@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import moment from 'moment/moment.js';
 import { db } from '../../firebase/index.js';
 
 function MyCalendar() {
@@ -62,6 +63,7 @@ function MyCalendar() {
         onChange={onChange}
         value={date}
         tileClassName={tileClassName}
+        formatDay={(locale, date) => moment(date).format('DD')}
       />
     </div>
   );

@@ -1,10 +1,13 @@
 import MyCalendar from './Components/Calendar/MyCalendar';
-import './App.css';
+import QrGenerator from './Components/QR/QrGenerator';
+import QrScan from './Components/QR/QrScan';
 
 function App() {
   return (
     <div>
       <MyCalendar />
+      <QrGenerator />
+      <QrScan />
     </div>
   );
 }

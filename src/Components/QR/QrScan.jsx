@@ -1,11 +1,12 @@
-//import { useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { attendanceState } from './attendanceState';
-import QrReader from 'react-qr-reader';
-import { db } from './firebase/index.js';
+import { attendanceState } from '../../RecoilState.js';
+import { QrReader } from 'react-qr-reader';
+import { db } from '../../firebase';
 
 function QrScan() {
-  const [attendance, setAttendance] = useRecoilState(attendanceState)
+  const [attendance, setAttendance] = useRecoilState(attendanceState);
+  const [openScanner, setOpenScanner] = useState(false);
 
   const handleScan = (data) => {
     if (data) {
@@ -21,6 +22,7 @@ function QrScan() {
         })
         .then(() => {
           setAttendance('출석 완료');
+          setOpenScanner(false);
         })
         .catch((error) => {
           console.error('Error writing document: ', error);
@@ -34,12 +36,15 @@ function QrScan() {
 
   return (
     <div>
-      <QrReader
-        delay={300}
-        onError={handleError}
-        onScan={handleScan}
-        style={{ width: '100%' }}
-      />
+      <button onClick={() => setOpenScanner(true)}>카메라 아이콘</button>
+      {openScanner && (
+        <QrReader
+          delay={300}
+          onError={handleError}
+          onScan={handleScan}
+          style={{ width: '100%' }}
+        />
+      )}
       <p>{attendance}</p>
     </div>
   );
