@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Avatar,
@@ -16,106 +16,29 @@ import {
 } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LoadingButton from "@mui/lab/LoadingButton";
-import "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   getAuth,
   updateProfile,
 } from "firebase/auth";
-// import {
-//   PhoneAuthProvider,
-//   RecaptchaVerifier,
-//   createUserWithEmailAndPassword,
-//   getAuth,
-//   signInWithCredential,
-//   signInWithPhoneNumber,
-//   updateProfile,
-// } from "firebase/auth";
+import "../firebase";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userSlice";
 import { getDatabase, ref, set } from "firebase/database";
-import { useSetRecoilState } from "recoil";
-import { isLoading, user } from "../RecoilState";
 
 function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [position, setPosition] = useState("");
   const [isManagerCheck, setManagerCheck] = useState(false);
-  const setCurrentUser = useSetRecoilState(user);
-  const setIsLoading = useSetRecoilState(isLoading);
-
-  const navigate = useNavigate();
-
-  // const [phoneNum, setPhoneNum] = useState("");
-  // const [phoneCheckCode, setPhoneCheckCode] = useState("");
-  // const [isPhoneNumCheck, setIsPhoneNumCheck] = useState(false);
-  // const [isErrorMsg, setIsErrorMsg] = useState(false);
-  // const [confirmationResult, setConfirmationResult] = useState("");
-
-  // const auth = getAuth();
-  // auth.languageCode = "ko";
-
-  // // 휴대폰 인증번호 보내주는 부분
-  // const handleSendNumber = useCallback(
-  //   (e) => {
-  //     e.preventDefault();
-
-  //     const appVerifier = window.recaptchaVerifier;
-  //     signInWithPhoneNumber(getAuth(), "+82" + phoneNum, appVerifier)
-  //       .then((confirmationResult) => {
-  //         // SMS sent. Prompt user to type the code from the message, then sign the
-  //         // user in with confirmationResult.confirm(code).
-  //         window.confirmationResult = confirmationResult;
-  //         // ...
-  //         setConfirmationResult(confirmationResult);
-  //         console.log(confirmationResult);
-  //       })
-  //       .catch((error) => {
-  //         // Error; SMS not sent
-  //         // ...
-  //         console.log(error.message);
-  //       });
-  //   },
-  //   [phoneNum]
-  // );
-
-  // useEffect(() => {
-  //   window.recaptchaVerifier = new RecaptchaVerifier(
-  //     auth,
-  //     "sendCodeBtn",
-  //     {
-  //       size: "invisible",
-  //       callback: (response) => {
-  //         // reCAPTCHA solved, allow signInWithPhoneNumber.
-  //         handleSendNumber();
-  //       },
-  //     },
-  //     auth
-  //   );
-  // }, [auth, handleSendNumber]);
-
-  // // 휴대폰 인증번호 비교하고 확인해서 가입시키는 방법
-  // const confirmPhoneCode = async (e) => {
-  //   e.preventDefault();
-  //   confirmationResult
-  //     .confirm(phoneCheckCode)
-  //     .then((result) => {
-  //       // User signed in successfully.
-  //       const user = result.user;
-  //       console.log(user);
-  //       if (position === "manager") {
-  //         navigate("/managerfirst");
-  //       } else {
-  //         navigate("/employeefirst");
-  //       }
-  //       // ...
-  //     })
-  //     .catch((error) => {
-  //       setError(error);
-  //       // User couldn't sign in (bad verification code?)
-  //       // ...
-  //     });
-  // };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!error) return;
+    setTimeout(() => {
+      setError("");
+    }, 3000);
+  }, [error]);
 
   const handlePositionChange = (e) => {
     setPosition(e.target.value);
@@ -126,8 +49,9 @@ function SignupPage() {
   };
 
   // firebase 에 데이터 전송
+
   const sendUserInfo = useCallback(
-    async (name, email, password, companyCode) => {
+    async (name, email, password) => {
       setLoading(true);
       try {
         const auth = getAuth();
@@ -138,72 +62,36 @@ function SignupPage() {
         );
         await updateProfile(user, {
           displayName: name,
-          password: password,
-          companyCode: companyCode,
         });
-        await set(ref(getDatabase(), "users/" + user.uid), {
-          name: user.displayName,
-          password: password,
-          companyCode: companyCode,
-          id: user.uid,
-        });
-        // recoil에 user 등록하기
-        setCurrentUser(user);
-        setIsLoading(false);
-
-        if (position === "manager") {
-          setLoading(false);
-          navigate("/managerfirst");
-        } else {
-          setLoading(false);
-          navigate("/employeefirst");
-        }
+        // await set(ref(getDatabase(), "users/" + user.uid), {
+        //   name: user.displayName,
+        //   avatar: user.photoURL,
+        //   id: user.uid,
+        // });
+        dispatch(setUser(user));
+        console.log(user);
       } catch (e) {
         setError(e.message);
       } finally {
         setLoading(false);
       }
     },
-    [navigate, position, setCurrentUser]
+    [dispatch]
   );
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-
       const data = new FormData(e.currentTarget);
       const name = data.get("name");
       const email = data.get("email");
       const password = data.get("password");
       const confirmPW = data.get("confirmPW");
-      const companyCode = data.get("companycode");
-
-      // 회원가입 폼 유효성 검사
-      if (position === "") {
-        setError("가입 포지션을 선택해주세요");
-        return;
-      }
-
-      if (position === "manager" && !isManagerCheck) {
-        setError("체크 항목을 체크해주세요");
-        return;
-      }
-
-      if (position === "employee" && !companyCode) {
-        setError("회사 코드를 입력해주세요");
-        return;
-      }
-
-      // if (!isPhoneNumCheck) {
-      //   setError("인증코드를 올바르게 입력해주세요.");
-      //   return;
-      // }
 
       if (!name || !email || !password || !confirmPW) {
         setError("모든 항목을 입력해주세요");
         return;
       }
-
       if (
         password !== confirmPW ||
         password.length < 6 ||
@@ -212,12 +100,10 @@ function SignupPage() {
         setError("비밀번호를 확인해 주세요");
         return;
       }
-
-      // 회사 코드 유효한지 확인
-
-      sendUserInfo(name, email, password, companyCode);
+      console.log(name, email, password);
+      sendUserInfo(name, email, password);
     },
-    [sendUserInfo, isManagerCheck, position]
+    [sendUserInfo]
   );
   return (
     <div className="mt-20">
@@ -340,54 +226,6 @@ function SignupPage() {
               name="confirmPW"
               type="password"
             />
-
-            {/* <div className="inline-flex items-center justify-between w-full">
-              <TextField
-                margin="normal"
-                required
-                label="휴대전화번호"
-                name="phoneNum"
-                className="w-8/12"
-                onChange={(e) => setPhoneNum(e.target.value)}
-                value={phoneNum}
-              />
-              <Button
-                variant="outlined"
-                color="primary"
-                id="sendCodeBtn"
-                sx={{ flexGrow: 0.3 }}
-                onClick={handleSendNumber}>
-                인증번호 전송
-              </Button>
-            </div>
-            <Typography
-              component="p"
-              variant="p"
-              color="gray"
-              sx={{ fontSize: "12px" }}>
-              (-을 빼고 입력해주세요. (ex.01012345678))
-            </Typography>
-            <FormControlLabel
-              className="text-red-500 "
-              label="인증번호가 오지 않습니까?"
-              control={
-                <Checkbox
-                  checked={isErrorMsg}
-                  onChange={(e) => setIsErrorMsg(e.target.checked)}
-                />
-              }
-            />
-            <div className="inline-flex items-center justify-between w-full">
-              <TextField
-                required
-                margin="normal"
-                label="인증번호"
-                onChange={(e) => setPhoneCheckCode(e.target.value)}
-                value={phoneCheckCode}
-                name="checkPhoneNum"
-                className="w-8/12"
-              />
-            </div> */}
             {/* 에러시 오류 표시 */}
             {error ? (
               <Alert sx={{ mt: 3 }} severity="error">

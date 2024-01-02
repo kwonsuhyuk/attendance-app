@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithPhoneNumber } from "firebase/auth";
-import { RecaptchaVerifier } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -11,15 +10,15 @@ import { RecaptchaVerifier } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyBWsGya53buGyFjmgeV-dNgd2XqeBXy4d0",
   authDomain: "britec-attd-app.firebaseapp.com",
+  databaseURL:
+    "https://britec-attd-app-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "britec-attd-app",
   storageBucket: "britec-attd-app.appspot.com",
   messagingSenderId: "723788106509",
   appId: "1:723788106509:web:4cb593996a6105ca1bfe44",
   measurementId: "G-P4SQ6BEGGM",
-  databaseURL:
-    "https://britec-attd-app-default-rtdb.asia-southeast1.firebasedatabase.app",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);

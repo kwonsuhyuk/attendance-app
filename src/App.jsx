@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -8,32 +8,28 @@ import MainPage from "./Page/MainPage";
 import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
 import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
 import IndexPage from "./Page/IndexPage";
-import "./firebase";
-import { useRecoilState } from "recoil";
-import { isLoading, user } from "./RecoilState";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { SyncLoader } from "react-spinners";
+import "./firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser, setUser } from "./store/userSlice";
 
 function App() {
-  const [currentUser, setCurrentUser] = useRecoilState(user);
-  const [loading, setLoading] = useRecoilState(isLoading);
+  const dispatch = useDispatch();
+  const { currentUser, isLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
-    console.log(isLoading);
-    const unsubscribe = onAuthStateChanged(getAuth(), (userInfo) => {
-      if (userInfo) {
-        console.log(userInfo);
-        setCurrentUser(userInfo);
-        setLoading(false);
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        dispatch(setUser(user));
       } else {
-        setCurrentUser();
-        setLoading(false);
+        dispatch(clearUser());
       }
     });
     return () => unsubscribe();
-  }, [setCurrentUser, setLoading]);
+  }, [dispatch, isLoading, currentUser]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="absolute top-1/2 left-1/2 flex flex-col gap-10">
         <h3>로딩 중입니다.</h3>
