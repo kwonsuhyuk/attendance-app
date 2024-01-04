@@ -21,7 +21,7 @@ function QrScan() {
           time: now,
         })
         .then(() => {
-          setAttendance('출석 완료');
+          setAttendance({ status: '출석 완료', time: now });
           setOpenScanner(false);
         })
         .catch((error) => {
@@ -45,7 +45,7 @@ function QrScan() {
           style={{ width: '100%' }}
         />
       )}
-      <p>{attendance}</p>
+      <p>{attendance.status}</p>
     </div>
   );
 }
