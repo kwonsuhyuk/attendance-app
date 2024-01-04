@@ -25,7 +25,6 @@ import {
 import "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
-import { getDatabase, ref, set } from "firebase/database";
 
 function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -33,6 +32,8 @@ function SignupPage() {
   const [position, setPosition] = useState("");
   const [isManagerCheck, setManagerCheck] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!error) return;
     setTimeout(() => {
@@ -51,7 +52,7 @@ function SignupPage() {
   // firebase 에 데이터 전송
 
   const sendUserInfo = useCallback(
-    async (name, email, password) => {
+    async (name, email, password, companyCode) => {
       setLoading(true);
       try {
         const auth = getAuth();
@@ -63,20 +64,24 @@ function SignupPage() {
         await updateProfile(user, {
           displayName: name,
         });
-        // await set(ref(getDatabase(), "users/" + user.uid), {
-        //   name: user.displayName,
-        //   avatar: user.photoURL,
-        //   id: user.uid,
-        // });
+
         dispatch(setUser(user));
-        console.log(user);
+        // 유저 정보 다음 페이지로 이동해서 한번에 보낼거임
+        const userData = { name: name, id: user.uid, companyCode: companyCode };
+
+        // 추가 정보 입력창으로 이동하게 함
+        if (position === "manager") {
+          navigate("/managerfirst", { state: userData });
+        } else if (position === "employee") {
+          navigate("/employeefirst", { state: userData });
+        }
       } catch (e) {
         setError(e.message);
       } finally {
         setLoading(false);
       }
     },
-    [dispatch]
+    [dispatch, position, navigate]
   );
 
   const handleSubmit = useCallback(
@@ -87,10 +92,27 @@ function SignupPage() {
       const email = data.get("email");
       const password = data.get("password");
       const confirmPW = data.get("confirmPW");
+      const companyCode = data.get("companycode");
 
       if (!name || !email || !password || !confirmPW) {
         setError("모든 항목을 입력해주세요");
         return;
+      }
+
+      // 관리자일시 체크 확인
+      if (position === "manager") {
+        if (!isManagerCheck) {
+          setError("체크 항목을 체크해주세요.");
+          return;
+        }
+      }
+
+      // 직원 일시 회사코드 입력
+      if (position === "employee") {
+        if (companyCode === "") {
+          setError("회사코드를 입력해주세요.");
+          return;
+        }
       }
       if (
         password !== confirmPW ||
@@ -100,11 +122,12 @@ function SignupPage() {
         setError("비밀번호를 확인해 주세요");
         return;
       }
-      console.log(name, email, password);
-      sendUserInfo(name, email, password);
+
+      sendUserInfo(name, email, password, companyCode);
     },
-    [sendUserInfo]
+    [sendUserInfo, position, isManagerCheck]
   );
+
   return (
     <div className="mt-20">
       <Container component="main" maxWidth="xs">
