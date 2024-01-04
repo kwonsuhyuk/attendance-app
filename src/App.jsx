@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import "./App.css";
+import SignupPage from "./Page/SignupPage";
+import { Navigate, Route, Routes } from "react-router-dom";
+import LoginPage from "./Page/LoginPage";
+import Notfound from "./Page/Notfound";
+import MainPage from "./Page/MainPage";
+import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
+import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
+import IndexPage from "./Page/IndexPage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { SyncLoader } from "react-spinners";
+import "./firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser, setUser } from "./store/userSlice";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const { currentUser, isLoading } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        dispatch(setUser(user));
+      } else {
+        dispatch(clearUser());
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch, isLoading, currentUser]);
+
+  if (isLoading) {
+    return (
+      <div className="absolute top-1/2 left-1/2 flex flex-col gap-10">
+        <h3>로딩 중입니다.</h3>
+        <SyncLoader />
+      </div> // 로딩 스피너
+    );
+  }
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={!currentUser ? <IndexPage /> : <MainPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/managerfirst" element={<ManagerFirstPage />} />
+      <Route path="/employeefirst" element={<EmployeeFirstPage />} />
+      <Route
+        path="/signin"
+        element={currentUser ? <Navigate to="/" /> : <LoginPage />}
+      />
+      <Route path="/*" element={<Notfound />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
