@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import Box from "@mui/material/Box";
 import {
   Alert,
   Avatar,
-  Box,
   Checkbox,
   Container,
   Divider,
@@ -45,9 +45,9 @@ function SignupPage() {
     setPosition(e.target.value);
   };
 
-  const findCompanyCode = (e) => {
-    // 데이터 베이스에서 회사코드가 있는지 찾는 메서드
-  };
+  // const findCompanyCode = (e) => {
+  //   // 데이터 베이스에서 회사코드가 있는지 찾는 메서드
+  // };
 
   // firebase 에 데이터 전송
 
@@ -131,7 +131,13 @@ function SignupPage() {
   return (
     <div className="mt-20">
       <Container component="main" maxWidth="xs">
-        <Box className="flex flex-col justify-center items-center">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
           <Avatar sx={{ m: 1, bgcolor: "black" }}>
             <LockOpenIcon />
           </Avatar>

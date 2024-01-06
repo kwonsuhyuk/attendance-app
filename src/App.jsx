@@ -1,3 +1,4 @@
+import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
@@ -13,6 +14,7 @@ import { SyncLoader } from "react-spinners";
 import "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, setUser } from "./store/userSlice";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,17 +40,25 @@ function App() {
     );
   }
   return (
-    <Routes>
-      <Route path="/" element={!currentUser ? <IndexPage /> : <MainPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/managerfirst" element={<ManagerFirstPage />} />
-      <Route path="/employeefirst" element={<EmployeeFirstPage />} />
-      <Route
-        path="/signin"
-        element={currentUser ? <Navigate to="/" /> : <LoginPage />}
+    <>
+      <ToastContainer
+        position="bottom-right"
+        theme="light"
+        pauseOnHover
+        autoClose={1500}
       />
-      <Route path="/*" element={<Notfound />} />
-    </Routes>
+      <Routes>
+        <Route path="/" element={!currentUser ? <IndexPage /> : <MainPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/managerfirst" element={<ManagerFirstPage />} />
+        <Route path="/employeefirst" element={<EmployeeFirstPage />} />
+        <Route
+          path="/signin"
+          element={currentUser ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route path="/*" element={<Notfound />} />
+      </Routes>
+    </>
   );
 }
 
