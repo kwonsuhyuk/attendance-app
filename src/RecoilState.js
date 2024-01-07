@@ -1,11 +1,11 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export const attendanceState = atom({
-  key: "attendanceState",
-  default: "출석하지 않음",
+  key: 'attendanceState',
+  default: '출석하지 않음',
 });
 
 export const userState = atom({
-  key: "userState",
+  key: 'userState',
   default: { currentUser: null, isLoading: true },
 });
