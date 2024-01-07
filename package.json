@@ -12,16 +12,23 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.3",
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.12.8",
     "firebase": "^10.7.1",
     "gsap": "^3.12.4",
+
+    
+    "react-avatar-editor": "^13.0.2",
+  
+
     "html5-qrcode": "^2.3.8",
     "jsqr": "^1.4.0",
     "qrcode.react": "^3.1.0",
     "react": "^17.0.2",
     "react-calendar": "^4.7.0",
     "react-dom": "^17.0.2",
+
     "react-icons": "^4.12.0",
     "react-qr-reader": "^3.0.0-beta-1",
     "react-redux": "^8.0.5",
@@ -29,12 +36,13 @@
     "react-spinners": "^0.13.8",
     "recoil": "^0.7.7",
     "redux": "^4.2.1",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "uuid": "^9.0.1",
+    "react-toastify": "^9.1.1"
   },
   "devDependencies": {
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
-    "@mui/material": "^5.13.2",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
