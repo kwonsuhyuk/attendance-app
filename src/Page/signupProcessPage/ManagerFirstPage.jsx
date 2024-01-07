@@ -147,11 +147,9 @@ function ManagerFirstPage() {
     navigator.clipboard
       .writeText(companyID)
       .then(() => {
-        // 복사가 성공적으로 완료되면 토스트 메시지를 띄웁니다.
         toast.success("회사 ID가 클립보드에 복사되었습니다.");
       })
       .catch(() => {
-        // 복사가 실패하면 사용자에게 알립니다.
         toast.error(
           "회사 ID를 클립보드에 복사하는데 실패하였습니다. 다시 시도해주세요."
         );
