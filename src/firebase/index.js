@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
-//import { initializeApp } from 'firebase/app';
-import firebase from 'firebase/compat/app';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import 'firebase/compat/firestore';
+import firebase from 'firebase/compat/app';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -11,6 +12,8 @@ import 'firebase/compat/firestore';
 const firebaseConfig = {
   apiKey: 'AIzaSyBWsGya53buGyFjmgeV-dNgd2XqeBXy4d0',
   authDomain: 'britec-attd-app.firebaseapp.com',
+  databaseURL:
+    'https://britec-attd-app-default-rtdb.asia-southeast1.firebasedatabase.app',
   projectId: 'britec-attd-app',
   storageBucket: 'britec-attd-app.appspot.com',
   messagingSenderId: '723788106509',
@@ -19,8 +22,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = firebase.firestore;
 
 export { db };
