@@ -10,7 +10,7 @@ import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
 import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
 import IndexPage from "./Page/IndexPage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { SyncLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 import "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, setUser } from "./store/userSlice";
@@ -32,11 +32,18 @@ function App() {
     return () => unsubscribe();
   }, [dispatch, isLoading, currentUser]);
 
+  console.log(currentUser);
+
   if (isLoading) {
     return (
-      <div className="absolute top-1/2 left-1/2 flex flex-col gap-10">
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
+        <ClipLoader
+          color="black"
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
         <h3>로딩 중입니다.</h3>
-        <SyncLoader />
       </div> // 로딩 스피너
     );
   }
@@ -49,13 +56,20 @@ function App() {
         autoClose={1500}
       />
       <Routes>
-        <Route path="/" element={!currentUser ? <IndexPage /> : <MainPage />} />
+        <Route path={"/*"} element={<IndexPage />} />
+        <Route path={`/${currentUser?.photoURL}`} element={<MainPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/managerfirst" element={<ManagerFirstPage />} />
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route
           path="/signin"
-          element={currentUser ? <Navigate to="/" /> : <LoginPage />}
+          element={
+            currentUser ? (
+              <Navigate to={`/${currentUser?.photoURL}`} />
+            ) : (
+              <LoginPage />
+            )
+          }
         />
         <Route path="/*" element={<Notfound />} />
       </Routes>

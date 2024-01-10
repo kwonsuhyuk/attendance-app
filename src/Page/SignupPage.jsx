@@ -25,12 +25,18 @@ import {
 import "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
+import { child, get, ref, getDatabase } from "firebase/database";
+
+import { Button } from "antd";
 
 function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [position, setPosition] = useState("");
   const [isManagerCheck, setManagerCheck] = useState(false);
+  const [companyCode, setCompanyCode] = useState("");
+  const [isCodeValid, setIsCodeValid] = useState(false);
+  const [tempCompInfo, setTempCompInfo] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,11 +51,24 @@ function SignupPage() {
     setPosition(e.target.value);
   };
 
-  // const findCompanyCode = (e) => {
-  //   // 데이터 베이스에서 회사코드가 있는지 찾는 메서드
-  // };
+  const checkCompanyCode = async (code) => {
+    const database = getDatabase();
+    const idRef = ref(database, "companyCode/" + code);
+    const snapshot = await get(idRef);
+    if (snapshot.exists()) {
+      setTempCompInfo(snapshot.val().companyInfo.companyName);
+      setIsCodeValid(true);
+      return;
+    } else {
+      setError("일치하는 회사가 없습니다.");
+      setIsCodeValid(false);
+      return;
+    }
+  };
 
-  // firebase 에 데이터 전송
+  // useEffect(() => {
+  //   console.log(isCodeValid);
+  // }, [isCodeValid]);
 
   const sendUserInfo = useCallback(
     async (name, email, password, companyCode) => {
@@ -63,6 +82,7 @@ function SignupPage() {
         );
         await updateProfile(user, {
           displayName: name,
+          photoURL: companyCode,
         });
 
         dispatch(setUser(user));
@@ -73,10 +93,11 @@ function SignupPage() {
         if (position === "manager") {
           navigate("/managerfirst", { state: userData });
         } else if (position === "employee") {
+          console.log("pass");
           navigate("/employeefirst", { state: userData });
         }
       } catch (e) {
-        setError(e.message);
+        console.log(e);
       } finally {
         setLoading(false);
       }
@@ -85,14 +106,13 @@ function SignupPage() {
   );
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
       const name = data.get("name");
       const email = data.get("email");
       const password = data.get("password");
       const confirmPW = data.get("confirmPW");
-      const companyCode = data.get("companycode");
 
       if (!name || !email || !password || !confirmPW) {
         setError("모든 항목을 입력해주세요");
@@ -113,6 +133,10 @@ function SignupPage() {
           setError("회사코드를 입력해주세요.");
           return;
         }
+        if (!isCodeValid) {
+          setError("회사코드 인증버튼을 눌러주세요.");
+          return;
+        }
       }
       if (
         password !== confirmPW ||
@@ -125,7 +149,7 @@ function SignupPage() {
 
       sendUserInfo(name, email, password, companyCode);
     },
-    [sendUserInfo, position, isManagerCheck]
+    [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode]
   );
 
   return (
@@ -193,14 +217,35 @@ function SignupPage() {
                   sx={{ mt: 2 }}>
                   가입 회사 정보
                 </Typography>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="회사코드"
-                  name="companycode"
-                  autoComplete="off"
-                />
+                <div className="flex flex-col items-stretch mb-2">
+                  {!isCodeValid ? (
+                    <TextField
+                      className="w-full flex-grow"
+                      margin="normal"
+                      required
+                      label="회사코드"
+                      name="companycode"
+                      autoComplete="off"
+                      sx={{ border: error && "1px solid red" }}
+                      disabled={isCodeValid}
+                      value={companyCode}
+                      onChange={(e) => setCompanyCode(e.target.value)}
+                    />
+                  ) : (
+                    <TextField
+                      className="w-full flex-grow"
+                      margin="normal"
+                      autoComplete="off"
+                      disabled={isCodeValid}
+                      value={tempCompInfo}
+                    />
+                  )}
+                  <Button
+                    className="w-full flex-grow"
+                    onClick={() => checkCompanyCode(companyCode)}>
+                    회사찾기
+                  </Button>
+                </div>
                 <Typography
                   component="p"
                   variant="p"

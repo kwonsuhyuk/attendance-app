@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.3",
     "@reduxjs/toolkit": "^1.9.5",
+    "antd": "^5.12.8",
     "firebase": "^10.7.1",
     "gsap": "^3.12.4",
     "react": "^18.2.0",
@@ -23,11 +24,11 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.21.1",
     "react-spinners": "^0.13.8",
+    "react-toastify": "^9.1.1",
     "recoil": "^0.7.7",
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
-    "uuid": "^9.0.1",
-    "react-toastify": "^9.1.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@mui/icons-material": "^5.11.16",

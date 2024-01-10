@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -28,15 +28,28 @@ import WorkIcon from "@mui/icons-material/Work";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
+import "../../firebase";
+import {
+  getDatabase,
+  push,
+  ref,
+  serverTimestamp,
+  set,
+} from "firebase/database";
+import { useSelector } from "react-redux";
+import { getAuth, updateProfile } from "firebase/auth";
 
 const steps = ["회사 기본 설정", "회사 추가 설정", "직원 초대 코드"];
 const companyID = uuidv4().slice(0, 8);
 
 function ManagerFirstPage() {
   const { state } = useLocation();
-  console.log(state);
+  const { currentUser } = useSelector((state) => state.user);
   const [activeStep, setActiveStep] = useState(0);
   const [imageOpenModal, setImageOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // 회사 기본 설정 state
   const [companyName, setCompanyName] = useState("");
@@ -86,10 +99,6 @@ function ManagerFirstPage() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   // 태그 삭제
@@ -156,8 +165,69 @@ function ManagerFirstPage() {
       });
   };
 
+  const pushJobData = async () => {
+    const db = getDatabase();
+    jobTags.forEach((item) => {
+      const jobRef = ref(db, `companyCode/${companyID}/companyInfo/jobName`);
+      set(push(jobRef), {
+        jobName: item.jobName,
+        payWay: item.payWay,
+        defaultPay: item.defaultPay,
+      });
+    });
+  };
+
+  // 데이터 firebase 에 전송하고 메인페이지로 이동하는 함수
+  const sendDataAndGoMain = async () => {
+    setLoading(true);
+    handleNext();
+    const db = getDatabase();
+    const auth = getAuth();
+    //회사 정보 data
+    const companyRef1 = ref(db, `companyCode/${companyID}/`);
+    const companyRef = ref(db, `companyCode/${companyID}/companyInfo`);
+    const companyBasicData = {
+      companyName: companyName,
+      companyLogo: imageUrl,
+      adminName: adminName,
+      isdaynight: isdaynight,
+      nightStart: nightStart,
+      nightEnd: nightEnd,
+      isNightPay: parseFloat(isNightPay),
+      isholiday: isholiday,
+      holidayPay: parseFloat(holidayPay),
+    };
+
+    // 관리자 user 정보 data
+    const userRef = ref(db, `companyCode/${companyID}/users/adminUser`);
+    const userData = {
+      name: state.name,
+      id: state.id,
+      email: currentUser.email,
+    };
+
+    try {
+      await updateProfile(auth.currentUser, {
+        photoURL: companyID,
+      });
+      await set(companyRef1, {
+        companyId: companyID,
+      });
+      // userdata 입력
+      await set(userRef, userData);
+      // companydata 입력
+      await set(companyRef, companyBasicData);
+      await pushJobData();
+      setLoading(false);
+      navigate(`/${companyID}`);
+    } catch (e) {
+      toast.error(e.message);
+      setLoading(false);
+    }
+  };
+
   return (
-    <Box sx={{ width: "100%", height: "100vh" }}>
+    <Box sx={{ height: "100vh", margin: "0 5rem" }}>
       <Stepper activeStep={activeStep} sx={{ height: "10%" }}>
         {steps.map((label) => {
           const stepProps = {};
@@ -172,10 +242,26 @@ function ManagerFirstPage() {
       {activeStep === steps.length ? (
         // 완료되었다고 안내해주는 창
         <React.Fragment>
-          <Box sx={{ height: "80%" }}>end</Box>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Finish</Button>
+          <Box
+            sx={{
+              height: "80%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <ClipLoader
+              loading={loading}
+              color="black"
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+            {loading && (
+              <Typography sx={{ fontSize: "1.5rem" }} className="animate-text">
+                회사 데이터 설정하는 중
+              </Typography>
+            )}
           </Box>
         </React.Fragment>
       ) : activeStep === 0 ? (
@@ -692,9 +778,7 @@ function ManagerFirstPage() {
               Back
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
+            <Button onClick={sendDataAndGoMain}>Finish</Button>
           </Box>
         </React.Fragment>
       )}
