@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import {
   Box,
   Button,
@@ -17,17 +17,29 @@ import {
   Select,
   TextField,
   Typography,
-} from "@mui/material";
-import gsap from "gsap";
-import ImageModal from "../../Components/modal/ImageModal";
-import CloseIcon from "@mui/icons-material/Close";
-import AddIcon from "@mui/icons-material/Add";
-import { v4 as uuidv4 } from "uuid";
-import { numToKorean, formatMoney } from "../../util/formatMoney";
-import WorkIcon from "@mui/icons-material/Work";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { toast } from "react-toastify";
+} from '@mui/material';
+import gsap from 'gsap';
+import ImageModal from '../../Components/modal/ImageModal';
+import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import { v4 as uuidv4 } from 'uuid';
+import { numToKorean, formatMoney } from '../../util/formatMoney';
+import WorkIcon from '@mui/icons-material/Work';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
+import '../../firebase';
+import {
+  getDatabase,
+  push,
+  ref,
+  serverTimestamp,
+  set,
+} from 'firebase/database';
+import { useSelector } from 'react-redux';
+import { getAuth, updateProfile } from 'firebase/auth';
+import QrGenerator from '../../Components/QR/QrGenerator';
 
 const steps = ['회사 기본 설정', '회사 추가 설정', '직원 초대 코드'];
 const companyID = uuidv4().slice(0, 8);
@@ -216,8 +228,8 @@ function ManagerFirstPage() {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100vh" }}>
-      <Stepper activeStep={activeStep} sx={{ height: "10%" }}>
+    <Box sx={{ height: '100vh', margin: '0 5rem' }}>
+      <Stepper activeStep={activeStep} sx={{ height: '10%' }}>
         {steps.map((label) => {
           const stepProps = {};
           const labelProps = {};
@@ -231,10 +243,27 @@ function ManagerFirstPage() {
       {activeStep === steps.length ? (
         // 완료되었다고 안내해주는 창
         <React.Fragment>
-          <Box sx={{ height: "80%" }}>end</Box>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Finish</Button>
+          <Box
+            sx={{
+              height: '80%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <ClipLoader
+              loading={loading}
+              color='black'
+              size={150}
+              aria-label='Loading Spinner'
+              data-testid='loader'
+            />
+            {loading && (
+              <Typography sx={{ fontSize: '1.5rem' }} className='animate-text'>
+                회사 데이터 설정하는 중
+              </Typography>
+            )}
           </Box>
         </React.Fragment>
       ) : activeStep === 0 ? (
@@ -744,7 +773,12 @@ function ManagerFirstPage() {
                   <div className='flex flex-col justify-center items-center gap-3'>
                     {/* qr 예시 이미지 */}
                     <QrGenerator />
-                    {/* <div
+                    {/* <img
+                      src="data:image/jpeg;base64,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"
+                      alt="iu"
+                      className="w-72 h-72"
+                    />
+                    <div
                       className="flex justify-center items-center bg-gray-500 p-2"
                       style={{ borderRadius: "20px" }}>
                       <a
@@ -768,10 +802,8 @@ function ManagerFirstPage() {
             >
               Back
             </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={sendDataAndGoMain}>Finish</Button>
           </Box>
         </React.Fragment>
       )}
