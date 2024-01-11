@@ -3,32 +3,32 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from "@mui/material";
-import { Button, Input } from "antd";
-import { useCallback, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import "../../firebase";
+} from '@mui/material';
+import { Button, Input } from 'antd';
+import { useCallback, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import '../../firebase';
 import {
   getDownloadURL,
   getStorage,
   ref as refStorage,
   uploadBytes,
-} from "firebase/storage";
-import AvatarEditor from "react-avatar-editor";
+} from 'firebase/storage';
+import AvatarEditor from 'react-avatar-editor';
 
 function ImageModal({ open, handleClose, companyName, setImageUrl }) {
   const { currentUser } = useSelector((state) => state.user);
-  const [previewImage, setPreviewImage] = useState("");
-  const [croppedImage, setCroppedImage] = useState("");
-  const [uploadedCroppedImage, setuploadedCroppedImage] = useState("");
-  const [blob, setBlob] = useState("");
+  const [previewImage, setPreviewImage] = useState('');
+  const [croppedImage, setCroppedImage] = useState('');
+  const [uploadedCroppedImage, setuploadedCroppedImage] = useState('');
+  const [blob, setBlob] = useState('');
   const editorRef = useRef(null);
 
   const closeModal = useCallback(() => {
     handleClose();
-    setPreviewImage("");
-    setCroppedImage("");
-    setuploadedCroppedImage("");
+    setPreviewImage('');
+    setCroppedImage('');
+    setuploadedCroppedImage('');
   }, [handleClose]);
 
   const handleChange = useCallback((e) => {
@@ -36,7 +36,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
     if (!file) return;
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.addEventListener("load", () => {
+    reader.addEventListener('load', () => {
       setPreviewImage(reader.result);
     });
   }, []);
@@ -56,6 +56,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
     const downloadUrl = await getDownloadURL(uploadTask.ref);
     setImageUrl(downloadUrl);
     setuploadedCroppedImage(downloadUrl);
+    console.log('dlalss');
     closeModal();
   }, [currentUser?.uid, blob, closeModal, companyName, setImageUrl]);
 
@@ -64,14 +65,14 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
       <DialogTitle>회사 로고 사진 업로드</DialogTitle>
       <DialogContent>
         <Input
-          margin="dense"
-          inputprops={{ accept: "image/jpeg, image/jpg, image/png" }}
-          type="file"
-          fullwidth="true"
-          variant="standard"
+          margin='dense'
+          inputprops={{ accept: 'image/jpeg, image/jpg, image/png' }}
+          type='file'
+          fullwidth='true'
+          variant='standard'
           onChange={handleChange}
         />
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {previewImage && (
             <AvatarEditor
               ref={editorRef}
@@ -80,14 +81,14 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
               height={120}
               border={50}
               scale={2}
-              style={{ display: "inline" }}
+              style={{ display: 'inline' }}
             />
           )}
           {croppedImage && (
             <img
               src={croppedImage}
-              alt="cropped"
-              style={{ marginLeft: "50px" }}
+              alt='cropped'
+              style={{ marginLeft: '50px' }}
               width={100}
               height={100}
             />
