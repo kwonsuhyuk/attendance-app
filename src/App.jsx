@@ -9,6 +9,7 @@ import MainPage from './Page/MainPage';
 import ManagerFirstPage from './Page/signupProcessPage/ManagerFirstPage';
 import EmployeeFirstPage from './Page/signupProcessPage/EmployeeFirstPage';
 import IndexPage from './Page/IndexPage';
+import AccessCameraPage from './Page/AccessCameraPage';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ClipLoader } from 'react-spinners';
 import './firebase';
@@ -64,6 +65,7 @@ function App() {
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/managerfirst' element={<ManagerFirstPage />} />
         <Route path='/employeefirst' element={<EmployeeFirstPage />} />
+        <Route path='/camera' element={<AccessCameraPage />} />
         <Route
           path='/signin'
           element={
