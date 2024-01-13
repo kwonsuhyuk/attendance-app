@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 function IndexPage() {
   const navigate = useNavigate();
   return (
-    <div className='bg-black text-white text-center h-screen w-full overflow-hidden flex flex-col justify-between'>
+    <div className='bg-black text-white text-center h-[100vh] w-full overflow-hidden flex flex-col justify-between'>
       <div className='text-5xl pt-[66px] z-10'>
         <span className='font-bold'>Welcome</span>
         <span className='font-thin'> to</span>
