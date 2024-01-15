@@ -1,4 +1,4 @@
-import QrScan from '../Components/QR/QrScan';
+import QrScan from "../Components/QR/QrScan";
 
 function AccessCameraPage() {
   return (
