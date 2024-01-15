@@ -60,12 +60,17 @@ function App() {
         autoClose={1500}
       />
       <Routes>
-        <Route path={'/'} element={<IndexPage />} />
-        <Route path={`/:id`} element={<MainPage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/managerfirst' element={<ManagerFirstPage />} />
-        <Route path='/employeefirst' element={<EmployeeFirstPage />} />
+
+        {currentUser ? (
+          <Route path={`/${currentUser?.photoURL}`} element={<MainPage />} />
+        ) : (
+          <Route path={"/"} element={<IndexPage />} />
+        )}
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/managerfirst" element={<ManagerFirstPage />} />
+        <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route path='/:id/camera' element={<AccessCameraPage />} />
+
         <Route
           path='/signin'
           element={
