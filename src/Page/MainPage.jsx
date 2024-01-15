@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
 import AccessCameraPage from "./AccessCameraPage";
 import { useSelector } from "react-redux";
+import DateCheckPage from "./DateCheckPage";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -25,8 +26,12 @@ function MainPage() {
       <button onClick={scan}>
         <FaCamera />
       </button>
+      <button onClick={() => navigate(`/${currentUser.photoURL}/datecheck`)}>
+        datecheckpage
+      </button>
       <Routes>
         <Route path="/camera" element={<AccessCameraPage />} />
+        <Route path="/datecheck" element={<DateCheckPage />} />
       </Routes>
     </div>
   );
