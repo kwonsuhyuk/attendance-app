@@ -12,7 +12,7 @@ function QrScan() {
         width: 250,
         height: 250,
       },
-      fps: 20,
+      fps: 3000,
     });
     const now = new Date();
 

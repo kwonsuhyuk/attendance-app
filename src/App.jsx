@@ -1,5 +1,5 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import SignupPage from './Page/SignupPage';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isLoading } = useSelector((state) => state.user);
+  const [authInitiated, setAuthInitiated] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
@@ -31,13 +32,14 @@ function App() {
       } else {
         dispatch(clearUser());
       }
+      setAuthInitiated(true);
     });
     return () => unsubscribe();
-  }, [dispatch, isLoading, currentUser, navigate]);
+  }, [dispatch]);
 
   console.log(currentUser);
 
-  if (isLoading) {
+  if (isLoading || !authInitiated) {
     return (
       <div className='flex flex-col justify-center items-center h-screen w-screen'>
         <ClipLoader
@@ -68,9 +70,10 @@ function App() {
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/managerfirst' element={<ManagerFirstPage />} />
         <Route path='/employeefirst' element={<EmployeeFirstPage />} />
-        <Route path='/:id/camera' element={<AccessCameraPage />} />
+        <PrivateRoute path='/:id/camera' element={<AccessCameraPage />} />
+        <PrivateRoute path='/:id' element={<MainPage />} />
 
-        <Route
+        {/* <Route
           path='/signin'
           element={
             currentUser ? (
@@ -79,11 +82,19 @@ function App() {
               <LoginPage />
             )
           }
-        />
+        /> */}
         {/* <Route path='/*' element={<Notfound />} /> */}
       </Routes>
     </>
   );
+  function PrivateRoute({ path, element }) {
+    const { currentUser } = useSelector((state) => state.user);
+    return currentUser ? (
+      <Route path={path} element={element} />
+    ) : (
+      <Navigate to='/signin' />
+    );
+  }
 }
 
 export default App;

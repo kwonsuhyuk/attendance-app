@@ -3,7 +3,7 @@ import { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { db } from '../../firebase/index.js';
 
-const Calendar = () => {
+const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
 
   const handleDateChange = (date) => {
@@ -35,4 +35,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default MyDatePicker;
