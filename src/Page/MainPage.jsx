@@ -1,10 +1,10 @@
-import { getAuth, signOut } from "firebase/auth";
-import "../firebase";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { FaCamera } from "react-icons/fa";
-import AccessCameraPage from "./AccessCameraPage";
-import { useSelector } from "react-redux";
-import DateCheckPage from "./DateCheckPage";
+import { getAuth, signOut } from 'firebase/auth';
+import '../firebase';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { FaCamera } from 'react-icons/fa';
+import AccessCameraPage from './AccessCameraPage';
+import { useSelector } from 'react-redux';
+import DateCheckPage from './DateCheckPage';
 
 function MainPage() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function MainPage() {
 
   const logout = async () => {
     await signOut(getAuth());
-    navigate("/");
+    navigate('/');
   };
 
   const scan = () => {
@@ -30,8 +30,8 @@ function MainPage() {
         datecheckpage
       </button>
       <Routes>
-        <Route path="/camera" element={<AccessCameraPage />} />
-        <Route path="/datecheck" element={<DateCheckPage />} />
+        <Route path='/camera' element={<AccessCameraPage />} />
+        <Route path='/datecheck' element={<DateCheckPage />} />
       </Routes>
     </div>
   );
