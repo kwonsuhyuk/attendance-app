@@ -2,7 +2,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useEffect } from 'react';
 import './App.css';
 import SignupPage from './Page/SignupPage';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import LoginPage from './Page/LoginPage';
 import Notfound from './Page/Notfound';
 import MainPage from './Page/MainPage';
@@ -20,18 +20,20 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser, isLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         dispatch(setUser(user));
+        navigate(`/${currentUser?.photoURL}`);
       } else {
         dispatch(clearUser());
       }
     });
     return () => unsubscribe();
-  }, [dispatch, isLoading, currentUser]);
+  }, [dispatch, isLoading, currentUser, navigate]);
 
   console.log(currentUser);
 
@@ -48,6 +50,7 @@ function App() {
       </div> // 로딩 스피너
     );
   }
+
   return (
     <>
       <ToastContainer
@@ -65,7 +68,8 @@ function App() {
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/managerfirst' element={<ManagerFirstPage />} />
         <Route path='/employeefirst' element={<EmployeeFirstPage />} />
-        <Route path='/camera' element={<AccessCameraPage />} />
+        <Route path='/:id/camera' element={<AccessCameraPage />} />
+
         <Route
           path='/signin'
           element={
@@ -76,7 +80,7 @@ function App() {
             )
           }
         />
-        <Route path='/*' element={<Notfound />} />
+        {/* <Route path='/*' element={<Notfound />} /> */}
       </Routes>
     </>
   );
