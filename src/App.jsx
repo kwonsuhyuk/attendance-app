@@ -1,8 +1,14 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import SignupPage from './Page/SignupPage';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useRoutes,
+} from 'react-router-dom';
 import LoginPage from './Page/LoginPage';
 import Notfound from './Page/Notfound';
 import MainPage from './Page/MainPage';
@@ -22,24 +28,22 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isLoading } = useSelector((state) => state.user);
-  const [authInitiated, setAuthInitiated] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         dispatch(setUser(user));
-        navigate(`/${currentUser?.photoURL}`);
+        navigate(`/${currentUser?.photoURL}/`);
       } else {
         dispatch(clearUser());
       }
-      setAuthInitiated(true);
     });
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, isLoading, currentUser]);
 
   console.log(currentUser);
 
-  if (isLoading || !authInitiated) {
+  if (isLoading) {
     return (
       <div className='flex flex-col justify-center items-center h-screen w-screen'>
         <ClipLoader
@@ -62,39 +66,34 @@ function App() {
         autoClose={1500}
       />
       <Routes>
-        {currentUser ? (
-          <Route path={`/${currentUser?.photoURL}`} element={<MainPage />} />
-        ) : (
-          <Route path={'/'} element={<IndexPage />} />
-        )}
-        <Route path='/signup' element={<SignupPage />} />
+        <Route path='/' element={<IndexPage />} />
+        <Route path='/:id/*' element={<MainPage />} />
+        <Route
+          path='/signup'
+          element={
+            currentUser ? (
+              <Navigate to={`/${currentUser?.photoURL}/main`} />
+            ) : (
+              <SignupPage />
+            )
+          }
+        />
         <Route path='/managerfirst' element={<ManagerFirstPage />} />
         <Route path='/employeefirst' element={<EmployeeFirstPage />} />
-        <PrivateRoute path='/:id/camera' element={<AccessCameraPage />} />
-        <PrivateRoute path='/:id' element={<MainPage />} />
-
-        {/* <Route
+        <Route
           path='/signin'
           element={
             currentUser ? (
-              <Navigate to={`/${currentUser?.photoURL}`} />
+              <Navigate to={`/${currentUser?.photoURL}/main`} />
             ) : (
               <LoginPage />
             )
           }
-        /> */}
-        {/* <Route path='/*' element={<Notfound />} /> */}
+        />
+        <Route path='/*' element={<Notfound />} />
       </Routes>
     </>
   );
-  function PrivateRoute({ path, element }) {
-    const { currentUser } = useSelector((state) => state.user);
-    return currentUser ? (
-      <Route path={path} element={element} />
-    ) : (
-      <Navigate to='/signin' />
-    );
-  }
 }
 
 export default App;

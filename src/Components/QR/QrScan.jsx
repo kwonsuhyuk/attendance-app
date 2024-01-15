@@ -12,16 +12,16 @@ function QrScan() {
         width: 250,
         height: 250,
       },
-      fps: 3000,
+      fps: 5,
     });
-    const now = new Date();
 
     scanner.render(success, error);
     function success(result) {
       scanner.clear();
-      console.log(now);
       setScanResult(result);
-      document.getElementById('reader').remove();
+    }
+    function error(err) {
+      console.warn(err);
     }
     function error(err) {
       console.warn(err);
