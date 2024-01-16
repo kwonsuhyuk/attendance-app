@@ -5,8 +5,9 @@ import MyCalendar from '../Components/Calendar/MyCalendar';
 const DateCheckPage = () => {
   return (
     <div>
-      <MyDatePicker />
-      <MyCalendar />
+      datacheckpage
+      {/* <MyDatePicker />
+      <MyCalendar /> */}
     </div>
   );
 };
