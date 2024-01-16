@@ -1,7 +1,10 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { useEffect } from 'react';
-import './App.css';
-import SignupPage from './Page/SignupPage';
+
+
+import CssBaseline from "@mui/material/CssBaseline";
+import { useEffect } from "react";
+import "./App.css";
+import SignupPage from "./Page/SignupPage";
+
 import {
   Navigate,
   Route,
@@ -23,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearUser, setUser } from './store/userSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const dispatch = useDispatch();

@@ -10,6 +10,7 @@ function QrScan() {
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
+
       qrbox: { width: 250, height: 250 },
       fps: 1,
     });
@@ -43,8 +44,10 @@ function QrScan() {
     <div className='App'>
       <h1>Qr 코드를 스캔하세요</h1>
       {scanMessage ? <div>{scanMessage}</div> : <div id='reader'></div>}
+
     </div>
   );
 }
+
 
 export default QrScan;
