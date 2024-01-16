@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
-import { Html5QrcodeScanner } from 'html5-qrcode';
-import { QrReader } from 'react-qr-reader';
+import { Html5QrcodeScanner } from "html5-qrcode";
+import { QrReader } from "react-qr-reader";
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
@@ -40,6 +40,7 @@ function QrScan() {
     </div>
   );
 }
+
 
 // function QrScan() {
 //   const [attendance, setAttendance] = useState('출석하지 않음');

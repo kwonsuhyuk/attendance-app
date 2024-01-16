@@ -1,22 +1,30 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { useEffect } from 'react';
-import './App.css';
-import SignupPage from './Page/SignupPage';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import LoginPage from './Page/LoginPage';
-import Notfound from './Page/Notfound';
-import MainPage from './Page/MainPage';
-import ManagerFirstPage from './Page/signupProcessPage/ManagerFirstPage';
-import EmployeeFirstPage from './Page/signupProcessPage/EmployeeFirstPage';
-import IndexPage from './Page/IndexPage';
-import AccessCameraPage from './Page/AccessCameraPage';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { ClipLoader } from 'react-spinners';
-import './firebase';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearUser, setUser } from './store/userSlice';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+import CssBaseline from "@mui/material/CssBaseline";
+import { useEffect } from "react";
+import "./App.css";
+import SignupPage from "./Page/SignupPage";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useRoutes,
+} from "react-router-dom";
+import LoginPage from "./Page/LoginPage";
+import Notfound from "./Page/Notfound";
+import MainPage from "./Page/MainPage";
+import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
+import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
+import IndexPage from "./Page/IndexPage";
+import AccessCameraPage from "./Page/AccessCameraPage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ClipLoader } from "react-spinners";
+import "./firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser, setUser } from "./store/userSlice";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -27,13 +35,13 @@ function App() {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         dispatch(setUser(user));
-        navigate(`/${currentUser?.photoURL}`);
+        navigate(`/${currentUser?.photoURL}/`);
       } else {
         dispatch(clearUser());
       }
     });
     return () => unsubscribe();
-  }, [dispatch, isLoading, currentUser, navigate]);
+  }, [dispatch, isLoading, currentUser]);
 
   console.log(currentUser);
 
@@ -60,28 +68,31 @@ function App() {
         autoClose={1500}
       />
       <Routes>
-
-        {currentUser ? (
-          <Route path={`/${currentUser?.photoURL}`} element={<MainPage />} />
-        ) : (
-          <Route path={"/"} element={<IndexPage />} />
-        )}
-        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/" element={<IndexPage />} />
+        <Route path="/:id/*" element={<MainPage />} />
+        <Route
+          path="/signup"
+          element={
+            currentUser ? (
+              <Navigate to={`/${currentUser?.photoURL}/main`} />
+            ) : (
+              <SignupPage />
+            )
+          }
+        />
         <Route path="/managerfirst" element={<ManagerFirstPage />} />
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
-        <Route path='/:id/camera' element={<AccessCameraPage />} />
-
         <Route
           path='/signin'
           element={
             currentUser ? (
-              <Navigate to={`/${currentUser?.photoURL}`} />
+              <Navigate to={`/${currentUser?.photoURL}/main`} />
             ) : (
               <LoginPage />
             )
           }
         />
-        {/* <Route path='/*' element={<Notfound />} /> */}
+        <Route path="/*" element={<Notfound />} />
       </Routes>
     </>
   );
