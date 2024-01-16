@@ -1,29 +1,31 @@
 
+
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
+
 import {
   Navigate,
   Route,
   Routes,
   useNavigate,
   useRoutes,
-} from "react-router-dom";
-import LoginPage from "./Page/LoginPage";
-import Notfound from "./Page/Notfound";
-import MainPage from "./Page/MainPage";
-import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
-import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
-import IndexPage from "./Page/IndexPage";
-import AccessCameraPage from "./Page/AccessCameraPage";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ClipLoader } from "react-spinners";
-import "./firebase";
-import { useDispatch, useSelector } from "react-redux";
-import { clearUser, setUser } from "./store/userSlice";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+} from 'react-router-dom';
+import LoginPage from './Page/LoginPage';
+import Notfound from './Page/Notfound';
+import MainPage from './Page/MainPage';
+import ManagerFirstPage from './Page/signupProcessPage/ManagerFirstPage';
+import EmployeeFirstPage from './Page/signupProcessPage/EmployeeFirstPage';
+import IndexPage from './Page/IndexPage';
+import AccessCameraPage from './Page/AccessCameraPage';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { ClipLoader } from 'react-spinners';
+import './firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearUser, setUser } from './store/userSlice';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -68,10 +70,10 @@ function App() {
         autoClose={1500}
       />
       <Routes>
-        <Route path="/" element={<IndexPage />} />
-        <Route path="/:id/*" element={<MainPage />} />
+        <Route path='/' element={<IndexPage />} />
+        <Route path='/:id/*' element={<MainPage />} />
         <Route
-          path="/signup"
+          path='/signup'
           element={
             currentUser ? (
               <Navigate to={`/${currentUser?.photoURL}/main`} />
@@ -80,8 +82,8 @@ function App() {
             )
           }
         />
-        <Route path="/managerfirst" element={<ManagerFirstPage />} />
-        <Route path="/employeefirst" element={<EmployeeFirstPage />} />
+        <Route path='/managerfirst' element={<ManagerFirstPage />} />
+        <Route path='/employeefirst' element={<EmployeeFirstPage />} />
         <Route
           path='/signin'
           element={
@@ -92,7 +94,7 @@ function App() {
             )
           }
         />
-        <Route path="/*" element={<Notfound />} />
+        <Route path='/*' element={<Notfound />} />
       </Routes>
     </>
   );
