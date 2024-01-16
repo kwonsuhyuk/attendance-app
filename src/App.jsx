@@ -1,3 +1,4 @@
+
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect } from "react";
 import "./App.css";
@@ -24,6 +25,7 @@ import { clearUser, setUser } from "./store/userSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,12 +47,12 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
+      <div className='flex flex-col justify-center items-center h-screen w-screen'>
         <ClipLoader
-          color="black"
+          color='black'
           size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
+          aria-label='Loading Spinner'
+          data-testid='loader'
         />
         <h3>로딩 중입니다.</h3>
       </div> // 로딩 스피너
@@ -60,8 +62,8 @@ function App() {
   return (
     <>
       <ToastContainer
-        position="bottom-right"
-        theme="light"
+        position='bottom-right'
+        theme='light'
         pauseOnHover
         autoClose={1500}
       />
@@ -81,7 +83,7 @@ function App() {
         <Route path="/managerfirst" element={<ManagerFirstPage />} />
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route
-          path="/signin"
+          path='/signin'
           element={
             currentUser ? (
               <Navigate to={`/${currentUser?.photoURL}/main`} />
