@@ -6,8 +6,8 @@ const DateCheckPage = () => {
   return (
     <div>
       datacheckpage
-      {/* <MyDatePicker />
-      <MyCalendar /> */}
+      <MyDatePicker />
+      <MyCalendar />
     </div>
   );
 };
