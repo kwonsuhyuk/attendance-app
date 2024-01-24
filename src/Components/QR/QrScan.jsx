@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { db } from '../../firebase/index.js';
+import { db, getDatabase, ref, update } from '../../firebase/index.js';
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
@@ -10,7 +10,6 @@ function QrScan() {
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
-
       qrbox: { width: 250, height: 250 },
       fps: 1,
     });
@@ -20,20 +19,23 @@ function QrScan() {
         scanner.clear();
         setScanResult(result);
         const dateStr = new Date().toISOString().substring(0, 10);
-        db.ref(`/${companyCode}/users/${userId}`)
+        const dbref = ref(getDatabase(), `/${companyCode}/users/${userId}`);
+
+        dbref
           .once('value')
           .then((snapshot) => {
-            if (snapshot.exists() && snapshot.val().starttime) {
-              db.ref(`/${companyCode}/users/${userId}`).update({
-                endTime: dateStr + 'T' + result + ':00Z',
-              });
+            const updates = {};
+            if (snapshot.exists() && snapshot.val().startTime) {
+              updates['endTime'] = dateStr + 'T' + result + ':00Z';
               setScanMessage('퇴근 인증이 완료되었습니다');
             } else {
-              db.ref(`/${companyCode}/users/${userId}`).set({
-                startTime: dateStr + 'T' + result + ':00Z',
-              });
+              updates['startTime'] = dateStr + 'T' + result + ':00Z';
               setScanMessage('출근 인증이 완료되었습니다');
             }
+            update(dbref, updates);
+          })
+          .catch((error) => {
+            console.error('인증 정보 업데이트에 실패했습니다: ', error);
           });
       },
       (err) => console.warn(err)
@@ -44,10 +46,8 @@ function QrScan() {
     <div className='App'>
       <h1>Qr 코드를 스캔하세요</h1>
       {scanMessage ? <div>{scanMessage}</div> : <div id='reader'></div>}
-
     </div>
   );
 }
-
 
 export default QrScan;
