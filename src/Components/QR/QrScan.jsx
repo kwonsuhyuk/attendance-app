@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { db, getDatabase, ref, update } from '../../firebase/index.js';
+import { getDatabase, onValue, ref, set } from 'firebase/database';
+import { useSelector } from 'react-redux';
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
   const [scanMessage, setScanMessage] = useState(null);
-  const companyCode = 'yourCompanyCode'; // 회사 코드
-  const userId = 'yourUserId'; // 유저 아이디
+  const { currentUser }= useSelector(state=>state.user);
+  const companyCode = currentUser.photoURL; // 회사 코드
+  const userId = currentUser.uid; // 유저 아이디
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
@@ -19,26 +21,22 @@ function QrScan() {
         scanner.clear();
         setScanResult(result);
         const dateStr = new Date().toISOString().substring(0, 10);
-        const dbref = ref(getDatabase(), `/${companyCode}/users/${userId}`);
-
-        dbref
-          .once('value')
-          .then((snapshot) => {
-            const updates = {};
-            if (snapshot.exists() && snapshot.val().startTime) {
-              updates['endTime'] = dateStr + 'T' + result + ':00Z';
-              setScanMessage('퇴근 인증이 완료되었습니다');
-            } else {
-              updates['startTime'] = dateStr + 'T' + result + ':00Z';
-              setScanMessage('출근 인증이 완료되었습니다');
-            }
-            update(dbref, updates);
-          })
-          .catch((error) => {
-            console.error('인증 정보 업데이트에 실패했습니다: ', error);
-          });
+        const db = getDatabase()
+        const dbref = ref(db, `companyCode/${companyCode}/users/${userId}`)
+        onValue(dbref, (snapshot) => {
+          if (snapshot.exists() && snapshot.val().starttime) {
+            update(ref(db, `companyCode/${companyCode}/users/${userId}`), {
+              endTime: dateStr + 'T' + result + ':00Z',
+            });
+            setScanMessage('퇴근 인증이 완료되었습니다');
+          } else {
+            set(ref(db, `companyCode/${companyCode}/users/${userId}`), {
+              startTime: dateStr + 'T' + result + ':00Z',
+            });
+            setScanMessage('출근 인증이 완료되었습니다');
+          }
+        });
       },
-      (err) => console.warn(err)
     );
   }, [companyCode, userId]);
 

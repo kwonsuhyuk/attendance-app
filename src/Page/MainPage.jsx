@@ -5,6 +5,7 @@ import { FaCamera } from 'react-icons/fa';
 import AccessCameraPage from './AccessCameraPage';
 import { useSelector } from 'react-redux';
 import DateCheckPage from './DateCheckPage';
+import ShowSalary from '../Components/ShowSalary/ShowSalary';
 
 function MainPage() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function MainPage() {
       <button onClick={() => navigate(`/${currentUser.photoURL}/datecheck`)}>
         datecheckpage
       </button>
+      <div style={{backgroundColor:"red"}}>
+        <ShowSalary/>
+      </div>
       <Routes>
         <Route path='/camera' element={<AccessCameraPage />} />
         <Route path='/datecheck' element={<DateCheckPage />} />
