@@ -1,6 +1,6 @@
-import { getDatabase, onValue, ref } from 'firebase/database';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { child, get, getDatabase, onValue, ref } from "firebase/database";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
@@ -14,40 +14,56 @@ function ShowSalary() {
   const nightTimeWage = hourlyWage * 1.5; // 야간 시급
 
   useEffect(() => {
-    const dbref = ref(
-      getDatabase(),
-      `companyCode/${companyCode}/users/${userId}`
-    );
+    const db = getDatabase();
+    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
     const nightStartRef = ref(
-      getDatabase(),
+      db,
       `companyCode/${companyCode}/companyInfo/nightStart`
     );
     const nightEndRef = ref(
-      getDatabase(),
+      db,
       `companyCode/${companyCode}/companyInfo/nightEnd`
     );
 
-    onValue(dbref, (snapshot) => {
-      if (snapshot.exists()) {
-        const { startTime, endTime } = snapshot.val();
-        const start = new Date(startTime);
-        const end = new Date(endTime);
-        const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
-
+    Promise.all([get(dateRef), get(nightStartRef), get(nightEndRef)]).then(
+      ([dateSnapshot, nightStartSnapshot, nightEndSnapshot]) => {
         if (
-          start.getDate() === end.getDate() &&
-          start.getHours() > nightEndRef &&
-          end.getHours() < nightStartRef
+          dateSnapshot.exists() &&
+          nightStartSnapshot.exists() &&
+          nightEndSnapshot.exists()
         ) {
-          setDaySalary(workHours * hourlyWage);
-          setNightSalary(0);
-        } else {
-          setDaySalary(0);
-          setNightSalary(workHours * nightTimeWage);
+          const dates = dateSnapshot.val();
+          const nightStart = nightStartSnapshot.val();
+          const nightEnd = nightEndSnapshot.val();
+
+          let totalDaySalary = 0;
+          let totalNightSalary = 0;
+
+          for (let date in dates) {
+            const { startTime, endTime } = dates[date];
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+            const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
+
+            if (
+              start.getDate() === end.getDate() &&
+              start.getHours() >= nightEnd &&
+              end.getHours() <= nightStart
+            ) {
+              totalDaySalary += workHours * hourlyWage;
+            } else {
+              totalNightSalary += workHours * nightTimeWage;
+            }
+          }
+
+          setDaySalary(totalDaySalary);
+          setNightSalary(totalNightSalary);
         }
       }
-    });
+    );
   }, [companyCode, userId, hourlyWage, nightTimeWage]);
+
+  console.log(daySalary);
 
   return (
     <div>
