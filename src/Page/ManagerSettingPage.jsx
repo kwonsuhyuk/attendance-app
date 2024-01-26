@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../firebase";
-import { child, get, getDatabase, ref, set } from "firebase/database";
+import { get, getDatabase, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import {
@@ -68,9 +68,7 @@ const ManagerSettingPage = () => {
         )
       );
       const data = snapshot?.val();
-      console.log(data);
       setCompanyData(data);
-
       setIsLoading(false);
     }
 
@@ -161,7 +159,7 @@ const ManagerSettingPage = () => {
         </div>
       </div>
       <div className="flex flex-col w-1/4">
-        회사 로고{" "}
+        회사 로고
         <img
           src={companyLogo}
           alt="logo"
