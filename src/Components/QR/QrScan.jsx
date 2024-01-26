@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { getDatabase, onValue, ref, set, update, get } from 'firebase/database';
+import { getDatabase, get, ref, set, update } from 'firebase/database';
 import { useSelector } from 'react-redux';
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
   const [scanMessage, setScanMessage] = useState(null);
-  const [isStartTimeSet, setIsStartTimeSet] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser.photoURL; // 회사 코드
   const userId = currentUser.uid; // 유저 아이디
@@ -28,31 +27,29 @@ function QrScan() {
         `companyCode/${companyCode}/users/${userId}/${today}`
       );
 
-      onValue(dbref, async (snapshot) => {
-        if (snapshot.exists() && snapshot.val().startTime && !isStartTimeSet) {
-          await update(
-            ref(db, `companyCode/${companyCode}/users/${userId}/${today}`),
-            {
-              endTime: dateStr,
-            }
-          );
-          setScanMessage('퇴근 인증이 완료되었습니다');
-          console.log(scanMessage);
-        } else if (!snapshot.exists() || !snapshot.val().startTime) {
-          await set(
-            ref(db, `companyCode/${companyCode}/users/${userId}/${today}`),
-            {
-              startTime: dateStr,
-            }
-          );
-          setIsStartTimeSet(true);
-          setScanMessage('출근 인증이 완료되었습니다');
-          console.log(scanMessage);
-          console.log(today);
-        }
-      });
+      const snapshot = await get(dbref);
+      if (snapshot.exists() && snapshot.val().startTime) {
+        await update(
+          ref(db, `companyCode/${companyCode}/users/${userId}/${today}`),
+          {
+            endTime: dateStr,
+          }
+        );
+        setScanMessage('퇴근 인증이 완료되었습니다');
+        console.log(scanMessage);
+      } else {
+        await set(
+          ref(db, `companyCode/${companyCode}/users/${userId}/${today}`),
+          {
+            startTime: dateStr,
+          }
+        );
+        setScanMessage('출근 인증이 완료되었습니다');
+        console.log(scanMessage);
+        console.log(today);
+      }
     });
-  }, [isStartTimeSet]);
+  }, [companyCode, userId]);
 
   return (
     <div className='App'>
