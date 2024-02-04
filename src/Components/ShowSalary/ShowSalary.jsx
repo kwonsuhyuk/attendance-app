@@ -6,14 +6,16 @@ function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
   const [nightSalary, setNightSalary] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const companyCode = currentUser.photoURL; // 회사 코드
-  const userId = currentUser.uid; // 유저 아이디
+  const companyCode = currentUser?.photoURL; // 회사 코드
+  const userId = currentUser?.uid; // 유저 아이디
 
   const hourlyWage = 10000; // 시급
   const nightTimeWage = hourlyWage * 1.5; // 야간 시급
 
   useEffect(() => {
+    setIsLoading(true);
     const db = getDatabase();
     const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
     const nightStartRef = ref(

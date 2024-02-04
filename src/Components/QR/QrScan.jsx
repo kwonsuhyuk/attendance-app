@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { getDatabase, get, ref, set, update } from "firebase/database";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
@@ -35,6 +36,7 @@ function QrScan() {
             endTime: dateStr,
           }
         );
+
         setScanMessage("퇴근 인증이 완료되었습니다");
         console.log(scanMessage);
       } else {
