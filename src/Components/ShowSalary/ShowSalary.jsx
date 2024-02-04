@@ -8,8 +8,8 @@ function ShowSalary() {
   const { currentUser } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
 
-  const companyCode = currentUser.photoURL; // 회사 코드
-  const userId = currentUser.uid; // 유저 아이디
+  const companyCode = currentUser?.photoURL; // 회사 코드
+  const userId = currentUser?.uid; // 유저 아이디
 
   const hourlyWage = 10000; // 시급
   const nightTimeWage = hourlyWage * 1.5; // 야간 시급

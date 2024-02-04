@@ -110,6 +110,7 @@ function EmployeeFirstPage() {
       email: currentUser.email,
       companyCode: companyCode,
       jobName: selectJob,
+      userType: "employee",
     };
     try {
       await set(userRef, userData);
