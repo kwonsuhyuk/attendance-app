@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment/moment.js';
-import { db } from '../../firebase/index.js';
-import { child, get, getDatabase, onValue, ref } from 'firebase/database';
+
+import { get, getDatabase, ref } from 'firebase/database';
 import { useSelector } from 'react-redux';
 
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -30,7 +29,7 @@ function MyCalendar() {
   const [modalContent, setModalContent] = useState('');
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
-  const userId = currentUser.uid;
+  const userId = currentUser?.uid;
 
   useEffect(() => {
     const db = getDatabase();
@@ -54,7 +53,7 @@ function MyCalendar() {
       }
     });
     console.log(workTimes);
-  }, []);
+  }, [companyCode, userId, workTimes]);
 
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === 'month') {

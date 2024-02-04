@@ -93,7 +93,6 @@ function SignupPage() {
         if (position === "manager") {
           navigate("/managerfirst", { state: userData });
         } else if (position === "employee") {
-          console.log("pass");
           navigate("/employeefirst", { state: userData });
         }
       } catch (e) {

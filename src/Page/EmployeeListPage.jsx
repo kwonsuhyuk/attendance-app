@@ -46,14 +46,12 @@ const EmployeeListPage = () => {
   }
 
   return (
-    <div>
-      <div>직원들 </div>
+    <div className="w-full h-screen bg-green-300">
+      <div className="text-lg">직원들</div>
       {employeeList &&
         employeeList.map(
           (user) =>
-            user.id !== currentUser.uid && (
-              <Employee user={user} key={user.uid} />
-            )
+            user.userType !== "admin" && <Employee user={user} key={user.uid} />
         )}
     </div>
   );
