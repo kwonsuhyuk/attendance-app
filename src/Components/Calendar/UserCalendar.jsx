@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment/moment.js';
-
-import { get, getDatabase, ref } from 'firebase/database';
+import { db } from '../../firebase/index.js';
+import { child, get, getDatabase, onValue, ref } from 'firebase/database';
 import { useSelector } from 'react-redux';
 
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -22,18 +23,18 @@ const style = {
   p: 4,
 };
 
-function MyCalendar() {
+function UserCalendar({ id }) {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
-  const userId = currentUser?.uid;
+  const userId = currentUser.uid;
 
   useEffect(() => {
     const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
+    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`); // 이 부분 그 직원의 uid로 바꾸면될듯
 
     Promise.all([get(dateRef)]).then(([dateSnapshot]) => {
       if (dateSnapshot.exists()) {
@@ -53,7 +54,7 @@ function MyCalendar() {
       }
     });
     console.log(workTimes);
-  }, [companyCode, userId, workTimes]);
+  }, []);
 
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === 'month') {
@@ -123,4 +124,4 @@ function MyCalendar() {
   );
 }
 
-export default MyCalendar;
+export default UserCalendar;

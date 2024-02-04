@@ -1,15 +1,15 @@
-import "../firebase";
-import { Route, Routes } from "react-router-dom";
-import AccessCameraPage from "./AccessCameraPage";
-import DateCheckPage from "./DateCheckPage";
-import ShowSalary from "../Components/ShowSalary/ShowSalary";
-import ManagerSettingPage from "./managerSettingPage";
-import EmployeeListPage from "./EmployeeListPage";
-import MenuBar from "../Components/MenuBar";
-import { useEffect, useState } from "react";
-import { get, getDatabase, ref } from "firebase/database";
-import { useSelector } from "react-redux";
-import { ClipLoader } from "react-spinners";
+import '../firebase';
+import { Route, Routes } from 'react-router-dom';
+import AccessCameraPage from './AccessCameraPage';
+import DateCheckPage from './DateCheckPage';
+import ShowSalary from '../Components/ShowSalary/ShowSalary';
+import ManagerSettingPage from './managerSettingPage';
+import EmployeeListPage from './EmployeeListPage';
+import MenuBar from '../Components/MenuBar';
+import { useEffect, useState } from 'react';
+import { get, getDatabase, ref } from 'firebase/database';
+import { useSelector } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
 
 function MainPage() {
   const { currentUser, userType } = useSelector((state) => state.user);
@@ -68,6 +68,7 @@ function MainPage() {
         <Route path="/setting" element={<ManagerSettingPage />} />
         <Route path="/employeelist" element={<EmployeeListPage />} />
       </Routes>
+      <MyCalendar />
     </div>
   );
 }
