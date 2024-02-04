@@ -23,7 +23,7 @@ const style = {
   p: 4,
 };
 
-function MyCalendar() {
+function UserCalendar({ id }) {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ function MyCalendar() {
 
   useEffect(() => {
     const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
+    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`); // 이 부분 그 직원의 uid로 바꾸면될듯
 
     Promise.all([get(dateRef)]).then(([dateSnapshot]) => {
       if (dateSnapshot.exists()) {
@@ -124,4 +124,4 @@ function MyCalendar() {
   );
 }
 
-export default MyCalendar;
+export default UserCalendar;
