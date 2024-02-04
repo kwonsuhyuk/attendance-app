@@ -16,7 +16,7 @@ function ShowSalary() {
   useEffect(() => {
     const dbref = ref(
       getDatabase(),
-      `companyCode/${companyCode}/users/${userId}`
+      `companyCode/${companyCode}/users/${userId}/`
     );
     const nightStartRef = ref(
       getDatabase(),
