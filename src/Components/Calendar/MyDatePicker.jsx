@@ -45,7 +45,6 @@ const MyDatePicker = () => {
       dateFormat='yyyy.MM.dd'
       shouldCloseOnSelect
       minDate={new Date('2000-01-01')}
-      maxDate={new Date()}
       onChange={handleDateChange}
       inline
     />
