@@ -6,6 +6,7 @@ function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
   const [nightSalary, setNightSalary] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
   const companyCode = currentUser.photoURL; // 회사 코드
   const userId = currentUser.uid; // 유저 아이디
@@ -14,6 +15,7 @@ function ShowSalary() {
   const nightTimeWage = hourlyWage * 1.5; // 야간 시급
 
   useEffect(() => {
+    setIsLoading(true);
     const db = getDatabase();
     const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
     const nightStartRef = ref(
@@ -25,8 +27,8 @@ function ShowSalary() {
       `companyCode/${companyCode}/companyInfo/nightEnd`
     );
 
-    Promise.all([get(dateRef), get(nightStartRef), get(nightEndRef)]).then(
-      ([dateSnapshot, nightStartSnapshot, nightEndSnapshot]) => {
+    Promise.all([get(dateRef), get(nightStartRef), get(nightEndRef)])
+      .then(([dateSnapshot, nightStartSnapshot, nightEndSnapshot]) => {
         if (
           dateSnapshot.exists() &&
           nightStartSnapshot.exists() &&
@@ -43,6 +45,8 @@ function ShowSalary() {
             const { startTime, endTime } = dates[date];
             const start = new Date(startTime);
             const end = new Date(endTime);
+            console.log(start);
+            console.log(end);
             const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
 
             if (
@@ -59,12 +63,24 @@ function ShowSalary() {
           setDaySalary(totalDaySalary);
           setNightSalary(totalNightSalary);
         }
-      }
-    );
+      })
+      .then(setIsLoading(false));
   }, [companyCode, userId, hourlyWage, nightTimeWage]);
 
   console.log(daySalary);
-
+  if (isLoading) {
+    return (
+      <div className='flex flex-col justify-center items-center h-screen w-screen'>
+        <ClipLoader
+          color='black'
+          size={100}
+          aria-label='Loading Spinner'
+          data-testid='loader'
+        />
+        <h3>로딩 중입니다.</h3>
+      </div> // 로딩 스피너
+    );
+  }
   return (
     <div>
       {daySalary > 0 && <h1>당신의 오늘 주간 급여는 {daySalary}원 입니다.</h1>}
