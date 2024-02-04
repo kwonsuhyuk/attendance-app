@@ -70,12 +70,12 @@ function ShowSalary() {
   console.log(daySalary);
   if (isLoading) {
     return (
-      <div className='flex flex-col justify-center items-center h-screen w-screen'>
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
-          color='black'
+          color="black"
           size={100}
-          aria-label='Loading Spinner'
-          data-testid='loader'
+          aria-label="Loading Spinner"
+          data-testid="loader"
         />
         <h3>로딩 중입니다.</h3>
       </div> // 로딩 스피너

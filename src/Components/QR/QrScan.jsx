@@ -55,9 +55,9 @@ function QrScan() {
   }, [companyCode, userId]);
 
   return (
-    <div className='App'>
+    <div className="App">
       <h1>Qr 코드를 스캔하세요</h1>
-      {scanMessage ? <div>{scanMessage}</div> : <div id='reader'></div>}
+      {scanMessage ? <div>{scanMessage}</div> : <div id="reader"></div>}
     </div>
   );
 }
