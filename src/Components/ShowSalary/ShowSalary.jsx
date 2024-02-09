@@ -2,19 +2,23 @@ import { child, get, getDatabase, onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { SalaryType } from '../Utils/SalaryType';
 
 function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
   const [nightSalary, setNightSalary] = useState(0);
+  const [holidayAndWeekendSalary, setHolidayAndWeekendSalary] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
 
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
+  const { salaryPayment, monthlyPay } = SalaryType(companyCode, userId);
+  const hourlyWage = salaryPayment; // 시급
+  const monthlyWage = monthlyPay; //월급인 경우
 
-  const hourlyWage = 10000; // 시급
-  const nightTimeWage = hourlyWage * 1.5; // 야간 시급
-  const holidayAndWeekendWage = hourlyWage * 1.5; // 공휴일 및 주말 시급
+  // const nightTimeWage = hourlyWage * 1.5; // 야간 시급
+  // const holidayAndWeekendWage = hourlyWage * 1.5; // 공휴일 및 주말 시급
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,12 +36,22 @@ function ShowSalary() {
       db,
       `companyCode/${companyCode}/companyInfo/holidayList`
     );
+    const holidayPayRef = ref(
+      db,
+      `companyCode/${companyCode}/companyInfo/holidayPay`
+    );
+    const isNightPayRef = ref(
+      db,
+      `companyCode/${companyCode}/companyInfo/isNightPay`
+    );
 
     Promise.all([
       get(dateRef),
       get(nightStartRef),
       get(nightEndRef),
       get(holidayListRef),
+      get(holidayPayRef),
+      get(isNightPayRef),
     ])
       .then(
         ([
@@ -45,20 +59,27 @@ function ShowSalary() {
           nightStartSnapshot,
           nightEndSnapshot,
           holidayListSnapshot,
+          holidayPaySnapshot,
+          isNightPaySnapshot,
         ]) => {
           if (
             dateSnapshot.exists() &&
             nightStartSnapshot.exists() &&
             nightEndSnapshot.exists() &&
-            holidayListSnapshot.exists()
+            holidayListSnapshot.exists() &&
+            holidayPaySnapshot.exists() &&
+            isNightPaySnapshot.exists()
           ) {
             const dates = dateSnapshot.val();
             const nightStart = nightStartSnapshot.val();
             const nightEnd = nightEndSnapshot.val();
             const holidayList = holidayListSnapshot.val();
+            const holidayPay = holidayPaySnapshot.val();
+            const isNightPay = isNightPaySnapshot.val();
 
             let totalDaySalary = 0;
             let totalNightSalary = 0;
+            let totalWeekendOrHolidaySalary = 0;
 
             for (let date in dates) {
               const { startTime, endTime } = dates[date];
@@ -68,30 +89,44 @@ function ShowSalary() {
               const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
 
               const dateStr = start.toISOString().split('T')[0]; // YYYY-MM-DD 형식
-              const isHoliday = holidayList[dateStr]; // 공휴일인지 확인
-              const isWeekend = start.getDay() === 0 || start.getDay() === 6; // 주말인지 확인
+              const isHolidayOrWeekend =
+                holidayList[dateStr] ||
+                start.getDay() === 0 ||
+                start.getDay() === 6; // 공휴일 또는 주말인지 확인
 
-              const wage =
-                isHoliday || isWeekend ? holidayAndWeekendWage : hourlyWage; // 공휴일이거나 주말이면 공휴일 시급, 아니면 일반 시급
+              let wage = hourlyWage;
 
-              if (
-                start.getDate() === end.getDate() &&
-                start.getHours() >= nightEnd &&
-                end.getHours() <= nightStart
+              if (isHolidayOrWeekend) {
+                wage = hourlyWage * holidayPay;
+                totalWeekendOrHolidaySalary += wage * workHours;
+              } else if (
+                start.getDate() === end.getDate() && //야간의 경우인데 같은 날 20시부터 22시까지 할 경우
+                start.getHours() >= nightStart &&
+                end.getHours() <= 24
               ) {
-                totalDaySalary += workHours * wage; // 시급에 따른 급여 계산
+                wage = hourlyWage * isNightPay;
+                totalNightSalary += wage * workHours;
+              } else if (
+                start.getDate() !== end.getDate() && // 야간의 경우인데 다른 날이고 오늘 20시부터 다음날 06시까지 근무할 경우
+                start.getHours() >= nightStart &&
+                end.getHours() <= nightEnd
+              ) {
+                wage = hourlyWage * isNightPay;
+                totalNightSalary += wage * workHours;
               } else {
-                totalNightSalary += workHours * nightTimeWage;
+                wage = hourlyWage;
+                totalDaySalary += wage * workHours;
               }
             }
 
             setDaySalary(totalDaySalary);
             setNightSalary(totalNightSalary);
+            setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
           }
         }
       )
       .finally(() => setIsLoading(false));
-  }, [companyCode, userId, hourlyWage, nightTimeWage, holidayAndWeekendWage]);
+  }, [companyCode, userId, hourlyWage]);
 
   if (isLoading) {
     return (
@@ -112,7 +147,12 @@ function ShowSalary() {
       {nightSalary > 0 && (
         <h1>당신의 오늘 야간 급여는 {nightSalary}원 입니다.</h1>
       )}
-      ShowSalary
+      {holidayAndWeekendSalary > 0 && (
+        <h1>
+          오늘은 주말입니다. 당신의 오늘 급여는 {holidayAndWeekendSalary}원
+          입니다.
+        </h1>
+      )}
     </div>
   );
 }
