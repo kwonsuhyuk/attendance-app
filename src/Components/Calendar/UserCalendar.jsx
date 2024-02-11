@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -21,6 +22,7 @@ function UserCalendar({ user }) {
       db,
       `companyCode/${companyCode}/users/${user.uid}/date`
     );
+
 
     Promise.all([get(dateRef)]).then(([dateSnapshot]) => {
       if (dateSnapshot.exists()) {
@@ -86,6 +88,52 @@ function UserCalendar({ user }) {
     //   setShowText(true);
     // }
     // setSelectedDate(value);
+          const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
+          // Store work hours in the new object
+          newWorkTimes[date] = workHours;
+        }
+        // Update state with the new object
+        setWorkTimes(newWorkTimes);
+      }
+    });
+    console.log(workTimes);
+  }, []);
+
+  const tileClassName = ({ date: tileDate, view }) => {
+    if (view === 'month') {
+      const dateStr = tileDate.toLocaleDateString('fr-CA');
+      const workHours = workTimes[dateStr];
+      if (workHours) {
+        if (workHours >= 8) {
+          return 'bg-green-500';
+        } else if (workHours >= 4) {
+          return 'bg-yellow-500';
+        } else {
+          return 'bg-red-500';
+        }
+      }
+    }
+  };
+
+  const onClickDay = (value, event) => {
+    const dateStr = value.toLocaleDateString('fr-CA');
+    const workHours = workTimes[dateStr];
+    if (workHours) {
+      setModalContent(
+        <>
+          당신이 {dateStr}에 일한 시간은{' '}
+          <span style={{ color: 'blue' }}>{workHours}</span> 시간 입니다.
+        </>
+      );
+    } else {
+      setModalContent(`당신은 ${dateStr}에 근무하지 않았습니다.`);
+    }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+
   };
 
   const onChange = (date) => {
