@@ -51,7 +51,7 @@ function MainPage() {
       <div className="flex gap-5">
         <div>{currentCompany?.companyName}</div>
         <img
-          src={currentCompany.companyLogo}
+          src={currentCompany?.companyLogo}
           alt="회사로고"
           className="w-10 h-10"
         />

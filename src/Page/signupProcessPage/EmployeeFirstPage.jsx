@@ -29,8 +29,8 @@ function EmployeeFirstPage() {
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentCompanyInfo, setCurrentCompanyInfo] = useState();
-  const [jobList, setJobList] = useState({});
-  const [selectJob, setSelectJob] = useState("");
+  const [jobList, setJobList] = useState([]);
+  const [selectJob, setSelectJob] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +60,9 @@ function EmployeeFirstPage() {
         const snapshot = await get(compRef);
         if (snapshot.exists()) {
           setCurrentCompanyInfo(snapshot.val());
-          setJobList(snapshot.val().jobName);
+          setJobList(
+            snapshot.val().jobName ? Object.values(snapshot.val().jobName) : []
+          );
         }
       } catch (e) {
         console.log(e.message);
@@ -79,10 +81,6 @@ function EmployeeFirstPage() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen w-screen">
@@ -96,6 +94,7 @@ function EmployeeFirstPage() {
       </div>
     );
   }
+
   const handleGoMain = async () => {
     setLoading(true);
     handleNext();
@@ -109,8 +108,9 @@ function EmployeeFirstPage() {
       uid: state.id,
       email: currentUser.email,
       companyCode: companyCode,
-      jobName: selectJob,
+      jobName: selectJob.jobName,
       userType: "employee",
+      salaryAmount: selectJob?.defaultPay,
     };
     try {
       await set(userRef, userData);
@@ -190,18 +190,23 @@ function EmployeeFirstPage() {
                   </span>
                 </FormLabel>
                 <RadioGroup
+                  value={selectJob.jobName}
                   sx={{ display: "flex", flexDirection: "column" }}
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group">
+                  name="row-radio-buttons-group"
+                  onChange={(e) =>
+                    setSelectJob(
+                      jobList.find((job) => job.jobName === e.target.value)
+                    )
+                  }>
                   {jobList &&
-                    Object.entries(jobList).map(([key, job], index) => (
+                    jobList.map((job, index) => (
                       <FormControlLabel
                         key={index}
                         value={job.jobName}
                         control={<Radio />}
                         label={job.jobName}
-                        onChange={(e) => setSelectJob(e.target.value)}
                       />
                     ))}
                 </RadioGroup>

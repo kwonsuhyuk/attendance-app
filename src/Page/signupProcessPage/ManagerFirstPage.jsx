@@ -30,16 +30,11 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import "../../firebase";
-import {
-  getDatabase,
-  push,
-  ref,
-  serverTimestamp,
-  set,
-} from "firebase/database";
+import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
 import QrGenerator from "../../Components/QR/QrGenerator";
+import AddCardIcon from "@mui/icons-material/AddCard";
 
 const steps = ["회사 기본 설정", "회사 추가 설정", "직원 초대 코드"];
 const companyID = uuidv4().slice(0, 8);
@@ -67,6 +62,11 @@ function ManagerFirstPage() {
   const [jobTags, setJobTags] = useState([]);
   const [nightStart, setNightStart] = useState("");
   const [nightEnd, setNightEnd] = useState("");
+  const [day, setDay] = useState(1);
+
+  const handleChange = (event) => {
+    setDay(event.target.value);
+  };
 
   const handleNightStartChange = (event) => {
     setNightStart(event.target.value);
@@ -194,6 +194,7 @@ function ManagerFirstPage() {
       isdaynight: isdaynight,
       nightStart: nightStart,
       nightEnd: nightEnd,
+      payCheckDay: day,
       isNightPay: parseFloat(isNightPay),
       isholiday: isholiday,
       holidayPay: parseFloat(holidayPay),
@@ -505,6 +506,33 @@ function ManagerFirstPage() {
                 )}
               </ul>
             </div>
+            {/* 급여 정산일 설정 */}
+            <div className="text-gray-500 w-3/5">
+              <div className="text-black mb-3 font-black">
+                급여 정산 날짜 입력
+              </div>
+              매월
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={day}
+                className="h-10 ml-5"
+                onChange={handleChange}>
+                {[...Array(31)].map((x, i) => (
+                  <MenuItem key={i} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
+                ))}
+              </Select>
+              일
+              <div className="text-xs mt-3">
+                (급여 정산 시,전 달 <span className="text-red-500">{day}</span>
+                일 부터 {day != 1 ? "이번 달 " : "전 달 "}
+                <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>
+                일 까지 급여를 계산합니다.)
+              </div>
+            </div>
+
             {/* 주간야간 시간 설정 */}
             <div className="text-gray-500 w-3/5">
               <div className="text-black mb-3 font-black">
@@ -696,12 +724,30 @@ function ManagerFirstPage() {
                     </li>
                   ))}
                 </ul>
+                <div className="text-black font-black flex items-center gap-3">
+                  <AddCardIcon />
+                  급여 정산 날짜
+                </div>
+                <div className="mb-10 ml-3">
+                  <div className="text-s underline">
+                    매월 <span className="text-red-500">{day}</span> 일
+                  </div>
+                  <div className="text-xs mt-3">
+                    (급여 정산 시,전 달{" "}
+                    <span className="text-red-500">{day}</span>일 부터{" "}
+                    {day != 1 ? "이번 달 " : "전 달 "}
+                    <span className="text-red-500">
+                      {day === 1 ? 31 : day - 1}
+                    </span>
+                    일 까지 급여를 계산합니다.)
+                  </div>
+                </div>
                 {/* 주말 야간 , 공휴일 선택 유무 배당 확인 */}
                 <div className="text-black mb-3 font-black flex items-center gap-3">
                   <DateRangeIcon />
                   주간 야간 공휴일 구분 여부
                 </div>
-                <div className="grid grid-cols-2 h-full gap-3">
+                <div className="grid grid-cols-2 h-full gap-3 ml-3">
                   <div
                     style={{ borderRight: "1px solid #e9e9e9" }}
                     className="flex flex-col gap-5">
