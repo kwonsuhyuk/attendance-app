@@ -88,16 +88,8 @@ function UserCalendar({ user }) {
     //   setShowText(true);
     // }
     // setSelectedDate(value);
-          const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
-          // Store work hours in the new object
-          newWorkTimes[date] = workHours;
-        }
-        // Update state with the new object
-        setWorkTimes(newWorkTimes);
-      }
-    });
-    console.log(workTimes);
-  }, []);
+  };
+
 
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === 'month') {
@@ -113,22 +105,6 @@ function UserCalendar({ user }) {
         }
       }
     }
-  };
-
-  const onClickDay = (value, event) => {
-    const dateStr = value.toLocaleDateString('fr-CA');
-    const workHours = workTimes[dateStr];
-    if (workHours) {
-      setModalContent(
-        <>
-          당신이 {dateStr}에 일한 시간은{' '}
-          <span style={{ color: 'blue' }}>{workHours}</span> 시간 입니다.
-        </>
-      );
-    } else {
-      setModalContent(`당신은 ${dateStr}에 근무하지 않았습니다.`);
-    }
-    setOpen(true);
   };
 
   const handleClose = () => {
