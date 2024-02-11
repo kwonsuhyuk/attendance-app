@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
-import { getDatabase, get, ref, set, update } from 'firebase/database';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+
+import React, { useState, useEffect } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
+import { getDatabase, get, ref, set, update } from "firebase/database";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
   const [scanMessage, setScanMessage] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
-  const companyCode = currentUser.photoURL; // 회사 코드
-  const userId = currentUser.uid; // 유저 아이디
+
+  const companyCode = currentUser?.photoURL; // 회사 코드
+  const userId = currentUser?.uid; // 유저 아이디
+  const today = new Date().toISOString().slice(0, 10); // 오늘 날짜
+
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner('reader', {
+    const scanner = new Html5QrcodeScanner("reader", {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -41,6 +46,7 @@ function QrScan() {
           db,
           `companyCode/${companyCode}/users/${userId}/date/${tomorrowForNowStr}`
         );
+
         const nextDaySnapshot = await get(nextDayRef);
         if (nextDaySnapshot.exists() && nextDaySnapshot.val().startTime) {
           await update(nextDayRef, { endTime: dateStr });
@@ -55,6 +61,7 @@ function QrScan() {
         await set(dbref, { startTime: dateStr });
         setScanMessage('출근 인증이 완료되었습니다');
         toast.success('출근 인증이 완료되었습니다');
+
       }
     });
   }, [companyCode, userId]);

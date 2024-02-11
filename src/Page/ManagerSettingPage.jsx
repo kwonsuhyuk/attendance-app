@@ -37,6 +37,7 @@ const ManagerSettingPage = () => {
   const [nightEnd, setNightEnd] = useState(0);
   const [nightStart, setNightStart] = useState(0);
   const [jobNameInput, setJobNameInput] = useState("");
+  const [day, setDay] = useState(1);
 
   const handleInfoUpdate = async () => {
     await set(
@@ -53,6 +54,7 @@ const ManagerSettingPage = () => {
         nightEnd,
         nightStart,
         jobName,
+        payCheckDay: day,
       }
     );
     toast.success("정보 수정을 완료하였습니다.");
@@ -97,6 +99,7 @@ const ManagerSettingPage = () => {
 
   useEffect(() => {
     if (companyData) {
+      setDay(companyData.payCheckDay);
       setCompanyLogo(companyData.companyLogo);
       setCompanyName(companyData.companyName);
       setIsdaynight(companyData.isdaynight);
@@ -134,6 +137,9 @@ const ManagerSettingPage = () => {
 
     setJobNameInput("");
   };
+  const handlePayCheckDayChange = (event) => {
+    setDay(event.target.value);
+  };
 
   if (isLoading) {
     return (
@@ -150,7 +156,7 @@ const ManagerSettingPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-20">
       managerSettingPage
       <div className="flex flex-col w-1/4">
         회사 이름
@@ -278,8 +284,31 @@ const ManagerSettingPage = () => {
           ))}
         </ul>
       </div>
-      <div className="flex flex-col w-2/3">
-        주간 야간 공휴일 설정
+      <div className="text-gray-500 w-3/5 mb-10">
+        <div className="text-black mb-3 font-black">급여 정산 날짜 입력</div>
+        매월
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={day}
+          className="h-10 ml-5"
+          onChange={handlePayCheckDayChange}>
+          {[...Array(31)].map((x, i) => (
+            <MenuItem key={i} value={i + 1}>
+              {i + 1}
+            </MenuItem>
+          ))}
+        </Select>
+        일
+        <div className="text-xs mt-3">
+          (급여 정산 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
+          {day != 1 ? "이번 달 " : "전 달 "}
+          <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일
+          까지 급여를 계산합니다.)
+        </div>
+      </div>
+      <div className="flex flex-col w-2/3 ">
+        <div className="text-black mb-3 font-black">주간 야간 공휴일 설정</div>
         <div className="text-xs mb-7">
           (주간, 야간 ,공휴일 등을 구분해서 급여를 지급할지 설정합니다.)
         </div>
