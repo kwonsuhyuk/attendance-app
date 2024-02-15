@@ -120,21 +120,21 @@ function ManagerFirstPage() {
     setJobNameInput("");
   };
 
-  const handlePayWayChange = (index, value) => {
-    setJobTags((prevTags) => {
-      const newTags = [...prevTags];
-      newTags[index].payWay = value;
-      return newTags;
-    });
-  };
+  // const handlePayWayChange = (index, value) => {
+  //   setJobTags((prevTags) => {
+  //     const newTags = [...prevTags];
+  //     newTags[index].payWay = value;
+  //     return newTags;
+  //   });
+  // };
 
-  const handlePayChange = (index, value) => {
-    setJobTags((prev) => {
-      const updatedTags = [...prev];
-      updatedTags[index].defaultPay = parseInt(value) || "";
-      return updatedTags;
-    });
-  };
+  // const handlePayChange = (index, value) => {
+  //   setJobTags((prev) => {
+  //     const updatedTags = [...prev];
+  //     updatedTags[index].defaultPay = parseInt(value) || "";
+  //     return updatedTags;
+  //   });
+  // };
 
   useEffect(() => {
     const text = document.querySelector(".animate-text");
@@ -172,8 +172,8 @@ function ManagerFirstPage() {
       const jobRef = ref(db, `companyCode/${companyID}/companyInfo/jobName`);
       set(push(jobRef), {
         jobName: item.jobName,
-        payWay: item.payWay,
-        defaultPay: item.defaultPay,
+        // payWay: item.payWay,
+        // defaultPay: item.defaultPay,
       });
     });
   };
@@ -426,7 +426,7 @@ function ManagerFirstPage() {
                 </ul>
               </div>
             </div>
-            <div className="text-gray-500">
+            {/* <div className="text-gray-500">
               <div className="text-black mb-3 font-black">
                 직책별 기본 급여 설정
               </div>
@@ -505,7 +505,7 @@ function ManagerFirstPage() {
                   ))
                 )}
               </ul>
-            </div>
+            </div> */}
             {/* 급여 정산일 설정 */}
             <div className="text-gray-500 w-3/5">
               <div className="text-black mb-3 font-black">
@@ -702,13 +702,15 @@ function ManagerFirstPage() {
                 </div>
                 <div style={{ borderBottom: "1px solid #e9e9e9 w-1" }}></div>
                 {/* 직책보여줌 */}
-                <div className="text-black font-black flex items-center gap-3">
-                  <WorkIcon />
-                  직책{" "}
-                  <span className="text-xs text-gray-500 font-thin">
+                <div className="text-black font-black">
+                  <div>
+                    <WorkIcon />
+                    직책
+                  </div>
+                  <div className="text-xs text-gray-500 font-thin">
                     (보여지는 급여는 기본 설정 급여이며, 직원별 급여는 가입 후
                     직원별로 설정하실 수 있습니다.)
-                  </span>
+                  </div>
                 </div>
                 <ul className="text-base text-gray-500 flex flex-col gap-5 mb-10">
                   {jobTags.map((tagEl, index) => (
@@ -717,10 +719,10 @@ function ManagerFirstPage() {
                       className="flex gap-5 items-end"
                       style={{ borderBottom: "1px solid #e9e9e9" }}>
                       <div className="text-lg text-gray-800">
-                        {tagEl.jobName}
+                        - {tagEl.jobName}
                       </div>
-                      <div>{tagEl.payWay}</div>
-                      <div>{formatMoney(tagEl.defaultPay)}원</div>
+                      {/* <div>{tagEl.payWay}</div>
+                      <div>{formatMoney(tagEl.defaultPay)}원</div> */}
                     </li>
                   ))}
                 </ul>

@@ -19,6 +19,7 @@ import "../../firebase";
 import { get, getDatabase, push, ref, set } from "firebase/database";
 import gsap from "gsap";
 import { toast } from "react-toastify";
+import { Input } from "antd";
 
 const steps = ["회사 직책 선택", "사용법"];
 
@@ -31,6 +32,8 @@ function EmployeeFirstPage() {
   const [currentCompanyInfo, setCurrentCompanyInfo] = useState();
   const [jobList, setJobList] = useState([]);
   const [selectJob, setSelectJob] = useState([]);
+  const [salaryType, setSalaryType] = useState("");
+  const [salaryAmount, setSalaryAmount] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -110,7 +113,8 @@ function EmployeeFirstPage() {
       companyCode: companyCode,
       jobName: selectJob.jobName,
       userType: "employee",
-      salaryAmount: selectJob?.defaultPay,
+      salaryAmount: parseInt(salaryAmount),
+      salaryType: salaryType,
     };
     try {
       await set(userRef, userData);
@@ -161,9 +165,10 @@ function EmployeeFirstPage() {
           <Box
             sx={{
               height: "75%",
-              padding: "0 2rem",
+              padding: "0 1rem",
               display: "flex",
               flexDirection: "column",
+              overflowY: "scroll",
               gap: 10,
             }}
             className="text-gray-500 ">
@@ -175,15 +180,12 @@ function EmployeeFirstPage() {
               <br />
               커뮤니티에 오신 것을 환영합니다!
             </Typography>
-            <Box
-              sx={{
-                overflowY: "scroll",
-              }}>
+            <Box>
               <FormControl>
                 <FormLabel
                   id="demo-row-radio-buttons-group-label"
                   className="flex flex-col"
-                  sx={{ borderBottom: "1px solid #e9e9e9" }}>
+                  sx={{ borderBottom: "1px solid #e9e9e9", color: "black" }}>
                   회사 직종 선택
                   <span className="text-red-500 text-xs">
                     (직종은 관리자에 의해 임의로 재변경될 수 있습니다.)
@@ -211,6 +213,54 @@ function EmployeeFirstPage() {
                     ))}
                 </RadioGroup>
               </FormControl>
+            </Box>
+            <Box>
+              <FormControl>
+                <FormLabel
+                  id="demo-row-radio-buttons-group-label"
+                  className="flex flex-col"
+                  sx={{ borderBottom: "1px solid #e9e9e9", color: "black" }}>
+                  급여 지급 방법 및 급여 입력
+                  <span className="text-red-500 text-xs">
+                    (급여 지급 방법 및 급여 또한 관리자에 의해 재변경될 수
+                    있습니다.)
+                  </span>
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  onChange={(e) => setSalaryType(e.target.value)}>
+                  <FormControlLabel
+                    value="monthlyPay"
+                    control={<Radio />}
+                    label="월급"
+                  />
+                  <FormControlLabel
+                    value="daliyPay"
+                    control={<Radio />}
+                    label="일급"
+                  />
+                  <FormControlLabel
+                    value="hourPay"
+                    control={<Radio />}
+                    label="시급"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              {salaryType && (
+                <>
+                  <div className="text-red-500 text-xs">
+                    (본인 급여를 모르신다면 0원을 입력해주세요.)
+                  </div>
+                  <Input
+                    placeholder="회사에서 안내받은 급여를 입력하세요."
+                    value={salaryAmount}
+                    onChange={(e) => setSalaryAmount(e.target.value)}
+                  />
+                </>
+              )}
             </Box>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

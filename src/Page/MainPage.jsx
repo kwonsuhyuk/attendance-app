@@ -57,9 +57,11 @@ function MainPage() {
           className="w-10 h-10"
         />
       </div>
-      <div className="bg-red-300">
-        <ShowSalary />
-      </div>
+      {userType === "employee" && (
+        <div className="bg-red-300">
+          <ShowSalary />
+        </div>
+      )}
       <div>
         <MenuBar />
       </div>
