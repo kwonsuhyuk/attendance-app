@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment/moment.js';
 
-import { get, getDatabase, ref } from 'firebase/database';
+import { get, getDatabase, ref, update, set } from 'firebase/database';
 import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -21,6 +21,16 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+function getNextDate(dateStr) {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() + 1);
+  return date.toISOString().split('T')[0];
+}
+function getPrevDate(dateStr) {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() - 1);
+  return date.toISOString().split('T')[0];
+}
 
 function MyCalendar() {
   const [date, setDate] = useState(new Date());
@@ -32,28 +42,89 @@ function MyCalendar() {
   const userId = currentUser?.uid;
 
   useEffect(() => {
-    const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
+    const fetchWorkTimes = async () => {
+      const db = getDatabase();
+      const dateRef = ref(
+        db,
+        `companyCode/${companyCode}/users/${userId}/date`
+      );
+      const snapshot = await get(dateRef);
 
-    Promise.all([get(dateRef)]).then(([dateSnapshot]) => {
-      if (dateSnapshot.exists()) {
-        const dates = dateSnapshot.val();
-        // Initialize a new object to store work times
+      if (snapshot.exists()) {
+        const dates = snapshot.val();
         let newWorkTimes = {};
+
         for (let date in dates) {
           const { startTime, endTime } = dates[date];
-          const start = new Date(startTime);
-          const end = new Date(endTime);
-          const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
-          // Store work hours in the new object
-          newWorkTimes[date] = workHours;
+          let start, end, workDate;
+
+          if (startTime) {
+            start = new Date(startTime);
+            workDate = start.toISOString().split('T')[0];
+            //console.log(start);
+          } else {
+            const prevDay = getPrevDate(date);
+            const prevDayRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/date/${prevDay}`
+            );
+            const prevDaySnapShot = await get(prevDayRef);
+            if (prevDaySnapShot.exists() && prevDaySnapShot.val().startTime) {
+              start = new Date(prevDaySnapShot.val().startTime);
+              //console.log(start);
+            } else {
+              console.warn(`${date}의 시작 시간이 없습니다.`);
+            }
+          }
+
+          if (endTime) {
+            end = new Date(endTime);
+            //console.log(end);
+          } else {
+            const nextDay = getNextDate(date);
+            const nextDayRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/date/${nextDay}`
+            );
+            const nextDaySnapshot = await get(nextDayRef);
+
+            if (nextDaySnapshot.exists() && nextDaySnapshot.val().endTime) {
+              end = new Date(nextDaySnapshot.val().endTime);
+              console.log(end);
+            } else {
+              console.warn(
+                `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`
+              );
+            }
+          }
+
+          if (start && end) {
+            let workHours;
+            if (start < end) {
+              workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
+            } else {
+              workHours = Number(
+                (24 - start.getHours() + end.getHours()).toFixed(1)
+              );
+            }
+            const workDateRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`
+            );
+            const workDateSnapshot = await get(workDateRef);
+            if (workDateSnapshot.exists() && workDateSnapshot.val()) {
+              await update(workDateRef, { workHour: workHours });
+            }
+            newWorkTimes[workDate] = workHours;
+          }
         }
-        // Update state with the new object
+
         setWorkTimes(newWorkTimes);
       }
-    });
-    console.log(workTimes);
-  }, [companyCode, userId, workTimes]);
+    };
+
+    fetchWorkTimes();
+  }, [companyCode, userId]);
 
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === 'month') {
@@ -73,8 +144,9 @@ function MyCalendar() {
 
   const onClickDay = (value, event) => {
     const dateStr = value.toLocaleDateString('fr-CA');
-    const workHours = workTimes[dateStr];
-    if (workHours) {
+
+    if (workTimes[dateStr]) {
+      const workHours = workTimes[dateStr];
       setModalContent(
         <>
           당신이 {dateStr}에 일한 시간은{' '}
