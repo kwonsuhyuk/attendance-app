@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { get, getDatabase, ref } from 'firebase/database';
 import { useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
+import MyCalendar from '../Components/Calendar/MyCalendar';
 
 function MainPage() {
   const { currentUser, userType } = useSelector((state) => state.user);
