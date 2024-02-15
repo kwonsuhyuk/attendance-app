@@ -19,6 +19,7 @@ function ShowSalary() {
   const [isLoading, setIsLoading] = useState(false);
   const [today, setToday] = useState('');
   const [workHours, setWorkHours] = useState(0);
+  const [executed, setExecuted] = useState(false);
 
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
@@ -28,6 +29,7 @@ function ShowSalary() {
 
   useEffect(() => {
     setIsLoading(true);
+
     const db = getDatabase();
     const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
     const nightStartRef = ref(
@@ -50,6 +52,10 @@ function ShowSalary() {
       db,
       `companyCode/${companyCode}/companyInfo/isNightPay`
     );
+    const workHourRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${userId}/workDates/${today}`
+    );
 
     Promise.all([
       get(dateRef),
@@ -58,6 +64,7 @@ function ShowSalary() {
       get(holidayListRef),
       get(holidayPayRef),
       get(isNightPayRef),
+      get(workHourRef),
     ])
       .then(
         async ([
@@ -67,6 +74,7 @@ function ShowSalary() {
           holidayListSnapshot,
           holidayPaySnapshot,
           isNightPaySnapshot,
+          workHourSnapshot,
         ]) => {
           if (
             dateSnapshot.exists() &&
@@ -74,7 +82,8 @@ function ShowSalary() {
             nightEndSnapshot.exists() &&
             holidayListSnapshot.exists() &&
             holidayPaySnapshot.exists() &&
-            isNightPaySnapshot.exists()
+            isNightPaySnapshot.exists() &&
+            workHourSnapshot.exists()
           ) {
             const dates = dateSnapshot.val();
             const nightStart = nightStartSnapshot.val();
@@ -82,6 +91,7 @@ function ShowSalary() {
             const holidayList = holidayListSnapshot.val();
             const holidayPay = holidayPaySnapshot.val();
             const isNightPay = isNightPaySnapshot.val();
+            const workHours = workHourSnapshot.val().workHour;
 
             let totalDaySalary = 0;
             let totalNightSalary = 0;
@@ -158,8 +168,8 @@ function ShowSalary() {
             );
             const workDateSnapshot = await get(workDateRef);
             const workDates = workDateSnapshot.val();
-
-            for (let workDate in workDates) {
+            let workDate;
+            for (workDate in workDates) {
               if (workDate == dateStr) {
                 const workHourRef = ref(
                   db,
@@ -217,21 +227,21 @@ function ShowSalary() {
             setNightSalary(totalNightSalary);
             setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
 
-            const workHourRef = ref(
-              db,
-              `companyCode/${companyCode}/users/${userId}/workDates/${today}`
-            );
-            await update(workHourRef, {
-              workHour: workHours,
-              daySalary: daySalary,
-              nightSalary: nightSalary,
-              holidayAndWeekendSalary: holidayAndWeekendSalary,
-            });
+            if (workDateSnapshot.exists() && workDateSnapshot.val().workHour) {
+              await update(workHourRef, {
+                workHour: workHours,
+                daySalary: daySalary,
+                nightSalary: nightSalary,
+                holidayAndWeekendSalary: holidayAndWeekendSalary,
+              });
+            }
           }
         }
       )
-      .finally(() => setIsLoading(false));
-  }, [companyCode, userId, workHours, today]);
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [companyCode, userId, today]);
 
   if (isLoading) {
     return (
@@ -263,6 +273,9 @@ function ShowSalary() {
           {today}는 주말 또는 공휴일입니다. 당신의 급여는
           {holidayAndWeekendSalary}원 입니다.
         </h1>
+      )}
+      {monthlyWage > 0 && (
+        <h1>당신은 월급쟁이입니다. 당신의 급여는 {monthlyWage}원 입니다.</h1>
       )}
     </div>
   );
