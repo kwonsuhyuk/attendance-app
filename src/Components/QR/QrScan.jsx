@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
-import { getDatabase, get, ref, set, update } from "firebase/database";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
+import { getDatabase, get, ref, set, update, push } from 'firebase/database';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
   const [scanMessage, setScanMessage] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
-  const companyCode = currentUser?.photoURL; // 회사 코드
-  const userId = currentUser?.uid; // 유저 아이디
-  const today = new Date().toISOString().slice(0, 10); // 오늘 날짜
+  const companyCode = currentUser.photoURL; // 회사 코드
+  const userId = currentUser.uid; // 유저 아이디
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
+    const scanner = new Html5QrcodeScanner('reader', {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -23,35 +22,45 @@ function QrScan() {
       setScanResult(result);
       const dateStr = new Date().toString();
       const db = getDatabase();
+
+      // 스캔할 때마다 날짜를 확인
+      const now = new Date();
+      const nowStr = now.toISOString().slice(0, 10);
+      const tomorrowForNow = new Date(now);
+      tomorrowForNow.setDate(tomorrowForNow.getDate() + 1);
+      const tomorrowForNowStr = tomorrowForNow.toISOString().slice(0, 10);
+      let workHours = 0;
+
       const dbref = ref(
         db,
-        `companyCode/${companyCode}/users/${userId}/date/${today}`
+        `companyCode/${companyCode}/users/${userId}/date/${nowStr}`
+      );
+      const workDateRef = ref(
+        db,
+        `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`
       );
 
       const snapshot = await get(dbref);
       if (snapshot.exists() && snapshot.val().startTime) {
-        await update(
-          ref(db, `companyCode/${companyCode}/users/${userId}/date/${today}`),
-          {
-            endTime: dateStr,
-          }
+        const nextDayRef = ref(
+          db,
+          `companyCode/${companyCode}/users/${userId}/date/${tomorrowForNowStr}`
         );
-
-        setScanMessage("퇴근 인증이 완료되었습니다");
-        toast.success("퇴근 인증이 완료되었습니다");
-
-        console.log(scanMessage);
+        const nextDaySnapshot = await get(nextDayRef);
+        if (nextDaySnapshot.exists() && nextDaySnapshot.val().startTime) {
+          await update(nextDayRef, { endTime: dateStr });
+          setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
+          toast.success('다음 날 퇴근 인증이 완료되었습니다');
+        } else {
+          await update(dbref, { endTime: dateStr });
+          setScanMessage('퇴근 인증이 완료되었습니다');
+          toast.success('퇴근 인증이 완료되었습니다');
+        }
       } else {
-        await set(
-          ref(db, `companyCode/${companyCode}/users/${userId}/date/${today}`),
-          {
-            startTime: dateStr,
-          }
-        );
-        setScanMessage("출근 인증이 완료되었습니다");
-        toast.success("출근 인증이 완료되었습니다");
-        console.log(scanMessage);
-        console.log(today);
+        await set(dbref, { startTime: dateStr });
+        await set(workDateRef, { workHour: workHours });
+        setScanMessage('출근 인증이 완료되었습니다');
+        toast.success('출근 인증이 완료되었습니다');
       }
     });
   }, [companyCode, userId]);

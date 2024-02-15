@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import moment from "moment/moment.js";
-import { get, getDatabase, ref } from "firebase/database";
-import { useSelector } from "react-redux";
-import "./UserCalendar.css";
+import { useState, useEffect, useRef } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import moment from 'moment/moment.js';
+import { get, getDatabase, ref } from 'firebase/database';
+import { useSelector } from 'react-redux';
+import './UserCalendar.css';
 
 function UserCalendar({ user }) {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
-  const [calendarWidth, setCalendarWidth] = useState("w-2/3");
+  const [calendarWidth, setCalendarWidth] = useState('w-2/3');
   const [showText, setShowText] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -43,8 +43,8 @@ function UserCalendar({ user }) {
 
   const tileContent = ({ date, view }) => {
     // Month view에 대해서만 커스텀 컨텐트를 제공합니다.
-    if (view === "month") {
-      const workTime = workTimes[moment(date).format("YYYY-MM-DD")];
+    if (view === 'month') {
+      const workTime = workTimes[moment(date).format('YYYY-MM-DD')];
 
       // If workTime exists for the date
       if (workTime) {
@@ -54,7 +54,8 @@ function UserCalendar({ user }) {
           <div className="text-xl px-5 py-10 h-full flex items-center justify-center">
             <span
               className="bg-green-300 text-black text-xs w-full"
-              style={{ borderRadius: "10px" }}>
+              style={{ borderRadius: '10px' }}
+            >
               {workHours}시간 {workMinutes}분
             </span>
           </div>
@@ -70,9 +71,9 @@ function UserCalendar({ user }) {
 
   const tileClassName = ({ date, view }) => {
     // Month view에 대해서만 클래스를 추가합니다.
-    if (view === "month") {
+    if (view === 'month') {
       // 'border' 클래스를 추가합니다.
-      return "border";
+      return 'border';
     }
   };
 
@@ -86,6 +87,26 @@ function UserCalendar({ user }) {
     //   setShowText(true);
     // }
     // setSelectedDate(value);
+  };
+
+  // const tileClassName = ({ date: tileDate, view }) => {
+  //   if (view === 'month') {
+  //     const dateStr = tileDate.toLocaleDateString('fr-CA');
+  //     const workHours = workTimes[dateStr];
+  //     if (workHours) {
+  //       if (workHours >= 8) {
+  //         return 'bg-green-500';
+  //       } else if (workHours >= 4) {
+  //         return 'bg-yellow-500';
+  //       } else {
+  //         return 'bg-red-500';
+  //       }
+  //     }
+  //   }
+  // };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const onChange = (date) => {
@@ -105,7 +126,7 @@ function UserCalendar({ user }) {
           value={date}
           tileClassName={tileClassName}
           onClickDay={onClickDay}
-          formatDay={(locale, date) => moment(date).format("DD")}
+          formatDay={(locale, date) => moment(date).format('DD')}
           tileContent={tileContent}
           className={`h-full ${calendarWidth} transition-all duration-500 ease-in-out`}
         />

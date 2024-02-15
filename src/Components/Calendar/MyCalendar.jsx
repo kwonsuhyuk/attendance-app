@@ -1,84 +1,156 @@
-import { useState, useEffect } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import moment from "moment/moment.js";
+import { useState, useEffect } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import moment from 'moment/moment.js';
 
-import { get, getDatabase, ref } from "firebase/database";
-import { useSelector } from "react-redux";
+import { get, getDatabase, ref, update, set } from 'firebase/database';
+import { useSelector } from 'react-redux';
 
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
+function getNextDate(dateStr) {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() + 1);
+  return date.toISOString().split('T')[0];
+}
+function getPrevDate(dateStr) {
+  const date = new Date(dateStr);
+  date.setDate(date.getDate() - 1);
+  return date.toISOString().split('T')[0];
+}
 
 function MyCalendar() {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [modalContent, setModalContent] = useState('');
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
   const userId = currentUser?.uid;
 
   useEffect(() => {
-    const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
+    const fetchWorkTimes = async () => {
+      const db = getDatabase();
+      const dateRef = ref(
+        db,
+        `companyCode/${companyCode}/users/${userId}/date`
+      );
+      const snapshot = await get(dateRef);
 
-    Promise.all([get(dateRef)]).then(([dateSnapshot]) => {
-      if (dateSnapshot.exists()) {
-        const dates = dateSnapshot.val();
-        // Initialize a new object to store work times
+      if (snapshot.exists()) {
+        const dates = snapshot.val();
         let newWorkTimes = {};
+
         for (let date in dates) {
           const { startTime, endTime } = dates[date];
-          const start = new Date(startTime);
-          const end = new Date(endTime);
-          const workHours = Math.abs(end - start) / 36e5; //근무시간 계산
-          // Store work hours in the new object
-          newWorkTimes[date] = workHours;
+          let start, end, workDate;
+
+          if (startTime) {
+            start = new Date(startTime);
+            workDate = start.toISOString().split('T')[0];
+            //console.log(start);
+          } else {
+            const prevDay = getPrevDate(date);
+            const prevDayRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/date/${prevDay}`
+            );
+            const prevDaySnapShot = await get(prevDayRef);
+            if (prevDaySnapShot.exists() && prevDaySnapShot.val().startTime) {
+              start = new Date(prevDaySnapShot.val().startTime);
+              //console.log(start);
+            } else {
+              console.warn(`${date}의 시작 시간이 없습니다.`);
+            }
+          }
+
+          if (endTime) {
+            end = new Date(endTime);
+            //console.log(end);
+          } else {
+            const nextDay = getNextDate(date);
+            const nextDayRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/date/${nextDay}`
+            );
+            const nextDaySnapshot = await get(nextDayRef);
+
+            if (nextDaySnapshot.exists() && nextDaySnapshot.val().endTime) {
+              end = new Date(nextDaySnapshot.val().endTime);
+              console.log(end);
+            } else {
+              console.warn(
+                `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`
+              );
+            }
+          }
+
+          if (start && end) {
+            let workHours;
+            if (start < end) {
+              workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
+            } else {
+              workHours = Number(
+                (24 - start.getHours() + end.getHours()).toFixed(1)
+              );
+            }
+            const workDateRef = ref(
+              db,
+              `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`
+            );
+            const workDateSnapshot = await get(workDateRef);
+            if (workDateSnapshot.exists() && workDateSnapshot.val()) {
+              await update(workDateRef, { workHour: workHours });
+            }
+            newWorkTimes[workDate] = workHours;
+          }
         }
-        // Update state with the new object
+
         setWorkTimes(newWorkTimes);
       }
-    });
-    console.log(workTimes);
-  }, [companyCode, userId, workTimes]);
+    };
+
+    fetchWorkTimes();
+  }, [companyCode, userId]);
 
   const tileClassName = ({ date: tileDate, view }) => {
-    if (view === "month") {
-      const dateStr = tileDate.toLocaleDateString("fr-CA");
+    if (view === 'month') {
+      const dateStr = tileDate.toLocaleDateString('fr-CA');
       const workHours = workTimes[dateStr];
       if (workHours) {
         if (workHours >= 8) {
-          return "bg-green-500";
+          return 'bg-green-500';
         } else if (workHours >= 4) {
-          return "bg-yellow-500";
+          return 'bg-yellow-500';
         } else {
-          return "bg-red-500";
+          return 'bg-red-500';
         }
       }
     }
   };
 
   const onClickDay = (value, event) => {
-    const dateStr = value.toLocaleDateString("fr-CA");
-    const workHours = workTimes[dateStr];
-    if (workHours) {
+    const dateStr = value.toLocaleDateString('fr-CA');
+
+    if (workTimes[dateStr]) {
+      const workHours = workTimes[dateStr];
       setModalContent(
         <>
-          당신이 {dateStr}에 일한 시간은{" "}
-          <span style={{ color: "blue" }}>{workHours}시간</span> 입니다.
+          당신이 {dateStr}에 일한 시간은{' '}
+          <span style={{ color: 'blue' }}>{workHours}</span> 시간 입니다.
         </>
       );
     } else {
@@ -102,13 +174,14 @@ function MyCalendar() {
         value={date}
         tileClassName={tileClassName}
         onClickDay={onClickDay}
-        formatDay={(locale, date) => moment(date).format("DD")}
+        formatDay={(locale, date) => moment(date).format('DD')}
       />
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Work Hours Information
