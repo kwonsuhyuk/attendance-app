@@ -1,6 +1,7 @@
-import { child, get, getDatabase, onValue, ref } from 'firebase/database';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { child, get, getDatabase, onValue, ref } from "firebase/database";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners";
 
 function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
@@ -70,12 +71,12 @@ function ShowSalary() {
   console.log(daySalary);
   if (isLoading) {
     return (
-      <div className='flex flex-col justify-center items-center h-screen w-screen'>
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
-          color='black'
+          color="black"
           size={100}
-          aria-label='Loading Spinner'
-          data-testid='loader'
+          aria-label="Loading Spinner"
+          data-testid="loader"
         />
         <h3>로딩 중입니다.</h3>
       </div> // 로딩 스피너
@@ -87,7 +88,6 @@ function ShowSalary() {
       {nightSalary > 0 && (
         <h1>당신의 오늘 야간 급여는 {nightSalary}원 입니다.</h1>
       )}
-      ShowSalary
     </div>
   );
 }

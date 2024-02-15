@@ -43,7 +43,7 @@ const ManagerSettingPage = () => {
     await set(
       ref(
         getDatabase(),
-        "companyCode/" + currentUser.photoURL + "/companyInfo"
+        "companyCode/" + currentUser?.photoURL + "/companyInfo"
       ),
       {
         ...companyData,
@@ -66,7 +66,7 @@ const ManagerSettingPage = () => {
       const snapshot = await get(
         ref(
           getDatabase(),
-          "companyCode/" + currentUser.photoURL + "/companyInfo"
+          "companyCode/" + currentUser?.photoURL + "/companyInfo"
         )
       );
       const data = snapshot?.val();
@@ -79,7 +79,7 @@ const ManagerSettingPage = () => {
     return () => {
       setCompanyData([]);
     };
-  }, [currentUser.photoURL]);
+  }, [currentUser?.photoURL]);
 
   const handlePayChange = (tagKey, value) => {
     setJobTags((prev) => {
@@ -130,8 +130,8 @@ const ManagerSettingPage = () => {
       ...prev,
       [uuidv4()]: {
         jobName: jobNameInput,
-        payWay: "hourPay",
-        defaultPay: 0,
+        // payWay: "hourPay",
+        // defaultPay: 0,
       },
     }));
 
@@ -214,7 +214,7 @@ const ManagerSettingPage = () => {
           </div>
         </div>
       </div>
-      <div className="text-gray-500">
+      {/* <div className="text-gray-500">
         <div className="text-black mb-3 font-black">직책별 기본 급여 설정</div>
         <div className="text-xs mb-7">
           (회사의 기본 급여을 설정합니다. 직원마다 급여를 다르게 설정해야 할 시
@@ -283,7 +283,7 @@ const ManagerSettingPage = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
       <div className="text-gray-500 w-3/5 mb-10">
         <div className="text-black mb-3 font-black">급여 정산 날짜 입력</div>
         매월
