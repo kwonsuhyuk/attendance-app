@@ -222,6 +222,7 @@ function ShowSalary() {
               `companyCode/${companyCode}/users/${userId}/workDates/${today}`
             );
             await update(workHourRef, {
+              workHour: workHours,
               daySalary: daySalary,
               nightSalary: nightSalary,
               holidayAndWeekendSalary: holidayAndWeekendSalary,
@@ -259,8 +260,8 @@ function ShowSalary() {
       )}
       {holidayAndWeekendSalary > 0 && (
         <h1>
-          {today}는 주말입니다. 당신의 급여는 {holidayAndWeekendSalary}원
-          입니다.
+          {today}는 주말 또는 공휴일입니다. 당신의 급여는
+          {holidayAndWeekendSalary}원 입니다.
         </h1>
       )}
     </div>
