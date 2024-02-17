@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import MyCalendar from '../Components/Calendar/MyCalendar';
 import ShowSalary from '../Components/ShowSalary/ShowSalary';
 import { useMatch } from 'react-router-dom';
+import { Divider } from '@mui/material';
 
 const ShowCalendarPage = () => {
   const { currentUser, userType } = useSelector((state) => state.user);
@@ -20,8 +21,22 @@ const ShowCalendarPage = () => {
 
   return (
     <div>
-      <MyCalendar />
-      <ShowSalary matchHome={matchHome} matchCalendar={matchCalendar} />
+      <div className="flex flex-row space-x-[150px]">
+        <a
+          className="cursor-pointer"
+          onClick={() => navigate(`${currentUser.photoURL}/`)}
+        >
+          main
+        </a>
+        <a className="cursor-pointer">menu</a>
+      </div>
+      <Divider />
+      <div>
+        <MyCalendar />
+      </div>
+      <div>
+        <ShowSalary matchHome={matchHome} matchCalendar={matchCalendar} />
+      </div>
     </div>
   );
 };

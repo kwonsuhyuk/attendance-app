@@ -3,6 +3,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { getDatabase, get, ref, set, update, push } from 'firebase/database';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function QrScan() {
   const [scanResult, setScanResult] = useState(null);
@@ -10,6 +11,7 @@ function QrScan() {
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser.photoURL; // 회사 코드
   const userId = currentUser.uid; // 유저 아이디
+  const navigate = useNavigate();
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner('reader', {
@@ -67,13 +69,16 @@ function QrScan() {
         setScanMessage('출근 인증이 완료되었습니다');
         toast.success('출근 인증이 완료되었습니다');
       }
+      navigate(`/${currentUser.photoURL}/companymain`);
     });
   }, [companyCode, userId]);
 
   return (
-    <div className="App">
-      <h1>Qr 코드를 스캔하세요</h1>
-      {scanMessage ? <div>{scanMessage}</div> : <div id="reader"></div>}
+    <div className="min-h-screen min-w-screen">
+      <div className="h-full w-full">
+        {/* <h1>Qr 코드를 스캔하세요</h1> */}
+        <div id="reader"></div>
+      </div>
     </div>
   );
 }

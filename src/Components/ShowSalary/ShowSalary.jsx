@@ -32,6 +32,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
+  const nowStr = new Date().toISOString().split('T')[0];
   console.log('totalSalary', totalSalaryPay);
 
   useEffect(() => {
@@ -313,9 +314,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
     <>
       <div>
         {daySalary > 0 && (
-          <h1>
-            당신의 {today} 주간 급여는 {daySalary}원 입니다.
-          </h1>
+          <div>
+            {today} 주간 {daySalary}원
+          </div>
         )}
         {nightSalary > 0 && (
           <h1>
@@ -333,7 +334,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
         )}
       </div>
       <div>
-        {salaryDay == now && totalSalaryPay > 0 && (
+        {salaryDay == now && totalSalaryPay > 0 && !monthlyWage && (
           <h2>
             오늘은 월급 정산일입니다. 당신의 월급은 {totalSalaryPay}원 입니다.
           </h2>
@@ -363,20 +364,47 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 scope="row"
                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                Day
+                주간
               </th>
-              <td class="px-6 py-4"> {workHours > 0 && `${workHours}`}</td>
-              <td class="px-6 py-4">{daySalary > 0 && `${daySalary}`}</td>
+              <td class="px-6 py-4">
+                {' '}
+                {daySalary > 0 && today == nowStr && `${workHours}`}
+              </td>
+              <td class="px-6 py-4">
+                {daySalary > 0 && today == nowStr && `${daySalary}`}
+              </td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                Night
+                야간
               </th>
-              <td class="px-6 py-4">White</td>
-              <td class="px-6 py-4">Laptop PC</td>
+              <td class="px-6 py-4">
+                {nightSalary > 0 && today == nowStr && `${workHours}시간`}
+              </td>
+              <td class="px-6 py-4">
+                {nightSalary > 0 && today == nowStr && `${nightSalary}원`}
+              </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                공휴일 및 주말
+              </th>
+              <td class="px-6 py-4">
+                {holidayAndWeekendSalary > 0 &&
+                  today == nowStr &&
+                  `${workHours}시간`}
+              </td>
+              <td class="px-6 py-4">
+                {holidayAndWeekendSalary > 0 &&
+                  today == nowStr &&
+                  `${holidayAndWeekendSalary}원`}
+              </td>
             </tr>
             <tr class="bg-white dark:bg-gray-800">
               <th
@@ -385,8 +413,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
               >
                 Month
               </th>
-              <td class="px-6 py-4">Black</td>
-              <td class="px-6 py-4">Accessories</td>
+              <td class="px-6 py-4"></td>
+              <td class="px-6 py-4">
+                {monthlyWage > 0 ? `${monthlyWage}원` : `${totalSalaryPay}원`}
+              </td>
             </tr>
           </tbody>
         </table>

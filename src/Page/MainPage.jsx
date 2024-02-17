@@ -65,87 +65,41 @@ function MainPage() {
   }
 
   return (
-    //     <div className="m-10 ">
-    //       <div className="flex flex-col">
-    //         <div className="flex flex-row space-x-60">
-    //           <a
-    //             className="cursor-pointer"
-    //             onClick={() => navigate(`${currentUser.photoURL}/`)}
-    //           >
-    //             main
-    //           </a>
-    //           <a className="cursor-pointer">menu</a>
-    //         </div>
-    //         <Divider />
-    //         <div className="flex gap-5 flex-col">
-    //           <div>{currentCompany?.companyName}</div>
-    //           <img
-    //             src={currentCompany?.companyLogo}
-    //             alt="회사로고"
-    //             className="w-10 h-10"
-    //           />
+    <div className="min-h-screen min-w-screen bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text">
+      <div className="h-full overflow-auto xl:px-20 py-14">
+        {/* <div className="flex gap-5">
+             <div>{currentCompany?.companyName}</div>
+            <img
+               src={currentCompany?.companyLogo}
+               alt="회사로고"
+               className="w-10 h-10"
+             />
+           </div> */}
 
-    //           <div onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
-    //             캘린더 바로가기 {'>'}
-    //           </div>
-    //         </div>
-    //         <div></div>
-    //       </div>
-    //       {userType === 'employee' && (
-    //         <>
-    //           <div className="flex flex-col">
-    //             <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
-    //           </div>
-    //         </>
-    //       )}
-    //       <div>
-    //         <a
-    //           className="dark-nav-selected cursor-pointer"
-    //           onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-    //         >
-    //           QR SCAN
-    //         </a>
-    //       </div>
-    //       <Routes>
-    //         <Route path="/camera" element={<AccessCameraPage />} />
-    //         <Route path="/datecheck" element={<DateCheckPage />} />
-    //         <Route path="/setting" element={<ManagerSettingPage />} />
-    //         <Route path="/employeelist" element={<EmployeeListPage />} />
-    //         <Route path="/calendar" element={<ShowCalendarPage />} />
-    //       </Routes>
-    // =======
-    //     <div className="min-h-screen min-w-screen bg-white-bg text-white-text dark:bg-dark-bg text-dark-text p-10">
-    //       <div className="h-full w-full overflow-auto">
-    //         {/* <div className="flex gap-5">
-    //         <div>{currentCompany?.companyName}</div>
-    //         <img
-    //           src={currentCompany?.companyLogo}
-    //           alt="회사로고"
-    //           className="w-10 h-10"
-    //         />
-    //       </div> */}
+        {userType === 'employee' && (
+          <div className="bg-red-300">
+            <ShowSalary />
+          </div>
+        )}
 
-    //         {userType === "employee" && (
-    //           <div className="bg-red-300">
-    //             <ShowSalary />
-    //           </div>
-    //         )}
+        {/* <MenuBar
+          companyName={currentCompany?.companyName}
+          companyLogo={currentCompany?.companyLogo}
+        /> */}
 
-    //         <MenuBar
-    //           companyName={currentCompany?.companyName}
-    //           companyLogo={currentCompany?.companyLogo}
-    //         />
-
-    //         <Routes>
-    //           <Route path="/companyMain" element={<CompanyMain />} />
-    //           <Route path="/camera" element={<AccessCameraPage />} />
-    //           <Route path="/datecheck" element={<DateCheckPage />} />
-    //           <Route path="/setting" element={<ManagerSettingPage />} />
-    //           <Route path="/employeelist" element={<EmployeeListPage />} />
-    //         </Routes>
-    //       </div>
-    //     </div>
-    <div></div>
+        <Routes>
+          <Route
+            path="/companymain"
+            element={<CompanyMain companyLogo={currentCompany?.companyLogo} />}
+          />
+          <Route path="/camera" element={<AccessCameraPage />} />
+          <Route path="/datecheck" element={<DateCheckPage />} />
+          <Route path="/setting" element={<ManagerSettingPage />} />
+          <Route path="/employeelist" element={<EmployeeListPage />} />
+          <Route path="/calendar" element={<ShowCalendarPage />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
