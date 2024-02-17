@@ -69,7 +69,7 @@ function App() {
           aria-label="Loading Spinner"
           data-testid="loader"
         />
-        <h3>로딩 중입니다.</h3>
+        <h3>로딩 중 입니다.</h3>
       </div> // 로딩 스피너
     );
   }

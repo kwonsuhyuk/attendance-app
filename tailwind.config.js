@@ -23,8 +23,7 @@ export default {
         "white-nav-selected": "#000000",
       },
       fontFamily: {
-        title: [], // 제목 폰트 설정
-        content: [], // 내용 폰트 설정
+        noto: ["Noto Sans KR"], // 내용 폰트 설정
       },
     },
   },
@@ -34,7 +33,7 @@ export default {
 };
 
 {
-  /* <div class="bg-white dark:bg-black text-black dark:text-white">
+  /* <div class="bg-white-bg dark:bg-black text-black dark:text-white">
    기본 모드에서는 흰색 배경에 검은색 텍스트이고 다크 모드에서는 검은색 배경에 흰색 텍스트
 </div> */
 }
