@@ -1,8 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
-
 import {
   Navigate,
   Route,
@@ -30,6 +29,7 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isLoading } = useSelector((state) => state.user);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {

@@ -50,8 +50,8 @@ function MainPage() {
   }
 
   return (
-    <div className="min-h-screen min-w-screen bg-white-bg text-white-text dark:bg-dark-bg text-dark-text p-10">
-      <div className="h-full w-full overflow-auto">
+    <div className="min-h-screen min-w-screen bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text">
+      <div className="h-full overflow-auto px-20 py-14">
         {/* <div className="flex gap-5">
         <div>{currentCompany?.companyName}</div>
         <img
@@ -73,7 +73,7 @@ function MainPage() {
         />
 
         <Routes>
-          <Route path="/companyMain" element={<CompanyMain />} />
+          <Route path="/companymain" element={<CompanyMain />} />
           <Route path="/camera" element={<AccessCameraPage />} />
           <Route path="/datecheck" element={<DateCheckPage />} />
           <Route path="/setting" element={<ManagerSettingPage />} />
