@@ -7,12 +7,14 @@ import {
   update,
 } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
+
 import { useSelector } from 'react-redux';
+import { useMatch } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SalaryType from '../Utils/SalaryType';
 //import SalaryDay from '../Utils/SalaryDay';
 
-function ShowSalary() {
+function ShowSalary({ matchCalendar, matchHome }) {
   const [daySalary, setDaySalary] = useState(0);
   const [nightSalary, setNightSalary] = useState(0);
   const [holidayAndWeekendSalary, setHolidayAndWeekendSalary] = useState(0);
@@ -306,7 +308,8 @@ function ShowSalary() {
       </div>
     );
   }
-  return (
+
+  return matchHome ? (
     <>
       <div>
         {daySalary > 0 && (
@@ -337,7 +340,59 @@ function ShowSalary() {
         )}
       </div>
     </>
-  );
+  ) : matchCalendar ? (
+    <>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" class="px-6 py-3">
+                Work
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Time
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Pay
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Day
+              </th>
+              <td class="px-6 py-4"> {workHours > 0 && `${workHours}`}</td>
+              <td class="px-6 py-4">{daySalary > 0 && `${daySalary}`}</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Night
+              </th>
+              <td class="px-6 py-4">White</td>
+              <td class="px-6 py-4">Laptop PC</td>
+            </tr>
+            <tr class="bg-white dark:bg-gray-800">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Month
+              </th>
+              <td class="px-6 py-4">Black</td>
+              <td class="px-6 py-4">Accessories</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ) : null;
 }
 
 export default ShowSalary;
