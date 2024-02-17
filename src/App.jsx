@@ -1,29 +1,29 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState } from "react";
-import "./App.css";
-import SignupPage from "./Page/SignupPage";
+import CssBaseline from '@mui/material/CssBaseline';
+import { useEffect, useState } from 'react';
+import './App.css';
+import SignupPage from './Page/SignupPage';
 import {
   Navigate,
   Route,
   Routes,
   useNavigate,
   useRoutes,
-} from "react-router-dom";
-import LoginPage from "./Page/LoginPage";
-import Notfound from "./Page/Notfound";
-import MainPage from "./Page/MainPage";
-import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
-import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
-import IndexPage from "./Page/IndexPage";
-import AccessCameraPage from "./Page/AccessCameraPage";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ClipLoader } from "react-spinners";
-import "./firebase";
-import { useDispatch, useSelector } from "react-redux";
-import { clearUser, setUser, setUserType } from "./store/userSlice";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { get, getDatabase, ref } from "firebase/database";
+} from 'react-router-dom';
+import LoginPage from './Page/LoginPage';
+import Notfound from './Page/Notfound';
+import MainPage from './Page/MainPage';
+import ManagerFirstPage from './Page/signupProcessPage/ManagerFirstPage';
+import EmployeeFirstPage from './Page/signupProcessPage/EmployeeFirstPage';
+import IndexPage from './Page/IndexPage';
+import AccessCameraPage from './Page/AccessCameraPage';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { ClipLoader } from 'react-spinners';
+import './firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearUser, setUser, setUserType } from './store/userSlice';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { get, getDatabase, ref } from 'firebase/database';
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ function App() {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         dispatch(setUser(user));
-        navigate(`/${currentUser?.photoURL}/`);
+        navigate(`/${currentUser?.photoURL}/companymain`);
       } else {
         dispatch(clearUser());
       }
@@ -48,7 +48,7 @@ function App() {
       const snapshot = await get(
         ref(
           getDatabase(),
-          "companyCode/" + currentUser?.photoURL + "/users/" + currentUser?.uid
+          'companyCode/' + currentUser?.photoURL + '/users/' + currentUser?.uid
         )
       );
       if (snapshot.val()) {

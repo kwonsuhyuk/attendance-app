@@ -7,12 +7,14 @@ import {
   update,
 } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
+
 import { useSelector } from 'react-redux';
+import { useMatch } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SalaryType from '../Utils/SalaryType';
 //import SalaryDay from '../Utils/SalaryDay';
 
-function ShowSalary() {
+function ShowSalary({ matchCalendar, matchHome }) {
   const [daySalary, setDaySalary] = useState(0);
   const [nightSalary, setNightSalary] = useState(0);
   const [holidayAndWeekendSalary, setHolidayAndWeekendSalary] = useState(0);
@@ -30,6 +32,7 @@ function ShowSalary() {
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
+  const nowStr = new Date().toISOString().split('T')[0];
   console.log('totalSalary', totalSalaryPay);
 
   useEffect(() => {
@@ -306,13 +309,14 @@ function ShowSalary() {
       </div>
     );
   }
-  return (
+
+  return matchHome ? (
     <>
       <div>
         {daySalary > 0 && (
-          <h1>
-            당신의 {today} 주간 급여는 {daySalary}원 입니다.
-          </h1>
+          <div>
+            {today} 주간 {daySalary}원
+          </div>
         )}
         {nightSalary > 0 && (
           <h1>
@@ -330,14 +334,95 @@ function ShowSalary() {
         )}
       </div>
       <div>
-        {salaryDay == now && totalSalaryPay > 0 && (
+        {salaryDay == now && totalSalaryPay > 0 && !monthlyWage && (
           <h2>
             오늘은 월급 정산일입니다. 당신의 월급은 {totalSalaryPay}원 입니다.
           </h2>
         )}
       </div>
     </>
-  );
+  ) : matchCalendar ? (
+    <>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" class="px-6 py-3">
+                Work
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Time
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Pay
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                주간
+              </th>
+              <td class="px-6 py-4">
+                {' '}
+                {daySalary > 0 && today == nowStr && `${workHours}`}
+              </td>
+              <td class="px-6 py-4">
+                {daySalary > 0 && today == nowStr && `${daySalary}`}
+              </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                야간
+              </th>
+              <td class="px-6 py-4">
+                {nightSalary > 0 && today == nowStr && `${workHours}시간`}
+              </td>
+              <td class="px-6 py-4">
+                {nightSalary > 0 && today == nowStr && `${nightSalary}원`}
+              </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                공휴일 및 주말
+              </th>
+              <td class="px-6 py-4">
+                {holidayAndWeekendSalary > 0 &&
+                  today == nowStr &&
+                  `${workHours}시간`}
+              </td>
+              <td class="px-6 py-4">
+                {holidayAndWeekendSalary > 0 &&
+                  today == nowStr &&
+                  `${holidayAndWeekendSalary}원`}
+              </td>
+            </tr>
+            <tr class="bg-white dark:bg-gray-800">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Month
+              </th>
+              <td class="px-6 py-4"></td>
+              <td class="px-6 py-4">
+                {monthlyWage > 0 ? `${monthlyWage}원` : `${totalSalaryPay}원`}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ) : null;
 }
 
 export default ShowSalary;
