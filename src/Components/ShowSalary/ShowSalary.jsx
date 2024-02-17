@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SalaryType from '../Utils/SalaryType';
+//import SalaryDay from '../Utils/SalaryDay';
 
 function ShowSalary() {
   const [daySalary, setDaySalary] = useState(0);
@@ -19,17 +20,19 @@ function ShowSalary() {
   const [isLoading, setIsLoading] = useState(false);
   const [today, setToday] = useState('');
   const [workHours, setWorkHours] = useState(0);
-  const [executed, setExecuted] = useState(false);
+  const [salaryDay, setSalaryDay] = useState(0);
+  const [totalSalaryPay, setTotalSalaryPay] = useState(0);
 
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
   const { salaryPayment, monthlyPay } = SalaryType(companyCode, userId);
+  //const { salaryDay, totalSalaryPay } = SalaryDay(companyCode, userId);
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
+  const now = new Date().getDate();
+  console.log('totalSalary', totalSalaryPay);
 
   useEffect(() => {
-    setIsLoading(true);
-
     const db = getDatabase();
     const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
     const nightStartRef = ref(
@@ -56,6 +59,43 @@ function ShowSalary() {
       db,
       `companyCode/${companyCode}/users/${userId}/workDates/${today}`
     );
+    const fetchData = async () => {
+      const db = getDatabase();
+      const salaryDayRef = ref(
+        db,
+        `companyCode/${companyCode}/companyInfo/payCheckDay`
+      );
+      const salaryPayRef = ref(
+        db,
+        `companyCode/${companyCode}/users/${userId}/workDates`
+      );
+
+      const salaryDaySnapshot = await get(salaryDayRef);
+      if (salaryDaySnapshot.exists()) {
+        setSalaryDay(salaryDaySnapshot.val());
+      }
+
+      const salaryPaySnapshot = await get(salaryPayRef);
+      if (salaryPaySnapshot.exists()) {
+        const salaryPays = salaryPaySnapshot.val();
+        let totalSalary = 0;
+
+        // 저번달 salaryDay부터 이번달 salaryDay - 1일까지의 salary를 합산
+        for (let date in salaryPays) {
+          const dateObj = new Date(date);
+          const today = new Date();
+          if (
+            dateObj.getMonth() === today.getMonth() &&
+            dateObj.getDate() < salaryDay
+          ) {
+            const { daySalary, nightSalary, holidayAndWeekendSalary } =
+              salaryPays[date];
+            totalSalary += daySalary + nightSalary + holidayAndWeekendSalary;
+          }
+        }
+        setTotalSalaryPay(totalSalary);
+      }
+    };
 
     Promise.all([
       get(dateRef),
@@ -180,8 +220,12 @@ function ShowSalary() {
                 setToday(workDate);
               }
             }
+
             console.log('오늘', today);
             console.log('일한시간', workHours);
+            console.log('지금', now);
+            console.log('돈주는 날', salaryDay);
+            console.log('월급', totalSalaryPay);
 
             if (isHolidayOrWeekend) {
               wage = hourlyWage * holidayPay;
@@ -221,13 +265,18 @@ function ShowSalary() {
               } else {
                 totalDaySalary += wage * workHours;
                 console.log('오늘은 주간 근무야');
+                console.log(totalDaySalary);
               }
             }
             setDaySalary(totalDaySalary);
             setNightSalary(totalNightSalary);
             setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
+            console.log(workHours);
+            console.log(workDateSnapshot.exists());
+            console.log(workDateSnapshot.val().workHour);
 
-            if (workDateSnapshot.exists() && workDateSnapshot.val().workHour) {
+            if (workDateSnapshot.exists() && workHours) {
+              console.log('주간 급여', daySalary);
               await update(workHourRef, {
                 workHour: workHours,
                 daySalary: daySalary,
@@ -241,6 +290,7 @@ function ShowSalary() {
       .finally(() => {
         setIsLoading(false);
       });
+    fetchData();
   }, [companyCode, userId, today]);
 
   if (isLoading) {
@@ -257,27 +307,36 @@ function ShowSalary() {
     );
   }
   return (
-    <div>
-      {daySalary > 0 && (
-        <h1>
-          당신의 {today} 주간 급여는 {daySalary}원 입니다.
-        </h1>
-      )}
-      {nightSalary > 0 && (
-        <h1>
-          당신의 {today} 야간 급여는 {nightSalary}원 입니다.
-        </h1>
-      )}
-      {holidayAndWeekendSalary > 0 && (
-        <h1>
-          {today}는 주말 또는 공휴일입니다. 당신의 급여는
-          {holidayAndWeekendSalary}원 입니다.
-        </h1>
-      )}
-      {monthlyWage > 0 && (
-        <h1>당신은 월급쟁이입니다. 당신의 급여는 {monthlyWage}원 입니다.</h1>
-      )}
-    </div>
+    <>
+      <div>
+        {daySalary > 0 && (
+          <h1>
+            당신의 {today} 주간 급여는 {daySalary}원 입니다.
+          </h1>
+        )}
+        {nightSalary > 0 && (
+          <h1>
+            당신의 {today} 야간 급여는 {nightSalary}원 입니다.
+          </h1>
+        )}
+        {holidayAndWeekendSalary > 0 && (
+          <h1>
+            {today}는 주말 또는 공휴일입니다. 당신의 급여는
+            {holidayAndWeekendSalary}원 입니다.
+          </h1>
+        )}
+        {monthlyWage > 0 && (
+          <h1>당신은 월급쟁이입니다. 당신의 급여는 {monthlyWage}원 입니다.</h1>
+        )}
+      </div>
+      <div>
+        {salaryDay == now && totalSalaryPay > 0 && (
+          <h2>
+            오늘은 월급 정산일입니다. 당신의 월급은 {totalSalaryPay}원 입니다.
+          </h2>
+        )}
+      </div>
+    </>
   );
 }
 
