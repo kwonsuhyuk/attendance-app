@@ -58,7 +58,12 @@ function QrScan() {
         }
       } else {
         await set(dbref, { startTime: dateStr });
-        await set(workDateRef, { workHour: workHours });
+        await set(workDateRef, {
+          workHour: workHours,
+          daySalary: 0,
+          nightSalary: 0,
+          holidayAndWeekendSalary: 0,
+        });
         setScanMessage('출근 인증이 완료되었습니다');
         toast.success('출근 인증이 완료되었습니다');
       }
