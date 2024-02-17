@@ -11,6 +11,7 @@ import { get, getDatabase, ref } from 'firebase/database';
 import { useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import MyCalendar from '../Components/Calendar/MyCalendar';
+import CompanyMain from './CompanyMain';
 import ShowCalendarPage from './ShowCalendarPage';
 import { Divider } from '@mui/material';
 import { useNavigate, useMatch } from 'react-router-dom';
@@ -31,6 +32,7 @@ function MainPage() {
   }, []);
   console.log(matchCalendar);
   console.log(matchHome);
+
   useEffect(() => {
     async function getCompanyInfo() {
       setIsLoading(true);
@@ -63,55 +65,87 @@ function MainPage() {
   }
 
   return (
-    <div className="m-10 ">
-      <div className="flex flex-col">
-        <div className="flex flex-row space-x-60">
-          <a
-            className="cursor-pointer"
-            onClick={() => navigate(`${currentUser.photoURL}/`)}
-          >
-            main
-          </a>
-          <a className="cursor-pointer">menu</a>
-        </div>
-        <Divider />
-        <div className="flex gap-5 flex-col">
-          <div>{currentCompany?.companyName}</div>
-          <img
-            src={currentCompany?.companyLogo}
-            alt="회사로고"
-            className="w-10 h-10"
-          />
+    //     <div className="m-10 ">
+    //       <div className="flex flex-col">
+    //         <div className="flex flex-row space-x-60">
+    //           <a
+    //             className="cursor-pointer"
+    //             onClick={() => navigate(`${currentUser.photoURL}/`)}
+    //           >
+    //             main
+    //           </a>
+    //           <a className="cursor-pointer">menu</a>
+    //         </div>
+    //         <Divider />
+    //         <div className="flex gap-5 flex-col">
+    //           <div>{currentCompany?.companyName}</div>
+    //           <img
+    //             src={currentCompany?.companyLogo}
+    //             alt="회사로고"
+    //             className="w-10 h-10"
+    //           />
 
-          <div onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
-            캘린더 바로가기 {'>'}
-          </div>
-        </div>
-        <div></div>
-      </div>
-      {userType === 'employee' && (
-        <>
-          <div className="flex flex-col">
-            <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
-          </div>
-        </>
-      )}
-      <div>
-        <a
-          className="dark-nav-selected cursor-pointer"
-          onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-        >
-          QR SCAN
-        </a>
-      </div>
-      <Routes>
-        <Route path="/camera" element={<AccessCameraPage />} />
-        <Route path="/datecheck" element={<DateCheckPage />} />
-        <Route path="/setting" element={<ManagerSettingPage />} />
-        <Route path="/employeelist" element={<EmployeeListPage />} />
-        <Route path="/calendar" element={<ShowCalendarPage />} />
-      </Routes>
-    </div>
+    //           <div onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
+    //             캘린더 바로가기 {'>'}
+    //           </div>
+    //         </div>
+    //         <div></div>
+    //       </div>
+    //       {userType === 'employee' && (
+    //         <>
+    //           <div className="flex flex-col">
+    //             <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
+    //           </div>
+    //         </>
+    //       )}
+    //       <div>
+    //         <a
+    //           className="dark-nav-selected cursor-pointer"
+    //           onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
+    //         >
+    //           QR SCAN
+    //         </a>
+    //       </div>
+    //       <Routes>
+    //         <Route path="/camera" element={<AccessCameraPage />} />
+    //         <Route path="/datecheck" element={<DateCheckPage />} />
+    //         <Route path="/setting" element={<ManagerSettingPage />} />
+    //         <Route path="/employeelist" element={<EmployeeListPage />} />
+    //         <Route path="/calendar" element={<ShowCalendarPage />} />
+    //       </Routes>
+    // =======
+    //     <div className="min-h-screen min-w-screen bg-white-bg text-white-text dark:bg-dark-bg text-dark-text p-10">
+    //       <div className="h-full w-full overflow-auto">
+    //         {/* <div className="flex gap-5">
+    //         <div>{currentCompany?.companyName}</div>
+    //         <img
+    //           src={currentCompany?.companyLogo}
+    //           alt="회사로고"
+    //           className="w-10 h-10"
+    //         />
+    //       </div> */}
+
+    //         {userType === "employee" && (
+    //           <div className="bg-red-300">
+    //             <ShowSalary />
+    //           </div>
+    //         )}
+
+    //         <MenuBar
+    //           companyName={currentCompany?.companyName}
+    //           companyLogo={currentCompany?.companyLogo}
+    //         />
+
+    //         <Routes>
+    //           <Route path="/companyMain" element={<CompanyMain />} />
+    //           <Route path="/camera" element={<AccessCameraPage />} />
+    //           <Route path="/datecheck" element={<DateCheckPage />} />
+    //           <Route path="/setting" element={<ManagerSettingPage />} />
+    //           <Route path="/employeelist" element={<EmployeeListPage />} />
+    //         </Routes>
+    //       </div>
+    //     </div>
+    <div></div>
   );
 }
 

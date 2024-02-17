@@ -4,10 +4,17 @@ import '../firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { FaCamera } from 'react-icons/fa';
 
-const MenuBar = () => {
+const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
   const { userType, currentUser } = useSelector((state) => state.user);
-
+  const toggleTheme = () => {
+    const body = document.body;
+    if (body.classList.contains('dark')) {
+      body.classList.remove('dark');
+    } else {
+      body.classList.add('dark');
+    }
+  };
   const logout = async () => {
     await signOut(getAuth());
     navigate('/');
@@ -17,8 +24,14 @@ const MenuBar = () => {
   if (userType === 'admin') {
     return (
       // Main , 직원리스트 , 회사 설정, 공휴일 지정 하는 페이지 , 직원 요약 켈린더
-      <>
-        <button onClick={() => navigate(`${currentUser.photoURL}/`)}>
+      <div>
+        <button
+          onClick={toggleTheme}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded"
+        >
+          다크모드 전환
+        </button>
+        <button onClick={() => navigate(`/${currentUser?.photoURL}/`)}>
           main
         </button>
         <button onClick={logout}>logout</button>
@@ -33,29 +46,26 @@ const MenuBar = () => {
         >
           직원리스트로 이동
         </button>
-      </>
+      </div>
     );
   } else {
     // user가 직원일시
     return (
       // 메인 , 자기켈린더, QR
       <>
-        <div className="flex flex-col">
-          <button onClick={() => navigate(`${currentUser.photoURL}/`)}>
-            main
-          </button>
-          <button onClick={logout}>logout</button>
-
-          <button>캘린더 바로가기</button>
-        </div>
-        <div>
-          <a
-            className="dark-nav-selected cursor-pointer"
-            onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-          >
-            QR SCAN
-          </a>
-        </div>
+        <button
+          onClick={toggleTheme}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          다크모드 전환
+        </button>
+        <button onClick={() => navigate(`${currentUser.photoURL}/`)}>
+          main
+        </button>
+        <button onClick={logout}>logout</button>
+        <button onClick={() => navigate(`/${currentUser.photoURL}/camera`)}>
+          <FaCamera />
+        </button>
       </>
     );
   }
