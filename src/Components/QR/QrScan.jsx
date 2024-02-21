@@ -5,12 +5,14 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-function QrScan() {
+function QrScan({ companyLogo }) {
   const [scanResult, setScanResult] = useState(null);
   const [scanMessage, setScanMessage] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser.photoURL; // 회사 코드
   const userId = currentUser.uid; // 유저 아이디
+  const [currentCompany, setCurrentCompany] = useState();
+  const [jobName, setJobName] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +20,20 @@ function QrScan() {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
+    async function getCompanyInfo() {
+      const db = getDatabase();
+      const dbRef = ref(db, `companyCode/${currentUser?.photoURL}/companyInfo`);
+      const jobNameRef = ref(
+        db,
+        `companyCode/${currentUser?.photoURL}/users/${currentUser?.uid}/jobName`
+      );
+      const snapshot = await get(dbRef);
+      const jobSnapshot = await get(jobNameRef);
+      if (snapshot.val() && jobSnapshot.val()) {
+        setCurrentCompany(snapshot.val());
+        setJobName(jobSnapshot.val());
+      }
+    }
 
     scanner.render(async (result) => {
       scanner.clear();
@@ -71,10 +87,25 @@ function QrScan() {
       }
       navigate(`/${currentUser.photoURL}/companymain`);
     });
+    getCompanyInfo();
+    return () => {
+      setCurrentCompany([]);
+    };
   }, [companyCode, userId]);
 
   return (
-    <div className="min-h-screen min-w-screen">
+    <div className="space-y-4">
+      <div className="flex flex-col items-center space-y-4">
+        <img
+          src={companyLogo}
+          alt="회사로고"
+          className="rounded-full w-[130px] h-[130px]"
+          style={{ border: '2px solid black' }}
+        />
+        <div className="flex items-center text-white-text">
+          {currentCompany?.companyName}/{jobName}
+        </div>
+      </div>
       <div className="h-full w-full">
         {/* <h1>Qr 코드를 스캔하세요</h1> */}
         <div id="reader"></div>

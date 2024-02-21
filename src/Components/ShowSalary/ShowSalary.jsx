@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { useMatch } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SalaryType from '../Utils/SalaryType';
+import { formatMoney } from '../../util/formatMoney';
 //import SalaryDay from '../Utils/SalaryDay';
 
 function ShowSalary({ matchCalendar, matchHome }) {
@@ -278,7 +279,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             console.log(workDateSnapshot.exists());
             console.log(workDateSnapshot.val().workHour);
 
-            if (workDateSnapshot.exists() && workHours) {
+            if (workDateSnapshot.exists()) {
               console.log('주간 급여', daySalary);
               await update(workHourRef, {
                 workHour: workHours,
@@ -298,7 +299,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
+      <div classNameNameName="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
           color="black"
           size={100}
@@ -312,115 +313,243 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
   return matchHome ? (
     <>
-      <div>
-        {daySalary > 0 && (
-          <div>
-            {today} 주간 {daySalary}원
-          </div>
-        )}
-        {nightSalary > 0 && (
-          <h1>
-            당신의 {today} 야간 급여는 {nightSalary}원 입니다.
-          </h1>
-        )}
-        {holidayAndWeekendSalary > 0 && (
-          <h1>
-            {today}는 주말 또는 공휴일입니다. 당신의 급여는
-            {holidayAndWeekendSalary}원 입니다.
-          </h1>
-        )}
-        {monthlyWage > 0 && (
-          <h1>당신은 월급쟁이입니다. 당신의 급여는 {monthlyWage}원 입니다.</h1>
-        )}
-      </div>
-      <div>
-        {salaryDay == now && totalSalaryPay > 0 && !monthlyWage && (
-          <h2>
-            오늘은 월급 정산일입니다. 당신의 월급은 {totalSalaryPay}원 입니다.
-          </h2>
-        )}
+      <div className="flex flex-col justify-between items-center text-white-text">
+        <div className="flex flext-row  w-full justify-between items-center text-[16px]">
+          {daySalary > 0 && (
+            <div className="flex flex-col justify-between items-center space-y-4">
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">최근 일한 날짜</div>
+                <div className="flex items-baseline">{today}</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-start ">근무 형태</div>
+                <div className="flex items-baseline">주간</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">급여</div>
+                <div className="flex items-baseline">
+                  {formatMoney(daySalary)}원
+                </div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+            </div>
+          )}
+          {nightSalary > 0 && (
+            <div className="flex flex-col justify-between items-center space-y-4">
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">최근 일한 날짜</div>
+                <div className="flex items-baseline">{today}</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-start ">근무 형태</div>
+                <div className="flex items-baseline">야간</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">급여</div>
+                <div className="flex items-baseline">
+                  {formatMoney(nightSalary)}원
+                </div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+            </div>
+          )}
+          {holidayAndWeekendSalary > 0 && (
+            <div className="flex flex-col justify-between items-center space-y-4">
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">최근 일한 날짜</div>
+                <div className="flex items-baseline">{today}</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-start ">근무 형태</div>
+                <div className="flex items-baseline">공휴일 및 주말</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">급여</div>
+                <div className="flex items-baseline">
+                  {formatMoney(holidayAndWeekendSalary)}원
+                </div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+            </div>
+          )}
+          {monthlyWage > 0 && (
+            <div className="flex flex-col justify-between items-center space-y-4">
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">최근 일한 날짜</div>
+                <div className="flex items-baseline">{today}</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-start ">근무 형태</div>
+                <div className="flex items-baseline">월급</div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+              <div className="flex flex-row w-full justify-between space-x-16 items-center">
+                <div className="flex items-baseline">급여</div>
+                <div className="flex items-baseline">
+                  {formatMoney(monthlyWage)}원
+                </div>
+              </div>
+              <div className="w-[316px] border-b border-solid"></div>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-row justify-between space-x-16">
+          {salaryDay == now && totalSalaryPay > 0 && !monthlyWage && (
+            <div className="flex flex-row w-full justify-between space-x-16 items-center">
+              <div>월급정산일 </div>
+              <div>{formatMoney(totalSalaryPay)}</div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   ) : matchCalendar ? (
     <>
-      <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="relative flex justify-center overflow-x-auto text-white-text">
+        <table className="w-[350px] text-[12px] rtl:text-right text-gray-500 dark:text-gray-400 text-center border border-solid">
+          <thead className="text-xs text-gray-700  border-t border-b border-solid uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3 border-r border-solid ">
                 Work
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3 border-r border-solid ">
                 Time
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" className="px-6 py-3 border-r border-solid ">
                 Pay
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
               >
                 주간
               </th>
-              <td class="px-6 py-4">
+              <td className="px-6 py-4 border-r border-solid">
                 {' '}
                 {daySalary > 0 && today == nowStr && `${workHours}`}
               </td>
-              <td class="px-6 py-4">
-                {daySalary > 0 && today == nowStr && `${daySalary}`}
+              <td className="px-6 py-4 border-r border-solid">
+                {daySalary > 0 &&
+                  today == nowStr &&
+                  `${formatMoney(daySalary)}`}
               </td>
             </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
               >
                 야간
               </th>
-              <td class="px-6 py-4">
+              <td className="px-6 py-4 border-r border-solid">
                 {nightSalary > 0 && today == nowStr && `${workHours}시간`}
               </td>
-              <td class="px-6 py-4">
-                {nightSalary > 0 && today == nowStr && `${nightSalary}원`}
+              <td className="px-6 py-4 border-r border-solid">
+                {nightSalary > 0 &&
+                  today == nowStr &&
+                  `${formatMoney(nightSalary)}원`}
               </td>
             </tr>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
               >
                 공휴일 및 주말
               </th>
-              <td class="px-6 py-4">
+              <td className="px-6 py-4 border-r border-solid">
                 {holidayAndWeekendSalary > 0 &&
                   today == nowStr &&
                   `${workHours}시간`}
               </td>
-              <td class="px-6 py-4">
+              <td className="px-6 py-4 border-r border-solid">
                 {holidayAndWeekendSalary > 0 &&
                   today == nowStr &&
-                  `${holidayAndWeekendSalary}원`}
+                  `${formatMoney(holidayAndWeekendSalary)}원`}
               </td>
             </tr>
-            <tr class="bg-white dark:bg-gray-800">
+            <tr className="bg-white dark:bg-gray-800 border-b border-solid">
               <th
                 scope="row"
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
               >
                 Month
               </th>
-              <td class="px-6 py-4"></td>
-              <td class="px-6 py-4">
-                {monthlyWage > 0 ? `${monthlyWage}원` : `${totalSalaryPay}원`}
+              <td className="px-6 py-4 border-r border-solid"></td>
+              <td className="px-6 py-4 border-r border-solid">
+                {monthlyWage > 0
+                  ? `${formatMoney(monthlyWage)}원`
+                  : `${formatMoney(totalSalaryPay)}원`}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+      {/* <div classNameName="relative flex justify-center items-center py-10">
+        <div classNameName="border h-[160px] w-[350px]">
+          <div classNameName="flex border-b border-t border-solid items-center justify-between">
+            <div classNameName="flex border-r  px-2 py-1 text-[12px]">Work</div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">Time</div>
+            <div classNameName="flex px-2 py-1 text-[12px]">Pay</div>
+          </div>
+
+          <div classNameName="flex border-b border-solid items-center justify-between">
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">주간</div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">
+              {daySalary > 0 && today == nowStr && `${workHours}`}
+            </div>
+            <div classNameName="flex px-2 py-1 text-[12px]">
+              {daySalary > 0 && today == nowStr && `${formatMoney(daySalary)}`}
+            </div>
+          </div>
+          <div classNameName="flex border-b items-center border-solid justify-between">
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">야간</div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">
+              {nightSalary > 0 && today == nowStr && `${workHours}시간`}
+            </div>
+            <div classNameName="flex px-2 py-1 text-[12px]">
+              {nightSalary > 0 &&
+                today == nowStr &&
+                `${formatMoney(nightSalary)}원`}
+            </div>
+          </div>
+          <div classNameName="flex border-b items-center border-solid justify-between">
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">
+              공휴일 및 주말
+            </div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">
+              {holidayAndWeekendSalary > 0 &&
+                today == nowStr &&
+                `${workHours}시간`}
+            </div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]">
+              {holidayAndWeekendSalary > 0 &&
+                today == nowStr &&
+                `${formatMoney(holidayAndWeekendSalary)}원`}
+            </div>
+          </div>
+          <div classNameName="flex items-center justify-between border-solid border-b">
+            <div classNameName="flex border-r px-2 py-1 text-[12px] ">Month</div>
+            <div classNameName="flex border-r px-2 py-1 text-[12px]"></div>
+            <div classNameName="flex px-2 py-1 text-[12px]">
+              {monthlyWage > 0
+                ? `${formatMoney(monthlyWage)}원`
+                : `${formatMoney(totalSalaryPay)}원`}
+            </div>
+          </div>
+        </div>
+      </div> */}
     </>
   ) : null;
 }
