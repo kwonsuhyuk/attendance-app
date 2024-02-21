@@ -1,20 +1,20 @@
-import '../firebase';
-import { Route, Routes } from 'react-router-dom';
-import AccessCameraPage from './AccessCameraPage';
-import DateCheckPage from './DateCheckPage';
-import ShowSalary from '../Components/ShowSalary/ShowSalary';
-import ManagerSettingPage from './managerSettingPage';
-import EmployeeListPage from './EmployeeListPage';
-import MenuBar from '../Components/MenuBar';
-import { useEffect, useState } from 'react';
-import { get, getDatabase, ref } from 'firebase/database';
-import { useSelector } from 'react-redux';
-import { ClipLoader } from 'react-spinners';
-import MyCalendar from '../Components/Calendar/MyCalendar';
-import CompanyMain from './CompanyMain';
-import ShowCalendarPage from './ShowCalendarPage';
-import { Divider } from '@mui/material';
-import { useNavigate, useMatch } from 'react-router-dom';
+import "../firebase";
+import { Route, Routes } from "react-router-dom";
+import AccessCameraPage from "./AccessCameraPage";
+import DateCheckPage from "./DateCheckPage";
+import ShowSalary from "../Components/ShowSalary/ShowSalary";
+import ManagerSettingPage from "./ManagerSettingPage";
+import EmployeeListPage from "./EmployeeListPage";
+import MenuBar from "../Components/MenuBar";
+import { useEffect, useState } from "react";
+import { get, getDatabase, ref } from "firebase/database";
+import { useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners";
+import MyCalendar from "../Components/Calendar/MyCalendar";
+import CompanyMain from "./CompanyMain";
+import ShowCalendarPage from "./ShowCalendarPage";
+import { Divider } from "@mui/material";
+import { useNavigate, useMatch } from "react-router-dom";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -59,34 +59,20 @@ function MainPage() {
           aria-label="Loading Spinner"
           data-testid="loader"
         />
-        <h3>로딩 중입니다.</h3>
+        <h3>로딩 중 입니다.</h3>
       </div> // 로딩 스피너
     );
   }
 
   return (
-    <div className="min-h-screen min-w-screen bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text">
-      <div className="h-full overflow-auto xl:px-20 py-14">
-        {/* <div className="flex gap-5">
-             <div>{currentCompany?.companyName}</div>
-            <img
-               src={currentCompany?.companyLogo}
-               alt="회사로고"
-               className="w-10 h-10"
-             />
-           </div> */}
-
-        {userType === 'employee' && (
-          <div className="bg-red-300">
-            <ShowSalary />
-          </div>
-        )}
-
-        {/* <MenuBar
+    <div className="min-h-screen min-w-screen bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text flex flex-col">
+      <div className="overflow-auto px-10 md:px-20 py-10">
+        <MenuBar
           companyName={currentCompany?.companyName}
           companyLogo={currentCompany?.companyLogo}
-        /> */}
-
+        />
+      </div>
+      <div className="overflow-auto px-5 md:px-20 flex-grow">
         <Routes>
           <Route
             path="/companymain"
@@ -99,7 +85,7 @@ function MainPage() {
             }
           />
           <Route path="/datecheck" element={<DateCheckPage />} />
-          <Route path="/setting" element={<ManagerSettingPage />} />
+          <Route path="/setting/*" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />
         </Routes>

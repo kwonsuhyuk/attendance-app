@@ -209,6 +209,7 @@ function ManagerFirstPage() {
       name: state.name,
       uid: state.id,
       email: currentUser.email,
+      phoneNumber: state.phoneNumber,
       userType: "admin",
     };
 
@@ -225,7 +226,7 @@ function ManagerFirstPage() {
       await set(companyRef, companyBasicData);
       await pushJobData();
       setLoading(false);
-      navigate(`/${companyID}`);
+      navigate(`/${companyID}/companymain`);
     } catch (e) {
       toast.error(e.message);
       setLoading(false);
