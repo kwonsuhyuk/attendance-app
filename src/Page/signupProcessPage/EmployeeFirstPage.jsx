@@ -104,7 +104,7 @@ function EmployeeFirstPage() {
     const db = getDatabase();
     const userRef = ref(
       db,
-      `companyCode/${companyCode}/users/${currentUser.uid}`
+      `companyCode/${companyCode}/users/${currentUser?.uid}`
     );
     const userData = {
       name: state.name,
@@ -112,10 +112,10 @@ function EmployeeFirstPage() {
       email: currentUser.email,
       phoneNumber: state.phoneNumber,
       companyCode: companyCode,
-      jobName: selectJob.jobName,
+      jobName: selectJob?.jobName,
       userType: "employee",
-      salaryAmount: parseInt(salaryAmount),
-      salaryType: salaryType,
+      salaryAmount: salaryAmount ? parseInt(salaryAmount) : 0,
+      salaryType: salaryType ? salaryType : "hourPay",
     };
     try {
       await set(userRef, userData);
@@ -170,7 +170,7 @@ function EmployeeFirstPage() {
               display: "flex",
               flexDirection: "column",
               overflowY: "scroll",
-              gap: 10,
+              gap: 5,
             }}
             className="text-gray-500 ">
             <Typography sx={{ mt: 2, mb: 1 }} className="animate-text">
@@ -181,6 +181,10 @@ function EmployeeFirstPage() {
               <br />
               커뮤니티에 오신 것을 환영합니다!
             </Typography>
+            <div className="text-lg font-bold text-red-300">
+              회사에서 안내받은 <br />
+              직종 및 급여 지급 방식 급여를 입력해주세요!
+            </div>
             <Box>
               <FormControl>
                 <FormLabel
@@ -288,16 +292,35 @@ function EmployeeFirstPage() {
               flexDirection: "column",
               gap: 10,
             }}
-            className="text-gray-500 ">
-            <Typography sx={{ mt: 2, mb: 1 }} className="animate-text">
-              앱 사용법
+            className="">
+            <Typography
+              sx={{ mt: 2, mb: 1 }}
+              className="animate-text text-black font-black">
+              앱 기능 및 사용법
             </Typography>
-            <Box
-              sx={{
-                overflowY: "scroll",
-              }}>
-              {/* 간단한 앱사용법 안내 */}
-            </Box>
+            <div className="overflow-y-auto text-sm text-black flex flex-col gap-5 leading-7">
+              <div className="flex gap-3">
+                <div className="text-2xl">.</div>
+                <div className="border-b border-solid border-cyan-500">
+                  Att-App은 QR스캔으로 자동으로 출근, 퇴근을 기록하고 월별로
+                  쉽게 정산하기 위한 서비스입니다.
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="text-2xl">.</div>
+                <div className="border-b border-solid border-cyan-500">
+                  직원 분 또한 Att-App을 통해 자신의 월별 급여를 한눈에 알아 보
+                  실 수 있습니다.
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="text-2xl">.</div>
+                <div className="border-b border-solid border-cyan-500">
+                  가입 후 <span className="font-bold"> App Guide</span>{" "}
+                  페이지에서 자세한 앱 사용법을 알 수 있습니다.
+                </div>
+              </div>
+            </div>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button

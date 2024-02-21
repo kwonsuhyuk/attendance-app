@@ -15,6 +15,7 @@ import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import { Divider } from "@mui/material";
 import { useNavigate, useMatch } from "react-router-dom";
+import AppGuidePage from "./AppGuidePage";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ function MainPage() {
           companyLogo={currentCompany?.companyLogo}
         />
       </div>
-      <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto">
+      <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto relative">
         <Routes>
           <Route
             path="/companymain"
@@ -89,6 +90,7 @@ function MainPage() {
           <Route path="/setting/*" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />
+          <Route path="/appguide" element={<AppGuidePage />} />
         </Routes>
       </div>
       {/* footer */}
