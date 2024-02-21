@@ -1,9 +1,9 @@
-import QrScan from "../Components/QR/QrScan";
+import QrScan from '../Components/QR/QrScan';
 
-function AccessCameraPage() {
+function AccessCameraPage({ companyLogo }) {
   return (
     <div>
-      <QrScan />
+      <QrScan companyLogo={companyLogo} />
     </div>
   );
 }

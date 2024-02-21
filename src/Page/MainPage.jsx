@@ -92,7 +92,12 @@ function MainPage() {
             path="/companymain"
             element={<CompanyMain companyLogo={currentCompany?.companyLogo} />}
           />
-          <Route path="/camera" element={<AccessCameraPage />} />
+          <Route
+            path="/camera"
+            element={
+              <AccessCameraPage companyLogo={currentCompany?.companyLogo} />
+            }
+          />
           <Route path="/datecheck" element={<DateCheckPage />} />
           <Route path="/setting" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />

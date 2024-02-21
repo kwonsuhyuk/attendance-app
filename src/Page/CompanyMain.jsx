@@ -19,6 +19,7 @@ const CompanyMain = ({ companyLogo }) => {
   const navigate = useNavigate();
   const { currentUser, userType } = useSelector((state) => state.user);
   const [currentCompany, setCurrentCompany] = useState();
+  const [jobName, setJobName] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
@@ -37,9 +38,15 @@ const CompanyMain = ({ companyLogo }) => {
       setIsLoading(true);
       const db = getDatabase();
       const dbRef = ref(db, `companyCode/${currentUser?.photoURL}/companyInfo`);
+      const jobNameRef = ref(
+        db,
+        `companyCode/${currentUser?.photoURL}/users/${currentUser?.uid}/jobName`
+      );
       const snapshot = await get(dbRef);
-      if (snapshot.val()) {
+      const jobSnapshot = await get(jobNameRef);
+      if (snapshot.val() && jobSnapshot.val()) {
         setCurrentCompany(snapshot.val());
+        setJobName(jobSnapshot.val());
       }
       setIsLoading(false);
     }
@@ -51,9 +58,9 @@ const CompanyMain = ({ companyLogo }) => {
 
   return (
     <>
-      <div className="m-10 ">
-        <div className="flex flex-col">
-          <div className="flex flex-row space-x-[150px]">
+      <div className="m-10">
+        <div className="flex flex-col space-y-8">
+          <div className="flex justify-between">
             <a
               className="cursor-pointer"
               onClick={() => navigate(`${currentUser.photoURL}/`)}
@@ -62,36 +69,38 @@ const CompanyMain = ({ companyLogo }) => {
             </a>
             <a className="cursor-pointer">menu</a>
           </div>
-          <Divider />
-          <div className="flex gap-5 flex-col">
-            <div>{currentCompany?.companyName}</div>
+
+          <div className="flex flex-col items-center space-y-4">
             <img
               src={companyLogo}
               alt="회사로고"
-              className="rounded-full w-24 h-24 mr-5"
+              className="rounded-full w-[130px] h-[130px]"
               style={{ border: '2px solid black' }}
             />
-
-            <div onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
-              캘린더 바로가기 {'>'}
+            <div className="flex items-center text-white-text">
+              {currentCompany?.companyName}/{jobName}
             </div>
           </div>
-          <div></div>
-        </div>
-        {userType === 'employee' && (
-          <>
-            <div className="flex flex-col">
-              <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
+          <div className="flex flex-col items-center space-y-4">
+            <div
+              className="flex flex-row justify-between w-full items-center cursor-pointer text-white-text"
+              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}
+            >
+              <div>캘린더 바로가기</div>
+              <div className="text-white-text">&gt;</div>
             </div>
-          </>
-        )}
-        <div>
-          <a
-            className="dark-nav-selected cursor-pointer"
-            onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-          >
-            QR SCAN
-          </a>
+            <div className="border-b border-solid w-[316px]"></div>
+            {userType === 'employee' && (
+              <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
+            )}
+            <div
+              className="cursor-pointer text-[20px] font-extrabold text-white-text"
+              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
+            >
+              QR SCAN
+            </div>
+            <div className="border-b border-solid w-[316px]"></div>
+          </div>
         </div>
       </div>
     </>

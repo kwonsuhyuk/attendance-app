@@ -43,6 +43,7 @@ function MyCalendar() {
   const userId = currentUser?.uid;
 
   useEffect(() => {
+    let isMounted = true;
     const fetchWorkTimes = async () => {
       const db = getDatabase();
       const dateRef = ref(
@@ -119,12 +120,16 @@ function MyCalendar() {
             newWorkTimes[workDate] = workHours;
           }
         }
-
-        setWorkTimes(newWorkTimes);
+        if (isMounted) {
+          setWorkTimes(newWorkTimes);
+        }
       }
     };
 
     fetchWorkTimes();
+    return () => {
+      isMounted = false;
+    };
   }, [companyCode, userId]);
 
   const tileClassName = ({ date: tileDate, view }) => {
@@ -150,8 +155,13 @@ function MyCalendar() {
       const workHours = workTimes[dateStr];
       setModalContent(
         <>
-          당신이 {dateStr}에 일한 시간은{' '}
-          <span style={{ color: 'blue' }}>{workHours}</span> 시간 입니다.
+          <div className="flex flex-row w-full justify-between text-white-text">
+            <div>근무 날짜 : </div>
+            <div>{dateStr}</div>
+          </div>
+          <div className="flex flex-row w-full justify-between text-white-text">
+            <div>일한 시간 : </div> <div>{workHours}</div>
+          </div>
         </>
       );
     } else {
@@ -171,6 +181,7 @@ function MyCalendar() {
   return (
     <div className="flex justify-center items-center">
       <Calendar
+        className=""
         onChange={onChange}
         value={date}
         tileClassName={tileClassName}
@@ -184,8 +195,13 @@ function MyCalendar() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Work Hours Information
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="flex justify-center items-center text-white-text font-bold"
+          >
+            상세기록
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {modalContent}
