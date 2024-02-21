@@ -42,6 +42,9 @@ function SignupPage() {
 
   useEffect(() => {
     if (!error) return;
+    if (error) {
+      console.log("qiwjjoi");
+    }
     setTimeout(() => {
       setError("");
     }, 3000);
@@ -71,7 +74,7 @@ function SignupPage() {
   // }, [isCodeValid]);
 
   const sendUserInfo = useCallback(
-    async (name, email, password, companyCode) => {
+    async (name, email, password, companyCode, phoneNumber) => {
       setLoading(true);
       try {
         const auth = getAuth();
@@ -87,7 +90,12 @@ function SignupPage() {
 
         dispatch(setUser(user));
         // 유저 정보 다음 페이지로 이동해서 한번에 보낼거임
-        const userData = { name: name, id: user.uid, companyCode: companyCode };
+        const userData = {
+          name: name,
+          id: user.uid,
+          companyCode: companyCode,
+          phoneNumber: phoneNumber,
+        };
 
         // 추가 정보 입력창으로 이동하게 함
         if (position === "manager") {
@@ -96,7 +104,7 @@ function SignupPage() {
           navigate("/employeefirst", { state: userData });
         }
       } catch (e) {
-        console.log(e);
+        setError(e.message);
       } finally {
         setLoading(false);
       }
@@ -110,10 +118,11 @@ function SignupPage() {
       const data = new FormData(e.currentTarget);
       const name = data.get("name");
       const email = data.get("email");
+      const phoneNumber = data.get("phoneNumber");
       const password = data.get("password");
       const confirmPW = data.get("confirmPW");
 
-      if (!name || !email || !password || !confirmPW) {
+      if (!name || !email || !password || !confirmPW || !phoneNumber) {
         setError("모든 항목을 입력해주세요");
         return;
       }
@@ -146,7 +155,7 @@ function SignupPage() {
         return;
       }
 
-      sendUserInfo(name, email, password, companyCode);
+      sendUserInfo(name, email, password, companyCode, phoneNumber);
     },
     [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode]
   );
@@ -275,6 +284,21 @@ function SignupPage() {
               label="이메일"
               name="email"
               autoComplete="off"
+            />
+            <Typography
+              component="p"
+              variant="p"
+              color="gray"
+              sx={{ fontSize: "12px" }}>
+              (유효한 이메일을 작성해주셔야 합니다!) <br />
+              (이메일형식예시 : hongildong@naver.com)
+            </Typography>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="전화번호"
+              name="phoneNumber"
             />
             <TextField
               margin="normal"
