@@ -113,35 +113,38 @@ const CompanyMain = ({ companyLogo }) => {
     );
   } else {
     return (
-      <div className="m-10">
-        <div className="flex flex-col space-y-8">
-          <div className="flex flex-col items-center space-y-4">
+      <div>
+        <div className="flex flex-col gap-16">
+          <div className="flex flex-col items-center gap-4">
             <img
               src={companyLogo}
               alt="회사로고"
               className="rounded-full w-[130px] h-[130px]"
-              style={{ border: '2px solid black' }}
+
             />
-            <div className="flex items-center text-white-text">
-              {currentCompany?.companyName}/{jobName}
+            <div className="font-black">{currentCompany?.companyName}</div>
+            <div className="flex items-center">
+              {currentUser?.displayName}/{jobName}
             </div>
           </div>
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center gap-4">
             <div
-              className="flex flex-row w-full justify-between space-x-16 items-center"
-              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}
-            >
+
+              className="flex flex-row justify-between w-full items-center cursor-pointer"
+              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
+
               <div>캘린더 바로가기</div>
-              <div className="text-white-text">&gt;</div>
+              <div>&gt;</div>
             </div>
             <div className="border-b border-solid w-[316px]"></div>
             {userType === 'employee' && (
               <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
             )}
             <div
-              className="cursor-pointer text-[20px] font-extrabold text-white-text"
-              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-            >
+
+              className="cursor-pointer text-[20px] font-extrabold"
+              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}>
+
               QR SCAN
             </div>
             <div className="border-b border-solid w-[316px]"></div>

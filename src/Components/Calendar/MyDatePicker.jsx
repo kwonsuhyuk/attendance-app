@@ -160,6 +160,9 @@ const MyDatePicker = () => {
           <FormControlLabel
             control={
               <Checkbox
+                sx={{
+                  color: darkMode ? "white" : "black",
+                }}
                 checked={isholiday}
                 onChange={(event) => setIsHoliday(event.target.checked)}
                 inputProps={{ "aria-label": "controlled" }}
