@@ -21,6 +21,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
+import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -72,6 +73,14 @@ const MenuBar = ({ companyName, companyLogo }) => {
         setOpen(false);
       },
       icon: <DarkModeIcon />,
+    },
+    {
+      title: "APP GUIDE",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/appguide`);
+        setOpen(false);
+      },
+      icon: <LiveHelpIcon />,
     },
     {
       title: "LOGOUT",
@@ -259,6 +268,8 @@ const MenuBar = ({ companyName, companyLogo }) => {
             ? "CALENDAR"
             : location.pathname.includes("camera")
             ? "CAMERA"
+            : location.pathname.includes("appguide")
+            ? "GUIDE"
             : "MENU"}
         </div>
         <div className="cursor-pointer" onClick={toggleDrawer(true)}>

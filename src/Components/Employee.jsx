@@ -352,7 +352,7 @@ const Employee = ({ user }) => {
                       padding: "5px 10px",
                       borderRadius: "5px",
                     }}>
-                    변경사항 저장
+                    변경 사항 저장
                   </Button>
                   <Button
                     onClick={handleSettingClose}
