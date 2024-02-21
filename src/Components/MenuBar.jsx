@@ -4,9 +4,23 @@ import "../firebase";
 import { getAuth, signOut } from "firebase/auth";
 import { FaCamera } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import {
+  Box,
+  FormControlLabel,
+  FormGroup,
+  ListItemIcon,
+  SwipeableDrawer,
+  Switch,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { toggleMode } from "../store/darkmodeSlice";
+import { List, ListItem, ListItemText } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Typography } from "antd";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -14,6 +28,60 @@ const MenuBar = ({ companyName, companyLogo }) => {
   const dispatch = useDispatch();
   const { userType, currentUser } = useSelector((state) => state.user);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOpen(open);
+  };
+
+  const menuItems = [
+    {
+      title: "HOME",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/companymain`);
+        setOpen(false);
+      },
+      icon: <HomeIcon />,
+    },
+    {
+      title: "CALENDAR",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/calendar`);
+        setOpen(false);
+      },
+      icon: <CalendarTodayIcon />,
+    },
+    {
+      title: "QR SCAN",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/camera`);
+        setOpen(false);
+      },
+      icon: <CameraAltIcon />,
+    },
+    {
+      title: "DARKMODE",
+      handle: () => {
+        toggleTheme();
+        setOpen(false);
+      },
+      icon: <DarkModeIcon />,
+    },
+    {
+      title: "LOGOUT",
+      handle: () => {
+        logout();
+        setOpen(false);
+      },
+      icon: <LogoutIcon />,
+    },
+  ];
 
   const logout = async () => {
     await signOut(getAuth());
@@ -177,12 +245,57 @@ const MenuBar = ({ companyName, companyLogo }) => {
   } else {
     // user가 직원일시
     return (
-      // 메인 , 자기켈린더, QR
-      <>
-        <div onClick={logout} className="text-sm cursor-pointer">
-          logout
+      <div
+        className="flex pb-3 text-xs justify-between text-white-nav-text dark:text-dark-nav-text"
+        style={{
+          borderBottom: !darkMode
+            ? "1px solid #00000080"
+            : "1px solid #FFFFFF80",
+        }}>
+        <div>
+          {location.pathname.includes("companymain")
+            ? "HOME"
+            : location.pathname.includes("calendar")
+            ? "CALENDAR"
+            : location.pathname.includes("camera")
+            ? "CAMERA"
+            : "MENU"}
         </div>
-      </>
+        <div className="cursor-pointer" onClick={toggleDrawer(true)}>
+          MENU
+        </div>
+
+        <SwipeableDrawer
+          anchor="right"
+          open={open}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "16px",
+            }}>
+            <img
+              src={companyLogo}
+              alt="회사로고"
+              className="rounded-full w-10 h-10"
+            />
+            <Typography variant="h6" component="div">
+              {currentUser?.displayName}
+            </Typography>
+            <List>
+              {menuItems.map((item, index) => (
+                <ListItem button key={item.title} onClick={item.handle}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </SwipeableDrawer>
+      </div>
     );
   }
 };

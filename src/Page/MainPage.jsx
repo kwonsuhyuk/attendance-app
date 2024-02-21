@@ -21,6 +21,7 @@ function MainPage() {
   const { currentUser, userType } = useSelector((state) => state.user);
   const [currentCompany, setCurrentCompany] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const { darkMode } = useSelector((state) => state.darkmodeSlice);
 
   const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
   useEffect(() => {
@@ -72,7 +73,7 @@ function MainPage() {
           companyLogo={currentCompany?.companyLogo}
         />
       </div>
-      <div className="overflow-auto px-5 md:px-20 flex-grow">
+      <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto">
         <Routes>
           <Route
             path="/companymain"
@@ -90,6 +91,12 @@ function MainPage() {
           <Route path="/calendar" element={<ShowCalendarPage />} />
         </Routes>
       </div>
+      {/* footer */}
+      <div
+        className="lg:hidden mx-10 mb-10"
+        style={{
+          borderTop: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
+        }}></div>
     </div>
   );
 }

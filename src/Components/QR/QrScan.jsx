@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
-import { getDatabase, get, ref, set, update, push } from 'firebase/database';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
+import { getDatabase, get, ref, set, update, push } from "firebase/database";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function QrScan({ companyLogo }) {
   const [scanResult, setScanResult] = useState(null);
@@ -14,9 +14,10 @@ function QrScan({ companyLogo }) {
   const [currentCompany, setCurrentCompany] = useState();
   const [jobName, setJobName] = useState();
   const navigate = useNavigate();
+  const { darkMode } = useSelector((state) => state.darkmodeSlice);
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner('reader', {
+    const scanner = new Html5QrcodeScanner("reader", {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -67,12 +68,12 @@ function QrScan({ companyLogo }) {
         const nextDaySnapshot = await get(nextDayRef);
         if (nextDaySnapshot.exists() && nextDaySnapshot.val().startTime) {
           await update(nextDayRef, { endTime: dateStr });
-          setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
-          toast.success('다음 날 퇴근 인증이 완료되었습니다');
+          setScanMessage("다음 날 퇴근 인증이 완료되었습니다");
+          toast.success("다음 날 퇴근 인증이 완료되었습니다");
         } else {
           await update(dbref, { endTime: dateStr });
-          setScanMessage('퇴근 인증이 완료되었습니다');
-          toast.success('퇴근 인증이 완료되었습니다');
+          setScanMessage("퇴근 인증이 완료되었습니다");
+          toast.success("퇴근 인증이 완료되었습니다");
         }
       } else {
         await set(dbref, { startTime: dateStr });
@@ -82,10 +83,10 @@ function QrScan({ companyLogo }) {
           nightSalary: 0,
           holidayAndWeekendSalary: 0,
         });
-        setScanMessage('출근 인증이 완료되었습니다');
-        toast.success('출근 인증이 완료되었습니다');
+        setScanMessage("출근 인증이 완료되었습니다");
+        toast.success("출근 인증이 완료되었습니다");
       }
-      navigate(`/${currentUser.photoURL}/companymain`);
+      navigate(`/${currentUser?.photoURL}/companymain`);
     });
     getCompanyInfo();
     return () => {
@@ -94,21 +95,21 @@ function QrScan({ companyLogo }) {
   }, [companyCode, userId]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col items-center gap-4">
         <img
           src={companyLogo}
           alt="회사로고"
           className="rounded-full w-[130px] h-[130px]"
-          style={{ border: '2px solid black' }}
         />
-        <div className="flex items-center text-white-text">
-          {currentCompany?.companyName}/{jobName}
+        <div className="font-black">{currentCompany?.companyName}</div>
+        <div className="flex items-center">
+          {currentUser?.displayName}/{jobName}
         </div>
       </div>
       <div className="h-full w-full">
         {/* <h1>Qr 코드를 스캔하세요</h1> */}
-        <div id="reader"></div>
+        <div id="reader" className="p-12"></div>
       </div>
     </div>
   );
