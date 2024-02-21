@@ -142,16 +142,16 @@ function ShowSalary({ matchCalendar, matchHome }) {
             let totalNightSalary = 0;
             let totalWeekendOrHolidaySalary = 0;
 
-            const getNextDate = (date) => {
+            function getNextDate(date) {
               let currentDate = new Date(date);
               currentDate.setDate(currentDate.getDate() + 1);
               return currentDate.toISOString().split("T")[0];
-            };
-            const getPrevDate = (dateStr) => {
+            }
+            function getPrevDate(dateStr) {
               const date = new Date(dateStr);
               date.setDate(date.getDate() - 1);
               return date.toISOString().split("T")[0];
-            };
+            }
             let start, end;
             for (let date in dates) {
               const { startTime, endTime } = dates[date];
@@ -301,7 +301,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
+      <div classNameNameName="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
           color="black"
           size={100}
@@ -414,79 +414,82 @@ function ShowSalary({ matchCalendar, matchHome }) {
     </>
   ) : matchCalendar ? (
     <>
-      <div className="relative flex justify-center overflow-x-auto text-white-text">
-        <table className="w-[350px] text-[12px] rtl:text-right text-gray-500 dark:text-gray-400 text-center border border-solid">
-          <thead className="text-xs text-gray-700  border-t border-b border-solid uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="relative w-full h-full overflow-x-auto">
+        <table className="w-full text-xs rtl:text-right text-center border-none">
+          <thead className="text-xs border-t border-b border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
             <tr>
-              <th scope="col" className="px-6 py-3 border-r border-solid ">
+              <th
+                scope="col"
+                className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                 Work
               </th>
-              <th scope="col" className="px-6 py-3 border-r border-solid ">
+              <th
+                scope="col"
+                className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 Time
               </th>
-              <th scope="col" className="px-6 py-3 border-r border-solid ">
+              <th scope="col" className="pl-6 py-3 text-end">
                 Pay
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
+            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
+                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                 주간
               </th>
-              <td className="px-6 py-4 border-r border-solid">
-                {" "}
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 {daySalary > 0 && today == nowStr && `${workHours}`}
               </td>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="pl-6 py-3 text-end text-nowrap">
                 {daySalary > 0 &&
                   today == nowStr &&
                   `${formatMoney(daySalary)}`}
               </td>
             </tr>
-            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
+            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
+                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                 야간
               </th>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 {nightSalary > 0 && today == nowStr && `${workHours}시간`}
               </td>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="pl-6 py-3 text-end text-nowrap">
                 {nightSalary > 0 &&
                   today == nowStr &&
                   `${formatMoney(nightSalary)}원`}
               </td>
             </tr>
-            <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
+            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
+                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                 공휴일 및 주말
               </th>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 {holidayAndWeekendSalary > 0 &&
                   today == nowStr &&
                   `${workHours}시간`}
               </td>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="pl-6 py-3 text-end text-nowrap">
                 {holidayAndWeekendSalary > 0 &&
                   today == nowStr &&
                   `${formatMoney(holidayAndWeekendSalary)}원`}
               </td>
             </tr>
 
-            <tr className="bg-white dark:bg-gray-800 border-b border-solid">
+            <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
+                className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
                 Month
               </th>
-              <td className="px-6 py-4 border-r border-solid"></td>
-              <td className="px-6 py-4 border-r border-solid">
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub"></td>
+              <td className="pl-6 py-3 text-end text-nowrap">
                 {monthlyWage > 0
                   ? `${formatMoney(monthlyWage)}원`
                   : `${formatMoney(totalSalaryPay)}원`}
