@@ -8,7 +8,6 @@ import {
 } from "firebase/database";
 import React, { useEffect, useState } from "react";
 
-
 import { useSelector } from "react-redux";
 import { useMatch } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -143,16 +142,16 @@ function ShowSalary({ matchCalendar, matchHome }) {
             let totalNightSalary = 0;
             let totalWeekendOrHolidaySalary = 0;
 
-            function getNextDate(date) {
+            const getNextDate = (date) => {
               let currentDate = new Date(date);
               currentDate.setDate(currentDate.getDate() + 1);
               return currentDate.toISOString().split("T")[0];
-            }
-            function getPrevDate(dateStr) {
+            };
+            const getPrevDate = (dateStr) => {
               const date = new Date(dateStr);
               date.setDate(date.getDate() - 1);
               return date.toISOString().split("T")[0];
-            }
+            };
             let start, end;
             for (let date in dates) {
               const { startTime, endTime } = dates[date];
@@ -302,7 +301,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
   if (isLoading) {
     return (
-      <div classNameNameName="flex flex-col justify-center items-center h-screen w-screen">
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
           color="black"
           size={100}
@@ -415,7 +414,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
     </>
   ) : matchCalendar ? (
     <>
-
       <div className="relative flex justify-center overflow-x-auto text-white-text">
         <table className="w-[350px] text-[12px] rtl:text-right text-gray-500 dark:text-gray-400 text-center border border-solid">
           <thead className="text-xs text-gray-700  border-t border-b border-solid uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -435,12 +433,11 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
-              >
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
                 주간
               </th>
               <td className="px-6 py-4 border-r border-solid">
-                {' '}
+                {" "}
                 {daySalary > 0 && today == nowStr && `${workHours}`}
               </td>
               <td className="px-6 py-4 border-r border-solid">
@@ -452,8 +449,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
-              >
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
                 야간
               </th>
               <td className="px-6 py-4 border-r border-solid">
@@ -468,8 +464,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="bg-white border-b border-solid dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
-              >
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
                 공휴일 및 주말
               </th>
               <td className="px-6 py-4 border-r border-solid">
@@ -487,8 +482,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="bg-white dark:bg-gray-800 border-b border-solid">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid"
-              >
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r border-solid">
                 Month
               </th>
               <td className="px-6 py-4 border-r border-solid"></td>
