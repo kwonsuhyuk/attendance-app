@@ -496,60 +496,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
           </tbody>
         </table>
       </div>
-      {/* <div classNameName="relative flex justify-center items-center py-10">
-        <div classNameName="border h-[160px] w-[350px]">
-          <div classNameName="flex border-b border-t border-solid items-center justify-between">
-            <div classNameName="flex border-r  px-2 py-1 text-[12px]">Work</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">Time</div>
-            <div classNameName="flex px-2 py-1 text-[12px]">Pay</div>
-          </div>
-
-          <div classNameName="flex border-b border-solid items-center justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">주간</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {daySalary > 0 && today == nowStr && `${workHours}`}
-            </div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {daySalary > 0 && today == nowStr && `${formatMoney(daySalary)}`}
-            </div>
-          </div>
-          <div classNameName="flex border-b items-center border-solid justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">야간</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {nightSalary > 0 && today == nowStr && `${workHours}시간`}
-            </div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {nightSalary > 0 &&
-                today == nowStr &&
-                `${formatMoney(nightSalary)}원`}
-            </div>
-          </div>
-          <div classNameName="flex border-b items-center border-solid justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              공휴일 및 주말
-            </div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {holidayAndWeekendSalary > 0 &&
-                today == nowStr &&
-                `${workHours}시간`}
-            </div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {holidayAndWeekendSalary > 0 &&
-                today == nowStr &&
-                `${formatMoney(holidayAndWeekendSalary)}원`}
-            </div>
-          </div>
-          <div classNameName="flex items-center justify-between border-solid border-b">
-            <div classNameName="flex border-r px-2 py-1 text-[12px] ">Month</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]"></div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {monthlyWage > 0
-                ? `${formatMoney(monthlyWage)}원`
-                : `${formatMoney(totalSalaryPay)}원`}
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   ) : null;
 }
