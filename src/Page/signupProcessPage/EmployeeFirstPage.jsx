@@ -110,6 +110,7 @@ function EmployeeFirstPage() {
       name: state.name,
       uid: state.id,
       email: currentUser.email,
+      phoneNumber: state.phoneNumber,
       companyCode: companyCode,
       jobName: selectJob.jobName,
       userType: "employee",
@@ -119,7 +120,7 @@ function EmployeeFirstPage() {
     try {
       await set(userRef, userData);
       setLoading(false);
-      navigate(`/${companyCode}`);
+      navigate(`/${companyCode}/companymain`);
     } catch (e) {
       toast.error(e.message);
       setLoading(false);
@@ -237,7 +238,7 @@ function EmployeeFirstPage() {
                     label="월급"
                   />
                   <FormControlLabel
-                    value="daliyPay"
+                    value="dailyPay"
                     control={<Radio />}
                     label="일급"
                   />

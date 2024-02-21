@@ -5,6 +5,8 @@ import UserCalendar from "./Calendar/UserCalendar";
 import "../firebase";
 import { getDatabase, off, onValue, ref, update } from "firebase/database";
 import { toast } from "react-toastify";
+import { formatMoney, numToKorean } from "../util/formatMoney";
+import { useSelector } from "react-redux";
 const style = {
   position: "absolute",
   top: "50%",
@@ -20,14 +22,22 @@ const style = {
 };
 
 const paymentMethods = {
-  hourPay: "시급 지급",
   monthlyPay: "월급 지급",
   dailyPay: "일급 지급",
+  hourPay: "시급 지급",
 };
 
 const Employee = ({ user }) => {
-  const { name, email, jobName, uid, salaryAmount, companyCode, salaryType } =
-    user;
+  const {
+    name,
+    email,
+    jobName,
+    uid,
+    salaryAmount,
+    companyCode,
+    salaryType,
+    phoneNumber,
+  } = user;
   const [detailOpen, setDetailOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [jobAnchorEl, setJobAnchorEl] = useState(null);
@@ -37,6 +47,7 @@ const Employee = ({ user }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState(salaryType);
   const [salary, setSalary] = useState(salaryAmount);
+  const { darkMode } = useSelector((state) => state.darkmodeSlice);
 
   const handleSalaryChange = (event) => {
     setSalary(event.target.value);
@@ -107,6 +118,7 @@ const Employee = ({ user }) => {
       salaryAmount: parseInt(salary),
     })
       .then(() => {
+        window.location.reload();
         toast.success("정보 수정이 완료되었습니다.");
         handleSettingClose();
       })
@@ -120,13 +132,41 @@ const Employee = ({ user }) => {
     <>
       {user && (
         <>
-          <div className="flex mb-5 gap-5 bg-orange-300 h-5">
-            <div>{name}</div>
-            <div>{email}</div>
-            <div>{jobName}</div>
-            <div>{salaryAmount}원</div>
-            <button onClick={handleShowInfo}>직원 상세보기</button>
-            <button onClick={handleSettingInfo}>직원 정보 수정</button>
+          <div
+            className="flex justify-between md:grid md:grid-cols-7 items-center justify-items-center py-5 text-sm"
+            style={{
+              borderBottom: !darkMode
+                ? "1px solid #00000033"
+                : "1px solid #FFFFFF33",
+            }}>
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {name}
+            </div>
+            <div className="hidden md:block overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {email}
+            </div>
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {jobName}
+            </div>
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {paymentMethods[salaryType]}
+            </div>
+            <div className="hidden md:block overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {salaryAmount && formatMoney(parseInt(salaryAmount))}원
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={handleSettingInfo}
+              style={{
+                borderBottom: !darkMode
+                  ? "1px solid #00000033"
+                  : "1px solid #FFFFFF33",
+              }}>
+              수정
+            </div>
+            <div onClick={handleShowInfo} className="cursor-pointer">
+              상세보기 & 정산 {">"}
+            </div>
           </div>
           <Modal
             open={detailOpen}
@@ -145,32 +185,79 @@ const Employee = ({ user }) => {
             open={settingOpen}
             onClose={handleSettingClose}
             aria-labelledby="child-modal-title"
-            aria-describedby="child-modal-description">
+            aria-describedby="child-modal-description"
+            style={{ borderRadius: "10px" }}>
             <Box
               sx={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "50vw",
-                height: "30vh",
+                width: {
+                  xs: "80vw",
+                  sm: "30vw",
+                },
+                height: {
+                  xs: "50vh",
+                  sm: "50vh",
+                },
                 bgcolor: "background.paper",
                 boxShadow: 24,
-                pt: 2,
+                pt: 4,
                 px: 4,
                 pb: 2,
+                fontFamily: "'Noto Sans KR', sans-serif",
+                color: "#333",
               }}>
-              {/* 직원 상세 달력 추가 하기  */}
-              <div className="text-2xl mb-3">직원 정보</div>
-              <form className="grid grid-cols-2 gap-10">
-                <div>이름 : {name}</div>
-                <div>이메일 : {email}</div>
-                <div>
-                  직종
+              <div
+                className="text-2xl mb-10"
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: "#FF6B00",
+                }}>
+                직원 정보
+              </div>
+              <form className="flex flex-col justify-between h-2/3">
+                <div
+                  className="grid grid-cols-2 justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <div>
+                    <strong className="text-xl font-bold">이름</strong>
+                  </div>
+                  <div>{name}</div>
+                </div>
+                <div
+                  className="grid grid-cols-2 justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <div>
+                    <strong className="text-xl font-bold">이메일</strong>
+                  </div>
+                  <div> {email}</div>
+                </div>
+                <div
+                  className="grid grid-cols-2 justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <div>
+                    <strong className="text-xl font-bold">휴대전화</strong>
+                  </div>
+                  <div> {phoneNumber}</div>
+                </div>
+                <div
+                  className="grid grid-cols-2 justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <strong className="text-xl font-bold">직종</strong>
                   <Button
                     aria-controls="job-menu"
                     aria-haspopup="true"
-                    onClick={handleJobNameClick}>
+                    onClick={handleJobNameClick}
+                    style={{
+                      padding: "5px 10px",
+                      border: "1px solid #FF6B00",
+                      borderRadius: "5px",
+                      marginLeft: "10px",
+                      color: "#FF6B00",
+                    }}>
                     {selectedJobName}
                   </Button>
                   <Menu
@@ -182,21 +269,44 @@ const Employee = ({ user }) => {
                     {jobNames.map((job, index) => (
                       <MenuItem
                         key={index}
-                        onClick={() => handleJobNameSelect(job.jobName)}>
+                        onClick={() => handleJobNameSelect(job.jobName)}
+                        style={{ padding: "10px 20px" }}>
                         {job.jobName}
                       </MenuItem>
                     ))}
                   </Menu>
                 </div>
 
-                <div>
-                  지급방식
+                <div
+                  className="grid grid-cols-2 justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <strong className="text-xl font-bold">지급방식</strong>
                   <Button
                     aria-controls="payment-menu"
                     aria-haspopup="true"
-                    onClick={handlePaymentMethodClick}>
+                    onClick={handlePaymentMethodClick}
+                    style={{
+                      padding: "5px 10px",
+                      border: `1px solid ${
+                        selectedPaymentMethod === "hourPay"
+                          ? "#008000"
+                          : selectedPaymentMethod === "dailyPay"
+                          ? "#0000FF"
+                          : "red"
+                      }`,
+                      borderRadius: "px",
+                      marginLeft: "10px",
+                      color: `${
+                        selectedPaymentMethod === "hourPay"
+                          ? "#008000"
+                          : selectedPaymentMethod === "dailyPay"
+                          ? "#0000FF"
+                          : "red"
+                      }`,
+                    }}>
                     {paymentMethods[selectedPaymentMethod]}
                   </Button>
+
                   <Menu
                     id="payment-menu"
                     anchorEl={paymentAnchorEl}
@@ -206,18 +316,54 @@ const Employee = ({ user }) => {
                     {Object.entries(paymentMethods).map(([key, label]) => (
                       <MenuItem
                         key={key}
-                        onClick={() => handlePaymentMethodSelect(key)}>
+                        onClick={() => handlePaymentMethodSelect(key)}
+                        style={{ padding: "10px 20px" }}>
                         {label}
                       </MenuItem>
                     ))}
                   </Menu>
                 </div>
-                <div>
-                  급여 <Input value={salary} onChange={handleSalaryChange} />
+                <div
+                  className="grid grid-cols-2 items-center justify-items-center pb-2"
+                  style={{ borderBottom: "1px solid #e9e9e9" }}>
+                  <strong className="text-xl font-bold">급여</strong>{" "}
+                  <div>
+                    <Input
+                      value={salary}
+                      onChange={handleSalaryChange}
+                      style={{ marginLeft: "10px" }}
+                    />
+                    <div className="text-xs ml-3">
+                      {"="}
+                      <span className="text-gray-500 underline">
+                        {numToKorean(salary)}
+                      </span>{" "}
+                      원
+                    </div>
+                  </div>
                 </div>
+
                 <div className="absolute right-5 bottom-3 flex gap-3">
-                  <Button onClick={handleSettingSubmit}>확인</Button>
-                  <Button onClick={handleSettingClose}>취소</Button>
+                  <Button
+                    onClick={handleSettingSubmit}
+                    style={{
+                      backgroundColor: "#FF6B00",
+                      color: "#fff",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                    }}>
+                    변경사항 저장
+                  </Button>
+                  <Button
+                    onClick={handleSettingClose}
+                    style={{
+                      backgroundColor: "#6c757d",
+                      color: "#fff",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                    }}>
+                    취소
+                  </Button>
                 </div>
               </form>
             </Box>

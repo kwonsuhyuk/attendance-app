@@ -1,7 +1,6 @@
-import DatePicker from 'react-datepicker';
-import { useState, useEffect } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import { db } from '../../firebase/index.js';
+import DatePicker from "react-datepicker";
+import { useState, useEffect } from "react";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   child,
   getDatabase,
@@ -12,94 +11,257 @@ import {
   get,
   remove,
   onValue,
-} from 'firebase/database';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+} from "firebase/database";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "./MyDatePicker.css";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import HelpIcon from "@mui/icons-material/Help";
+import { Checkbox, FormControlLabel, Input } from "@mui/material";
+import { ClipLoader } from "react-spinners";
+import { Button } from "antd";
+import CloseIcon from "@mui/icons-material/Close";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isholiday, setIsHoliday] = useState();
+  const [holidayPay, setHolidayPay] = useState(0);
+  const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const [isLoading, setIsLoading] = useState(false);
+  const [updatedHolidays, setUpdatedHolidays] = useState(selectedHolidays);
 
   useEffect(() => {
-    const dbref = ref(
-      getDatabase(),
-      `companyCode/${companyCode}/companyInfo/holidayList`
-    );
-    onValue(dbref, (snapshot) => {
+    async function getData() {
+      setIsLoading(true);
+      const snapshot = await get(
+        ref(
+          getDatabase(),
+          "companyCode/" + currentUser?.photoURL + "/companyInfo"
+        )
+      );
+      const data = snapshot?.val();
+      setIsHoliday(data?.isholiday);
+      setHolidayPay(data?.holidayPay);
+      setIsLoading(false);
+    }
+
+    getData();
+  }, [currentUser?.photoURL]);
+  //popover
+  const handlePopoverClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      const dbref = ref(
+        getDatabase(),
+        `companyCode/${companyCode}/companyInfo/holidayList`
+      );
+      const snapshot = await get(dbref);
       if (snapshot.exists()) {
         let holidays = snapshot.val();
         let dates = Object.keys(holidays).map((dateStr) => new Date(dateStr));
         setSelectedHolidays(dates);
+        setUpdatedHolidays(dates); // 초기값으로 설정
       } else {
         setSelectedHolidays([]);
+        setUpdatedHolidays([]);
       }
-    });
-  }, []);
+    };
+
+    fetchHolidays();
+  }, [companyCode]);
 
   const handleDateSelect = (date, event) => {
     if (event.detail === 2) {
       // 더블 클릭 이벤트 확인
-      handleDateChange(date);
+      handleDateAdd(date);
     }
   };
 
-  const handleDateChange = async (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`;
-
-    const dbref = ref(
-      getDatabase(),
-      `companyCode/${companyCode}/companyInfo/holidayList/${dateStr}`
-    );
-
-    // 이미 선택된 공휴일인지 확인
-    const isAlreadySelected = selectedHolidays.some(
+  const handleDateAdd = (date) => {
+    const isAlreadySelected = updatedHolidays.some(
       (d) => d.getTime() === date.getTime()
     );
 
-    if (isAlreadySelected) {
-      // 이미 선택된 공휴일이면 삭제
-      try {
-        await remove(dbref);
-        setSelectedHolidays((prevHolidays) =>
-          prevHolidays.filter((d) => d.getTime() !== date.getTime())
-        );
-        toast.success('공휴일 정보가 성공적으로 삭제되었습니다.');
-      } catch (error) {
-        toast.error('공휴일 정보 삭제에 실패했습니다: ', error);
-      }
-    } else {
+    if (!isAlreadySelected) {
       // 새로운 공휴일이면 추가
-      try {
-        await set(dbref, true);
-        setSelectedHolidays((prevHolidays) => [...prevHolidays, date]);
-        toast.success('공휴일 정보가 성공적으로 저장되었습니다.');
-      } catch (error) {
-        toast.error('공휴일 정보 저장에 실패했습니다: ', error);
-      }
+      setUpdatedHolidays((prevHolidays) => [...prevHolidays, date]);
     }
   };
 
+  const handleDateRemove = (dateToRemove) => {
+    setUpdatedHolidays((prevHolidays) =>
+      prevHolidays.filter((date) => date.getTime() !== dateToRemove.getTime())
+    );
+  };
+
+  const handleSaveChanges = async () => {
+    const holidayList = updatedHolidays.reduce((obj, date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const dateStr = `${year}-${month}-${day}`;
+      obj[dateStr] = true;
+      return obj;
+    }, {});
+
+    const dbref = ref(
+      getDatabase(),
+      `companyCode/${companyCode}/companyInfo/holidayList`
+    );
+
+    try {
+      await set(dbref, holidayList);
+      setSelectedHolidays(updatedHolidays);
+      toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
+    } catch (error) {
+      toast.error("공휴일 정보 저장에 실패했습니다: ", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
+        <ClipLoader
+          color="black"
+          size={100}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+        <h3>로딩 중 입니다.</h3>
+      </div> // 로딩 스피너
+    );
+  }
+
   return (
-    <div>
-      <DatePicker
-        dateFormat="yyyy.MM.dd"
-        shouldCloseOnSelect
-        minDate={new Date('2000-01-01')}
-        onSelect={handleDateSelect}
-        inline
-        highlightDates={selectedHolidays.map((date) => ({
-          'react-datepicker__day--highlighted-custom-1': [date],
-        }))}
-        dayClassName={(date) =>
-          selectedHolidays.find((d) => d.getTime() === date.getTime())
-            ? 'red'
-            : undefined
-        }
-      />
+    <div className="flex flex-col h-full gap-5">
+      <div className="flex flex-col gap-10 lg:grid lg:grid-cols-2 h-full">
+        <div
+          className="flex flex-col gap-7"
+          style={{
+            borderRight: !darkMode
+              ? "1px solid #00000033"
+              : "1px solid #FFFFFF33",
+          }}>
+          <div className="font-black">공휴일 설정 및 수정</div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isholiday}
+                onChange={(event) => setIsHoliday(event.target.checked)}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            }
+            label="공휴일(주말) 구분 하기"
+          />
+          {isholiday && (
+            <>
+              <div>
+                <div className="text-xs mb-3">
+                  주말(토,일) 과 국가 지정 공휴일에 <br />
+                  적용되는 시급 배율을 입력해주세요. <br />
+                  (회사에서 지정하는 공휴일은 가입후 설정에서 가능합니다.)
+                </div>
+                <Input
+                  type="number"
+                  inputProps={{ min: 1 }}
+                  value={holidayPay}
+                  sx={{ color: !darkMode ? "black" : "white" }}
+                  onChange={(e) => setHolidayPay(e.target.value)}
+                />
+                배 지급
+              </div>
+              <div className="text-sm text-blue-500">
+                기본급:10000원 일시 &gt; {holidayPay * 10000}원
+              </div>
+            </>
+          )}
+        </div>
+        {isholiday && (
+          <div className="flex flex-col gap-7 h-full overflow-y-auto">
+            <div className="font-extrabold">공휴일 날짜 추가 및 삭제</div>
+            <div className="flex justify-center">
+              <DatePicker
+                dateFormat="yyyy.MM.dd"
+                shouldCloseOnSelect
+                minDate={new Date("2000-01-01")}
+                onSelect={handleDateSelect}
+                inline
+                highlightDates={updatedHolidays.map((date) => ({
+                  "react-datepicker__day--highlighted-custom-1": [date],
+                }))}
+                dayClassName={(date) =>
+                  updatedHolidays.find((d) => d.getTime() === date.getTime())
+                    ? "red"
+                    : undefined
+                }
+              />
+              <div>
+                <HelpIcon onClick={handlePopoverClick} style={{ padding: 3 }} />
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handlePopoverClose}
+                  transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}>
+                  <Typography sx={{ p: 2 }}>
+                    회사 공휴일로 설정할 날짜를 찾아 더블 클릭을 하면 추가하실
+                    수 있습니다.
+                  </Typography>
+                </Popover>
+              </div>
+            </div>
+            {/* 공휴일리스트 */}
+            <ul className="overflow-y-auto lg:h-80">
+              {updatedHolidays.map((date, index) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
+                const dateStr = `${year}.${month}.${day}`;
+
+                return (
+                  <li key={index}>
+                    <div
+                      className="flex justify-between items-center gap-3 p-3 mb-5"
+                      style={{
+                        borderBottom: !darkMode
+                          ? "1px solid #00000033"
+                          : "1px solid #FFFFFF33",
+                      }}>
+                      {dateStr}
+                      <CloseIcon
+                        className="cursor-pointer"
+                        onClick={() => handleDateRemove(date)}
+                      />
+
+                      {/* 삭제 버튼 */}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div className="w-full flex justify-center">
+        <Button onClick={handleSaveChanges}>변경 사항 저장</Button>
+      </div>
     </div>
   );
 };
