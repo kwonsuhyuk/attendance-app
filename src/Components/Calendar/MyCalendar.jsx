@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import "./MyCalendar.css";
+import { ClipLoader } from "react-spinners";
 
 const style = {
   position: "absolute",
@@ -40,10 +41,12 @@ function MyCalendar() {
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
   const userId = currentUser?.uid;
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
     const fetchWorkTimes = async () => {
+      setIsLoading(true);
       const db = getDatabase();
       const dateRef = ref(
         db,
@@ -76,6 +79,7 @@ function MyCalendar() {
             } else {
               console.warn(`${date}의 시작 시간이 없습니다.`);
             }
+            setIsLoading(true);
           }
 
           if (endTime) {
@@ -97,6 +101,7 @@ function MyCalendar() {
                 `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`
               );
             }
+            setIsLoading(true);
           }
 
           if (start && end) {
@@ -117,6 +122,7 @@ function MyCalendar() {
               await update(workDateRef, { workHour: workHours });
             }
             newWorkTimes[workDate] = workHours;
+            setIsLoading(false);
           }
         }
         if (isMounted) {
