@@ -5,14 +5,15 @@ import {
   onValue,
   ref,
   update,
-} from "firebase/database";
-import React, { useEffect, useState } from "react";
+} from 'firebase/database';
+import React, { useEffect, useState } from 'react';
 
-import { useSelector } from "react-redux";
-import { useMatch } from "react-router-dom";
-import ClipLoader from "react-spinners/ClipLoader";
-import SalaryType from "../Utils/SalaryType";
-import { formatMoney } from "../../util/formatMoney";
+import { useSelector } from 'react-redux';
+import { useMatch } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
+import SalaryType from '../Utils/SalaryType';
+import { formatMoney } from '../../util/formatMoney';
+import { set } from 'date-fns';
 
 //import SalaryDay from '../Utils/SalaryDay';
 
@@ -22,7 +23,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const [holidayAndWeekendSalary, setHolidayAndWeekendSalary] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
-  const [today, setToday] = useState("");
+  const [today, setToday] = useState('');
   const [workHours, setWorkHours] = useState(0);
   const [salaryDay, setSalaryDay] = useState(0);
   const [totalSalaryPay, setTotalSalaryPay] = useState(0);
@@ -34,8 +35,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
-  const nowStr = new Date().toISOString().split("T")[0];
-  console.log("totalSalary", totalSalaryPay);
+  const nowStr = new Date().toISOString().split('T')[0];
+  console.log('totalSalary', totalSalaryPay);
 
   useEffect(() => {
     const db = getDatabase();
@@ -64,6 +65,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
       db,
       `companyCode/${companyCode}/users/${userId}/workDates/${today}`
     );
+
     const fetchData = async () => {
       const db = getDatabase();
       const salaryDayRef = ref(
@@ -81,6 +83,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
       }
 
       const salaryPaySnapshot = await get(salaryPayRef);
+      console.log('존재', salaryPaySnapshot.exists());
       if (salaryPaySnapshot.exists()) {
         const salaryPays = salaryPaySnapshot.val();
         let totalSalary = 0;
@@ -88,7 +91,15 @@ function ShowSalary({ matchCalendar, matchHome }) {
         // 저번달 salaryDay부터 이번달 salaryDay - 1일까지의 salary를 합산
         for (let date in salaryPays) {
           const dateObj = new Date(date);
+          console.log('dateObj', dateObj);
+
           const today = new Date();
+          console.log('today', today);
+          console.log(
+            '사실인가요',
+            dateObj.getMonth() === today.getMonth() &&
+              dateObj.getDate() < salaryDay
+          );
           if (
             dateObj.getMonth() === today.getMonth() &&
             dateObj.getDate() < salaryDay
@@ -96,9 +107,11 @@ function ShowSalary({ matchCalendar, matchHome }) {
             const { daySalary, nightSalary, holidayAndWeekendSalary } =
               salaryPays[date];
             totalSalary += daySalary + nightSalary + holidayAndWeekendSalary;
+            setTotalSalaryPay(totalSalary);
           }
         }
-        setTotalSalaryPay(totalSalary);
+
+        console.log(totalSalaryPay);
       }
     };
 
@@ -122,12 +135,11 @@ function ShowSalary({ matchCalendar, matchHome }) {
           workHourSnapshot,
         ]) => {
           if (
-            dateSnapshot.exists() &&
-            nightStartSnapshot.exists() &&
-            nightEndSnapshot.exists() &&
-            holidayListSnapshot.exists() &&
-            holidayPaySnapshot.exists() &&
-            isNightPaySnapshot.exists() &&
+            dateSnapshot.exists() ||
+            nightStartSnapshot.exists() ||
+            nightEndSnapshot.exists() ||
+            holidayPaySnapshot.exists() ||
+            isNightPaySnapshot.exists() ||
             workHourSnapshot.exists()
           ) {
             const dates = dateSnapshot.val();
@@ -145,6 +157,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             function getNextDate(date) {
               let currentDate = new Date(date);
               currentDate.setDate(currentDate.getDate() + 1);
+
               return currentDate.toISOString().split("T")[0];
             }
             function getPrevDate(dateStr) {
@@ -152,6 +165,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               date.setDate(date.getDate() - 1);
               return date.toISOString().split("T")[0];
             }
+
             let start, end;
             for (let date in dates) {
               const { startTime, endTime } = dates[date];
@@ -194,16 +208,22 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 }
               }
             }
-            console.log(start);
-            console.log(end);
+            console.log('시작시간', start);
+            console.log('퇴근 시간', end);
 
-            const dateStr = start.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+            const dateStr = start.toISOString().split('T')[0]; // YYYY-MM-DD 형식
             console.log(dateStr);
 
-            const isHolidayOrWeekend =
-              holidayList[dateStr] ||
-              start.getDay() === 0 ||
-              start.getDay() === 6; // 공휴일 또는 주말인지 확인
+            let isHolidayOrWeekend;
+
+            if (holidayList) {
+              isHolidayOrWeekend =
+                holidayList[dateStr] ||
+                start.getDay() === 0 ||
+                start.getDay() === 6; // 공휴일 또는 주말인지 확인}
+            } else {
+              isHolidayOrWeekend = start.getDay() === 0 || start.getDay() === 6; // 공
+            }
 
             let wage = hourlyWage;
             //console.log('wage', wage);
@@ -226,18 +246,27 @@ function ShowSalary({ matchCalendar, matchHome }) {
               }
             }
 
-            console.log("오늘", today);
-            console.log("일한시간", workHours);
-            console.log("지금", now);
-            console.log("돈주는 날", salaryDay);
-            console.log("월급", totalSalaryPay);
+            console.log('오늘', today);
+            console.log('일한시간', workHours);
+            console.log('지금', now);
+            console.log('돈주는 날', salaryDay);
+            console.log('월급', totalSalaryPay);
 
             if (isHolidayOrWeekend) {
-              wage = hourlyWage * holidayPay;
+              if (holidayPay) {
+                wage = hourlyWage * holidayPay;
+              } else {
+                wage = hourlyWage;
+              }
+
               totalWeekendOrHolidaySalary += wage * workHours;
-              console.log("오늘은 공휴일");
+              console.log('오늘은 공휴일');
+              console.log('wage', wage);
+              console.log('workHours', workHours);
+              console.log(totalWeekendOrHolidaySalary);
             } else {
               // 출퇴근 시간이 같은 날에 있으면서, 그 시간이 야간 시간 범위에 포함되는 경우
+              console.log('주말 혹은 공휴일', isHolidayOrWeekend);
               if (
                 start.getDate() === end.getDate() &&
                 ((start.getHours() >= nightStart && start.getHours() < 24) ||
@@ -245,14 +274,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
               ) {
                 wage = hourlyWage * isNightPay;
                 totalNightSalary += wage * workHours;
-                console.log("오늘은 22시~24시라서 야간근무야");
+                console.log('오늘은 22시~24시라서 야간근무야');
               }
               // 출퇴근 시간이 다른 날에 걸쳐 있는 경우
               else if (start.getDate() !== end.getDate()) {
-                console.log("야간 시작 시간은", nightStart);
-                console.log("주간 시작 시간은", nightEnd);
-                console.log("출근 시간은", start.getHours());
-                console.log("퇴근 시간은", end.getHours());
+                console.log('야간 시작 시간은', nightStart);
+                console.log('주간 시작 시간은', nightEnd);
+                console.log('출근 시간은', start.getHours());
+                console.log('퇴근 시간은', end.getHours());
                 if (
                   start.getHours() >= nightStart &&
                   start.getHours() < 24 &&
@@ -261,35 +290,38 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 ) {
                   // 출근 시간이 야간 근무 시간에 포함되는 경우
                   wage = hourlyWage * isNightPay;
-                  console.log("오늘의 시급은", wage);
+                  console.log('오늘의 시급은', wage);
                   totalNightSalary += wage * workHours;
                   console.log(workHours);
 
-                  console.log("오늘도 야간 근무야");
+                  console.log('오늘도 야간 근무야');
                 }
               } else {
                 totalDaySalary += wage * workHours;
-                console.log("오늘은 주간 근무야");
+                console.log('오늘은 주간 근무야');
                 console.log(totalDaySalary);
               }
             }
+
             setDaySalary(totalDaySalary);
             setNightSalary(totalNightSalary);
             setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
             console.log(workHours);
             console.log(workDateSnapshot.exists());
             console.log(workDateSnapshot.val().workHour);
+            console.log('isItTrue', workDateSnapshot.exists() && workHours);
 
-            if (workDateSnapshot.exists() && workHours) {
-              console.log("주간 급여", daySalary);
+            console.log('주간 급여', daySalary);
 
-              await update(workHourRef, {
-                workHour: workHours,
-                daySalary: daySalary,
-                nightSalary: nightSalary,
-                holidayAndWeekendSalary: holidayAndWeekendSalary,
-              });
-            }
+            await update(workHourRef, {
+              workHour: workHours,
+              daySalary: daySalary,
+              nightSalary: nightSalary,
+              holidayAndWeekendSalary: holidayAndWeekendSalary,
+            });
+            console.log('daySalary', daySalary);
+            console.log('nightSalary', nightSalary);
+            console.log('holidayAndWeekendSalary', holidayAndWeekendSalary);
           }
         }
       )
@@ -437,10 +469,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
+
                 className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                 주간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
+
                 {daySalary > 0 && today == nowStr && `${workHours}`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
@@ -452,7 +486,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
+
                 className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+
                 야간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -467,7 +503,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
               <th
                 scope="row"
+
                 className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+
                 공휴일 및 주말
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -485,7 +523,11 @@ function ShowSalary({ matchCalendar, matchHome }) {
             <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
               <th
                 scope="row"
+
+          
+
                 className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
+
                 Month
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub"></td>
@@ -498,60 +540,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
           </tbody>
         </table>
       </div>
-      {/* <div classNameName="relative flex justify-center items-center py-10">
-        <div classNameName="border h-[160px] w-[350px]">
-          <div classNameName="flex border-b border-t border-solid items-center justify-between">
-            <div classNameName="flex border-r  px-2 py-1 text-[12px]">Work</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">Time</div>
-            <div classNameName="flex px-2 py-1 text-[12px]">Pay</div>
-          </div>
-
-          <div classNameName="flex border-b border-solid items-center justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">주간</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {daySalary > 0 && today == nowStr && `${workHours}`}
-            </div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {daySalary > 0 && today == nowStr && `${formatMoney(daySalary)}`}
-            </div>
-          </div>
-          <div classNameName="flex border-b items-center border-solid justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">야간</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {nightSalary > 0 && today == nowStr && `${workHours}시간`}
-            </div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {nightSalary > 0 &&
-                today == nowStr &&
-                `${formatMoney(nightSalary)}원`}
-            </div>
-          </div>
-          <div classNameName="flex border-b items-center border-solid justify-between">
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              공휴일 및 주말
-            </div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {holidayAndWeekendSalary > 0 &&
-                today == nowStr &&
-                `${workHours}시간`}
-            </div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]">
-              {holidayAndWeekendSalary > 0 &&
-                today == nowStr &&
-                `${formatMoney(holidayAndWeekendSalary)}원`}
-            </div>
-          </div>
-          <div classNameName="flex items-center justify-between border-solid border-b">
-            <div classNameName="flex border-r px-2 py-1 text-[12px] ">Month</div>
-            <div classNameName="flex border-r px-2 py-1 text-[12px]"></div>
-            <div classNameName="flex px-2 py-1 text-[12px]">
-              {monthlyWage > 0
-                ? `${formatMoney(monthlyWage)}원`
-                : `${formatMoney(totalSalaryPay)}원`}
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   ) : null;
 }
