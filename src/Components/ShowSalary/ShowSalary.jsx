@@ -333,7 +333,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
   if (isLoading) {
     return (
-      <div classNameNameName="flex flex-col justify-center items-center h-screen w-screen">
+      <div className="flex flex-col justify-center items-center h-screen w-screen">
         <ClipLoader
           color="black"
           size={100}
