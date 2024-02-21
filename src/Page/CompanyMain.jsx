@@ -107,47 +107,16 @@ const CompanyMain = ({ companyLogo }) => {
         </div>
       </div>
     );
-  }
-
-  return (
-    <>
+  } else {
+    return (
       <div className="m-10">
         <div className="flex flex-col space-y-8">
-          <div className="flex justify-between">
-            <a
-              className="cursor-pointer"
-              onClick={() => navigate(`${currentUser.photoURL}/`)}>
-              main
-            </a>
-            <a className="cursor-pointer">menu</a>
-          </div>
-          <Divider />
-          <div className="flex gap-5 flex-col">
-            <div>{currentCompany?.companyName}</div>
-            {companyLogo && (
-              <img
-                src={companyLogo}
-                alt="회사로고"
-                className="rounded-full w-24 h-24 mr-5"
-                style={{ border: "2px solid black" }}
-              />
-            )}
-            <div onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
-              캘린더 바로가기 {">"}
-            </div>
-          </div>
-          <div></div>
-        </div>
-        {userType === "employee" && (
-          <>
-            <div className="flex flex-col">
-
           <div className="flex flex-col items-center space-y-4">
             <img
               src={companyLogo}
               alt="회사로고"
               className="rounded-full w-[130px] h-[130px]"
-              style={{ border: '2px solid black' }}
+              style={{ border: "2px solid black" }}
             />
             <div className="flex items-center text-white-text">
               {currentCompany?.companyName}/{jobName}
@@ -156,36 +125,25 @@ const CompanyMain = ({ companyLogo }) => {
           <div className="flex flex-col items-center space-y-4">
             <div
               className="flex flex-row justify-between w-full items-center cursor-pointer text-white-text"
-              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}
-            >
+              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}>
               <div>캘린더 바로가기</div>
               <div className="text-white-text">&gt;</div>
             </div>
             <div className="border-b border-solid w-[316px]"></div>
-            {userType === 'employee' && (
+            {userType === "employee" && (
               <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
             )}
             <div
               className="cursor-pointer text-[20px] font-extrabold text-white-text"
-              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
-            >
+              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}>
               QR SCAN
             </div>
-          </>
-        )}
-        <div>
-          <a
-            className="dark-nav-selected cursor-pointer"
-            onClick={() => navigate(`/${currentUser.photoURL}/camera`)}>
-            QR SCAN
-          </a>
             <div className="border-b border-solid w-[316px]"></div>
           </div>
-
         </div>
       </div>
-    </>
-  );
+    );
+  }
 };
 
 export default CompanyMain;
