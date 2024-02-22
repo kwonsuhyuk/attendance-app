@@ -11,9 +11,7 @@ function UserCalendar({ user }) {
   const [workTimes, setWorkTimes] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
-  const [calendarWidth, setCalendarWidth] = useState("w-2/3");
-  const [showText, setShowText] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(moment(selectedDate));
 
   useEffect(() => {
     const db = getDatabase();
@@ -127,7 +125,7 @@ function UserCalendar({ user }) {
           onClickDay={onClickDay}
           formatDay={(locale, date) => moment(date).format("DD")}
           tileContent={tileContent}
-          className={`h-full ${calendarWidth} transition-all duration-500 ease-in-out`}
+          className={`h-full transition-all duration-500 ease-in-out`}
         />
         {/* {showText && <div>{moment(selectedDate).format("YYYY-MM-DD")}</div>} */}
       </div>

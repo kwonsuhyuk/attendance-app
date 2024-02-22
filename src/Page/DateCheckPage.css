@@ -1,0 +1,21 @@
+.react-calendar__tile--now {
+  background: none;
+  color: inherit;
+}
+.react-calendar__navigation button {
+  background-color: var(--tw-bg-opacity);
+  color: var(--tw-text-opacity);
+}
+
+.dark .react-calendar__navigation button {
+  background-color: var(--tw-bg-opacity-dark);
+  color: var(--tw-text-opacity-dark);
+}
+
+.react-calendar__tile {
+  border: 1px solid #00000033 !important;
+}
+
+.dark .react-calendar__tile {
+  border: 1px solid #ffffff33 !important;
+}

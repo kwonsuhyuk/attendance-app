@@ -7,6 +7,7 @@ import { getDatabase, off, onValue, ref, update } from "firebase/database";
 import { toast } from "react-toastify";
 import { formatMoney, numToKorean } from "../util/formatMoney";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const style = {
   position: "absolute",
   top: "50%",
@@ -48,6 +49,7 @@ const Employee = ({ user }) => {
     useState(salaryType);
   const [salary, setSalary] = useState(salaryAmount);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const navigate = useNavigate();
 
   const handleSalaryChange = (event) => {
     setSalary(event.target.value);
@@ -94,11 +96,8 @@ const Employee = ({ user }) => {
     setSelectedPaymentMethod(paymentMethod);
     setPaymentAnchorEl(null);
   };
-  const handleDetailClose = () => {
-    setDetailOpen(false);
-  };
   const handleShowInfo = () => {
-    setDetailOpen(true);
+    navigate(`/${companyCode}/datecheck/${uid}`);
   };
   const handleSettingClose = () => {
     setSettingOpen(false);
@@ -168,19 +167,7 @@ const Employee = ({ user }) => {
               상세보기 & 정산 {">"}
             </div>
           </div>
-          <Modal
-            open={detailOpen}
-            onClose={handleDetailClose}
-            aria-labelledby="child-modal-title"
-            aria-describedby="child-modal-description">
-            <Box sx={{ ...style }}>
-              {/* 직원 상세 달력 추가 하기  */}
-              <UserCalendar user={user} />
-              <div className="absolute bottom-3 right-1/2">
-                <Button onClick={handleDetailClose}>닫기</Button>
-              </div>
-            </Box>
-          </Modal>
+
           <Modal
             open={settingOpen}
             onClose={handleSettingClose}

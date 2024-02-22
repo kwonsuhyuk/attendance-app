@@ -210,7 +210,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
               </div>
               <div
                 className={`${
-                  location.pathname === `/${currentUser?.photoURL}/datecheck`
+                  location.pathname.includes(
+                    `/${currentUser?.photoURL}/datecheck`
+                  )
                     ? "text-white-nav-selected dark:text-dark-nav-selected"
                     : "text-white-nav-text dark:text-dark-nav-text"
                 } cursor-pointer`}
