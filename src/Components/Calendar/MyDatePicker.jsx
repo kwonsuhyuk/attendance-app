@@ -123,8 +123,20 @@ const MyDatePicker = () => {
       `companyCode/${companyCode}/companyInfo/holidayList`
     );
 
+    const dbref2 = ref(
+      getDatabase(),
+      `companyCode/${companyCode}/companyInfo/isholiday`
+    );
+
+    const dbref3 = ref(
+      getDatabase(),
+      `companyCode/${companyCode}/companyInfo/holidayPay`
+    );
+
     try {
       await set(dbref, holidayList);
+      await set(dbref2, isholiday);
+      await set(dbref3, parseFloat(holidayPay));
       setSelectedHolidays(updatedHolidays);
       toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
     } catch (error) {

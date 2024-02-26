@@ -14,6 +14,8 @@ import MyCalendar from "../Components/Calendar/MyCalendar";
 import ShowCalendarPage from "./ShowCalendarPage";
 import { Divider } from "@mui/material";
 import { useNavigate, useMatch } from "react-router-dom";
+import GuidePopover from "../Components/GuidePopover";
+import { Typography } from "antd";
 const paymentMethods = {
   monthlyPay: "월급 지급",
   dailyPay: "일급 지급",
@@ -65,54 +67,64 @@ const CompanyMain = ({ companyLogo }) => {
 
   // 관리자 일때
   if (userType === "admin") {
-    return (
-      <div
-        className="flex justify-center items-center"
-        style={{
-          height: "calc(100vh - 18rem)",
-          borderBottom: !darkMode
-            ? "1px solid #00000080"
-            : "1px solid #FFFFFF80",
-        }}>
-        <div className="relative flex items-center h-full w-full">
-          <div
-            className="flex flex-col items-center justify-center gap-7 cursor-pointer"
-            style={{ position: "absolute", left: "30%", top: "10%" }}>
+    if (window.innerWidth <= 600) {
+      return (
+        <div className="flex justify-center items-center">
+          PC로 접속해주세요.
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className="flex justify-center items-center"
+          style={{
+            height: "calc(100vh - 18rem)",
+            borderBottom: !darkMode
+              ? "1px solid #00000080"
+              : "1px solid #FFFFFF80",
+          }}>
+          <div className="relative flex items-center h-full w-full">
             <div
-              className="bg-gradient-to-b from-black to-transparent w-80 h-80 rounded-full"
-              onClick={() =>
-                navigate(`/${currentUser?.photoURL}/employeelist`)
-              }></div>
-            <div className="font-black text-lg">PEOPLE</div>
-            <div className="font-normal text-xs">
-              직원 리스트와 요약 보기 및 정산
-            </div>
-
-            <div
-              className="flex flex-col items-center justify-center gap-7 cursor-pointer z-9"
-              style={{ position: "absolute", left: "65%" }}>
+              className="flex flex-col items-center justify-center gap-7 cursor-pointer"
+              style={{ position: "absolute", left: "30%", top: "10%" }}>
               <div
-                className="w-80 h-80 rounded-full "
-                onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}
-                style={{ backgroundColor: "#B8B8B84D" }}></div>
-              <div className="font-black text-lg">CALENDAR</div>
-              <div className="font-normal text-xs">직원 달력 별 보기</div>
+                className="bg-gradient-to-b from-black to-transparent w-80 h-80 rounded-full"
+                onClick={() =>
+                  navigate(`/${currentUser?.photoURL}/employeelist`)
+                }></div>
+              <div className="font-black text-lg">PEOPLE</div>
+              <div className="font-normal text-xs">
+                직원 리스트와 요약 보기 및 정산
+              </div>
 
               <div
-                className="flex flex-col items-center justify-center gap-7 cursor-pointer z-10"
-                style={{ position: "absolute", left: "65%" }}
-                onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}>
-                <div className="bg-gradient-to-b from-gray-300 to-transparent w-80 h-80 rounded-full "></div>
-                <div className="font-black text-lg">SETTING</div>
-                <div className="font-normal text-xs">
-                  공휴일 설정 및 근태 관리
+                className="flex flex-col items-center justify-center gap-7 cursor-pointer z-9"
+                style={{ position: "absolute", left: "65%" }}>
+                <div
+                  className="w-80 h-80 rounded-full "
+                  onClick={() =>
+                    navigate(`/${currentUser?.photoURL}/datecheck`)
+                  }
+                  style={{ backgroundColor: "#B8B8B84D" }}></div>
+                <div className="font-black text-lg">CALENDAR</div>
+                <div className="font-normal text-xs">직원 달력 별 보기</div>
+
+                <div
+                  className="flex flex-col items-center justify-center gap-7 cursor-pointer z-10"
+                  style={{ position: "absolute", left: "65%" }}
+                  onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}>
+                  <div className="bg-gradient-to-b from-gray-300 to-transparent w-80 h-80 rounded-full "></div>
+                  <div className="font-black text-lg">SETTING</div>
+                  <div className="font-normal text-xs">
+                    공휴일 설정 및 근태 관리
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   } else {
     return (
       <div>

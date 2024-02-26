@@ -86,7 +86,7 @@ function MainPage() {
               <AccessCameraPage companyLogo={currentCompany?.companyLogo} />
             }
           />
-          <Route path="/datecheck" element={<DateCheckPage />} />
+          <Route path="/datecheck/:id?" element={<DateCheckPage />} />
           <Route path="/setting/*" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />

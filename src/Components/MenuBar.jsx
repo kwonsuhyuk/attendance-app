@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../firebase";
 import { getAuth, signOut } from "firebase/auth";
 import { FaCamera } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import {
   Box,
   FormControlLabel,
@@ -22,6 +22,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
+import GuidePopover from "./GuidePopover";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -40,6 +41,25 @@ const MenuBar = ({ companyName, companyLogo }) => {
     }
     setOpen(open);
   };
+
+  const subMenuItems = [
+    {
+      title: "APP GUIDE",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/appguide`);
+        setOpen(false);
+      },
+      icon: <LiveHelpIcon />,
+    },
+    {
+      title: "LOGOUT",
+      handle: () => {
+        logout();
+        setOpen(false);
+      },
+      icon: <LogoutIcon />,
+    },
+  ];
 
   const menuItems = [
     {
@@ -73,22 +93,6 @@ const MenuBar = ({ companyName, companyLogo }) => {
         setOpen(false);
       },
       icon: <DarkModeIcon />,
-    },
-    {
-      title: "APP GUIDE",
-      handle: () => {
-        navigate(`/${currentUser?.photoURL}/appguide`);
-        setOpen(false);
-      },
-      icon: <LiveHelpIcon />,
-    },
-    {
-      title: "LOGOUT",
-      handle: () => {
-        logout();
-        setOpen(false);
-      },
-      icon: <LogoutIcon />,
     },
   ];
 
@@ -162,95 +166,132 @@ const MenuBar = ({ companyName, companyLogo }) => {
 
   // user가 관리자 일시
   if (userType === "admin") {
-    return (
-      // Main , 직원리스트 , 회사 설정, 공휴일 지정 하는 페이지 , 직원 요약 켈린더
-      <div className="flex h-28 items-center">
-        <img
-          src={companyLogo}
-          alt="회사로고"
-          className="rounded-full w-24 h-24 mr-5"
-        />
-        <div className="grid grid-rows-2 w-full">
-          <div
-            className="flex justify-between w-full items-end pb-2"
-            style={{
-              borderBottom: !darkMode
-                ? "1px solid #00000080"
-                : "1px solid #FFFFFF80",
-            }}>
-            <div className="hidden lg:block font-black text-lg">
-              {companyName}
+    if (window.innerWidth > 600) {
+      return (
+        // Main , 직원리스트 , 회사 설정, 공휴일 지정 하는 페이지 , 직원 요약 켈린더
+        <div className="flex h-28 items-center">
+          <img
+            src={companyLogo}
+            alt="회사로고"
+            className="rounded-full w-24 h-24 mr-5"
+          />
+          <div className="grid grid-rows-2 w-full">
+            <div
+              className="flex justify-between w-full items-end pb-2"
+              style={{
+                borderBottom: !darkMode
+                  ? "1px solid #00000080"
+                  : "1px solid #FFFFFF80",
+              }}>
+              <div className="hidden lg:block font-black text-lg">
+                {companyName}
+              </div>
+              <div className="flex gap-3 md:justify-between md:items-end md:w-1/3">
+                <div
+                  className={`${
+                    location.pathname ===
+                    `/${currentUser?.photoURL}/companymain`
+                      ? "text-white-nav-selected dark:text-dark-nav-selected"
+                      : "text-white-nav-text dark:text-dark-nav-text"
+                  } cursor-pointer`}
+                  onClick={() =>
+                    navigate(`/${currentUser?.photoURL}/companymain`)
+                  }
+                  style={{
+                    border: "none",
+                  }}>
+                  HOME
+                </div>
+                <div
+                  className={`${
+                    location.pathname ===
+                    `/${currentUser?.photoURL}/employeelist`
+                      ? "text-white-nav-selected dark:text-dark-nav-selected"
+                      : "text-white-nav-text dark:text-dark-nav-text"
+                  } cursor-pointer`}
+                  style={{ border: "none" }}
+                  onClick={() =>
+                    navigate(`/${currentUser?.photoURL}/employeelist`)
+                  }>
+                  PEOPLE
+                </div>
+                <div
+                  className={`${
+                    location.pathname.includes(
+                      `/${currentUser?.photoURL}/datecheck`
+                    )
+                      ? "text-white-nav-selected dark:text-dark-nav-selected"
+                      : "text-white-nav-text dark:text-dark-nav-text"
+                  } cursor-pointer`}
+                  style={{ border: "none" }}
+                  onClick={() =>
+                    navigate(`/${currentUser?.photoURL}/datecheck`)
+                  }>
+                  CALENDAR
+                </div>
+                <div
+                  className={`${
+                    location.pathname.includes(
+                      `/${currentUser?.photoURL}/setting`
+                    )
+                      ? "text-white-nav-selected dark:text-dark-nav-selected"
+                      : "text-white-nav-text dark:text-dark-nav-text"
+                  } cursor-pointer`}
+                  style={{ border: "none" }}
+                  onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}>
+                  SETTING
+                </div>
+              </div>
             </div>
-            <div className="flex gap-3 md:justify-between md:items-end md:w-1/3">
-              <div
-                className={`${
-                  location.pathname === `/${currentUser?.photoURL}/companymain`
-                    ? "text-white-nav-selected dark:text-dark-nav-selected"
-                    : "text-white-nav-text dark:text-dark-nav-text"
-                } cursor-pointer`}
-                onClick={() =>
-                  navigate(`/${currentUser?.photoURL}/companymain`)
-                }
-                style={{
-                  border: "none",
-                }}>
-                HOME
-              </div>
-              <div
-                className={`${
-                  location.pathname === `/${currentUser?.photoURL}/employeelist`
-                    ? "text-white-nav-selected dark:text-dark-nav-selected"
-                    : "text-white-nav-text dark:text-dark-nav-text"
-                } cursor-pointer`}
-                style={{ border: "none" }}
-                onClick={() =>
-                  navigate(`/${currentUser?.photoURL}/employeelist`)
-                }>
-                PEOPLE
-              </div>
-              <div
-                className={`${
-                  location.pathname === `/${currentUser?.photoURL}/datecheck`
-                    ? "text-white-nav-selected dark:text-dark-nav-selected"
-                    : "text-white-nav-text dark:text-dark-nav-text"
-                } cursor-pointer`}
-                style={{ border: "none" }}
-                onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}>
-                CALENDAR
-              </div>
-              <div
-                className={`${
-                  location.pathname.includes(
-                    `/${currentUser?.photoURL}/setting`
-                  )
-                    ? "text-white-nav-selected dark:text-dark-nav-selected"
-                    : "text-white-nav-text dark:text-dark-nav-text"
-                } cursor-pointer`}
-                style={{ border: "none" }}
-                onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}>
-                SETTING
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <MaterialUISwitch
-                    sx={{ m: 1 }}
-                    defaultChecked={darkMode}
-                    onChange={toggleTheme}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <MaterialUISwitch
+                        sx={{ m: 1 }}
+                        defaultChecked={darkMode}
+                        onChange={toggleTheme}
+                      />
+                    }
                   />
-                }
-              />
-            </FormGroup>
-            <div onClick={logout} className="text-sm cursor-pointer">
-              logout
+                </FormGroup>
+                {location.pathname ===
+                  `/${currentUser?.photoURL}/companymain` && (
+                  <div>
+                    <GuidePopover text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법, 그리고 급여를 본인이 입력하여 가입합니다. 우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요." />
+                  </div>
+                )}
+              </div>
+              <div onClick={logout} className="text-sm cursor-pointer">
+                logout
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="flex h-28 items-center">
+          <img
+            src={companyLogo}
+            alt="회사로고"
+            className="rounded-full w-24 h-24 mr-5"
+          />
+          <div className="grid grid-rows-2 w-full">
+            <div
+              className="flex justify-between w-full items-end pb-2"
+              style={{
+                borderBottom: !darkMode
+                  ? "1px solid #00000080"
+                  : "1px solid #FFFFFF80",
+              }}>
+              <div className="font-black text-lg">{companyName}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
   } else {
     // user가 직원일시
     return (
@@ -288,14 +329,25 @@ const MenuBar = ({ companyName, companyLogo }) => {
               alignItems: "center",
               padding: "16px",
             }}>
-            <img
-              src={companyLogo}
-              alt="회사로고"
-              className="rounded-full w-10 h-10"
-            />
-            <Typography variant="h6" component="div">
-              {currentUser?.displayName}
-            </Typography>
+            <div className="flex flex-col justify-center items-center gap-3">
+              <img
+                src={companyLogo}
+                alt="회사로고"
+                className="rounded-full w-10 h-10"
+              />
+              <Typography variant="h6" component="div">
+                {currentUser?.displayName}
+              </Typography>
+            </div>
+            <div className="flex gap-5 mb-3">
+              {subMenuItems.map((item, index) => (
+                <div key={item.title} onClick={item.handle} className="text-sm">
+                  <span className="text-sx">{item.icon}</span>
+                  <span>{item.title}</span>
+                </div>
+              ))}
+            </div>
+            <div className="w-full h-[1px] bg-slate-500"></div>
             <List>
               {menuItems.map((item, index) => (
                 <ListItem button key={item.title} onClick={item.handle}>

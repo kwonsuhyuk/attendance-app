@@ -6,6 +6,7 @@ import { child, get, getDatabase, ref } from "firebase/database";
 import { ClipLoader } from "react-spinners";
 import { MenuItem, Select } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
+import GuidePopover from "../Components/GuidePopover";
 
 const EmployeeListPage = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -96,9 +97,12 @@ const EmployeeListPage = () => {
         position: "relative",
       }}>
       <div className="mx-5 lg:mx-0 flex justify-between items-center mb-12">
-        <div className="hidden md:flex md:items-end">
-          <span className="font-bold mr-2">직원 수 </span>
-          <span className=""> {employeeList.length - 1}</span>
+        <div className="hidden md:flex md:items-center gap-5">
+          <div>
+            <span className="font-bold mr-2">직원 수 </span>
+            <span className=""> {employeeList.length - 1}</span>
+          </div>
+          <GuidePopover text="여기는 회사 직원리스트 페이지 입니다. 각종 직원들이 설정한 정보를 수정할 수 있고, 상세정보&정산 버튼을 클릭해 직원들의 날짜별 상세 근무 기록과 월 정산을 하실 수 있습니다." />
         </div>
         <div className="flex gap-7">
           <div onClick={handleFilterReset} className="flex items-center">
