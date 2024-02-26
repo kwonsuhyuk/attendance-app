@@ -4,6 +4,7 @@ import { ListItem, ListItemText } from "@mui/material";
 import ManagerSettingBasicPage from "./ManagerSettingBasicPage";
 import MyDatePicker from "../Components/Calendar/MyDatePicker";
 import { useSelector } from "react-redux";
+import GuidePopover from "../Components/GuidePopover";
 
 const ManagerSettingPage = () => {
   const location = useLocation();
@@ -16,11 +17,12 @@ const ManagerSettingPage = () => {
 
   return (
     <div
-      className="px-10 lg:px-15 py-5 overflow-scroll"
+      className="px-10 lg:px-15 py-5 overflow-scrol"
       style={{
         height: "calc(100vh - 18rem)",
         position: "relative",
       }}>
+      <GuidePopover text="회사의 각종 정보를 수정할 수 있는 페이지 입니다. 변경 정보를 저장하시려면 반드시 저장 버튼을 클릭해 저장해 주세요." />
       <div
         className="grid h-full w-full"
         style={{ gridTemplateColumns: "1fr 6fr" }}>
