@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import moment from "moment/moment.js";
 import { get, getDatabase, ref } from "firebase/database";
 import { useSelector } from "react-redux";
@@ -8,23 +8,31 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import GuidePopover from "../Components/GuidePopover";
-import { Modal } from "antd";
+import { Button, DatePicker, Modal } from "antd";
 const paymentMethods = {
   monthlyPay: "월급 지급",
   dailyPay: "일급 지급",
   hourPay: "시급 지급",
 };
+("react");
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
-const DateCheckPage = () => {
-  const [modalDate, setModalDate] = useState([
-    moment().startOf("month"),
-    moment(),
+const { RangePicker } = DatePicker;
+
+const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
+  const [modalDates, setModalDates] = useState([
+    dayjs().subtract(1, "month").date(modalDefaultValue),
+    dayjs().subtract(1, "day"),
   ]);
-  const [date, setDate] = useState(moment());
+  const [date, setDate] = useState(dayjs());
   const [workTimes, setWorkTimes] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
   const [isLoading, setIsLoading] = useState(false);
   const [workDates, setWorkDates] = useState({});
@@ -32,6 +40,7 @@ const DateCheckPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [salaryInfo, setSalaryInfo] = useState(null);
 
   useEffect(() => {
     async function getuserinfo() {
@@ -90,7 +99,7 @@ const DateCheckPage = () => {
   const tileContent = ({ date, view }) => {
     // Month view에 대해서만 커스텀 컨텐트를 제공합니다.
     if (view === "month") {
-      const workTime = workTimes[moment(date).format("YYYY-MM-DD")];
+      const workTime = workTimes[dayjs(date).format("YYYY-MM-DD")];
 
       // If workTime exists for the date
       if (workTime) {
@@ -121,7 +130,7 @@ const DateCheckPage = () => {
   };
 
   const handleDateSelect = (date) => {
-    setSelectedDate(moment(date));
+    setSelectedDate(dayjs(date));
   };
 
   if (isLoading) {
@@ -146,20 +155,71 @@ const DateCheckPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setSalaryInfo(null);
   };
+
+  const calculateSalary = () => {
+    // 선택한 기간 내에 있는 workdates를 필터링합니다.
+    const filteredWorkdates = Object.entries(workDates).filter(
+      ([date]) =>
+        dayjs(date).isSameOrBefore(modalDates[1]) &&
+        dayjs(date).isSameOrAfter(modalDates[0])
+    );
+
+    console.log(filteredWorkdates);
+
+    // 필터링된 workDates 대해 주간, 야간, 공휴일 시간을 계산합니다.
+    let totalDayHours = 0;
+    let totalNightHours = 0;
+    let totalHolidayHours = 0;
+
+    let totalDaySalary = 0;
+    let totalNightSalary = 0;
+    let totalHolidaySalary = 0;
+
+    filteredWorkdates.forEach(([date, workDates]) => {
+      if (workDates.daySalary > 0) {
+        totalDayHours += workDates.workHour;
+        totalDaySalary += workDates.daySalary;
+      }
+      if (workDates.nightSalary > 0) {
+        totalNightHours += workDates.workHour;
+        totalNightSalary += workDates.nightSalary;
+      }
+      if (workDates.holidayAndWeekendSalary > 0) {
+        totalHolidayHours += workDates.workHour;
+        totalHolidaySalary += workDates.holidayAndWeekendSalary;
+      }
+    });
+
+    const totalSalary = totalDaySalary + totalNightSalary + totalHolidaySalary;
+
+    setSalaryInfo({
+      totalDayHours,
+      totalNightHours,
+      totalHolidayHours,
+      totalDaySalary,
+      totalNightSalary,
+      totalHolidaySalary,
+      totalSalary,
+    });
+  };
+  console.log(user);
+  // const handleModalDateChange = (dates, dateStrings) => {
+  //   console.log(dates, dateStrings);
+  // };
 
   return (
     <div
       className="pb-10"
       style={{
         height: "calc(100vh - 10rem)",
+        marginBottom: "3rem",
         position: "relative",
         justifyContent: "flex-start",
+        overflowY: "scroll",
         borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
       }}>
       <div
@@ -187,7 +247,7 @@ const DateCheckPage = () => {
               border: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
             }}>
             <Calendar
-              onChange={onChange} // 이 부분을 수정합니다.
+              onChange={onChange}
               value={date}
               onClickDay={handleDateSelect}
               tileClassName={tileClassName}
@@ -272,7 +332,7 @@ const DateCheckPage = () => {
 
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
                   <div className="flex justify-between w-full text-sm">
-                    <div>출근 시간</div>
+                    <div>퇴근 시간</div>
                     <div>
                       {workTimes[selectedDate.format("YYYY-MM-DD")]
                         ? new Date(
@@ -301,11 +361,63 @@ const DateCheckPage = () => {
                       분
                     </div>
                   </div>
+                  <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
+                  <div className="flex justify-between w-full text-sm">
+                    <div>급여 지급 구분</div>
+                    <div>
+                      {workDates[selectedDate?.format("YYYY-MM-DD")] &&
+                        Object.keys(
+                          workDates[selectedDate?.format("YYYY-MM-DD")]
+                        )?.map((key, index) => {
+                          if (
+                            workDates[selectedDate?.format("YYYY-MM-DD")][key] >
+                              0 &&
+                            key != "workHour"
+                          ) {
+                            let displayText = "";
+                            switch (key) {
+                              case "holidayAndWeekendSalary":
+                                displayText = "공휴일 급여";
+                                break;
+                              case "nightSalary":
+                                displayText = "야간 급여";
+                                break;
+                              case "daySalary":
+                                displayText = "주간 급여";
+                                break;
+                            }
+                            return <div key={index}>{displayText}</div>;
+                          }
+                        })}
+                    </div>
+                  </div>
+
                   <div className="h-[3px] w-full bg-white-border dark:bg-dark-border"></div>
                   <div className="flex justify-between w-full text-base font-semibold">
                     <div>오늘 급여</div>
                     {/* 데이터 불러와지면 여기에 삽입 */}
-                    <div>1000000원</div>
+                    <div>
+                      {workDates[selectedDate?.format("YYYY-MM-DD")] &&
+                        Object.keys(
+                          workDates[selectedDate?.format("YYYY-MM-DD")]
+                        )?.map((key, index) => {
+                          if (
+                            workDates[selectedDate?.format("YYYY-MM-DD")][key] >
+                              0 &&
+                            key != "workHour"
+                          ) {
+                            return (
+                              <div key={index}>
+                                {
+                                  workDates[selectedDate?.format("YYYY-MM-DD")][
+                                    key
+                                  ]
+                                }
+                              </div>
+                            );
+                          }
+                        })}
+                    </div>
                   </div>
                 </div>
               )}
@@ -313,16 +425,128 @@ const DateCheckPage = () => {
             <div
               className="w-full h-1/6 text-xl font-bold flex justify-center items-center text-white dark:text-black bg-black dark:bg-white cursor-pointer"
               onClick={handleOpenSettleModal}>
-              이번달 직원 정산하기
+              {user ? "이번달 직원 정산하기" : "직원을 선택해 주세요."}
             </div>
+
             <Modal
-              title="Basic Modal"
+              title={`${user?.name}/${user?.jobName}의 이번달 정산`}
               open={isModalOpen}
-              onOk={handleOk}
-              onCancel={handleCancel}>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
+              onCancel={handleCancel}
+              cancelText="닫기"
+              footer={[
+                <Button key="back" onClick={handleCancel}>
+                  닫기
+                </Button>,
+              ]}>
+              <div className="flex flex-col">
+                <RangePicker
+                  defaultValue={modalDates}
+                  onChange={(dates) => {
+                    setModalDates(dates);
+                  }}
+                />
+                <div className="text-xs">
+                  (시작 날 당일 부터 끝나는 날 당일 까지 계산합니다.)
+                </div>
+                <Button
+                  key="calculate"
+                  onClick={calculateSalary}
+                  className="mt-7 mb-7">
+                  정산하기
+                </Button>
+
+                {salaryInfo && (
+                  <div
+                    className="text-black"
+                    style={{
+                      padding: 5,
+                    }}>
+                    <div className="flex flex-col" style={{ height: "auto" }}>
+                      <div
+                        className="flex justify-between items-center py-3"
+                        style={{
+                          borderTop: "2px solid black",
+                          borderBottom: "2px solid black",
+                        }}>
+                        <div>
+                          <strong className="text-xl font-bold">총 급여</strong>
+                        </div>
+                        <div className="text-red-500 font-bold text-base">
+                          {salaryInfo.totalSalary} 원
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-4 my-3">
+                        <div>
+                          <strong className="text-xl font-bold">
+                            시간 타입
+                          </strong>
+                        </div>
+                        <div>
+                          <strong className="text-xl font-bold">
+                            근무 시간
+                          </strong>
+                        </div>
+                        <div>
+                          <strong className="text-xl font-bold">
+                            설정 급여
+                          </strong>
+                        </div>
+                        <div>
+                          <strong className="text-xl font-bold">급여</strong>
+                        </div>
+                      </div>
+                      <div className="w-full h-[1px] bg-black"></div>
+                      <div className="grid grid-cols-4 my-3">
+                        <div>주간</div>
+                        <div>{salaryInfo.totalDayHours} 시간</div>
+                        <div>{user?.salaryAmount}원</div>
+                        <div>{salaryInfo.totalDaySalary} 원</div>
+                      </div>
+                      <div className="w-full h-[1px] bg-gray-300"></div>
+                      <div className="grid grid-cols-4 my-3">
+                        <div>야간</div>
+                        <div>{salaryInfo.totalNightHours} 시간</div>
+                        <div className="flex flex-col">
+                          <span>{user?.salaryAmount * nightPay}원</span>
+                          <span className="text-xs font-thin">
+                            ({user?.salaryAmount}원 x {nightPay})
+                          </span>
+                        </div>
+                        <div>{salaryInfo.totalNightSalary} 원</div>
+                      </div>
+                      <div className="w-full h-[1px] bg-gray-300"></div>
+                      <div className="grid grid-cols-4 my-3">
+                        <div>공휴일</div>
+                        <div>{salaryInfo.totalHolidayHours} 시간</div>
+                        <div className="flex flex-col">
+                          <span>{user?.salaryAmount * holidayPay}</span>
+                          <span className="text-xs font-thin">
+                            ({user?.salaryAmount}원 x {holidayPay})
+                          </span>
+                        </div>
+                        <div>{salaryInfo.totalHolidaySalary} 원</div>
+                      </div>
+                      <div className="w-full h-[1px] bg-gray-300"></div>
+                      <div
+                        className="flex justify-between items-center py-3"
+                        style={{
+                          borderTop: "1px solid black",
+                          borderBottom: "2px solid black",
+                        }}>
+                        <div>
+                          <strong className="text-xl font-bold">총 시간</strong>
+                        </div>
+                        <div>
+                          {salaryInfo.totalDayHours +
+                            salaryInfo.totalNightHours +
+                            salaryInfo.totalHolidayHours}{" "}
+                          시간
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </Modal>
           </div>
         </div>

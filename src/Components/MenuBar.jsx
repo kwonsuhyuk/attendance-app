@@ -259,7 +259,12 @@ const MenuBar = ({ companyName, companyLogo }) => {
                 {location.pathname ===
                   `/${currentUser?.photoURL}/companymain` && (
                   <div>
-                    <GuidePopover text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법, 그리고 급여를 본인이 입력하여 가입합니다. 우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요." />
+                    <GuidePopover
+                      text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법,
+                    그리고 급여를 본인이 입력하여 가입합니다. 
+                    우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 
+                    각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요."
+                    />
                   </div>
                 )}
               </div>
