@@ -26,15 +26,16 @@ const ShowCalendarPage = () => {
         <MyCalendar />
       </div>
       <div className="flex flex-row justify-start mr-auto mb-5">
-        <div className="bg-red-500 font-medium text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-red-500 font-normal text-base w-6 h-6 flex items-center justify-center">
           0+
         </div>
-        <div className="bg-yellow-500 font-medium text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-yellow-500 font-normal text-base w-6 h-6 flex items-center justify-center">
           4+
         </div>
-        <div className="bg-green-500 font-medium text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-green-500 font-normal text-base w-6 h-6 flex items-center justify-center">
           8+
         </div>
+        {/* <div className="flex items-center text-xs ml-3">(단위: 시간)</div> */}
       </div>
       <div className="w-full">
         <ShowSalary matchHome={matchHome} matchCalendar={matchCalendar} />
