@@ -7,19 +7,6 @@ import { toast } from "react-toastify";
 import { formatMoney, numToKorean } from "../util/formatMoney";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "90vw",
-  height: "90vh",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 2,
-};
 
 const paymentMethods = {
   monthlyPay: "월급 지급",
@@ -38,7 +25,7 @@ const Employee = ({ user }) => {
     salaryType,
     phoneNumber,
   } = user;
-  const [detailOpen, setDetailOpen] = useState(false);
+
   const [settingOpen, setSettingOpen] = useState(false);
   const [jobAnchorEl, setJobAnchorEl] = useState(null);
   const [paymentAnchorEl, setPaymentAnchorEl] = useState(null);

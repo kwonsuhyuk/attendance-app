@@ -100,7 +100,12 @@ function EmployeeFirstPage() {
 
   const handleGoMain = async () => {
     setLoading(true);
+    if (!selectJob) {
+      toast.error("직종을 선택해주세요.");
+      return;
+    }
     handleNext();
+
     const db = getDatabase();
     const userRef = ref(
       db,
@@ -112,7 +117,7 @@ function EmployeeFirstPage() {
       email: currentUser.email,
       phoneNumber: state.phoneNumber,
       companyCode: companyCode,
-      jobName: selectJob?.jobName,
+      jobName: selectJob.jobName,
       userType: "employee",
       salaryAmount: salaryAmount ? parseInt(salaryAmount) : 0,
       salaryType: salaryType ? salaryType : "hourPay",

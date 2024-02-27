@@ -6,7 +6,7 @@ import ShowSalary from "../Components/ShowSalary/ShowSalary";
 import ManagerSettingPage from "./ManagerSettingPage";
 import EmployeeListPage from "./EmployeeListPage";
 import MenuBar from "../Components/MenuBar";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { get, getDatabase, ref } from "firebase/database";
 import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
@@ -16,6 +16,7 @@ import ShowCalendarPage from "./ShowCalendarPage";
 import { Divider } from "@mui/material";
 import { useNavigate, useMatch } from "react-router-dom";
 import AppGuidePage from "./AppGuidePage";
+import moment from "moment";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -47,9 +48,6 @@ function MainPage() {
       setIsLoading(false);
     }
     getCompanyInfo();
-    return () => {
-      setCurrentCompany([]);
-    };
   }, [currentUser?.photoURL]);
 
   if (isLoading) {
@@ -86,7 +84,16 @@ function MainPage() {
               <AccessCameraPage companyLogo={currentCompany?.companyLogo} />
             }
           />
-          <Route path="/datecheck/:id?" element={<DateCheckPage />} />
+          <Route
+            path="/datecheck/:id?"
+            element={
+              <DateCheckPage
+                modalDefaultValue={currentCompany?.payCheckDay}
+                nightPay={currentCompany?.isNightPay}
+                holidayPay={currentCompany?.holidayPay}
+              />
+            }
+          />
           <Route path="/setting/*" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />
