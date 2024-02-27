@@ -109,14 +109,14 @@ function MyCalendar() {
             if (start < end) {
               workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
               if (workHours >= 9) {
-                workHours -= 1;
+                workHours -= 1; //점심시간 빼는거
               }
             } else {
               workHours = Number(
                 (24 - start.getHours() + end.getHours()).toFixed(1)
               );
               if (workHours >= 9) {
-                workHours -= 1;
+                workHours -= 1; // 점심시간 빼는거
               }
             }
             const workDateRef = ref(

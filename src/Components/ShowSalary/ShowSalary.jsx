@@ -239,12 +239,13 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`
                 );
                 const workHourSnapshot = await get(workHourRef);
+                console.log('워크아워스냅샷', workHourSnapshot.val().workHour);
                 setWorkHours(workHourSnapshot.val().workHour);
                 setToday(workDate);
               }
             }
-
-            console.log('오늘', today);
+            console.log('dateStr', dateStr);
+            console.log('일한 날', today);
             console.log('일한시간', workHours);
             console.log('지금', now);
             console.log('돈주는 날', salaryDay);
@@ -258,6 +259,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               }
 
               totalWeekendOrHolidaySalary += wage * workHours;
+              setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
               console.log('오늘은 공휴일');
               console.log('wage', wage);
               console.log('workHours', workHours);
@@ -265,6 +267,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
             } else {
               // 출퇴근 시간이 같은 날에 있으면서, 그 시간이 야간 시간 범위에 포함되는 경우
               console.log('주말 혹은 공휴일', isHolidayOrWeekend);
+              console.log('start.getDate', start.getDate());
+              console.log('end.getDate', end.getDate());
               if (
                 start.getDate() === end.getDate() &&
                 ((start.getHours() >= nightStart && start.getHours() < 24) ||
@@ -273,6 +277,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 wage = hourlyWage * isNightPay;
                 totalNightSalary += wage * workHours;
                 console.log('오늘은 22시~24시라서 야간근무야');
+                setNightSalary(totalNightSalary);
               }
               // 출퇴근 시간이 다른 날에 걸쳐 있는 경우
               else if (start.getDate() !== end.getDate()) {
@@ -291,23 +296,25 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   console.log('오늘의 시급은', wage);
                   totalNightSalary += wage * workHours;
                   console.log(workHours);
-
+                  setNightSalary(totalNightSalary);
                   console.log('오늘도 야간 근무야');
                 }
               } else {
                 totalDaySalary += wage * workHours;
                 console.log('오늘은 주간 근무야');
                 console.log(totalDaySalary);
+                setDaySalary(totalDaySalary);
               }
             }
-
-            setDaySalary(totalDaySalary);
-            setNightSalary(totalNightSalary);
-            setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
             console.log(workHours);
             console.log(workDateSnapshot.exists());
             console.log(workDateSnapshot.val().workHour);
+            console.log('야간수당은', workDateSnapshot.val().nightSalary);
             console.log('isItTrue', workDateSnapshot.exists() && workHours);
+
+            console.log('주간 수당', daySalary);
+            console.log('야간 수당', nightSalary);
+            console.log('주간 수당', holidayAndWeekendSalary);
 
             if (workHours > 0) {
               await update(workHourRef, {
@@ -468,12 +475,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 주간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {daySalary > 0 && today == nowStr && `${workHours}`}
+                {daySalary > 0 && `${workHours}`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
-                {daySalary > 0 &&
-                  today == nowStr &&
-                  `${formatMoney(daySalary)}`}
+                {daySalary > 0 && `${formatMoney(daySalary)}`}
               </td>
             </tr>
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -484,12 +489,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 야간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {nightSalary > 0 && today == nowStr && `${workHours}시간`}
+                {nightSalary > 0 && `${workHours}시간`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
-                {nightSalary > 0 &&
-                  today == nowStr &&
-                  `${formatMoney(nightSalary)}원`}
+                {nightSalary > 0 && `${formatMoney(nightSalary)}원`}
               </td>
             </tr>
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -500,13 +503,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 공휴일 및 주말
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {holidayAndWeekendSalary > 0 &&
-                  today == nowStr &&
-                  `${workHours}시간`}
+                {holidayAndWeekendSalary > 0 && `${workHours}시간`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {holidayAndWeekendSalary > 0 &&
-                  today == nowStr &&
                   `${formatMoney(holidayAndWeekendSalary)}원`}
               </td>
             </tr>
