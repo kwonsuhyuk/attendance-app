@@ -108,10 +108,16 @@ function MyCalendar() {
             let workHours;
             if (start < end) {
               workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
+              if (workHours >= 9) {
+                workHours -= 1;
+              }
             } else {
               workHours = Number(
                 (24 - start.getHours() + end.getHours()).toFixed(1)
               );
+              if (workHours >= 9) {
+                workHours -= 1;
+              }
             }
             const workDateRef = ref(
               db,
