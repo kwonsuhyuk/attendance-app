@@ -64,32 +64,62 @@ function QrScan({ companyLogo }) {
         db,
         `companyCode/${companyCode}/users/${userId}/date/${yesterdayForNowStr}`
       );
-      const prevDaySnapshot = await get(prevDayRef);
+      const prevWorkDateRef = ref(
+        db,
+        `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayForNowStr}`
+      );
 
+      const prevDaySnapshot = await get(prevDayRef);
       const snapshot = await get(dbref);
       console.log('어제', yesterdayForNow);
-
-      if (
-        !snapshot.exists() &&
-        prevDaySnapshot.val().startTime &&
-        !prevDaySnapshot.val().endTime
-      ) {
-        console.log('어제 출근기록 있음');
-        await update(dbref, { endTime: dateStr });
-        setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
-        toast.success('다음 날 퇴근 인증이 완료되었습니다');
-      } else if (
-        snapshot.exists() &&
-        !snapshot.val().endTime &&
-        snapshot.val().startTime
-      ) {
-        await update(dbref, { endTime: dateStr });
-        setScanMessage('퇴근 인증이 완료되었습니다');
-        toast.success('퇴근 인증이 완료되었습니다');
+      if (prevDaySnapshot.exists() || snapshot.exists()) {
+        if (
+          !snapshot.exists() &&
+          prevDaySnapshot.val().startTime &&
+          !prevDaySnapshot.val().endTime
+        ) {
+          console.log('어제 출근기록 있음');
+          await update(dbref, { endTime: dateStr });
+          setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
+          toast.success('다음 날 퇴근 인증이 완료되었습니다');
+        } else if (
+          snapshot.exists() &&
+          !snapshot.val().endTime &&
+          snapshot.val().startTime
+        ) {
+          await update(dbref, { endTime: dateStr });
+          setScanMessage('퇴근 인증이 완료되었습니다');
+          toast.success('퇴근 인증이 완료되었습니다');
+        } else if (
+          snapshot.exists() &&
+          snapshot.val().endTime &&
+          !snapshot.val().startTIme
+        ) {
+          const startTime = prevDaySnapshot.val().startTime;
+          const endTime = snapshot.val().endTime;
+          const start = new Date(startTime);
+          const end = new Date(endTime);
+          workHours = Number(
+            (24 - start.getHours() + end.getHours()).toFixed(1)
+          );
+          await set(dbref, { startTime: dateStr });
+          await update(prevDayRef, { endTime: endTime });
+          await update(prevWorkDateRef, {
+            workHour: workHours,
+          });
+          await set(workDateRef, {
+            workHour: 0,
+            daySalary: 0,
+            nightSalary: 0,
+            holidayAndWeekendSalary: 0,
+          });
+          setScanMessage('출근 인증이 완료되었습니다');
+          toast.success('출근 인증이 완료되었습니다');
+        }
       } else {
         await set(dbref, { startTime: dateStr });
         await set(workDateRef, {
-          workHour: workHours,
+          workHour: 0,
           daySalary: 0,
           nightSalary: 0,
           holidayAndWeekendSalary: 0,
