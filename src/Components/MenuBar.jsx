@@ -23,6 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import GuidePopover from "./GuidePopover";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -95,6 +96,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
       icon: <DarkModeIcon />,
     },
   ];
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   const logout = async () => {
     await signOut(getAuth());
@@ -318,6 +322,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
             ? "GUIDE"
             : "MENU"}
         </div>
+
+        <ReplayIcon onClick={refreshPage} sx={{ fontSize: "15px" }} />
+
         <div className="cursor-pointer" onClick={toggleDrawer(true)}>
           MENU
         </div>
@@ -346,8 +353,11 @@ const MenuBar = ({ companyName, companyLogo }) => {
             </div>
             <div className="flex gap-5 mb-3">
               {subMenuItems.map((item, index) => (
-                <div key={item.title} onClick={item.handle} className="text-sm">
-                  <span className="text-sx">{item.icon}</span>
+                <div
+                  key={item.title}
+                  onClick={item.handle}
+                  className="text-sm font-noto">
+                  <span className="text-xs">{item.icon}</span>
                   <span>{item.title}</span>
                 </div>
               ))}
