@@ -577,100 +577,104 @@ function ShowSalary({ matchCalendar, matchHome }) {
     </>
   ) : matchCalendar ? (
     <>
-      <div className="relative w-full h-full overflow-x-auto">
-        <table className="w-full text-xs rtl:text-right text-center border-none">
-          <thead className="text-xs border-t border-b border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
-            <tr>
-              <th
-                scope="col"
-                className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-              >
-                Work
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end"
-              >
-                Time
-              </th>
-              <th scope="col" className="pl-6 py-3 text-end">
-                Pay
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-              <th
-                scope="row"
-                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-              >
-                주간
-              </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {now > salaryDay ? `${totalDayHour1}` : `${totalDayHour2}`}
-              </td>
-              <td className="pl-6 py-3 text-end text-nowrap">
-                {now > salaryDay
-                  ? `${formatMoney(totalDayPay1)}원`
-                  : `${formatMoney(totalDayPay2)}원`}
-              </td>
-            </tr>
-            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-              <th
-                scope="row"
-                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-              >
-                야간
-              </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {now > salaryDay ? `${totalNightHour1}` : `${totalNightHour2}`}
-              </td>
-              <td className="pl-6 py-3 text-end text-nowrap">
-                {now > salaryDay
-                  ? `${formatMoney(totalNightPay1)}원`
-                  : `${formatMoney(totalNightPay2)}원`}
-              </td>
-            </tr>
-            <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-              <th
-                scope="row"
-                className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-              >
-                공휴일 및 주말
-              </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {now > salaryDay
-                  ? `${totalHolidayHour1}`
-                  : `${totalHolidayHour2}`}
-              </td>
-              <td className="pl-6 py-3 text-end text-nowrap">
-                {now > salaryDay
-                  ? `${formatMoney(totalHolidayPay1)}원`
-                  : `${formatMoney(totalHolidayPay2)}원`}
-              </td>
-            </tr>
+      {(totalWorkHour1 || totalWorkHour2) && (
+        <div className="relative w-full h-full overflow-x-auto">
+          <table className="w-full text-xs rtl:text-right text-center border-none">
+            <thead className="text-xs border-t border-b border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
+              <tr>
+                <th
+                  scope="col"
+                  className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                >
+                  Work
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end"
+                >
+                  Time
+                </th>
+                <th scope="col" className="pl-6 py-3 text-end">
+                  Pay
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                <th
+                  scope="row"
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                >
+                  주간
+                </th>
+                <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
+                  {now > salaryDay ? `${totalDayHour1}` : `${totalDayHour2}`}
+                </td>
+                <td className="pl-6 py-3 text-end text-nowrap">
+                  {now > salaryDay
+                    ? `${formatMoney(totalDayPay1)}원`
+                    : `${formatMoney(totalDayPay2)}원`}
+                </td>
+              </tr>
+              <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                <th
+                  scope="row"
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                >
+                  야간
+                </th>
+                <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
+                  {now > salaryDay
+                    ? `${totalNightHour1}`
+                    : `${totalNightHour2}`}
+                </td>
+                <td className="pl-6 py-3 text-end text-nowrap">
+                  {now > salaryDay
+                    ? `${formatMoney(totalNightPay1)}원`
+                    : `${formatMoney(totalNightPay2)}원`}
+                </td>
+              </tr>
+              <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                <th
+                  scope="row"
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                >
+                  공휴일 및 주말
+                </th>
+                <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
+                  {now > salaryDay
+                    ? `${totalHolidayHour1}`
+                    : `${totalHolidayHour2}`}
+                </td>
+                <td className="pl-6 py-3 text-end text-nowrap">
+                  {now > salaryDay
+                    ? `${formatMoney(totalHolidayPay1)}원`
+                    : `${formatMoney(totalHolidayPay2)}원`}
+                </td>
+              </tr>
 
-            <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
-              <th
-                scope="row"
-                className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase"
-              >
-                Month
-              </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub">
-                {now > salaryDay ? `${totalWorkHour1}` : `${totalWorkHour2}`}
-              </td>
-              <td className="pl-6 py-3 text-end text-nowrap">
-                {monthlyWage > 0
-                  ? `${formatMoney(monthlyWage)}원`
-                  : now > salaryDay
-                  ? `${formatMoney(totalSalaryPay1)}원`
-                  : `${formatMoney(totalSalaryPay2)}원`}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
+                <th
+                  scope="row"
+                  className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase"
+                >
+                  Month
+                </th>
+                <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub">
+                  {now > salaryDay ? `${totalWorkHour1}` : `${totalWorkHour2}`}
+                </td>
+                <td className="pl-6 py-3 text-end text-nowrap">
+                  {monthlyWage > 0
+                    ? `${formatMoney(monthlyWage)}원`
+                    : now > salaryDay
+                    ? `${formatMoney(totalSalaryPay1)}원`
+                    : `${formatMoney(totalSalaryPay2)}원`}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   ) : null;
 }
