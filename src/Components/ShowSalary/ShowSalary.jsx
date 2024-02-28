@@ -28,6 +28,21 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const [totalSalaryPay1, setTotalSalaryPay1] = useState(0);
   const [totalSalaryPay2, setTotalSalaryPay2] = useState(0);
 
+  const [totalDayHours1, setTotalDayHours1] = useState(0);
+  const [totalDayHours2, setTotalDayHours2] = useState(0);
+  const [totalNightHours1, setTotalNightHours1] = useState(0);
+  const [totalNightHours2, setTotalNightHours2] = useState(0);
+  const [totalHolidayHours1, setTotalHolidayHours1] = useState(0);
+  const [totalHolidayHours2, setTotalHolidayHours2] = useState(0);
+  const [totalDayPay1, setTotalDayPay1] = useState(0);
+  const [totalDayPay2, setTotalDayPay2] = useState(0);
+  const [totalNightPay1, setTotalNightPay1] = useState(0);
+  const [totalNightPay2, setTotalNightPay2] = useState(0);
+  const [totalHolidayPay1, setTotalHolidayPay1] = useState(0);
+  const [totalHolidayPay2, setTotalHolidayPay2] = useState(0);
+  const [totalWorkHour1, setTotalWorkHour1] = useState(0);
+  const [totalWorkHour2, setTotalWorkHour2] = useState(0);
+
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
   const { salaryPayment, monthlyPay } = SalaryType(companyCode, userId);
@@ -88,6 +103,24 @@ function ShowSalary({ matchCalendar, matchHome }) {
         const salaryPays = salaryPaySnapshot.val();
         let totalSalary1 = 0;
         let totalSalary2 = 0;
+        let totalDayHours1 = 0;
+        let totalNightHours1 = 0;
+        let totalHolidayHours1 = 0;
+
+        let totalDaySalary1 = 0;
+        let totalNightSalary1 = 0;
+        let totalHolidaySalary1 = 0;
+
+        let totalDayHours2 = 0;
+        let totalNightHours2 = 0;
+        let totalHolidayHours2 = 0;
+
+        let totalDaySalary2 = 0;
+        let totalNightSalary2 = 0;
+        let totalHolidaySalary2 = 0;
+
+        let totalWorkHour1 = 0;
+        let totalWorkHour2 = 0;
 
         // 저번달 salaryDay부터 이번달 salaryDay - 1일까지의 salary를 합산
         for (let date in salaryPays) {
@@ -104,10 +137,33 @@ function ShowSalary({ matchCalendar, matchHome }) {
             dateObj.getMonth() === today.getMonth() &&
             dateObj.getDate() >= salaryDay
           ) {
-            const { daySalary, nightSalary, holidayAndWeekendSalary } =
-              salaryPays[date];
-
+            const {
+              workHour,
+              daySalary,
+              nightSalary,
+              holidayAndWeekendSalary,
+            } = salaryPays[date];
+            if (daySalary > 0) {
+              totalDayHours1 += workHour;
+              totalDaySalary1 += daySalary;
+              setTotalDayHours1(totalDayHours1);
+              setTotalDayPay1(totalDaySalary1);
+            }
+            if (nightSalary > 0) {
+              totalNightHours1 += workHour;
+              totalNightSalary1 += nightSalary;
+              setTotalNightHours1(totalNightHours1);
+              setTotalNightPay1(totalNightSalary1);
+            }
+            if (holidayAndWeekendSalary > 0) {
+              totalHolidayHours1 += workHour;
+              totalHolidaySalary1 += holidayAndWeekendSalary;
+              setTotalHolidayHours1(totalHolidayHours1);
+              setTotalHolidayPay1(totalHolidaySalary1);
+            }
             totalSalary1 += daySalary + nightSalary + holidayAndWeekendSalary;
+            totalWorkHour1 += workHour;
+            setTotalWorkHour1(totalWorkHour1);
             setTotalSalaryPay1(totalSalary1);
           }
           //1월 28일부터 오늘
@@ -117,11 +173,35 @@ function ShowSalary({ matchCalendar, matchHome }) {
             (dateObj.getMonth() == today.getMonth() - 1 &&
               dateObj.getDate() >= salaryDay)
           ) {
-            const { daySalary, nightSalary, holidayAndWeekendSalary } =
-              salaryPays[date];
+            const {
+              workHour,
+              daySalary,
+              nightSalary,
+              holidayAndWeekendSalary,
+            } = salaryPays[date];
+
+            if (daySalary > 0) {
+              totalDayHours2 += workHour;
+              totalDaySalary2 += daySalary;
+              setTotalDayHours2(totalDayHours2);
+              setTotalDayPay2(totalDaySalary2);
+            }
+            if (nightSalary > 0) {
+              totalNightHours2 += workHour;
+              totalNightSalary2 += nightSalary;
+              setTotalNightHours2(totalNightHours2);
+              setTotalNightPay2(totalNightSalary2);
+            }
+            if (holidayAndWeekendSalary > 0) {
+              totalHolidayHours2 += workHour;
+              totalHolidaySalary2 += holidayAndWeekendSalary;
+              setTotalHolidayHours2(totalHolidayHours2);
+              setTotalHolidayPay2(totalHolidaySalary2);
+            }
 
             totalSalary2 += daySalary + nightSalary + holidayAndWeekendSalary;
-
+            totalWorkHour2 += workHour;
+            setTotalWorkHour2(totalWorkHour2);
             setTotalSalaryPay2(totalSalary2);
           }
           console.log("총 급여1", totalSalaryPay1);
@@ -481,10 +561,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 주간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {daySalary > 0 && `${workHours}`}
+                {now > salaryDay ? `${totalDayHours1}` : `${totalDayHours2}`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
-                {daySalary > 0 && `${formatMoney(daySalary)}`}
+                {now > salaryDay
+                  ? `${formatMoney(totalDayPay1)}원`
+                  : `${formatMoney(totalDayPay2)}원`}
               </td>
             </tr>
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -494,10 +576,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 야간
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {nightSalary > 0 && `${workHours}시간`}
+                {now > salaryDay
+                  ? `${totalNightHours1}`
+                  : `${totalNightHours2}`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
-                {nightSalary > 0 && `${formatMoney(nightSalary)}원`}
+                {now > salaryDay
+                  ? `${formatMoney(totalNightPay1)}원`
+                  : `${formatMoney(totalNightPay2)}원`}
               </td>
             </tr>
             <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -507,11 +593,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 공휴일 및 주말
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                {holidayAndWeekendSalary > 0 && `${workHours}시간`}
+                {now > salaryDay
+                  ? `${totalHolidayHours1}`
+                  : `${totalHolidayHours2}`}
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
-                {holidayAndWeekendSalary > 0 &&
-                  `${formatMoney(holidayAndWeekendSalary)}원`}
+                {now > salaryDay
+                  ? `${formatMoney(totalHolidayPay1)}원`
+                  : `${formatMoney(totalHolidayPay2)}원`}
               </td>
             </tr>
 
@@ -521,7 +610,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
                 Month
               </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub"></td>
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub">
+                {now > salaryDay ? `${totalWorkHour1}` : `${totalWorkHour2}`}
+              </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {monthlyWage > 0
                   ? `${formatMoney(monthlyWage)}원`
