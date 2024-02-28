@@ -65,7 +65,7 @@ function MyCalendar() {
           if (startTime) {
             start = new Date(startTime);
             workDate = start.toISOString().split('T')[0];
-            //console.log(start);
+            console.log(start);
           } else {
             const prevDay = getPrevDate(date);
             const prevDayRef = ref(
@@ -84,7 +84,7 @@ function MyCalendar() {
 
           if (endTime) {
             end = new Date(endTime);
-            //console.log(end);
+            console.log(end);
           } else {
             const nextDay = getNextDate(date);
             const nextDayRef = ref(
