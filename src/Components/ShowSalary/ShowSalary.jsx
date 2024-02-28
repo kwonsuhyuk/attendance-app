@@ -25,7 +25,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const [today, setToday] = useState('');
   const [workHours, setWorkHours] = useState(0);
   const [salaryDay, setSalaryDay] = useState(0);
-  const [totalSalaryPay, setTotalSalaryPay] = useState(0);
+  const [totalSalaryPay1, setTotalSalaryPay1] = useState(0);
+  const [totalSalaryPay2, setTotalSalaryPay2] = useState(0);
 
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
@@ -35,7 +36,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
   const nowStr = new Date().toISOString().split('T')[0];
-  console.log('totalSalary', totalSalaryPay);
 
   useEffect(() => {
     const db = getDatabase();
@@ -86,7 +86,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
       console.log('존재', salaryPaySnapshot.exists());
       if (salaryPaySnapshot.exists()) {
         const salaryPays = salaryPaySnapshot.val();
-        let totalSalary = 0;
+        let totalSalary1 = 0;
+        let totalSalary2 = 0;
 
         // 저번달 salaryDay부터 이번달 salaryDay - 1일까지의 salary를 합산
         for (let date in salaryPays) {
@@ -95,21 +96,37 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
           const today = new Date();
           console.log('today', today);
-
+          console.log(dateObj.getMonth());
+          console.log(today.getMonth());
+          //salaryDay = 28
+          //2월 28일포함~ 오늘
           if (
             dateObj.getMonth() === today.getMonth() &&
-            dateObj.getDate() < salaryDay
+            dateObj.getDate() >= salaryDay
           ) {
             const { daySalary, nightSalary, holidayAndWeekendSalary } =
               salaryPays[date];
 
-            totalSalary += daySalary + nightSalary + holidayAndWeekendSalary;
-            setTotalSalaryPay(totalSalary);
-            console.log('총 급여1', totalSalaryPay);
+            totalSalary1 += daySalary + nightSalary + holidayAndWeekendSalary;
+            setTotalSalaryPay1(totalSalary1);
           }
-        }
+          //1월 28일부터 오늘
+          if (
+            (dateObj.getMonth() === today.getMonth() &&
+              dateObj.getDate() < salaryDay) ||
+            (dateObj.getMonth() == today.getMonth() - 1 &&
+              dateObj.getDate() >= salaryDay)
+          ) {
+            const { daySalary, nightSalary, holidayAndWeekendSalary } =
+              salaryPays[date];
 
-        console.log('총 급여2', totalSalaryPay);
+            totalSalary2 += daySalary + nightSalary + holidayAndWeekendSalary;
+
+            setTotalSalaryPay2(totalSalary2);
+          }
+          console.log('총 급여1', totalSalaryPay1);
+          console.log('총 급여2', totalSalaryPay2);
+        }
       }
     };
 
@@ -249,7 +266,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
             console.log('일한시간', workHours);
             console.log('지금', now);
             console.log('돈주는 날', salaryDay);
-            console.log('월급', totalSalaryPay);
+            console.log('월급', totalSalaryPay1);
 
             if (isHolidayOrWeekend) {
               if (holidayPay) {
@@ -433,14 +450,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
             </div>
           )}
         </div>
-        <div className="flex flex-row justify-between space-x-16">
-          {salaryDay == now && totalSalaryPay > 0 && !monthlyWage && (
-            <div className="flex flex-row w-full justify-between space-x-16 items-center">
-              <div>월급정산일 </div>
-              <div>{formatMoney(totalSalaryPay)}</div>
-            </div>
-          )}
-        </div>
       </div>
     </>
   ) : matchCalendar ? (
@@ -522,7 +531,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <td className="pl-6 py-3 text-end text-nowrap">
                 {monthlyWage > 0
                   ? `${formatMoney(monthlyWage)}원`
-                  : `${formatMoney(totalSalaryPay)}원`}
+                  : now > salaryDay
+                  ? `${formatMoney(totalSalaryPay1)}원`
+                  : `${formatMoney(totalSalaryPay2)}원`}
               </td>
             </tr>
           </tbody>
