@@ -23,6 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import GuidePopover from "./GuidePopover";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -95,6 +96,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
       icon: <DarkModeIcon />,
     },
   ];
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   const logout = async () => {
     await signOut(getAuth());
@@ -259,7 +263,12 @@ const MenuBar = ({ companyName, companyLogo }) => {
                 {location.pathname ===
                   `/${currentUser?.photoURL}/companymain` && (
                   <div>
-                    <GuidePopover text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법, 그리고 급여를 본인이 입력하여 가입합니다. 우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요." />
+                    <GuidePopover
+                      text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법,
+                    그리고 급여를 본인이 입력하여 가입합니다. 
+                    우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 
+                    각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요."
+                    />
                   </div>
                 )}
               </div>
@@ -313,6 +322,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
             ? "GUIDE"
             : "MENU"}
         </div>
+
+        <ReplayIcon onClick={refreshPage} sx={{ fontSize: "15px" }} />
+
         <div className="cursor-pointer" onClick={toggleDrawer(true)}>
           MENU
         </div>
@@ -341,8 +353,11 @@ const MenuBar = ({ companyName, companyLogo }) => {
             </div>
             <div className="flex gap-5 mb-3">
               {subMenuItems.map((item, index) => (
-                <div key={item.title} onClick={item.handle} className="text-sm">
-                  <span className="text-sx">{item.icon}</span>
+                <div
+                  key={item.title}
+                  onClick={item.handle}
+                  className="text-sm font-noto">
+                  <span className="text-xs">{item.icon}</span>
                   <span>{item.title}</span>
                 </div>
               ))}
