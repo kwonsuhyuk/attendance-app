@@ -63,9 +63,9 @@ function MyCalendar() {
           let start, end, workDate;
 
           if (startTime) {
-            start = new Date(startTime);
-            workDate = start.toISOString().split('T')[0];
-            console.log(start);
+
+            start = moment.utc(startTime).toDate();
+            workDate = start.toISOString().split("T")[0];
           } else {
             const prevDay = getPrevDate(date);
             const prevDayRef = ref(
@@ -83,8 +83,9 @@ function MyCalendar() {
           }
 
           if (endTime) {
-            end = new Date(endTime);
-            console.log(end);
+
+            end = moment.utc(endTime).toDate();
+
           } else {
             const nextDay = getNextDate(date);
             const nextDayRef = ref(
@@ -159,6 +160,8 @@ function MyCalendar() {
     }
   };
 
+  console.log("datesList", datesList);
+  console.log("workTIme", workTimes);
   const onClickDay = (value, event) => {
     const dateStr = value.toLocaleDateString('fr-CA');
 
