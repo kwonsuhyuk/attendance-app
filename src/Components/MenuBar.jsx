@@ -353,8 +353,11 @@ const MenuBar = ({ companyName, companyLogo }) => {
             </div>
             <div className="flex gap-5 mb-3">
               {subMenuItems.map((item, index) => (
-                <div key={item.title} onClick={item.handle} className="text-sm">
-                  <span className="text-sx">{item.icon}</span>
+                <div
+                  key={item.title}
+                  onClick={item.handle}
+                  className="text-sm font-noto">
+                  <span className="text-xs">{item.icon}</span>
                   <span>{item.title}</span>
                 </div>
               ))}

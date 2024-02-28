@@ -18,6 +18,7 @@ const paymentMethods = {
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import { formatMoney } from "../util/formatMoney";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
@@ -472,7 +473,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
                           <strong className="text-xl font-bold">총 급여</strong>
                         </div>
                         <div className="text-red-500 font-bold text-base">
-                          {salaryInfo.totalSalary} 원
+                          {formatMoney(salaryInfo.totalSalary)} 원
                         </div>
                       </div>
                       <div className="grid grid-cols-4 my-3">
@@ -499,32 +500,38 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
                       <div className="grid grid-cols-4 my-3">
                         <div>주간</div>
                         <div>{salaryInfo.totalDayHours} 시간</div>
-                        <div>{user?.salaryAmount}원</div>
-                        <div>{salaryInfo.totalDaySalary} 원</div>
+                        <div>{formatMoney(user?.salaryAmount)}원</div>
+                        <div>{formatMoney(salaryInfo.totalDaySalary)}원</div>
                       </div>
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div className="grid grid-cols-4 my-3">
                         <div>야간</div>
                         <div>{salaryInfo.totalNightHours} 시간</div>
                         <div className="flex flex-col">
-                          <span>{user?.salaryAmount * nightPay}원</span>
+                          <span>
+                            {formatMoney(user?.salaryAmount * nightPay)}원
+                          </span>
                           <span className="text-xs font-thin">
                             ({user?.salaryAmount}원 x {nightPay})
                           </span>
                         </div>
-                        <div>{salaryInfo.totalNightSalary} 원</div>
+                        <div>{formatMoney(salaryInfo.totalNightSalary)}원</div>
                       </div>
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div className="grid grid-cols-4 my-3">
                         <div>공휴일</div>
                         <div>{salaryInfo.totalHolidayHours} 시간</div>
                         <div className="flex flex-col">
-                          <span>{user?.salaryAmount * holidayPay}</span>
+                          <span>
+                            {formatMoney(user?.salaryAmount * holidayPay)}원
+                          </span>
                           <span className="text-xs font-thin">
                             ({user?.salaryAmount}원 x {holidayPay})
                           </span>
                         </div>
-                        <div>{salaryInfo.totalHolidaySalary} 원</div>
+                        <div>
+                          {formatMoney(salaryInfo.totalHolidaySalary)}원
+                        </div>
                       </div>
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div
