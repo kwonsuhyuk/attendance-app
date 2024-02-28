@@ -79,7 +79,7 @@ function QrScan({ companyLogo }) {
           !prevDaySnapshot.val().endTime
         ) {
           console.log('어제 출근기록 있음');
-          await update(dbref, { endTime: dateStr });
+          await update(prevDayRef, { endTime: dateStr });
           setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
           toast.success('다음 날 퇴근 인증이 완료되었습니다');
         } else if (
