@@ -487,6 +487,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
       </div>
     );
   }
+  console.log("qweqwe", totalDayHours1);
+  console.log("asdasd", totalDayHours2);
+  console.log("qweqwe2", totalNightHours1);
+  console.log("asdasd2", totalNightHours2);
 
   return matchHome ? (
     <>
@@ -577,6 +581,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
     </>
   ) : matchCalendar ? (
     <>
+
       {(totalWorkHour1 || totalWorkHour2) && (
         <div className="relative w-full h-full overflow-x-auto">
           <table className="w-full text-xs rtl:text-right text-center border-none">
