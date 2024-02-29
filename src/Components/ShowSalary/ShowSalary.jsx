@@ -487,10 +487,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
       </div>
     );
   }
-  console.log("qweqwe", totalDayHours1);
-  console.log("asdasd", totalDayHours2);
-  console.log("qweqwe2", totalNightHours1);
-  console.log("asdasd2", totalNightHours2);
+
 
   return matchHome ? (
     <>
