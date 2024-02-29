@@ -444,6 +444,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
       </div>
     );
   }
+  console.log("qweqwe", totalDayHours1);
+  console.log("asdasd", totalDayHours2);
+  console.log("qweqwe2", totalNightHours1);
+  console.log("asdasd2", totalNightHours2);
 
   return matchHome ? (
     <>
@@ -562,6 +566,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               </th>
               <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 {now > salaryDay ? `${totalDayHours1}` : `${totalDayHours2}`}
+                시간
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {now > salaryDay
@@ -579,6 +584,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 {now > salaryDay
                   ? `${totalNightHours1}`
                   : `${totalNightHours2}`}
+                시간
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {now > salaryDay
@@ -596,6 +602,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 {now > salaryDay
                   ? `${totalHolidayHours1}`
                   : `${totalHolidayHours2}`}
+                시간
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {now > salaryDay
@@ -610,8 +617,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
                 Month
               </th>
-              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub">
+              <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                 {now > salaryDay ? `${totalWorkHour1}` : `${totalWorkHour2}`}
+                시간
               </td>
               <td className="pl-6 py-3 text-end text-nowrap">
                 {monthlyWage > 0

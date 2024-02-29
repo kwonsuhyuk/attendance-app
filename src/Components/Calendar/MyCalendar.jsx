@@ -1,41 +1,41 @@
-import { useState, useEffect } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import moment from 'moment/moment.js';
-import { get, getDatabase, ref, update, set } from 'firebase/database';
-import { useSelector } from 'react-redux';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import './MyCalendar.css';
-import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import moment from "moment/moment.js";
+import { get, getDatabase, ref, update, set } from "firebase/database";
+import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import "./MyCalendar.css";
+import CloseIcon from "@mui/icons-material/Close";
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '70vw',
-  height: '50vh',
-  bgcolor: 'background.paper',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "70vw",
+  height: "50vh",
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
 function getNextDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() + 1);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 function getPrevDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() - 1);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 
 function MyCalendar() {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [modalContent, setModalContent] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
   const userId = currentUser?.uid;
@@ -63,7 +63,6 @@ function MyCalendar() {
           let start, end, workDate;
 
           if (startTime) {
-
             start = moment.utc(startTime).toDate();
             workDate = start.toISOString().split("T")[0];
           } else {
@@ -83,9 +82,7 @@ function MyCalendar() {
           }
 
           if (endTime) {
-
             end = moment.utc(endTime).toDate();
-
           } else {
             const nextDay = getNextDate(date);
             const nextDayRef = ref(
@@ -145,16 +142,16 @@ function MyCalendar() {
   }, [companyCode, userId]);
 
   const tileClassName = ({ date: tileDate, view }) => {
-    if (view === 'month') {
-      const dateStr = tileDate.toLocaleDateString('fr-CA');
+    if (view === "month") {
+      const dateStr = tileDate.toLocaleDateString("fr-CA");
       const workHours = workTimes[dateStr];
       if (workHours) {
         if (workHours >= 8) {
-          return 'bg-green-500';
+          return "bg-green-500";
         } else if (workHours >= 4) {
-          return 'bg-yellow-500';
+          return "bg-yellow-500";
         } else {
-          return 'bg-red-500';
+          return "bg-red-500";
         }
       }
     }
@@ -163,7 +160,7 @@ function MyCalendar() {
   console.log("datesList", datesList);
   console.log("workTIme", workTimes);
   const onClickDay = (value, event) => {
-    const dateStr = value.toLocaleDateString('fr-CA');
+    const dateStr = value.toLocaleDateString("fr-CA");
 
     if (workTimes[dateStr]) {
       const workHours = workTimes[dateStr];
@@ -176,16 +173,16 @@ function MyCalendar() {
           </div>
           <div className="w-full h-[2px] bg-black"></div>
           <div className="flex flex-row w-full justify-between text-white-text">
-            <div>출근 시간</div>{' '}
+            <div>출근 시간</div>{" "}
             <div>
-              {new Date(startTime).getHours()}시{' '}
-              {new Date(startTime).getMinutes()}분{' '}
+              {new Date(startTime).getHours()}시{" "}
+              {new Date(startTime).getMinutes()}분{" "}
               {new Date(startTime).getSeconds()}초
             </div>
           </div>
           <div className="w-full h-[1px] bg-black"></div>
           <div className="flex flex-row w-full justify-between text-white-text">
-            <div>퇴근 시간</div>{' '}
+            <div>퇴근 시간</div>{" "}
             <div>
               {new Date(endTime).getHours()}시 {new Date(endTime).getMinutes()}
               분 {new Date(endTime).getSeconds()}초
@@ -231,22 +228,20 @@ function MyCalendar() {
             value={date}
             tileClassName={tileClassName}
             onClickDay={onClickDay}
-            formatDay={(locale, date) => moment(date).format('DD')}
+            formatDay={(locale, date) => moment(date).format("DD")}
           />
           <Modal
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
+            aria-describedby="modal-modal-description">
             <Box
               sx={{
                 ...style,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 3,
-              }}
-            >
+              }}>
               <div className="absolute top-3 right-3">
                 <CloseIcon onClick={() => setOpen(false)} />
               </div>
@@ -254,14 +249,12 @@ function MyCalendar() {
                 id="modal-modal-title"
                 variant="h6"
                 component="h2"
-                className="flex justify-center items-center text-white-text font-bold"
-              >
+                className="flex justify-center items-center text-white-text font-bold">
                 상세기록
               </Typography>
               <Typography
                 id="modal-modal-description"
-                sx={{ mt: 2, p: 3, border: '1px solid black' }}
-              >
+                sx={{ mt: 2, p: 3, border: "1px solid black" }}>
                 {modalContent}
               </Typography>
             </Box>
