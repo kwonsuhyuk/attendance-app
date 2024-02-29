@@ -174,7 +174,7 @@ const ManagerSettingBasicPage = () => {
                 <AddIcon onClick={handleTagSubmit} />
               </Box>
               <ul
-                className="col-span-3 overflow-y-scroll"
+                className="col-span-3 overflow-y-auto"
                 style={{
                   padding: "1rem 2rem",
                   borderLeft: !darkMode

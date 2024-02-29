@@ -169,7 +169,7 @@ const EmployeeListPage = () => {
             ? "1px solid #00000080"
             : "1px solid #FFFFFF80",
           borderTop: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
-          overflow: "scroll",
+          overflow: "auto",
           height: "calc(100% - 5rem)",
         }}>
         <div
@@ -194,7 +194,7 @@ const EmployeeListPage = () => {
           </span>
         </div>
 
-        <div className="overflow-y-scroll">
+        <div className="overflow-y-auto">
           {employeeList &&
             employeeList
               .filter(

@@ -17,7 +17,7 @@ const ManagerSettingPage = () => {
 
   return (
     <div
-      className="px-10 lg:px-15 py-5 overflow-scrol"
+      className="px-10 lg:px-15 py-5 overflow-auto"
       style={{
         height: "calc(100vh - 18rem)",
         position: "relative",
@@ -48,7 +48,7 @@ const ManagerSettingPage = () => {
             <ListItemText primary="회사 공휴일 수정" />
           </ListItem>
         </div>
-        <div className="overflow-scroll px-10 pt-5 lg:px-40">
+        <div className="overflow-auto px-10 pt-5 lg:px-40">
           <Routes>
             <Route path="/" element={<ManagerSettingBasicPage />} />
             <Route path="holidaysetting" element={<MyDatePicker />} />

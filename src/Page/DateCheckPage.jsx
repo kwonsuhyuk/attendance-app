@@ -225,7 +225,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
         marginBottom: "3rem",
         position: "relative",
         justifyContent: "flex-start",
-        overflowY: "scroll",
+        overflowY: "auto",
         overflowX: "hidden",
         borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
       }}>
