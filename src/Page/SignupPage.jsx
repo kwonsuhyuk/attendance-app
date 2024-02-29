@@ -160,6 +160,14 @@ function SignupPage() {
     [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode]
   );
 
+  useEffect(() => {
+    if (window.innerWidth <= 600 && isManagerCheck) {
+      alert(
+        "관리자는 PC 전용 서비스 입니다. PC버전으로 회원가입을 진행하셔야 추후에 문제가 발생하지 않습니다. PC로 회원가입 진행 부탁드립니다."
+      );
+    }
+  }, [isManagerCheck]);
+
   return (
     <div className="mt-20">
       <Container component="main" maxWidth="xs">
