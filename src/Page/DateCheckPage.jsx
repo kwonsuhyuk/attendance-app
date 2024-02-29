@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { formatMoney } from "../util/formatMoney";
+import { toast } from "react-toastify";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
@@ -153,7 +154,11 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
   };
 
   const handleOpenSettleModal = () => {
-    setIsModalOpen(true);
+    if (user) {
+      setIsModalOpen(true);
+    } else {
+      toast.error("정산할 직원을 선택해 주세요.");
+    }
   };
 
   const handleCancel = () => {
@@ -214,20 +219,21 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
 
   return (
     <div
-      className="pb-10"
+      className="pb-10 px-3"
       style={{
         height: "calc(100vh - 10rem)",
         marginBottom: "3rem",
         position: "relative",
         justifyContent: "flex-start",
         overflowY: "scroll",
+        overflowX: "hidden",
         borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
       }}>
       <div
         className="grid h-full gap-7 place-content-start"
         style={{ gridTemplateColumns: "80fr 23fr" }}>
         <div className="h-full w-full">
-          <div className="flex justify-between items-end font-bold">
+          <div className="flex justify-between items-end font-bold pl-3">
             <div
               className="text-xl flex items-center cursor-pointer underline"
               onClick={() =>

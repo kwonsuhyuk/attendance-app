@@ -296,6 +296,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
                   : "1px solid #FFFFFF80",
               }}>
               <div className="font-black text-lg">{companyName}</div>
+              <div onClick={logout} className="text-sm cursor-pointer">
+                logout
+              </div>
             </div>
           </div>
         </div>

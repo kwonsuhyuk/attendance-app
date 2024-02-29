@@ -157,8 +157,6 @@ function MyCalendar() {
     }
   };
 
-  console.log("datesList", datesList);
-  console.log("workTIme", workTimes);
   const onClickDay = (value, event) => {
     const dateStr = value.toLocaleDateString("fr-CA");
 
