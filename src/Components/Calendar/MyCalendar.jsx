@@ -55,16 +55,17 @@ function MyCalendar() {
 
       if (snapshot.exists()) {
         const dates = snapshot.val();
-        setDatesList(dates);
+        console.log(dates);
         let newWorkTimes = {};
-
+        setDatesList(snapshot.val());
         for (let date in dates) {
           const { startTime, endTime } = dates[date];
           let start, end, workDate;
-
+          console.log("date", date);
           if (startTime) {
-            start = moment.utc(startTime).toDate();
-            workDate = start.toISOString().split("T")[0];
+            start = moment(startTime); // Use moment.js to parse the date
+            workDate = start.format("YYYY-MM-DD");
+            console.log("workDate", workDate);
           } else {
             const prevDay = getPrevDate(date);
             const prevDayRef = ref(
@@ -82,7 +83,8 @@ function MyCalendar() {
           }
 
           if (endTime) {
-            end = moment.utc(endTime).toDate();
+            end = moment(endTime);
+            //console.log(end);
           } else {
             const nextDay = getNextDate(date);
             const nextDayRef = ref(
@@ -104,18 +106,10 @@ function MyCalendar() {
 
           if (start && end) {
             let workHours;
-            if (start < end) {
-              workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
-              if (workHours >= 9) {
-                workHours -= 1; //점심시간 빼는거
-              }
+            if (start.isBefore(end)) {
+              workHours = Number((Math.abs(end.diff(start)) / 36e5).toFixed(1));
             } else {
-              workHours = Number(
-                (24 - start.getHours() + end.getHours()).toFixed(1)
-              );
-              if (workHours >= 9) {
-                workHours -= 1; // 점심시간 빼는거
-              }
+              workHours = Number((24 - start.hours() + end.hours()).toFixed(1));
             }
             const workDateRef = ref(
               db,

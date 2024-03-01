@@ -3,32 +3,21 @@
   box-sizing: border-box;
 }
 
+/* body에 대한 스크롤바 디자인 */
 ::-webkit-scrollbar {
-  width: 3px; /* 스크롤바의 너비 */
+  width: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  height: 95%; /* 스크롤바의 길이 */
-  background: #217af4; /* 스크롤바의 색상 */
-
-  border-radius: 10px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
-}
-
-body::-webkit-scrollbar {
-  width: 8px; /* 스크롤바의 너비 */
-}
-
-body::-webkit-scrollbar-thumb {
-  height: 30%; /* 스크롤바의 길이 */
-  background: #217af4; /* 스크롤바의 색상 */
-
+  background-color: rgba(33, 122, 244, 0.1);
   border-radius: 10px;
 }
 
-body::-webkit-scrollbar-track {
-  background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
+/* body의 스크롤바에 마우스를 올렸을 때의 디자인 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.2); /* 연한 회색 색상 */
 }
