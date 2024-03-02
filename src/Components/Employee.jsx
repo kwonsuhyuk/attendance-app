@@ -118,7 +118,7 @@ const Employee = ({ user }) => {
       {user && (
         <>
           <div
-            className="flex justify-between md:grid md:grid-cols-7 items-center justify-items-center py-5 text-sm"
+            className="flex justify-between lg:grid lg:grid-cols-8 items-center justify-items-center py-5 text-sm"
             style={{
               borderBottom: !darkMode
                 ? "1px solid #00000033"
@@ -127,8 +127,11 @@ const Employee = ({ user }) => {
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
               {name}
             </div>
-            <div className="hidden md:block overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div className="w-auto hidden lg:block text-sm lg:text-base">
               {email}
+            </div>
+            <div className="w-auto hidden lg:block text-sm lg:text-base">
+              {phoneNumber}
             </div>
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
               {jobName}
@@ -136,7 +139,7 @@ const Employee = ({ user }) => {
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
               {paymentMethods[salaryType]}
             </div>
-            <div className="hidden md:block overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div className="hidden lg:block overflow-hidden overflow-ellipsis whitespace-nowrap">
               {salaryAmount && formatMoney(parseInt(salaryAmount))}원
             </div>
             <div
@@ -149,7 +152,7 @@ const Employee = ({ user }) => {
               }}>
               수정
             </div>
-            <div onClick={handleShowInfo} className="cursor-pointer">
+            <div onClick={handleShowInfo} className="cursor-pointer underline">
               상세보기 & 정산 {">"}
             </div>
           </div>

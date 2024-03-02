@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes, Link, useLocation } from "react-router-dom";
 import { ListItem, ListItemText } from "@mui/material";
 import ManagerSettingBasicPage from "./ManagerSettingBasicPage";

@@ -2,39 +2,23 @@ import "../firebase";
 import { Route, Routes } from "react-router-dom";
 import AccessCameraPage from "./AccessCameraPage";
 import DateCheckPage from "./DateCheckPage";
-import ShowSalary from "../Components/ShowSalary/ShowSalary";
 import ManagerSettingPage from "./ManagerSettingPage";
 import EmployeeListPage from "./EmployeeListPage";
 import MenuBar from "../Components/MenuBar";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { get, getDatabase, ref } from "firebase/database";
 import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
-import MyCalendar from "../Components/Calendar/MyCalendar";
 import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
-import { Divider } from "@mui/material";
-import { useNavigate, useMatch } from "react-router-dom";
 import AppGuidePage from "./AppGuidePage";
-import moment from "moment";
+import AboutPage from "./AboutPage";
 
 function MainPage() {
-  const navigate = useNavigate();
-  const { currentUser, userType } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const [currentCompany, setCurrentCompany] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
-
-  const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
-  useEffect(() => {
-    console.log(matchCalendar);
-  }, []);
-  const matchHome = useMatch(`/${currentUser?.photoURL}`);
-  useEffect(() => {
-    console.log(matchHome);
-  }, []);
-  console.log(matchCalendar);
-  console.log(matchHome);
 
   useEffect(() => {
     async function getCompanyInfo() {
@@ -98,6 +82,7 @@ function MainPage() {
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />
           <Route path="/appguide" element={<AppGuidePage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </div>
       {/* footer */}

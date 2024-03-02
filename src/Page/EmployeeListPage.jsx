@@ -173,19 +173,22 @@ const EmployeeListPage = () => {
           height: "calc(100% - 5rem)",
         }}>
         <div
-          className="flex justify-between md:grid md:grid-cols-7 items-center justify-items-center py-5 font-bold"
+          className="flex justify-between lg:grid lg:grid-cols-8 items-center justify-items-center py-5 font-bold"
           style={{
             borderBottom: !darkMode
               ? "1px solid #00000033"
               : "1px solid #FFFFFF33",
           }}>
           <span className="w-auto text-sm lg:text-base">이름</span>
-          <span className="w-auto hidden md:block text-sm lg:text-base">
+          <span className="w-auto hidden lg:block text-sm lg:text-base">
             이메일
+          </span>
+          <span className="w-auto hidden lg:block text-sm lg:text-base">
+            전화번호
           </span>
           <span className="w-auto text-sm lg:text-base">직종</span>
           <span className="w-auto text-sm lg:text-base">급여지급방식</span>
-          <span className="w-auto hidden md:block text-sm lg:text-base">
+          <span className="w-auto hidden lg:block text-sm lg:text-base">
             급여
           </span>
           <span className="w-auto text-sm lg:text-base">직원 정보 수정</span>

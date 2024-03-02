@@ -4,6 +4,7 @@ import "../firebase";
 import { getAuth, signOut } from "firebase/auth";
 import { FaCamera } from "react-icons/fa";
 import { cloneElement, useEffect, useState } from "react";
+import InfoIcon from "@mui/icons-material/Info";
 import {
   Box,
   FormControlLabel,
@@ -94,6 +95,14 @@ const MenuBar = ({ companyName, companyLogo }) => {
         setOpen(false);
       },
       icon: <DarkModeIcon />,
+    },
+    {
+      title: "ABOUT",
+      handle: () => {
+        navigate(`/${currentUser?.photoURL}/about`);
+        setOpen(false);
+      },
+      icon: <InfoIcon />,
     },
   ];
   const refreshPage = () => {
@@ -244,6 +253,18 @@ const MenuBar = ({ companyName, companyLogo }) => {
                   style={{ border: "none" }}
                   onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}>
                   SETTING
+                </div>
+                <div
+                  className={`${
+                    location.pathname.includes(
+                      `/${currentUser?.photoURL}/about`
+                    )
+                      ? "text-white-nav-selected dark:text-dark-nav-selected"
+                      : "text-white-nav-text dark:text-dark-nav-text"
+                  } cursor-pointer`}
+                  style={{ border: "none" }}
+                  onClick={() => navigate(`/${currentUser?.photoURL}/about`)}>
+                  ABOUT
                 </div>
               </div>
             </div>
