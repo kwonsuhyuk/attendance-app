@@ -1,24 +1,12 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import MyCalendar from '../Components/Calendar/MyCalendar';
-import ShowSalary from '../Components/ShowSalary/ShowSalary';
-import { useMatch, useNavigate } from 'react-router-dom';
-import { Divider } from '@mui/material';
+import { useSelector } from "react-redux";
+import MyCalendar from "../Components/Calendar/MyCalendar";
+import ShowSalary from "../Components/ShowSalary/ShowSalary";
+import { useMatch } from "react-router-dom";
 
 const ShowCalendarPage = () => {
-  const navigate = useNavigate();
-  const { currentUser, userType } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
-  useEffect(() => {
-    console.log(matchCalendar);
-  }, []);
   const matchHome = useMatch(`/${currentUser?.photoURL}`);
-  useEffect(() => {
-    console.log(matchHome);
-  }, []);
-  console.log(matchCalendar);
-  console.log(matchHome);
 
   return (
     <div className="flex flex-col items-center justify-between my-3 h-full">
@@ -35,7 +23,6 @@ const ShowCalendarPage = () => {
         <div className="bg-green-500 font-normal text-base w-6 h-6 flex items-center justify-center">
           8+
         </div>
-        {/* <div className="flex items-center text-xs ml-3">(단위: 시간)</div> */}
       </div>
       <div className="w-full">
         <ShowSalary matchHome={matchHome} matchCalendar={matchCalendar} />

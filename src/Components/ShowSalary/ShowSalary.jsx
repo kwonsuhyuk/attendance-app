@@ -579,7 +579,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
     <>
       {(totalWorkHour1 || totalWorkHour2) && (
         <div className="relative w-full h-full overflow-x-auto">
-          <div className="py-2 text-base">{"> "}이번달 근무내역</div>
+          <div className="py-2 text-base font-bold">이번달 근무내역</div>
           <table className="w-full text-xs rtl:text-right text-center border-none">
             <thead className="text-xs border-t border-b border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
               <tr>

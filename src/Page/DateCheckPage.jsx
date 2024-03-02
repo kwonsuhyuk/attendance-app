@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import moment from "moment/moment.js";
+import { useState, useEffect } from "react";
 import { get, getDatabase, ref } from "firebase/database";
 import { useSelector } from "react-redux";
 import "./DateCheckPage.css";
@@ -125,7 +124,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
     }
   };
 
-  const tileClassName = ({ date, view }) => {
+  const tileClassName = ({ view }) => {
     if (view === "month") {
       return `${darkMode ? "text-white" : "text-black"}`;
     }
@@ -185,7 +184,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
     let totalNightSalary = 0;
     let totalHolidaySalary = 0;
 
-    filteredWorkdates.forEach(([date, workDates]) => {
+    filteredWorkdates.forEach(([workDates]) => {
       if (workDates.daySalary > 0) {
         totalDayHours += workDates.workHour;
         totalDaySalary += workDates.daySalary;

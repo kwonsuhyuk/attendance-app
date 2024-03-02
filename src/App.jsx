@@ -1,21 +1,14 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
-import {
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-  useRoutes,
-} from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import LoginPage from "./Page/LoginPage";
 import Notfound from "./Page/Notfound";
 import MainPage from "./Page/MainPage";
 import ManagerFirstPage from "./Page/signupProcessPage/ManagerFirstPage";
 import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
 import IndexPage from "./Page/IndexPage";
-import AccessCameraPage from "./Page/AccessCameraPage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ClipLoader } from "react-spinners";
 import "./firebase";
@@ -28,7 +21,7 @@ import { toggleMode } from "./store/darkmodeSlice";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const { currentUser, isLoading } = useSelector((state) => state.user);
 
   useEffect(() => {

@@ -25,8 +25,7 @@ import {
 import "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
-import { child, get, ref, getDatabase } from "firebase/database";
-
+import { get, ref, getDatabase } from "firebase/database";
 import { Button } from "antd";
 
 function SignupPage() {
