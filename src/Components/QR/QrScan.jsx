@@ -74,6 +74,7 @@ function QrScan({ companyLogo }) {
       console.log('어제', yesterdayForNow);
       if (prevDaySnapshot.exists() || snapshot.exists()) {
         if (
+          //오늘 출근기록이 없고 어제 출근기록은 있는데 퇴근 기록은 없는 경우
           !snapshot.exists() &&
           prevDaySnapshot.val().startTime &&
           !prevDaySnapshot.val().endTime
@@ -83,6 +84,7 @@ function QrScan({ companyLogo }) {
           setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
           toast.success('다음 날 퇴근 인증이 완료되었습니다');
         } else if (
+          //오늘 출근기록이 있을경우
           snapshot.exists() &&
           !snapshot.val().endTime &&
           snapshot.val().startTime
@@ -91,6 +93,7 @@ function QrScan({ companyLogo }) {
           setScanMessage('퇴근 인증이 완료되었습니다');
           toast.success('퇴근 인증이 완료되었습니다');
         } else if (
+          //오늘 퇴근기록만 있고 출근기록은 없는 경우
           snapshot.exists() &&
           snapshot.val().endTime &&
           !snapshot.val().startTIme
@@ -107,6 +110,16 @@ function QrScan({ companyLogo }) {
           await update(prevWorkDateRef, {
             workHour: workHours,
           });
+          await set(workDateRef, {
+            workHour: 0,
+            daySalary: 0,
+            nightSalary: 0,
+            holidayAndWeekendSalary: 0,
+          });
+          setScanMessage('출근 인증이 완료되었습니다');
+          toast.success('출근 인증이 완료되었습니다');
+        } else {
+          await set(dbref, { startTime: dateStr });
           await set(workDateRef, {
             workHour: 0,
             daySalary: 0,
