@@ -184,7 +184,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
     let totalNightSalary = 0;
     let totalHolidaySalary = 0;
 
-    filteredWorkdates.forEach(([workDates]) => {
+    filteredWorkdates.forEach(([dates, workDates]) => {
       if (workDates.daySalary > 0) {
         totalDayHours += workDates.workHour;
         totalDaySalary += workDates.daySalary;
@@ -200,6 +200,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
     });
 
     const totalSalary = totalDaySalary + totalNightSalary + totalHolidaySalary;
+    console.log("total", totalSalary);
 
     setSalaryInfo({
       totalDayHours,
@@ -211,10 +212,6 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
       totalSalary,
     });
   };
-  console.log(user);
-  // const handleModalDateChange = (dates, dateStrings) => {
-  //   console.log(dates, dateStrings);
-  // };
 
   return (
     <div
