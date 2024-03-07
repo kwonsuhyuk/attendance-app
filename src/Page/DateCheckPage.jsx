@@ -517,14 +517,14 @@ const DateCheckPage = ({
                       <div className="w-full h-[1px] bg-black"></div>
                       <div className="grid grid-cols-4 my-3">
                         <div>주간</div>
-                        <div>{salaryInfo.totalDayHours} 시간</div>
+                        <div>{salaryInfo.totalDayHours.toFixed(1)} 시간</div>
                         <div>{formatMoney(user?.salaryAmount)}원</div>
                         <div>{formatMoney(salaryInfo.totalDaySalary)}원</div>
                       </div>
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div className="grid grid-cols-4 my-3">
                         <div>야간</div>
-                        <div>{salaryInfo.totalNightHours} 시간</div>
+                        <div>{salaryInfo.totalNightHours.toFixed(1)} 시간</div>
                         <div className="flex flex-col">
                           <span>
                             {formatMoney(user?.salaryAmount * nightPay)}원
@@ -538,7 +538,9 @@ const DateCheckPage = ({
                       <div className="w-full h-[1px] bg-gray-300"></div>
                       <div className="grid grid-cols-4 my-3">
                         <div>공휴일</div>
-                        <div>{salaryInfo.totalHolidayHours} 시간</div>
+                        <div>
+                          {salaryInfo.totalHolidayHours.toFixed(1)} 시간
+                        </div>
                         <div className="flex flex-col">
                           <span>
                             {formatMoney(user?.salaryAmount * holidayPay)}원
@@ -562,9 +564,11 @@ const DateCheckPage = ({
                           <strong className="text-xl font-bold">총 시간</strong>
                         </div>
                         <div>
-                          {salaryInfo.totalDayHours +
+                          {(
+                            salaryInfo.totalDayHours +
                             salaryInfo.totalNightHours +
-                            salaryInfo.totalHolidayHours}{" "}
+                            salaryInfo.totalHolidayHours
+                          ).toFixed(1)}
                           시간
                         </div>
                       </div>
