@@ -19,15 +19,7 @@ const CompanyMain = ({ companyLogo }) => {
   const [userpaytype, setUserpaytype] = useState("");
 
   const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
-  useEffect(() => {
-    console.log(matchCalendar);
-  }, []);
   const matchHome = useMatch(`/${currentUser?.photoURL}/companymain`);
-  useEffect(() => {
-    console.log(matchHome);
-  }, []);
-  console.log(matchCalendar);
-  console.log(matchHome);
 
   useEffect(() => {
     async function getCompanyInfo() {

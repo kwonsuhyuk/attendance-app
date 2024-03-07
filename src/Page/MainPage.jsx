@@ -75,6 +75,7 @@ function MainPage() {
                 modalDefaultValue={currentCompany?.payCheckDay}
                 nightPay={currentCompany?.isNightPay}
                 holidayPay={currentCompany?.holidayPay}
+                holidayList={currentCompany?.holidayList}
               />
             }
           />
