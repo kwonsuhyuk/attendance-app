@@ -24,7 +24,12 @@ dayjs.extend(isSameOrAfter);
 
 const { RangePicker } = DatePicker;
 
-const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
+const DateCheckPage = ({
+  modalDefaultValue,
+  nightPay,
+  holidayPay,
+  holidayList,
+}) => {
   const [modalDates, setModalDates] = useState([
     dayjs().subtract(1, "month").date(modalDefaultValue),
     dayjs().subtract(1, "day"),
@@ -124,7 +129,17 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
     }
   };
 
-  const tileClassName = ({ view }) => {
+  const tileClassName = ({ view, date }) => {
+    const dateString = date.toLocaleDateString("fr-CA"); // 날짜를 "YYYY-MM-DD" 형식의 문자열로 변환
+
+    if (
+      holidayList &&
+      view === "month" &&
+      (date.getDay() === 0 || date.getDay() === 6 || holidayList[dateString])
+    ) {
+      return "weekend";
+    }
+
     if (view === "month") {
       return `${darkMode ? "text-white" : "text-black"}`;
     }
@@ -229,9 +244,10 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay }) => {
         className="grid h-full gap-7 place-content-start"
         style={{ gridTemplateColumns: "80fr 23fr" }}>
         <div className="h-full w-full">
-          <div className="flex justify-between items-end font-bold pl-3">
+          <div className="flex justify-between items-end font-bold">
             <div
-              className="text-xl flex items-center cursor-pointer underline"
+              style={{ borderRadius: "10px" }}
+              className="text-xl flex items-center cursor-pointer p-3 underline"
               onClick={() =>
                 navigate(`/${currentUser?.photoURL}/employeelist`)
               }>

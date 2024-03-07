@@ -621,7 +621,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   주간
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                  {now > salaryDay ? `${totalDayHour1}` : `${totalDayHour2}`}
+                  {now > salaryDay
+                    ? `${totalDayHour1.toFixed(1)}`
+                    : `${totalDayHour2.toFixed(1)}`}
                   시간
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
@@ -639,8 +641,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalNightHour1}`
-                    : `${totalNightHour2}`}
+                    ? `${totalNightHour1.toFixed(1)}`
+                    : `${totalNightHour2.toFixed(1)}`}
                   시간
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
@@ -658,8 +660,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalHolidayHour1}`
-                    : `${totalHolidayHour2}`}
+                    ? `${totalHolidayHour1.toFixed(1)}`
+                    : `${totalHolidayHour2.toFixed(1)}`}
                   시간
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
@@ -677,7 +679,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   Month
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                  {now > salaryDay ? `${totalWorkHour1}` : `${totalWorkHour2}`}
+                  {now > salaryDay
+                    ? `${totalWorkHour1.toFixed(1)}`
+                    : `${totalWorkHour2.toFixed(1)}`}
                   시간
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
