@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import "./MyCalendar.css";
 import CloseIcon from "@mui/icons-material/Close";
+import convertTime from "../../util/formatTime";
+import { toast } from "react-toastify";
 const style = {
   position: "absolute",
   top: "50%",
@@ -39,8 +41,8 @@ function MyCalendar() {
   const { currentUser } = useSelector((state) => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
   const userId = currentUser?.uid;
-  const [isLoading, setIsLoading] = useState(false);
   const [datesList, setDatesList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -55,17 +57,15 @@ function MyCalendar() {
 
       if (snapshot.exists()) {
         const dates = snapshot.val();
-        console.log(dates);
         let newWorkTimes = {};
         setDatesList(snapshot.val());
         for (let date in dates) {
           const { startTime, endTime } = dates[date];
           let start, end, workDate;
-          console.log("date", date);
+
           if (startTime) {
-            start = moment(startTime); // Use moment.js to parse the date
-            workDate = start.format("YYYY-MM-DD");
-            console.log("workDate", workDate);
+            start = new Date(startTime);
+            workDate = start.toLocaleDateString("fr-CA");
           } else {
             const prevDay = getPrevDate(date);
             const prevDayRef = ref(
@@ -77,14 +77,13 @@ function MyCalendar() {
               start = new Date(prevDaySnapShot.val().startTime);
               //console.log(start);
             } else {
-              console.warn(`${date}의 시작 시간이 없습니다.`);
+              toast.error(`${date}의 시작 시간이 없습니다.`);
             }
             setIsLoading(true);
           }
 
           if (endTime) {
-            end = moment(endTime);
-            //console.log(end);
+            end = new Date(endTime);
           } else {
             const nextDay = getNextDate(date);
             const nextDayRef = ref(
@@ -97,7 +96,7 @@ function MyCalendar() {
               end = new Date(nextDaySnapshot.val().endTime);
               console.log(end);
             } else {
-              console.warn(
+              toast.error(
                 `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`
               );
             }
@@ -106,10 +105,18 @@ function MyCalendar() {
 
           if (start && end) {
             let workHours;
-            if (start.isBefore(end)) {
-              workHours = Number((Math.abs(end.diff(start)) / 36e5).toFixed(1));
+            if (start < end) {
+              workHours = Number((Math.abs(end - start) / 36e5).toFixed(1));
+              if (workHours >= 9) {
+                workHours -= 1; //점심시간 빼는거
+              }
             } else {
-              workHours = Number((24 - start.hours() + end.hours()).toFixed(1));
+              workHours = Number(
+                (24 - start.getHours() + end.getHours()).toFixed(1)
+              );
+              if (workHours >= 9) {
+                workHours -= 1; // 점심시간 빼는거
+              }
             }
             const workDateRef = ref(
               db,
@@ -138,6 +145,7 @@ function MyCalendar() {
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === "month") {
       const dateStr = tileDate.toLocaleDateString("fr-CA");
+
       const workHours = workTimes[dateStr];
       if (workHours) {
         if (workHours >= 8) {
@@ -154,9 +162,8 @@ function MyCalendar() {
   const onClickDay = (value, event) => {
     const dateStr = value.toLocaleDateString("fr-CA");
 
-    if (workTimes[dateStr]) {
+    if (datesList[dateStr]?.startTime) {
       const workHours = workTimes[dateStr];
-      const { startTime, endTime } = datesList[dateStr];
 
       setModalContent(
         <div className="flex flex-col gap-3">
@@ -167,22 +174,28 @@ function MyCalendar() {
           <div className="flex flex-row w-full justify-between text-white-text">
             <div>출근 시간</div>{" "}
             <div>
-              {new Date(startTime).getHours()}시{" "}
-              {new Date(startTime).getMinutes()}분{" "}
-              {new Date(startTime).getSeconds()}초
+              {new Date(datesList[dateStr].startTime).getHours()}시{" "}
+              {new Date(datesList[dateStr].startTime).getMinutes()}분{" "}
+              {new Date(datesList[dateStr].startTime).getSeconds()}초
             </div>
           </div>
           <div className="w-full h-[1px] bg-black"></div>
           <div className="flex flex-row w-full justify-between text-white-text">
             <div>퇴근 시간</div>{" "}
             <div>
-              {new Date(endTime).getHours()}시 {new Date(endTime).getMinutes()}
-              분 {new Date(endTime).getSeconds()}초
+              {datesList[dateStr].endTime && (
+                <>
+                  {new Date(datesList[dateStr].endTime).getHours()}시{" "}
+                  {new Date(datesList[dateStr].endTime).getMinutes()}분{" "}
+                  {new Date(datesList[dateStr].endTime).getSeconds()}초
+                </>
+              )}
             </div>
           </div>
           <div className="w-full h-[1px] bg-black"></div>
           <div className="flex flex-row w-full justify-between text-white-text">
-            <div>일한 시간</div> <div>{workHours}시간</div>
+            <div>일한 시간</div>{" "}
+            <div>{convertTime(workTimes[dateStr] && workHours)}</div>
           </div>
           <div className="text-xs text-gray-500">
             (9시간 이상 근무시 점심시간 1시간 제외하고 계산.)
@@ -212,48 +225,44 @@ function MyCalendar() {
   };
 
   return (
-    <>
-      {!isLoading && (
-        <div className="flex justify-center items-center">
-          <Calendar
-            onChange={onChange}
-            value={date}
-            tileClassName={tileClassName}
-            onClickDay={onClickDay}
-            formatDay={(locale, date) => moment(date).format("DD")}
-          />
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description">
-            <Box
-              sx={{
-                ...style,
-                display: "flex",
-                flexDirection: "column",
-                gap: 3,
-              }}>
-              <div className="absolute top-3 right-3">
-                <CloseIcon onClick={() => setOpen(false)} />
-              </div>
-              <Typography
-                id="modal-modal-title"
-                variant="h6"
-                component="h2"
-                className="flex justify-center items-center text-white-text font-bold">
-                상세기록
-              </Typography>
-              <Typography
-                id="modal-modal-description"
-                sx={{ mt: 2, p: 3, border: "1px solid black" }}>
-                {modalContent}
-              </Typography>
-            </Box>
-          </Modal>
-        </div>
-      )}
-    </>
+    <div className="flex justify-center items-center">
+      <Calendar
+        onChange={onChange}
+        value={date}
+        tileClassName={tileClassName}
+        onClickDay={onClickDay}
+        formatDay={(locale, date) => moment(date).format("DD")}
+      />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box
+          sx={{
+            ...style,
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}>
+          <div className="absolute top-3 right-3">
+            <CloseIcon onClick={() => setOpen(false)} />
+          </div>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="flex justify-center items-center text-white-text font-bold">
+            상세기록
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            sx={{ mt: 2, p: 3, border: "1px solid black" }}>
+            {modalContent}
+          </Typography>
+        </Box>
+      </Modal>
+    </div>
   );
 }
 
