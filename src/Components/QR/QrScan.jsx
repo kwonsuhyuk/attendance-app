@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
-import { getDatabase, get, ref, set, update, push } from "firebase/database";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
+import { getDatabase, get, ref, set, update, push } from 'firebase/database';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 //import { snap } from 'gsap';
 
 function QrScan({ companyLogo }) {
@@ -18,7 +18,7 @@ function QrScan({ companyLogo }) {
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
+    const scanner = new Html5QrcodeScanner('reader', {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -77,21 +77,6 @@ function QrScan({ companyLogo }) {
 
       const prevDaySnapshot = await get(prevDayRef);
       const snapshot = await get(dbref);
-      console.log('어제', yesterdayForNowStr);
-      console.log('지금', nowStr);
-      console.log('now', now);
-
-      console.log('1', prevDaySnapshot.exists() || snapshot.exists());
-
-      console.log(
-        '3',
-        snapshot.exists() && !snapshot.val().endTime && snapshot.val().startTime
-      );
-      console.log(
-        '4',
-        snapshot.exists() && snapshot.val().endTime && !snapshot.val().startTime
-      );
-
 
       if (prevDaySnapshot.exists() || snapshot.exists()) {
         if (
@@ -101,10 +86,10 @@ function QrScan({ companyLogo }) {
           prevDaySnapshot.val().startTime &&
           !prevDaySnapshot.val().endTime
         ) {
-          console.log("어제 출근기록 있음");
+          console.log('어제 출근기록 있음');
           await update(prevDayRef, { endTime: dateStr });
-          setScanMessage("다음 날 퇴근 인증이 완료되었습니다");
-          toast.success("다음 날 퇴근 인증이 완료되었습니다");
+          setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
+          toast.success('다음 날 퇴근 인증이 완료되었습니다');
         } else if (
           //오늘 출근기록이 있을경우
           snapshot.exists() &&
@@ -112,8 +97,8 @@ function QrScan({ companyLogo }) {
           !snapshot.val().endTime
         ) {
           await update(dbref, { endTime: dateStr });
-          setScanMessage("퇴근 인증이 완료되었습니다");
-          toast.success("퇴근 인증이 완료되었습니다");
+          setScanMessage('퇴근 인증이 완료되었습니다');
+          toast.success('퇴근 인증이 완료되었습니다');
         } else if (
           //오늘 퇴근기록만 있고 출근기록은 없는 경우
           snapshot.exists() &&
@@ -157,7 +142,6 @@ function QrScan({ companyLogo }) {
           });
           setScanMessage('출근 인증이 완료되었습니다');
           toast.success('출근 인증이 완료되었습니다');
-
         }
       } else {
         await set(dbref, { startTime: dateStr });
@@ -171,7 +155,6 @@ function QrScan({ companyLogo }) {
         setScanMessage('출근 인증이 완료되었습니다');
         toast.success('출근 인증이 완료되었습니다');
         console.log('외 안박혀;;');
-
       }
 
       navigate(`/${currentUser?.photoURL}/companymain`);
