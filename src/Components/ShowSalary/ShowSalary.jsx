@@ -5,14 +5,15 @@ import {
   onValue,
   ref,
   update,
-} from 'firebase/database';
-import React, { useEffect, useState } from 'react';
+} from "firebase/database";
+import React, { useEffect, useState } from "react";
 
-import { useSelector } from 'react-redux';
-import { useMatch } from 'react-router-dom';
-import ClipLoader from 'react-spinners/ClipLoader';
-import SalaryType from '../Utils/SalaryType';
-import { formatMoney } from '../../util/formatMoney';
+import { useSelector } from "react-redux";
+import { useMatch } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
+import SalaryType from "../../util/SalaryType";
+import { formatMoney } from "../../util/formatMoney";
+import convertTime from "../../util/formatTime";
 
 //import SalaryDay from '../Utils/SalaryDay';
 
@@ -22,7 +23,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const [holidayAndWeekendSalary, setHolidayAndWeekendSalary] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
-  const [today, setToday] = useState('');
+  const [today, setToday] = useState("");
   const [workHours, setWorkHours] = useState(0);
   const [salaryDay, setSalaryDay] = useState(0);
   const [totalSalaryPay1, setTotalSalaryPay1] = useState(0);
@@ -50,7 +51,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
-  const nowStr = new Date().toISOString().split('T')[0];
+  const nowStr = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const db = getDatabase();
@@ -127,6 +128,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
         for (let date in salaryPays) {
           const dateObj = new Date(date);
 
+
           const today = new Date();
 
           //salaryDay = 10
@@ -146,6 +148,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               totalDaySalary1 += daySalary;
             }
             if (nightSalary > 0) {
+
               totalNightHours1 += workHour;
 
               totalNightSalary1 += nightSalary;
@@ -188,6 +191,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               totalDaySalary2 += daySalary;
             }
             if (nightSalary > 0) {
+
               totalNightHours2 += workHour;
 
               totalNightSalary2 += nightSalary;
@@ -254,12 +258,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
               let currentDate = new Date(date);
               currentDate.setDate(currentDate.getDate() + 1);
 
-              return currentDate.toISOString().split('T')[0];
+              return currentDate.toISOString().split("T")[0];
             }
             function getPrevDate(dateStr) {
               const date = new Date(dateStr);
               date.setDate(date.getDate() - 1);
-              return date.toISOString().split('T')[0];
+              return date.toISOString().split("T")[0];
             }
 
             let start, end;
@@ -343,6 +347,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               }
             }
 
+
             if (isHolidayOrWeekend) {
               if (holidayPay) {
                 wage = hourlyWage * holidayPay;
@@ -352,6 +357,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
               totalWeekendOrHolidaySalary += wage * workHours;
               setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
+
             } else {
               // 출퇴근 시간이 같은 날에 있으면서, 그 시간이 야간 시간 범위에 포함되는 경우
 
@@ -362,7 +368,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               ) {
                 wage = hourlyWage * isNightPay;
                 totalNightSalary += wage * workHours;
-                console.log('오늘은 22시~24시라서 야간근무야');
+                console.log("오늘은 22시~24시라서 야간근무야");
                 setNightSalary(totalNightSalary);
               } else if (
                 start.getDate() === end.getDate() &&
@@ -372,11 +378,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
               ) {
                 wage = hourlyWage * isNightPay;
                 totalNightSalary += wage * workHours;
-                console.log('오늘은 0시~7시라서 야간근무야');
+                console.log("오늘은 0시~7시라서 야간근무야");
                 setNightSalary(totalNightSalary);
               }
               // 출퇴근 시간이 다른 날에 걸쳐 있는 경우
               else if (start.getDate() !== end.getDate()) {
+
                 if (
                   start.getHours() >= nightStart &&
                   start.getHours() < 24 &&
@@ -388,6 +395,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   totalNightSalary += wage * workHours;
 
                   setNightSalary(totalNightSalary);
+
                 }
               } else {
                 totalDaySalary += wage * workHours;
@@ -525,14 +533,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <tr>
                 <th
                   scope="col"
-                  className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-                >
+                  className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                   Work
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end"
-                >
+                  className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   Time
                 </th>
                 <th scope="col" className="pl-6 py-3 text-end">
@@ -544,15 +550,13 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                 <th
                   scope="row"
-                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-                >
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                   주간
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalDayHour1.toFixed(1)}`
-                    : `${totalDayHour2.toFixed(1)}`}
-                  시간
+                    ? `${convertTime(totalDayHour1.toFixed(1))}`
+                    : `${convertTime(totalDayHour2.toFixed(1))}`}
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage
@@ -565,15 +569,13 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                 <th
                   scope="row"
-                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-                >
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                   야간
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalNightHour1.toFixed(1)}`
-                    : `${totalNightHour2.toFixed(1)}`}
-                  시간
+                    ? `${convertTime(totalNightHour1.toFixed(1))}`
+                    : `${convertTime(totalNightHour2.toFixed(1))}`}
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
@@ -586,15 +588,13 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                 <th
                   scope="row"
-                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
-                >
+                  className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
                   공휴일 및 주말
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalHolidayHour1.toFixed(1)}`
-                    : `${totalHolidayHour2.toFixed(1)}`}
-                  시간
+                    ? `${convertTime(totalHolidayHour1.toFixed(1))}`
+                    : `${convertTime(totalHolidayHour2.toFixed(1))}`}
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
@@ -608,15 +608,13 @@ function ShowSalary({ matchCalendar, matchHome }) {
               <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
                 <th
                   scope="row"
-                  className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase"
-                >
-                  Month
+                  className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
+                  이번 달 총합
                 </th>
                 <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
                   {now > salaryDay
-                    ? `${totalWorkHour1.toFixed(1)}`
-                    : `${totalWorkHour2.toFixed(1)}`}
-                  시간
+                    ? `${convertTime(totalWorkHour1.toFixed(1))}`
+                    : `${convertTime(totalWorkHour2.toFixed(1))}`}
                 </td>
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
