@@ -475,7 +475,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
     <>
       <div className="flex flex-col justify-between items-center text-sm w-full">
         <div className="flex flex-row justify-between items-center w-full">
-          {daySalary > 0 && (
+          {daySalary > 0 && !monthlyWage && (
             <div className="flex flex-col justify-between items-center space-y-4 w-full">
               <div className="flex flex-row w-full justify-between items-center">
                 <div className="flex items-baseline">최근 일한 날짜</div>
@@ -495,7 +495,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               </div>
             </div>
           )}
-          {nightSalary > 0 && (
+          {nightSalary > 0 && !monthlyWage && (
             <div className="flex flex-col justify-between items-center space-y-4 w-full">
               <div className="flex flex-row w-full justify-between  items-center">
                 <div className="flex items-baseline">최근 일한 날짜</div>
@@ -515,7 +515,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
               </div>
             </div>
           )}
-          {holidayAndWeekendSalary > 0 && (
+          {holidayAndWeekendSalary > 0 && !monthlyWage && (
             <div className="flex flex-col justify-between items-center space-y-4 w-full">
               <div className="flex flex-row w-full justify-between items-center">
                 <div className="flex items-baseline">최근 일한 날짜</div>
