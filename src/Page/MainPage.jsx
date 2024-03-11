@@ -13,6 +13,7 @@ import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
 import AboutPage from "./AboutPage";
+import OutjobCheckPage from "./OutjobCheckPage";
 
 function MainPage() {
   const { currentUser } = useSelector((state) => state.user);
@@ -68,6 +69,7 @@ function MainPage() {
               <AccessCameraPage companyLogo={currentCompany?.companyLogo} />
             }
           />
+          <Route path="/outjobcheck" element={<OutjobCheckPage />} />
           <Route
             path="/datecheck/:id?"
             element={

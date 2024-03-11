@@ -344,6 +344,8 @@ const MenuBar = ({ companyName, companyLogo }) => {
             ? "CAMERA"
             : location.pathname.includes("appguide")
             ? "GUIDE"
+            : location.pathname.includes("outjobcheck")
+            ? "OUTJOB"
             : "MENU"}
         </div>
 

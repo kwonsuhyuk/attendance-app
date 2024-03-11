@@ -51,7 +51,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const hourlyWage = salaryPayment; // 시급
   const monthlyWage = monthlyPay; //월급인 경우
   const now = new Date().getDate();
-  const nowStr = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const db = getDatabase();
@@ -128,8 +127,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
         for (let date in salaryPays) {
           const dateObj = new Date(date);
 
-
           const today = new Date();
+
+          if (salaryPays[date].workHour == "외근") {
+            console.log("외근할래융!");
+            continue;
+          }
 
           //salaryDay = 10
           //급여날 지남
@@ -143,12 +146,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
               nightSalary,
               holidayAndWeekendSalary,
             } = salaryPays[date];
+
             if (daySalary > 0) {
               totalDayHours1 += workHour;
               totalDaySalary1 += daySalary;
             }
             if (nightSalary > 0) {
-
               totalNightHours1 += workHour;
 
               totalNightSalary1 += nightSalary;
@@ -191,7 +194,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
               totalDaySalary2 += daySalary;
             }
             if (nightSalary > 0) {
-
               totalNightHours2 += workHour;
 
               totalNightSalary2 += nightSalary;
@@ -270,6 +272,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
             for (let date in dates) {
               const { startTime, endTime } = dates[date];
 
+              if (startTime == "외근" || endTime == "외근") {
+                continue;
+              }
+
               if (startTime) {
                 start = new Date(startTime);
               } else {
@@ -347,7 +353,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
               }
             }
 
-
             if (isHolidayOrWeekend) {
               if (holidayPay) {
                 wage = hourlyWage * holidayPay;
@@ -357,7 +362,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
 
               totalWeekendOrHolidaySalary += wage * workHours;
               setHolidayAndWeekendSalary(totalWeekendOrHolidaySalary);
-
             } else {
               // 출퇴근 시간이 같은 날에 있으면서, 그 시간이 야간 시간 범위에 포함되는 경우
 
@@ -383,7 +387,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
               }
               // 출퇴근 시간이 다른 날에 걸쳐 있는 경우
               else if (start.getDate() !== end.getDate()) {
-
                 if (
                   start.getHours() >= nightStart &&
                   start.getHours() < 24 &&
@@ -395,7 +398,6 @@ function ShowSalary({ matchCalendar, matchHome }) {
                   totalNightSalary += wage * workHours;
 
                   setNightSalary(totalNightSalary);
-
                 }
               } else {
                 totalDaySalary += wage * workHours;
@@ -528,6 +530,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
       {(totalWorkHour1 || totalWorkHour2) && (
         <div className="relative w-full h-full overflow-x-auto">
           <div className="py-2 text-base font-bold">이번달 근무내역</div>
+          <div className="text-xs pb-1">
+            (외근은 포함되지 않습니다. 관리자에게 문의해주세요.)
+          </div>
           <table className="w-full text-xs rtl:text-right text-center border-none">
             <thead className="text-xs border-t border-b border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
               <tr>

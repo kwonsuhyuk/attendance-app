@@ -19,6 +19,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { formatMoney } from "../util/formatMoney";
 import { toast } from "react-toastify";
+import convertTime from "../util/formatTime";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
@@ -102,6 +103,12 @@ const DateCheckPage = ({
     );
   }, [companyCode, user?.uid]);
 
+  useEffect(() => {
+    return () => {
+      setSalaryInfo([]);
+    };
+  }, []);
+
   const tileContent = ({ date, view }) => {
     // Month view에 대해서만 커스텀 컨텐트를 제공합니다.
     if (view === "month") {
@@ -109,14 +116,26 @@ const DateCheckPage = ({
 
       // If workTime exists for the date
       if (workTime) {
+        if (workTime.startTime == "외근") {
+          return (
+            <div className="text-base px-5 py-5 h-full flex items-center justify-center">
+              <span
+                className="bg-blue-300 text-white text-xs w-full p-1"
+                style={{ borderRadius: "10px" }}>
+                외근
+              </span>
+            </div>
+          );
+        }
         const { workHours, workMinutes } = workTime;
+
         // 각 날짜에 대한 근무 시간, 시작 시간, 종료 시간을 반환합니다.
         return (
-          <div className="text-base px-5 py-7 h-full flex items-center justify-center">
+          <div className="text-base px-5 py-5 h-full flex items-center justify-center">
             <span
-              className="bg-gray-700 text-white text-xs w-full"
+              className="bg-gray-700 text-white text-xs w-full p-1"
               style={{ borderRadius: "10px" }}>
-              {workHours}시간 {workMinutes}분
+              {workHours > 9 ? workHours - 1 : workHours}시간 {workMinutes}분
             </span>
           </div>
         );
@@ -188,8 +207,6 @@ const DateCheckPage = ({
         dayjs(date).isSameOrAfter(modalDates[0])
     );
 
-    console.log(filteredWorkdates);
-
     // 필터링된 workDates 대해 주간, 야간, 공휴일 시간을 계산합니다.
     let totalDayHours = 0;
     let totalNightHours = 0;
@@ -199,25 +216,38 @@ const DateCheckPage = ({
     let totalNightSalary = 0;
     let totalHolidaySalary = 0;
 
+    let totalOutJob = 0;
+    let totalWorkHour = 0;
+
     filteredWorkdates.forEach(([dates, workDates]) => {
-      if (workDates.daySalary > 0) {
-        totalDayHours += workDates.workHour;
-        totalDaySalary += workDates.daySalary;
-      }
-      if (workDates.nightSalary > 0) {
-        totalNightHours += workDates.workHour;
-        totalNightSalary += workDates.nightSalary;
-      }
-      if (workDates.holidayAndWeekendSalary > 0) {
-        totalHolidayHours += workDates.workHour;
-        totalHolidaySalary += workDates.holidayAndWeekendSalary;
+      if (workDates.workHour == "외근") {
+        totalOutJob++;
+      } else {
+        if (workDates.daySalary > 0) {
+          totalDayHours += workDates.workHour;
+          totalDaySalary += workDates.daySalary;
+        }
+        if (workDates.nightSalary > 0) {
+          totalNightHours += workDates.workHour;
+          totalNightSalary += workDates.nightSalary;
+        }
+        if (workDates.holidayAndWeekendSalary > 0) {
+          totalHolidayHours += workDates.workHour;
+          totalHolidaySalary += workDates.holidayAndWeekendSalary;
+        }
+        if (workDates.workHour > 9) {
+          totalWorkHour += workDates.workHour - 1;
+        } else {
+          totalWorkHour += workDates.workHour;
+        }
       }
     });
 
     const totalSalary = totalDaySalary + totalNightSalary + totalHolidaySalary;
-    console.log("total", totalSalary);
 
     setSalaryInfo({
+      totalWorkHour,
+      totalOutJob,
       totalDayHours,
       totalNightHours,
       totalHolidayHours,
@@ -329,115 +359,139 @@ const DateCheckPage = ({
                     근무기록
                   </h2>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
-                    <div>출근 시간</div>
-                    <div>
-                      {workTimes[selectedDate.format("YYYY-MM-DD")]
-                        ? new Date(
-                            workTimes[
-                              selectedDate.format("YYYY-MM-DD")
-                            ].startTime
-                          ).toLocaleString("ko-KR", {
-                            month: "long",
-                            day: "numeric",
-                            hour: "numeric",
-                            minute: "numeric",
-                            second: "numeric",
-                            hour12: false,
-                          })
-                        : "데이터 없음"}
+                  {workTimes[selectedDate.format("YYYY-MM-DD")]?.startTime ==
+                  "외근" ? (
+                    <div className="flex justify-center items-center h-48 w-full text-lg">
+                      외근
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="flex justify-between w-full text-sm">
+                        <div>출근 시간</div>
+                        <div>
+                          {workTimes[selectedDate.format("YYYY-MM-DD")]
+                            ? new Date(
+                                workTimes[
+                                  selectedDate.format("YYYY-MM-DD")
+                                ].startTime
+                              ).toLocaleString("ko-KR", {
+                                month: "long",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "numeric",
+                                second: "numeric",
+                                hour12: false,
+                              })
+                            : "데이터 없음"}
+                        </div>
+                      </div>
 
-                  <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
-                    <div>퇴근 시간</div>
-                    <div>
-                      {workTimes[selectedDate.format("YYYY-MM-DD")]
-                        ? new Date(
-                            workTimes[selectedDate.format("YYYY-MM-DD")].endTime
-                          ).toLocaleString("ko-KR", {
-                            month: "long",
-                            day: "numeric",
-                            hour: "numeric",
-                            minute: "numeric",
-                            second: "numeric",
-                            hour12: false,
-                          })
-                        : "데이터 없음"}
-                    </div>
-                  </div>
+                      <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
+                      <div className="flex justify-between w-full text-sm">
+                        <div>퇴근 시간</div>
+                        <div>
+                          {workTimes[selectedDate.format("YYYY-MM-DD")]
+                            ? new Date(
+                                workTimes[
+                                  selectedDate.format("YYYY-MM-DD")
+                                ].endTime
+                              ).toLocaleString("ko-KR", {
+                                month: "long",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "numeric",
+                                second: "numeric",
+                                hour12: false,
+                              })
+                            : "데이터 없음"}
+                        </div>
+                      </div>
 
-                  <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
-                    <div>근무 시간</div>
-                    <div>
-                      {workTimes[selectedDate.format("YYYY-MM-DD")]
-                        ?.workHours || 0}
-                      시간{" "}
-                      {workTimes[selectedDate.format("YYYY-MM-DD")]
-                        ?.workMinutes || 0}
-                      분
-                    </div>
-                  </div>
-                  <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
-                    <div>급여 지급 구분</div>
-                    <div>
-                      {workDates[selectedDate?.format("YYYY-MM-DD")] &&
-                        Object.keys(
-                          workDates[selectedDate?.format("YYYY-MM-DD")]
-                        )?.map((key, index) => {
-                          if (
-                            workDates[selectedDate?.format("YYYY-MM-DD")][key] >
-                              0 &&
-                            key != "workHour"
-                          ) {
-                            let displayText = "";
-                            switch (key) {
-                              case "holidayAndWeekendSalary":
-                                displayText = "공휴일 급여";
-                                break;
-                              case "nightSalary":
-                                displayText = "야간 급여";
-                                break;
-                              case "daySalary":
-                                displayText = "주간 급여";
-                                break;
-                            }
-                            return <div key={index}>{displayText}</div>;
-                          }
-                        })}
-                    </div>
-                  </div>
+                      <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
+                      <div className="flex justify-between w-full text-sm">
+                        <div>근무 시간</div>
+                        <div>
+                          {workTimes[selectedDate.format("YYYY-MM-DD")]
+                            ?.workHours || 0}
+                          시간{" "}
+                          {workTimes[selectedDate.format("YYYY-MM-DD")]
+                            ?.workMinutes || 0}
+                          분
+                        </div>
+                      </div>
+                      <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
+                      {user?.salaryType && user.salaryType != "monthlyPay" && (
+                        <>
+                          <div className="flex justify-between w-full text-sm">
+                            <div>급여 지급 구분</div>
+                            <div>
+                              {workDates[selectedDate?.format("YYYY-MM-DD")] &&
+                                Object.keys(
+                                  workDates[selectedDate?.format("YYYY-MM-DD")]
+                                )?.map((key, index) => {
+                                  if (
+                                    workDates[
+                                      selectedDate?.format("YYYY-MM-DD")
+                                    ][key] > 0 &&
+                                    key != "workHour"
+                                  ) {
+                                    let displayText = "";
+                                    switch (key) {
+                                      case "holidayAndWeekendSalary":
+                                        displayText = "공휴일 급여";
+                                        break;
+                                      case "nightSalary":
+                                        displayText = "야간 급여";
+                                        break;
+                                      case "daySalary":
+                                        displayText = "주간 급여";
+                                        break;
+                                    }
+                                    return <div key={index}>{displayText}</div>;
+                                  }
+                                })}
+                            </div>
+                          </div>
+                        </>
+                      )}
 
-                  <div className="h-[3px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-base font-semibold">
-                    <div>오늘 급여</div>
-                    {/* 데이터 불러와지면 여기에 삽입 */}
-                    <div>
-                      {workDates[selectedDate?.format("YYYY-MM-DD")] &&
-                        Object.keys(
-                          workDates[selectedDate?.format("YYYY-MM-DD")]
-                        )?.map((key, index) => {
-                          if (
-                            workDates[selectedDate?.format("YYYY-MM-DD")][key] >
-                              0 &&
-                            key != "workHour"
-                          ) {
-                            return (
-                              <div key={index}>
-                                {
-                                  workDates[selectedDate?.format("YYYY-MM-DD")][
-                                    key
-                                  ]
-                                }
-                              </div>
-                            );
-                          }
-                        })}
-                    </div>
-                  </div>
+                      <div className="h-[3px] w-full bg-white-border dark:bg-dark-border"></div>
+                      {user?.salaryType && user.salaryType == "monthlyPay" ? (
+                        <div></div>
+                      ) : (
+                        <>
+                          <div className="flex justify-between w-full text-base font-semibold">
+                            <div>오늘 급여</div>
+                            {/* 데이터 불러와지면 여기에 삽입 */}
+                            <div>
+                              {workDates[selectedDate?.format("YYYY-MM-DD")] &&
+                                Object.keys(
+                                  workDates[selectedDate?.format("YYYY-MM-DD")]
+                                )?.map((key, index) => {
+                                  if (
+                                    workDates[
+                                      selectedDate?.format("YYYY-MM-DD")
+                                    ][key] > 0 &&
+                                    key != "workHour"
+                                  ) {
+                                    return (
+                                      <div key={index}>
+                                        {
+                                          workDates[
+                                            selectedDate?.format("YYYY-MM-DD")
+                                          ][key]
+                                        }
+                                        원
+                                      </div>
+                                    );
+                                  }
+                                })}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -474,7 +528,7 @@ const DateCheckPage = ({
                   정산하기
                 </Button>
 
-                {salaryInfo && (
+                {salaryInfo && user?.salaryType != "monthlyPay" ? (
                   <div
                     className="text-black"
                     style={{
@@ -564,13 +618,67 @@ const DateCheckPage = ({
                           <strong className="text-xl font-bold">총 시간</strong>
                         </div>
                         <div>
-                          {(
+                          {convertTime(
                             salaryInfo.totalDayHours +
-                            salaryInfo.totalNightHours +
-                            salaryInfo.totalHolidayHours
-                          ).toFixed(1)}
-                          시간
+                              salaryInfo.totalNightHours +
+                              salaryInfo.totalHolidayHours
+                          )}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="text-black"
+                    style={{
+                      padding: 5,
+                    }}>
+                    <div className="flex flex-col" style={{ height: "auto" }}>
+                      <div
+                        className="flex justify-between items-center py-3 px-3"
+                        style={{ borderTop: "2px solid black" }}>
+                        <div>
+                          <strong className="text-xl font-bold">
+                            이번 달 급여
+                          </strong>
+                        </div>
+                        <div className="text-red-500 font-bold text-base">
+                          {user?.salaryAmount &&
+                            formatMoney(user?.salaryAmount)}
+                          원
+                        </div>
+                      </div>
+                      <div
+                        className="text-xs"
+                        style={{
+                          borderBottom: "2px solid black",
+                        }}>
+                        (월급 직원으로, 설정된 급여로 정산됩니다.)
+                      </div>
+                      <div
+                        className="flex justify-between items-center py-3 px-3"
+                        style={{
+                          borderBottom: "1px solid black",
+                        }}>
+                        <div>
+                          <strong className="text-xl font-bold">
+                            총 외근 횟수
+                          </strong>
+                        </div>
+                        <div>{salaryInfo?.totalOutJob}회</div>
+                      </div>
+                      <div
+                        className="flex justify-between items-center py-3 px-3"
+                        style={{
+                          borderTop: "1px solid black",
+                          borderBottom: "2px solid black",
+                        }}>
+                        <div>
+                          <strong className="text-xl font-bold">
+                            총 근무 시간
+                          </strong>
+                        </div>
+                        <div>{convertTime(salaryInfo?.totalWorkHour)}</div>
                       </div>
                     </div>
                   </div>

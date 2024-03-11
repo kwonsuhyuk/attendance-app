@@ -141,7 +141,7 @@ const CompanyMain = ({ companyLogo }) => {
             )}
             <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
             <div
-              className="cursor-pointer text-lg font-extrabold flex justify-center items-center pb-5"
+              className="cursor-pointer text-lg font-extrabold flex justify-center items-center pb-5 underline"
               onClick={() => navigate(`/${currentUser.photoURL}/camera`)}>
               QR SCAN
             </div>
