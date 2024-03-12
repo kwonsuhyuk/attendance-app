@@ -2,7 +2,6 @@ import React from "react";
 import jehyunPhoto from "../assets/aboutImg/jehyun.jpeg";
 import suhyukPhoto from "../assets/aboutImg/suhyuk.jpeg";
 import aramPhoto from "../assets/aboutImg/aram.png";
-import "./AboutPage.css";
 const AboutPage = () => {
   return (
     <div
