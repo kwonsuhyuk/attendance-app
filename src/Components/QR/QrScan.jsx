@@ -222,9 +222,9 @@ function QrScan({ companyLogo }) {
           <div id="reader" className="p-12"></div>
         </div>
         <div
-          className="underline text-lg text-red-500"
+          className="underline text-sm text-red-500 text-center mb-3"
           onClick={handleCheckOutJob}>
-          외근 일시 여기를 클릭해주세요.
+          외근 시 여기를 클릭해주세요.
         </div>
       </div>
       <Dialog

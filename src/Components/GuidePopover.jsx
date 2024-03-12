@@ -3,7 +3,7 @@ import { IconButton, Popover, Typography } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useSelector } from "react-redux";
 
-export default function GuidePopover({ text }) {
+export default function GuidePopover({ text, show = true }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
 
@@ -22,9 +22,12 @@ export default function GuidePopover({ text }) {
     <div>
       <IconButton aria-describedby={id} onClick={handleClick}>
         <HelpOutlineIcon sx={{ color: !darkMode ? "black" : "white" }} />
-        <Typography sx={{ fontSize: 14, color: !darkMode ? "black" : "white" }}>
-          GUIDE
-        </Typography>{" "}
+        {show && (
+          <Typography
+            sx={{ fontSize: 14, color: !darkMode ? "black" : "white" }}>
+            GUIDE
+          </Typography>
+        )}
       </IconButton>
       <Popover
         id={id}
