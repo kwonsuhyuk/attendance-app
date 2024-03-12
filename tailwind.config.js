@@ -3,31 +3,40 @@ export default {
   corePlugins: {
     preflight: false,
   },
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         // darkmode
-        'dark-bg': '#202020',
-        'dark-text': '#FFFFFF',
-        'dark-border': '#FFFFFF80',
-        'dark-border-sub': '#FFFFFF33',
-        'dark-nav-text': '#909090',
-        'dark-nav-selected': '#FFFFFF',
+        "dark-bg": "#202020",
+        "dark-text": "#FFFFFF",
+        "dark-border": "#FFFFFF80",
+        "dark-border-sub": "#FFFFFF33",
+        "dark-nav-text": "#909090",
+        "dark-nav-selected": "#FFFFFF",
         // whitemode
-        'white-bg': '#EEEEEE',
-        'white-text': '#000000',
-        'white-border': '#00000080',
-        'white-border-sub': '#00000033',
-        'white-nav-text': '#6F6F6F',
-        'white-nav-selected': '#000000',
+        "white-bg": "#EEEEEE",
+        "white-text": "#000000",
+        "white-border": "#00000080",
+        "white-border-sub": "#00000033",
+        "white-nav-text": "#6F6F6F",
+        "white-nav-selected": "#000000",
       },
       fontFamily: {
-        noto: ['Noto Sans KR'], // 내용 폰트 설정
+        noto: ["Noto Sans KR"], // 내용 폰트 설정
+      },
+      keyframes: {
+        underline: {
+          from: { width: "0%" },
+          to: { width: "100%" },
+        },
+      },
+      animation: {
+        underline: "underline 0.5s ease-in-out forwards", // underline 애니메이션 사용자 정의
       },
     },
   },
-  darkMode: 'class',
+  darkMode: "class",
   plugins: [],
   important: true,
 };
