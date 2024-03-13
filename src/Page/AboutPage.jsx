@@ -1,16 +1,17 @@
-import React from "react";
-import jehyunPhoto from "../assets/aboutImg/jehyun.jpeg";
-import suhyukPhoto from "../assets/aboutImg/suhyuk.jpeg";
-import aramPhoto from "../assets/aboutImg/aram.png";
-import "./AboutPage.css";
+import React from 'react';
+import jehyunPhoto from '../assets/aboutImg/jehyun.jpeg';
+import suhyukPhoto from '../assets/aboutImg/suhyuk.jpeg';
+import aramPhoto from '../assets/aboutImg/aram.png';
+
 const AboutPage = () => {
   return (
     <div
       className="mb-10 flex flex-col justify-start items-center gap-10 md:flex-row"
       style={{
-        height: "calc(100vh - 18rem)",
-        position: "relative",
-      }}>
+        height: 'calc(100vh - 18rem)',
+        position: 'relative',
+      }}
+    >
       <div className="flex flex-col items-center justify-start gap-10 md:w-1/2 md:h-full">
         <div className="text-3xl md:text-5xl font-bold tracking-widest relative overflow-hidden group cursor-pointer">
           MADE BY
@@ -23,7 +24,7 @@ const AboutPage = () => {
                 src={jehyunPhoto}
                 alt="jehyun"
                 className="w-36 h-36 md:w-72 md:h-72"
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: '50%' }}
               />
             </div>
             <div className="text-xl font-bold">유제현</div>
@@ -33,7 +34,8 @@ const AboutPage = () => {
               href="https://github.com/YOOJEHYEON"
               className="text-blue-500"
               target="_blank"
-              rel="noreferrer">
+              rel="noreferrer"
+            >
               https://github.com/YOOJEHYEON
             </a>
             <div>국민 698902-01-212670</div>
@@ -44,7 +46,7 @@ const AboutPage = () => {
                 src={suhyukPhoto}
                 alt="suhyuk"
                 className="w-36 h-36 md:w-72 md:h-72"
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: '50%' }}
               />
             </div>
             <div className="text-xl font-bold">권수혁</div>
@@ -54,7 +56,8 @@ const AboutPage = () => {
               href="https://github.com/kwonsuhyuk"
               className="text-blue-500"
               target="_blank"
-              rel="noreferrer">
+              rel="noreferrer"
+            >
               https://github.com/kwonsuhyuk
             </a>
             <div>토스 1000-4676-3748</div>
@@ -73,7 +76,7 @@ const AboutPage = () => {
               src={aramPhoto}
               alt="suhyuk"
               className="w-36 h-36 md:w-72 md:h-72"
-              style={{ borderRadius: "50%" }}
+              style={{ borderRadius: '50%' }}
             />
           </div>
           <div className="text-xl font-bold">유아람</div>
