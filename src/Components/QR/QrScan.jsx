@@ -221,13 +221,12 @@ function QrScan({ companyLogo }) {
         <div className="h-full w-full ">
           <div id="reader" className="p-12"></div>
         </div>
-        <div className="flex-row">
-          <div
-            className=" underline text-lg justify-center text-red-500"
-            onClick={handleCheckOutJob}
-          >
-            외근 시 여기를 클릭해주세요
-          </div>
+
+        <div
+          className="underline text-sm text-red-500 text-center mb-3"
+          onClick={handleCheckOutJob}>
+          외근 시 여기를 클릭해주세요.
+
         </div>
       </div>
       <Dialog

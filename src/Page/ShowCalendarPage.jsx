@@ -15,16 +15,16 @@ const ShowCalendarPage = () => {
         <MyCalendar />
       </div>
       <div className="flex flex-row justify-start mr-auto mb-5">
-        <div className="bg-red-300 font-normal text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-red-300 font-normal text-base w-6 h-6 flex items-center justify-center text-black">
           0+
         </div>
-        <div className="bg-yellow-300 font-normal text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-yellow-300 font-normal text-base w-6 h-6 flex items-center justify-center text-black">
           4+
         </div>
-        <div className="bg-green-300 font-normal text-base w-6 h-6 flex items-center justify-center">
+        <div className="bg-green-300 font-normal text-base w-6 h-6 flex items-center justify-center text-black">
           8+
         </div>
-        <div className="bg-blue-300 font-normal text-sm w-10 h-6 flex items-center justify-center">
+        <div className="bg-blue-300 font-normal text-sm w-10 h-6 flex items-center justify-center text-black">
           외근
         </div>
       </div>

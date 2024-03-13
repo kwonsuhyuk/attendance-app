@@ -8,12 +8,15 @@ import {
 } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 
-import { useSelector } from 'react-redux';
-import { useMatch } from 'react-router-dom';
-import ClipLoader from 'react-spinners/ClipLoader';
-import SalaryType from '../../util/SalaryType';
-import { formatMoney } from '../../util/formatMoney';
-import convertTime from '../../util/formatTime';
+
+import { useSelector } from "react-redux";
+import { useMatch } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
+import SalaryType from "../../util/SalaryType";
+import { formatMoney } from "../../util/formatMoney";
+import convertTime from "../../util/formatTime";
+import GuidePopover from "../GuidePopover";
+
 
 //import SalaryDay from '../Utils/SalaryDay';
 
@@ -564,7 +567,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
     <>
       {(totalWorkHour1 || totalWorkHour2 || hourlyWage || tempoWage) && (
         <div className="relative w-full h-full overflow-x-auto">
-          <div className="py-2 text-base font-bold">이번달 근무내역</div>
+          <div className="py-2 text-base font-bold flex items-center">
+            이번달 근무내역{" "}
+            <GuidePopover
+              text="회사의 정산일부터 계산된 내용입니다."
+              show={false}
+            />
+          </div>
+
           <div className="text-xs pb-1">
             (외근은 포함되지 않습니다. 관리자에게 문의해주세요.)
           </div>
