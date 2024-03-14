@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { get, getDatabase, ref } from "firebase/database";
 import { toggleMode } from "./store/darkmodeSlice";
+import GuideFab from "./Components/GuideFab";
 
 function App() {
   const dispatch = useDispatch();
@@ -87,6 +88,7 @@ function App() {
         pauseOnHover
         autoClose={1500}
       />
+      <GuideFab />
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/:id/*" element={<MainPage />} />

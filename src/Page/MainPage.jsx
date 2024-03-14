@@ -13,12 +13,15 @@ import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
 import AboutPage from "./AboutPage";
+import Tour from "reactour";
+import { useTour } from "@reactour/tour";
 
 function MainPage() {
   const { currentUser } = useSelector((state) => state.user);
   const [currentCompany, setCurrentCompany] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const { setIsOpen } = useTour();
 
   useEffect(() => {
     async function getCompanyInfo() {
@@ -33,6 +36,18 @@ function MainPage() {
     }
     getCompanyInfo();
   }, [currentUser?.photoURL]);
+
+  useEffect(() => {
+    // LocalStorage에서 tourShown 값을 확인
+    const tourShown = localStorage.getItem("tourShown");
+
+    // tourShown 값이 없거나 'false'인 경우, 투어를 시작
+    if (!tourShown || tourShown === "false") {
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 1000);
+    }
+  }, []);
 
   if (isLoading) {
     return (

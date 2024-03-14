@@ -22,6 +22,7 @@ import { Checkbox, FormControlLabel, Input } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import { Button } from "antd";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTour } from "@reactour/tour";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
@@ -33,6 +34,42 @@ const MyDatePicker = () => {
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
   const [isLoading, setIsLoading] = useState(false);
   const [updatedHolidays, setUpdatedHolidays] = useState(selectedHolidays);
+  const { isOpen, setCurrentStep, setSteps } = useTour();
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setCurrentStep(6);
+        setSteps((prev) => [
+          ...prev,
+          {
+            selector: '[data-tour="step-25"]',
+            content: `공휴일을 구분해 급여 배율을 다르게 할지 설정하는 페이지 입니다. 마찬가지로 체크항목을 체크시에 공휴일 급여 배율을 설정할 수 있습니다.`,
+          },
+          {
+            selector: '[data-tour="step-26"]',
+            content: `위의 달력의 회사 자체 공휴일로 설정할 날짜를 더블클릭하여 추가 할 수 있습니다.`,
+          },
+          {
+            selector: '[data-tour="step-27"]',
+            content: `회사 공휴일로 설정한 날짜는 여기 리스트로 보실 수 있습니다.`,
+          },
+          {
+            selector: '[data-tour="step-28"]',
+            content: `마찬가지로 변경사항을 저장시에는 반드시 아래 저장버튼을 클릭하셔야 반영됩니다.`,
+          },
+          {
+            selector: '[data-tour="step-29"]',
+            content: `가이드가 다시 보고 싶으시다면 각 페이지에 GUIDE 버튼을 클릭하시면 언제든지 다시 보실 수 있습니다! 
+감사합니다.`,
+          },
+        ]);
+      }, 300);
+
+      return () => {
+        clearTimeout(timer), setSteps([]);
+      };
+    }
+  }, [isOpen, setCurrentStep, setSteps]);
 
   useEffect(() => {
     async function getData() {
@@ -159,7 +196,7 @@ const MyDatePicker = () => {
   }
 
   return (
-    <div className="flex flex-col h-full gap-5">
+    <div className="flex flex-col h-full gap-5" data-tour="step-25">
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-2 h-full">
         <div
           className="flex flex-col gap-7"
@@ -208,7 +245,7 @@ const MyDatePicker = () => {
         {isholiday && (
           <div className="flex flex-col gap-7 h-full overflow-y-auto">
             <div className="font-extrabold">공휴일 날짜 추가 및 삭제</div>
-            <div className="flex justify-center">
+            <div className="flex justify-center" data-tour="step-26">
               <DatePicker
                 dateFormat="yyyy.MM.dd"
                 shouldCloseOnSelect
@@ -243,7 +280,7 @@ const MyDatePicker = () => {
               </div>
             </div>
             {/* 공휴일리스트 */}
-            <ul className="overflow-y-auto lg:h-80">
+            <ul className="overflow-y-auto lg:h-80" data-tour="step-27">
               {updatedHolidays.map((date, index) => {
                 const year = date.getFullYear();
                 const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -274,7 +311,7 @@ const MyDatePicker = () => {
           </div>
         )}
       </div>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center" data-tour="step-28">
         <Button onClick={handleSaveChanges}>변경 사항 저장</Button>
       </div>
     </div>

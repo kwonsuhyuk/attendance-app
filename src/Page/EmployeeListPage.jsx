@@ -7,6 +7,8 @@ import { ClipLoader } from "react-spinners";
 import { MenuItem, Select } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
 import GuidePopover from "../Components/GuidePopover";
+import { useTour } from "@reactour/tour";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeListPage = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -17,6 +19,45 @@ const EmployeeListPage = () => {
   const [selectedJob, setSelectedJob] = useState("전체");
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
   const [selectedSalaryType, setSelectedSalaryType] = useState("전체");
+  const { isOpen, setCurrentStep, setSteps } = useTour();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setCurrentStep(0);
+        setSteps([
+          {
+            selector: '[data-tour="step-4"]',
+            content: `회사에 소속되어 있는 직원들을 한눈에 볼 수 있는 직원테이블 입니다. `,
+          },
+          {
+            selector: '[data-tour="step-5"]',
+            content: `직원들은 회사에 처음 가입시에 한번 자신의 
+직종, 급여 지급 방식, 급여를 본인이 직접 기입하게 되어 있습니다.
+(관리자가 직원 정보 미기입시 오류 방지위해)`,
+          },
+          {
+            selector: '[data-tour="step-6"]',
+            content: `관리자분은 수정버튼을 통해서 직원의 정보가 잘못 된 것이 있거나 수정할 사항이 있을 시에 수정을 하실 수 있습니다.`,
+          },
+          {
+            selector: '[data-tour="step-7"]',
+            content: `위의 분류 태그 및 검색창을 통해서 직원들을 분류 , 검색 하실 수 있습니다.`,
+          },
+          {
+            selector: '[data-tour="step-8"]',
+            content: `이제 직원의 근무 상세 내역과 정산 기능 페이지로 이동해보겠습니다. 
+아래 버튼을 클릭해 CALENDAR 페이지로 이동해 보겠습니다.`,
+          },
+        ]);
+      }, 300);
+
+      return () => {
+        clearTimeout(timer), setSteps([]);
+      };
+    }
+  }, [isOpen, setCurrentStep, setSteps]);
 
   const handleFilterReset = () => {
     setSelectedJob("전체");
@@ -102,9 +143,8 @@ const EmployeeListPage = () => {
             <span className="font-bold mr-2">직원 수 </span>
             <span className=""> {employeeList.length - 1}</span>
           </div>
-          <GuidePopover text="여기는 회사 직원리스트 페이지 입니다. 각종 직원들이 설정한 정보를 수정할 수 있고, 상세정보&정산 버튼을 클릭해 직원들의 날짜별 상세 근무 기록과 월 정산을 하실 수 있습니다." />
         </div>
-        <div className="flex gap-7">
+        <div className="flex gap-7" data-tour="step-7">
           <div onClick={handleFilterReset} className="flex items-center">
             <ReplayIcon />
           </div>
@@ -163,6 +203,7 @@ const EmployeeListPage = () => {
       </div>
       {/* 직원테이블 */}
       <div
+        data-tour="step-4"
         className="px-2"
         style={{
           borderBottom: !darkMode
@@ -173,6 +214,7 @@ const EmployeeListPage = () => {
           height: "calc(100% - 5rem)",
         }}>
         <div
+          data-tour="step-5"
           className="flex justify-between lg:grid lg:grid-cols-8 items-center justify-items-center py-5 font-bold"
           style={{
             borderBottom: !darkMode
@@ -191,8 +233,13 @@ const EmployeeListPage = () => {
           <span className="w-auto hidden lg:block text-sm lg:text-base">
             급여
           </span>
-          <span className="w-auto text-sm lg:text-base">직원 정보 수정</span>
-          <span className="w-auto text-sm lg:text-base">
+          <span className="w-auto text-sm lg:text-base" data-tour="step-6">
+            직원 정보 수정
+          </span>
+          <span
+            className="w-auto text-sm lg:text-base cursor-pointer"
+            data-tour="step-8"
+            onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}>
             상세보기 & 정산 {">"}
           </span>
         </div>

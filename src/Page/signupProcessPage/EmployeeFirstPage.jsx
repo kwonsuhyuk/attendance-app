@@ -125,7 +125,7 @@ function EmployeeFirstPage() {
     try {
       await set(userRef, userData);
       setLoading(false);
-      navigate(`/${companyCode}/companymain`);
+      navigate(`/${companyCode}/appguide`);
     } catch (e) {
       toast.error(e.message);
       setLoading(false);
