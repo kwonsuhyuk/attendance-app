@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { getDatabase, get, ref, set, update, push } from "firebase/database";
@@ -12,6 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import { useTour } from "@reactour/tour";
+
 
 function QrScan({ companyLogo }) {
   const [scanResult, setScanResult] = useState(null);
@@ -33,7 +35,7 @@ function QrScan({ companyLogo }) {
   };
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
+    const scanner = new Html5QrcodeScanner('reader', {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -102,10 +104,10 @@ function QrScan({ companyLogo }) {
           prevDaySnapshot.val().startTime &&
           !prevDaySnapshot.val().endTime
         ) {
-          console.log("어제 출근기록 있음");
+          console.log('어제 출근기록 있음');
           await update(prevDayRef, { endTime: dateStr });
-          setScanMessage("다음 날 퇴근 인증이 완료되었습니다");
-          toast.success("다음 날 퇴근 인증이 완료되었습니다");
+          setScanMessage('다음 날 퇴근 인증이 완료되었습니다');
+          toast.success('다음 날 퇴근 인증이 완료되었습니다');
         } else if (
           //오늘 출근기록이 있을경우
           snapshot.exists() &&
@@ -113,15 +115,15 @@ function QrScan({ companyLogo }) {
           !snapshot.val().endTime
         ) {
           await update(dbref, { endTime: dateStr });
-          setScanMessage("퇴근 인증이 완료되었습니다");
-          toast.success("퇴근 인증이 완료되었습니다");
+          setScanMessage('퇴근 인증이 완료되었습니다');
+          toast.success('퇴근 인증이 완료되었습니다');
         } else if (
           //오늘 퇴근기록만 있고 출근기록은 없는 경우
           snapshot.exists() &&
           snapshot.val().endTime &&
           !snapshot.val().startTime
         ) {
-          console.log("여기걸림");
+          console.log('여기걸림');
           const startTime = prevDaySnapshot.val().startTime;
           const endTime = snapshot.val().endTime;
           const start = new Date(startTime);
@@ -140,15 +142,15 @@ function QrScan({ companyLogo }) {
             nightSalary: 0,
             holidayAndWeekendSalary: 0,
           });
-          setScanMessage("출근 인증이 완료되었습니다");
-          toast.success("출근 인증이 완료되었습니다");
+          setScanMessage('출근 인증이 완료되었습니다');
+          toast.success('출근 인증이 완료되었습니다');
         } else if (
           //오늘 기록이 없고 어제기록이 확실히 있을때 당연히 출근이지
           !snapshot.exists() &&
           prevDaySnapshot.val().startTime &&
           prevDaySnapshot.val().endTime
         ) {
-          console.log("오늘기록이 없어서 이제 박는거임");
+          console.log('오늘기록이 없어서 이제 박는거임');
           await set(dbref, { startTime: dateStr });
           await set(workDateRef, {
             workHour: 0,
@@ -156,8 +158,8 @@ function QrScan({ companyLogo }) {
             nightSalary: 0,
             holidayAndWeekendSalary: 0,
           });
-          setScanMessage("출근 인증이 완료되었습니다");
-          toast.success("출근 인증이 완료되었습니다");
+          setScanMessage('출근 인증이 완료되었습니다');
+          toast.success('출근 인증이 완료되었습니다');
         }
       } else {
         await set(dbref, { startTime: dateStr });
@@ -168,9 +170,9 @@ function QrScan({ companyLogo }) {
           holidayAndWeekendSalary: 0,
         });
 
-        setScanMessage("출근 인증이 완료되었습니다");
-        toast.success("출근 인증이 완료되었습니다");
-        console.log("외 안박혀;;");
+        setScanMessage('출근 인증이 완료되었습니다');
+        toast.success('출근 인증이 완료되었습니다');
+        console.log('외 안박혀;;');
       }
 
       if (!isOpen) {
@@ -245,12 +247,12 @@ function QrScan({ companyLogo }) {
       `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`
     );
     try {
-      await set(nowRef, { startTime: "외근", endTime: "외근" });
-      await set(nowRef2, { workHour: "외근" });
+      await set(nowRef, { startTime: '외근', endTime: '외근' });
+      await set(nowRef2, { workHour: '외근' });
       handleClose();
-      toast.success("외근 등록이 완료되었습니다.");
+      toast.success('외근 등록이 완료되었습니다.');
     } catch (e) {
-      toast.error("정상적으로 기록되지 않았습니다.");
+      toast.error('정상적으로 기록되지 않았습니다.');
     }
   };
 
@@ -268,14 +270,18 @@ function QrScan({ companyLogo }) {
             {currentUser?.displayName}/{jobName}
           </div>
         </div>
+
         <div className="h-full w-full" data-tour="step-36">
+
           <div id="reader" className="p-12"></div>
         </div>
+
         <div
           data-tour="step-38"
           className="underline text-sm text-red-500 text-center mb-3"
           onClick={handleCheckOutJob}>
           외근 시 여기를 클릭해주세요.
+
         </div>
         <div
           data-tour="step-37"
@@ -285,11 +291,12 @@ function QrScan({ companyLogo }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description">
-        <DialogTitle>{"정말 외근으로 출근 하시는게 맞습니까?"}</DialogTitle>
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle>{'정말 외근으로 출근 하시는게 맞습니까?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            금일{" "}
+            금일{' '}
             {`${new Date().getFullYear()}년 ${
               new Date().getMonth() + 1
             }월 ${new Date().getDate()}일`}

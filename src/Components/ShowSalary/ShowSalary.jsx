@@ -397,8 +397,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
               } else if (
                 start.getDate() === end.getDate() &&
                 start.getHours() >= 0 &&
-                start.getHours() < 24 &&
-                (end.getHours() > 0 || end.getHours() <= nightEnd)
+                start.getHours() < end.getHours() &&
+                end.getHours() > start.getHours() &&
+                end.getHours() <= nightEnd
               ) {
                 if (hourlyWage) {
                   wage = hourlyWage * isNightPay;
@@ -415,7 +416,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 if (
                   start.getHours() >= nightStart &&
                   start.getHours() < 24 &&
-                  (end.getHours() > 0 || end.getHours() <= nightEnd)
+                  end.getHours() > 0 &&
+                  end.getHours() <= nightEnd
                 ) {
                   // 출근 시간이 야간 근무 시간에 포함되는 경우
                   if (hourlyWage) {
@@ -563,7 +565,7 @@ function ShowSalary({ matchCalendar, matchHome }) {
     </>
   ) : matchCalendar ? (
     <>
-      {(totalWorkHour1 || totalWorkHour2) && (
+      {(totalWorkHour1 || totalWorkHour2 || hourlyWage || tempoWage) && (
         <div className="relative w-full h-full overflow-x-auto">
           <div className="py-2 text-base font-bold flex items-center">
             이번달 근무내역{" "}
@@ -612,6 +614,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage
                     ? null
+                    : !totalDayPay1 && !totalDayPay2
+                    ? '0원'
                     : now > salaryDay
                     ? `${formatMoney(totalDayPay1)}원`
                     : `${formatMoney(totalDayPay2)}원`}
@@ -632,6 +636,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
                     ? null
+                    : !totalNightPay1 && !totalNightPay2
+                    ? '0원'
                     : now > salaryDay
                     ? `${formatMoney(totalNightPay1)}원`
                     : `${formatMoney(totalNightPay2)}원`}
@@ -652,6 +658,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
                     ? null
+                    : !totalHolidayPay1 && !totalHolidayPay2
+                    ? '0원'
                     : now > salaryDay
                     ? `${formatMoney(totalHolidayPay1)}원`
                     : `${formatMoney(totalHolidayPay2)}원`}
@@ -673,6 +681,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <td className="pl-6 py-3 text-end text-nowrap">
                   {monthlyWage > 0
                     ? `${formatMoney(monthlyWage)}원`
+                    : !totalSalaryPay1 && !totalSalaryPay2
+                    ? '0원'
                     : now > salaryDay
                     ? `${formatMoney(totalSalaryPay1)}원`
                     : `${formatMoney(totalSalaryPay2)}원`}
