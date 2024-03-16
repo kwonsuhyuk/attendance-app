@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { get, getDatabase, ref } from "firebase/database";
+import { child, get, getDatabase, push, ref, update } from "firebase/database";
 import { useSelector } from "react-redux";
 import "./DateCheckPage.css";
 import Calendar from "react-calendar";
@@ -7,13 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import GuidePopover from "../Components/GuidePopover";
-import { Button, DatePicker, Modal } from "antd";
-const paymentMethods = {
-  monthlyPay: "월급 지급",
-  dailyPay: "일급 지급",
-  hourPay: "시급 지급",
-};
-("react");
+import { Button, DatePicker, Input, Modal } from "antd";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
@@ -25,6 +19,12 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 const { RangePicker } = DatePicker;
+
+const paymentMethods = {
+  monthlyPay: "월급 지급",
+  dailyPay: "일급 지급",
+  hourPay: "시급 지급",
+};
 
 const DateCheckPage = ({
   modalDefaultValue,
@@ -50,6 +50,10 @@ const DateCheckPage = ({
   const navigate = useNavigate();
   const [salaryInfo, setSalaryInfo] = useState(null);
   const { isOpen, setCurrentStep, setSteps } = useTour();
+  const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
+  const [addVacationDates, setAddVacationDates] = useState();
+  const [vacationDates, setVacationDates] = useState();
+  const [addVacationMemo, setAddVacationMemo] = useState("");
 
   useEffect(() => {
     if (isOpen) {
@@ -102,8 +106,13 @@ const DateCheckPage = ({
       `companyCode/${companyCode}/users/${user?.uid}/workDates`
     );
 
-    Promise.all([get(dateRef1), get(dateRef2)]).then(
-      ([dateSnapshot1, dateSnapshot2]) => {
+    const dateRef3 = ref(
+      db,
+      `companyCode/${companyCode}/users/${user?.uid}/vacationDates`
+    );
+
+    Promise.all([get(dateRef1), get(dateRef2), get(dateRef3)]).then(
+      ([dateSnapshot1, dateSnapshot2, dateSnapshot3]) => {
         if (dateSnapshot1.exists()) {
           const dates = dateSnapshot1.val();
           let newWorkTimes = {};
@@ -124,6 +133,9 @@ const DateCheckPage = ({
           const workDates = dateSnapshot2.val();
           setWorkDates(workDates);
         }
+        if (dateSnapshot3.exists()) {
+          setVacationDates(dateSnapshot3.val());
+        }
       }
     );
   }, [companyCode, user?.uid]);
@@ -134,10 +146,29 @@ const DateCheckPage = ({
     };
   }, []);
 
+  console.log(vacationDates);
   const tileContent = ({ date, view }) => {
     // Month view에 대해서만 커스텀 컨텐트를 제공합니다.
     if (view === "month") {
       const workTime = workTimes[dayjs(date).format("YYYY-MM-DD")];
+
+      // vacationDates 객체가 정의되어 있지 않거나 undefined인 경우를 대비한 안전한 접근 방식
+      const isVacation = vacationDates
+        ? vacationDates[dayjs(date).format("YYYY-MM-DD")] || false
+        : false;
+
+      // 휴가일 경우
+      if (isVacation) {
+        return (
+          <div className="text-base px-5 py-5 h-full flex items-center justify-center">
+            <span
+              className="bg-red-500 text-white text-xs w-full p-1"
+              style={{ borderRadius: "10px" }}>
+              휴가
+            </span>
+          </div>
+        );
+      }
 
       // If workTime exists for the date
       if (workTime) {
@@ -270,6 +301,43 @@ const DateCheckPage = ({
     }
   };
 
+  const handleVacationCancel = () => {
+    setIsVacationModalOpen(false);
+  };
+
+  const handleVacationSubmit = async () => {
+    const db = getDatabase();
+    const dbRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${user?.uid}/vacationDates`
+    );
+
+    // addVacationDates의 첫 번째와 두 번째 요소를 시작일과 끝일로 사용
+    const startDate = dayjs(addVacationDates[0]);
+    const endDate = dayjs(addVacationDates[1]);
+
+    const updates = {};
+    let currentDate = startDate;
+
+    while (currentDate.isBefore(endDate.add(1, "day"))) {
+      const formattedDate = currentDate.format("YYYY-MM-DD");
+      updates[formattedDate] = addVacationMemo; // 날짜를 키로 하여 true 값을 설정
+      currentDate = currentDate.add(1, "day"); // 다음 날짜로 이동
+    }
+
+    try {
+      await update(dbRef, updates); // 생성된 업데이트 객체를 사용하여 Firebase에 일괄 업데이트
+      setIsVacationModalOpen(false); // 모달 닫기
+      setAddVacationDates([]);
+      setAddVacationMemo("");
+      window.location.reload();
+    } catch (error) {
+      console.error("휴가 날짜 등록 중 오류 발생:", error);
+      setAddVacationDates([]);
+      setAddVacationMemo("");
+    }
+  };
+
   const calculateSalary = () => {
     if (isOpen) {
       setTimeout(() => {
@@ -372,6 +440,12 @@ const DateCheckPage = ({
               직원 리스트로 가기
               <ArrowForwardIcon />{" "}
             </div>
+            <div
+              style={{ borderRadius: "10px" }}
+              className="text-xl flex items-center cursor-pointer p-3 underline"
+              onClick={() => setIsVacationModalOpen(true)}>
+              직원 휴가 등록
+            </div>
 
             <div className="text-7xl">
               {selectedDate && selectedDate?.month() + 1}{" "}
@@ -449,8 +523,13 @@ const DateCheckPage = ({
                     근무기록
                   </h2>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  {workTimes[selectedDate.format("YYYY-MM-DD")]?.startTime ==
-                  "외근" ? (
+                  {vacationDates &&
+                  vacationDates[dayjs(selectedDate).format("YYYY-MM-DD")] ? (
+                    <div className="flex justify-center items-center h-48 w-full text-lg">
+                      {vacationDates[dayjs(selectedDate).format("YYYY-MM-DD")]}
+                    </div>
+                  ) : workTimes[selectedDate.format("YYYY-MM-DD")]?.startTime ==
+                    "외근" ? (
                     <div className="flex justify-center items-center h-48 w-full text-lg">
                       외근
                     </div>
@@ -591,7 +670,37 @@ const DateCheckPage = ({
               onClick={handleOpenSettleModal}>
               {user ? "이번달 직원 정산하기" : "직원을 선택해 주세요."}
             </div>
-
+            {/* 휴가모달 */}
+            <Modal
+              title={`${user?.name}/${user?.jobName}의 휴가등록`}
+              open={isVacationModalOpen}
+              onCancel={handleVacationCancel}
+              cancelText="닫기"
+              footer={[
+                <Button key="back" onClick={handleVacationCancel}>
+                  닫기
+                </Button>,
+                <Button key="submit" onClick={handleVacationSubmit}>
+                  휴가등록
+                </Button>,
+              ]}>
+              <div className="flex flex-col gap-5">
+                <RangePicker
+                  onChange={(dates) => {
+                    setAddVacationDates(dates);
+                  }}
+                />
+                <div>
+                  휴가메모
+                  <Input
+                    placeholder="ex) 연차"
+                    value={addVacationMemo}
+                    onChange={(e) => setAddVacationMemo(e.target.value)}
+                  />
+                </div>
+              </div>
+            </Modal>
+            {/* 정산모달 */}
             <Modal
               title={`${user?.name}/${user?.jobName}의 이번달 정산`}
               open={isModalOpen}

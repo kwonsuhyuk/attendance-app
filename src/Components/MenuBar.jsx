@@ -345,7 +345,11 @@ const MenuBar = ({ companyName, companyLogo }) => {
             : "MENU"}
         </div>
 
-        <ReplayIcon onClick={refreshPage} sx={{ fontSize: "15px" }} />
+        <ReplayIcon
+          onClick={refreshPage}
+          sx={{ fontSize: "15px" }}
+          data-tour="step-43"
+        />
 
         <div
           className="cursor-pointer"
@@ -388,7 +392,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
               ))}
             </div>
             <div className="w-full h-[1px] bg-slate-500"></div>
-            <List>
+            <List data-tour="step-50">
               {menuItems.map((item, index) => (
                 <ListItem button key={item.title} onClick={item.handle}>
                   <ListItemIcon>{item.icon}</ListItemIcon>

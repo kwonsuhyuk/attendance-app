@@ -33,12 +33,16 @@ const ShowCalendarPage = () => {
             content: `마지막으로 정산일 이후로 부터 이번달 근무 시간 등을 요약해서 볼 수 있는 테이블 입니다. 회사 정산 날짜가 지나면 초기화 됩니다.`,
           },
           {
+            selector: '[data-tour="step-43"]',
+            content: `혹시 페이지가 로딩이 잘되지 않던가 작동이 잘 되지 않으면 위의 새로고침 버튼을 눌러주세요.`,
+          },
+          {
             selector: '[data-tour="step-39"]',
-            content: `혹시 앞으로 사용하시면서 모르는 것이 있다면 오른쪽 아래 가이드를 이용해주시거나 ABOUT 페이지에서 문의 해주세요! 감사합니다!`,
+            content: `앞으로 사용하시면서 모르는 것이 있다면 오른쪽 아래 가이드를 이용해주시거나 ABOUT 페이지에서 문의 해주세요! 감사합니다!`,
             action: () => {
               setTimeout(() => {
                 setIsOpen(false);
-              }, 1000);
+              }, 3000);
             },
           },
         ]);
@@ -48,7 +52,7 @@ const ShowCalendarPage = () => {
         clearTimeout(timer), setSteps([]);
       };
     }
-  }, [isOpen, setCurrentStep, setSteps]);
+  }, [isOpen, setCurrentStep, setSteps, setIsOpen]);
 
   return (
     <div
