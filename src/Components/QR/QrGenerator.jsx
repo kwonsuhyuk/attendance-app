@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import QRCode from "qrcode.react";
 
-function QrGenerator({ setQR }) {
+function QrGenerator() {
   const qrRef = useRef(null);
   const [qrUrl, setQrUrl] = React.useState("");
 
@@ -15,9 +15,8 @@ function QrGenerator({ setQR }) {
     if (qrRef.current) {
       const canvas = qrRef.current.querySelector("canvas");
       setQrUrl(canvas.toDataURL("image/png"));
-      setQR(randomValue);
     }
-  }, [setQR, randomValue]);
+  }, []);
 
   return (
     <div ref={qrRef}>

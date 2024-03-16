@@ -9,6 +9,12 @@ import { Provider } from "react-redux";
 import { TourProvider } from "@reactour/tour";
 import steps from "./Components/steps.js";
 
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -34,8 +40,8 @@ ReactDOM.render(
               paddingTop: 30,
               whiteSpace: "pre-wrap",
               lineHeight: 2,
-              maxWidth: "70vw",
-              maxHeight: "300px",
+              maxWidth: isMobile() ? "70vw" : "25vw",
+              maxHeight: isMobile() ? "300px" : "auto",
             }),
             maskArea: (base) => ({ ...base, rx: 10 }),
             maskWrapper: (base) => ({ ...base, color: "black" }),
