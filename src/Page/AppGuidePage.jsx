@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Steps, Collapse, Divider } from "antd";
 import iphoneImg from "../assets/guideImg/iphoneadd.jpeg";
 import iphoneImg2 from "../assets/guideImg/iphoneadd2.jpeg";
@@ -8,6 +8,7 @@ import qrguide from "../assets/guideImg/qrguide.png";
 import qrguide2 from "../assets/guideImg/qrguide2.png";
 import { useSelector } from "react-redux";
 import "./AppGuidePage.css";
+import { useTour } from "@reactour/tour";
 
 const { Step } = Steps;
 const { Panel } = Collapse;
@@ -129,8 +130,33 @@ const faqs = [
 
 const AppGuidePage = () => {
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const { isOpen, setCurrentStep, setSteps } = useTour();
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setCurrentStep(0);
+        setSteps([
+          {
+            selector: '[data-tour="step-30"]',
+            content: `안녕하세요! Attandance App 에
+오신 것을 환영합니다. 여기는 App Guide 페이지 입니다. 우선 원활한 앱사용을 위해서 아래 문서를 통해서 바탕화면에 위 앱을 등록해서 사용하세요!`,
+          },
+          {
+            selector: '[data-tour="step-31"]',
+            content: `완료 하셨다면 위의 메뉴바를 클릭하셔서 HOME으로 이동해 오른쪽아래 "?" 아이콘을 통해 가이드를 다시 진행해 주세요!`,
+          },
+        ]);
+      }, 300);
+
+      return () => {
+        clearTimeout(timer), setSteps([]);
+      };
+    }
+  }, [isOpen, setCurrentStep, setSteps]);
+
   return (
-    <div className="absolute top-0 w-full">
+    <div className="absolute top-0 w-full" data-tour="step-30">
       <div className="my-3 font-bold text-base">APP GUIDE</div>
       <Collapse>
         {faqs.map((faq, index) => (

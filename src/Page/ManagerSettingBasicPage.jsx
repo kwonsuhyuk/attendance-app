@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../firebase";
 import { get, getDatabase, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
@@ -16,6 +16,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "antd";
 import { toast } from "react-toastify";
+import QRCode from "qrcode.react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
@@ -28,6 +30,15 @@ const ManagerSettingBasicPage = () => {
   const [nightStart, setNightStart] = useState(0);
   const [jobNameInput, setJobNameInput] = useState("");
   const [day, setDay] = useState(1);
+  const [qrUrl, setQrUrl] = useState("");
+  const qrRef = useRef(null);
+
+  useEffect(() => {
+    if (qrRef?.current) {
+      const canvas = qrRef?.current.querySelector("canvas");
+      setQrUrl(canvas.toDataURL("image/png"));
+    }
+  }, []);
 
   //
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
@@ -126,6 +137,7 @@ const ManagerSettingBasicPage = () => {
   const handlePayCheckDayChange = (event) => {
     setDay(event.target.value);
   };
+  console.log(companyData?.qrValue);
 
   if (isLoading) {
     return (
@@ -140,11 +152,51 @@ const ManagerSettingBasicPage = () => {
       </div> // 로딩 스피너
     );
   }
+  // 회사 id 복사 클릭시
+  const handleCopyCompId = () => {
+    navigator.clipboard
+      .writeText(currentUser?.photoURL)
+      .then(() => {
+        toast.success("회사 ID가 클립보드에 복사되었습니다.");
+      })
+      .catch(() => {
+        toast.error(
+          "회사 ID를 클립보드에 복사하는데 실패하였습니다. 다시 시도해주세요."
+        );
+      });
+  };
 
   return (
     <>
       <div className="w-full flex flex-col gap-36">
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-7" data-tour="step-20">
+          <div>
+            <div className="font-black">회사 QR , ID코드</div>
+            <div className="grid grid-cols-2">
+              <div
+                ref={qrRef}
+                className="flex flex-col justify-center items-center gap-3">
+                <QRCode value={companyData?.qrValue} />
+                <div
+                  className="flex justify-center items-center bg-gray-500 p-2 "
+                  style={{ borderRadius: "20px" }}>
+                  <a href={qrUrl} download="QRCode.png" className="text-white">
+                    QR 다운로드
+                  </a>
+                </div>
+              </div>
+              <div className="flex flex-col justify-center items-center">
+                <div
+                  className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
+                  style={{ borderRadius: "20px" }}>
+                  {currentUser?.photoURL}
+                  <span className="absolute right-7 cursor-pointer">
+                    <ContentCopyIcon onClick={handleCopyCompId} />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="font-black">직종 수정</div>
           <div>
             <div className="h-64 grid grid-cols-5 grid-flow-col gap-4">
@@ -203,7 +255,7 @@ const ManagerSettingBasicPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-7" data-tour="step-21">
           <div className="mb-3 font-black">급여 정산 날짜 입력</div>
           <div>
             매월
@@ -235,7 +287,7 @@ const ManagerSettingBasicPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-7" data-tour="step-22">
           <div className="mb-3 font-black">주간 야간 설정</div>
           <div className="text-xs">
             (주간, 야간을 구분해서 급여를 지급할지 설정합니다.)
@@ -306,7 +358,9 @@ const ManagerSettingBasicPage = () => {
           </div>
         </div>
         <div className="w-full flex justify-center">
-          <Button onClick={handleInfoUpdate}>변경 사항 저장</Button>
+          <Button onClick={handleInfoUpdate} data-tour="step-23">
+            변경 사항 저장
+          </Button>
         </div>
       </div>
     </>

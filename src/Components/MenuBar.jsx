@@ -20,11 +20,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import GuidePopover from "./GuidePopover";
 import ReplayIcon from "@mui/icons-material/Replay";
+import { useTour } from "@reactour/tour";
 
 const MenuBar = ({ companyName, companyLogo }) => {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
   const { userType, currentUser } = useSelector((state) => state.user);
   const { darkMode } = useSelector((state) => state.darkmodeSlice);
   const [open, setOpen] = useState(false);
+  const { setCurrentStep, setSteps } = useTour();
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -89,12 +92,12 @@ const MenuBar = ({ companyName, companyLogo }) => {
       icon: <CameraAltIcon />,
     },
     {
-      title: "DARKMODE",
+      title: darkMode ? "LIGHTMODE" : "DARKMODE",
       handle: () => {
         toggleTheme();
         setOpen(false);
       },
-      icon: <DarkModeIcon />,
+      icon: darkMode ? <LightModeIcon /> : <DarkModeIcon />,
     },
     {
       title: "ABOUT",
@@ -199,7 +202,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
               <div className="hidden lg:block font-black text-lg">
                 {companyName}
               </div>
-              <div className="flex gap-3 md:justify-between md:items-end md:w-1/3">
+              <div
+                className="flex gap-3 md:justify-between md:items-end md:w-1/3"
+                data-tour="step-2">
                 <div
                   className={`${
                     location.pathname ===
@@ -216,6 +221,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
                   HOME
                 </div>
                 <div
+                  data-tour="step-3"
                   className={`${
                     location.pathname ===
                     `/${currentUser?.photoURL}/employeelist`
@@ -223,9 +229,9 @@ const MenuBar = ({ companyName, companyLogo }) => {
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
                   style={{ border: "none" }}
-                  onClick={() =>
-                    navigate(`/${currentUser?.photoURL}/employeelist`)
-                  }>
+                  onClick={() => {
+                    navigate(`/${currentUser?.photoURL}/employeelist`);
+                  }}>
                   PEOPLE
                 </div>
                 <div
@@ -243,6 +249,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
                   CALENDAR
                 </div>
                 <div
+                  data-tour="step-18"
                   className={`${
                     location.pathname.includes(
                       `/${currentUser?.photoURL}/setting`
@@ -281,17 +288,6 @@ const MenuBar = ({ companyName, companyLogo }) => {
                     }
                   />
                 </FormGroup>
-                {location.pathname ===
-                  `/${currentUser?.photoURL}/companymain` && (
-                  <div>
-                    <GuidePopover
-                      text="직원들은 가입할때 관리자가 설정한 직종과 급여 정산 방법,
-                    그리고 급여를 본인이 입력하여 가입합니다. 
-                    우선 PEOPLE 페이지로 이동하셔서 직원들을 확인하고 직원 정보를 수정 하여 사용하세요. 
-                    각 페이지 마다 웹을 사용하는 가이드가 있습니다. 가이드를 참고해서 사용 해주세요."
-                    />
-                  </div>
-                )}
               </div>
               <div onClick={logout} className="text-sm cursor-pointer">
                 logout
@@ -349,9 +345,16 @@ const MenuBar = ({ companyName, companyLogo }) => {
             : "MENU"}
         </div>
 
-        <ReplayIcon onClick={refreshPage} sx={{ fontSize: "15px" }} />
+        <ReplayIcon
+          onClick={refreshPage}
+          sx={{ fontSize: "15px" }}
+          data-tour="step-43"
+        />
 
-        <div className="cursor-pointer" onClick={toggleDrawer(true)}>
+        <div
+          className="cursor-pointer"
+          onClick={toggleDrawer(true)}
+          data-tour="step-31">
           MENU
         </div>
 
@@ -389,7 +392,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
               ))}
             </div>
             <div className="w-full h-[1px] bg-slate-500"></div>
-            <List>
+            <List data-tour="step-50">
               {menuItems.map((item, index) => (
                 <ListItem button key={item.title} onClick={item.handle}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
