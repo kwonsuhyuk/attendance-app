@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
 import { getDatabase, get, ref, set, update, push } from 'firebase/database';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -35,6 +35,7 @@ function QrScan({ companyLogo }) {
     const scanner = new Html5QrcodeScanner('reader', {
       qrbox: { width: 250, height: 250 },
       fps: 5,
+      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
     });
     async function getCompanyInfo() {
       const db = getDatabase();
@@ -224,9 +225,9 @@ function QrScan({ companyLogo }) {
 
         <div
           className="underline text-sm text-red-500 text-center mb-3"
-          onClick={handleCheckOutJob}>
+          onClick={handleCheckOutJob}
+        >
           외근 시 여기를 클릭해주세요.
-
         </div>
       </div>
       <Dialog
