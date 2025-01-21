@@ -62,7 +62,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
     const downloadUrl = await getDownloadURL(uploadTask.ref);
     setImageUrl(downloadUrl);
     setuploadedCroppedImage(downloadUrl);
-    console.log("dlalss");
+
     closeModal();
   }, [currentUser?.uid, blob, closeModal, companyName, setImageUrl]);
 

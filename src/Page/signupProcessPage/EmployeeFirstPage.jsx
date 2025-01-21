@@ -68,7 +68,6 @@ function EmployeeFirstPage() {
           );
         }
       } catch (e) {
-        console.log(e.message);
       } finally {
         setLoading(false);
       }

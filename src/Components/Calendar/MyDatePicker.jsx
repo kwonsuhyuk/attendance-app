@@ -23,6 +23,7 @@ import { ClipLoader } from "react-spinners";
 import { Button } from "antd";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTour } from "@reactour/tour";
+import Loading from "../common/Loading";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
@@ -182,17 +183,7 @@ const MyDatePicker = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
-        <ClipLoader
-          color="black"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-        <h3>로딩 중 입니다.</h3>
-      </div> // 로딩 스피너
-    );
+    return <Loading />;
   }
 
   return (

@@ -2,7 +2,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect } from "react";
 import "./App.css";
 import SignupPage from "./Page/SignupPage";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./Page/LoginPage";
 import Notfound from "./Page/Notfound";
 import MainPage from "./Page/MainPage";
@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { get, getDatabase, ref } from "firebase/database";
 import { toggleMode } from "./store/darkmodeSlice";
 import GuideFab from "./Components/GuideFab";
+import Loading from "./Components/common/Loading";
 
 function App() {
   const dispatch = useDispatch();
@@ -64,20 +65,9 @@ function App() {
     }
     getEmployeeInfo();
   }, [currentUser?.photoURL, currentUser?.uid, dispatch]);
-  console.log(currentUser);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
-        <ClipLoader
-          color="black"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-        <h3>로딩 중 입니다.</h3>
-      </div> // 로딩 스피너
-    );
+    return <Loading />;
   }
 
   return (

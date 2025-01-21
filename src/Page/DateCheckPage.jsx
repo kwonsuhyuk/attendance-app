@@ -15,6 +15,7 @@ import { formatMoney } from "../util/formatMoney";
 import { toast } from "react-toastify";
 import convertTime from "../util/formatTime";
 import { useTour } from "@reactour/tour";
+import Loading from "../Components/common/Loading";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
@@ -146,7 +147,6 @@ const DateCheckPage = ({
     };
   }, []);
 
-  console.log(vacationDates);
   const tileContent = ({ date, view }) => {
     // Month view에 대해서만 커스텀 컨텐트를 제공합니다.
     if (view === "month") {
@@ -242,17 +242,7 @@ const DateCheckPage = ({
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
-        <ClipLoader
-          color="black"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-        <h3>로딩 중 입니다.</h3>
-      </div> // 로딩 스피너
-    );
+    return <Loading />;
   }
 
   const onChange = (date) => {
@@ -332,7 +322,6 @@ const DateCheckPage = ({
       setAddVacationMemo("");
       window.location.reload();
     } catch (error) {
-      console.error("휴가 날짜 등록 중 오류 발생:", error);
       setAddVacationDates([]);
       setAddVacationMemo("");
     }

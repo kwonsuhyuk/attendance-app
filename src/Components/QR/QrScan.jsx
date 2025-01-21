@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { getDatabase, get, ref, set, update, push } from "firebase/database";
@@ -13,7 +12,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import { useTour } from "@reactour/tour";
-
 
 function QrScan({ companyLogo }) {
   const [scanResult, setScanResult] = useState(null);
@@ -105,7 +103,6 @@ function QrScan({ companyLogo }) {
           prevDaySnapshot.val().startTime &&
           !prevDaySnapshot.val().endTime
         ) {
-          console.log("어제 출근기록 있음");
           await update(prevDayRef, { endTime: dateStr });
           setScanMessage("다음 날 퇴근 인증이 완료되었습니다");
           toast.success("다음 날 퇴근 인증이 완료되었습니다");
@@ -124,7 +121,6 @@ function QrScan({ companyLogo }) {
           snapshot.val().endTime &&
           !snapshot.val().startTime
         ) {
-          console.log("여기걸림");
           const startTime = prevDaySnapshot.val().startTime;
           const endTime = snapshot.val().endTime;
           const start = new Date(startTime);
@@ -151,7 +147,6 @@ function QrScan({ companyLogo }) {
           prevDaySnapshot.val().startTime &&
           prevDaySnapshot.val().endTime
         ) {
-          console.log("오늘기록이 없어서 이제 박는거임");
           await set(dbref, { startTime: dateStr });
           await set(workDateRef, {
             workHour: 0,
@@ -283,8 +278,7 @@ function QrScan({ companyLogo }) {
         <div
           data-tour="step-38"
           className="underline text-sm text-red-500 text-center mb-3"
-          onClick={handleCheckOutJob}
-        >
+          onClick={handleCheckOutJob}>
           외근 시 여기를 클릭해주세요.
         </div>
         <div

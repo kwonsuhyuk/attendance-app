@@ -9,6 +9,7 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import GuidePopover from "../Components/GuidePopover";
 import { useTour } from "@reactour/tour";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Components/common/Loading";
 
 const EmployeeListPage = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -117,17 +118,7 @@ const EmployeeListPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
-        <ClipLoader
-          color="black"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-        <h3>로딩 중 입니다.</h3>
-      </div> // 로딩 스피너
-    );
+    return <Loading />;
   }
 
   return (

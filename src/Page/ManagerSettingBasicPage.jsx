@@ -18,6 +18,7 @@ import { Button } from "antd";
 import { toast } from "react-toastify";
 import QRCode from "qrcode.react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import Loading from "../Components/common/Loading";
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
@@ -137,20 +138,9 @@ const ManagerSettingBasicPage = () => {
   const handlePayCheckDayChange = (event) => {
     setDay(event.target.value);
   };
-  console.log(companyData?.qrValue);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen">
-        <ClipLoader
-          color="black"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-        <h3>로딩 중 입니다.</h3>
-      </div> // 로딩 스피너
-    );
+    return <Loading />;
   }
   // 회사 id 복사 클릭시
   const handleCopyCompId = () => {

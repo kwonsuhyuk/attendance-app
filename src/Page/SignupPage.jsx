@@ -41,9 +41,7 @@ function SignupPage() {
 
   useEffect(() => {
     if (!error) return;
-    if (error) {
-      console.log("qiwjjoi");
-    }
+
     setTimeout(() => {
       setError("");
     }, 3000);
@@ -67,10 +65,6 @@ function SignupPage() {
       return;
     }
   };
-
-  // useEffect(() => {
-  //   console.log(isCodeValid);
-  // }, [isCodeValid]);
 
   const sendUserInfo = useCallback(
     async (name, email, password, companyCode, phoneNumber) => {
