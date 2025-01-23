@@ -39,6 +39,7 @@ export default {
   darkMode: "class",
   plugins: [],
   important: true,
+  mode: "jit",
 };
 
 {
