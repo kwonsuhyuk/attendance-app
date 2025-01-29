@@ -15,6 +15,8 @@ assignees: ''
 
 - [ ] .tsx 파일변경 후 prop interface , type 지정하기 (컨벤션은 노션확인)
 - [ ] import 쓸데 없는 것이나 사용하지 않는 코드 지우기 
-- [ ] TODO
+- [ ] console 등테스트 했던 코드 지우기
+- [ ] Todo
+- [ ] Todo
 
 ## 참고할만한 자료(선택)
