@@ -13,7 +13,7 @@ assignees: ''
 
 ## 작업 상세 내용
 
-- [ ] TODO
+- [ ] .tsx 파일변경 후 prop interface , type 지정하기 (컨벤션은 노션확인)
 - [ ] TODO
 - [ ] TODO
 
