@@ -7,10 +7,7 @@ import {
   update,
 } from "firebase/database";
 import React, { useEffect, useState } from "react";
-
 import { useSelector } from "react-redux";
-import { useMatch } from "react-router-dom";
-import ClipLoader from "react-spinners/ClipLoader";
 import SalaryType from "../../util/SalaryType";
 import { formatMoney } from "../../util/formatMoney";
 import convertTime from "../../util/formatTime";
