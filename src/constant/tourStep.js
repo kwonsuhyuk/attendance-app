@@ -219,3 +219,15 @@ export const SETTING_STEPS = [
     content: `회사공휴일 수정 페이지로 이동해 보겠습니다. 회사 공휴일 수정 버튼을 클릭해주세요.`,
   },
 ];
+
+export const APP_GUIDE_STEPS = [
+  {
+    selector: '[data-tour="step-30"]',
+    content: `안녕하세요! Attandance App 에
+오신 것을 환영합니다. 여기는 App Guide 페이지 입니다. 우선 원활한 앱사용을 위해서 아래 문서를 통해서 바탕화면에 위 앱을 등록해서 사용하세요!`,
+  },
+  {
+    selector: '[data-tour="step-31"]',
+    content: `완료 하셨다면 위의 메뉴바를 클릭하셔서 HOME으로 이동해 오른쪽아래 "?" 아이콘을 통해 가이드를 다시 진행해 주세요!`,
+  },
+];
