@@ -1,31 +1,30 @@
-import React, { useEffect } from "react";
-import { Steps, Collapse, Divider } from "antd";
-import iphoneImg from "../assets/guideImg/iphoneadd.jpeg";
-import iphoneImg2 from "../assets/guideImg/iphoneadd2.jpeg";
-import galaxyguide from "../assets/guideImg/galaxyguide.jpg";
-import galaxyguide2 from "../assets/guideImg/galaxyguide2.jpg";
-import qrguide from "../assets/guideImg/qrguide.png";
-import qrguide2 from "../assets/guideImg/qrguide2.png";
-import { useSelector } from "react-redux";
-import "./AppGuidePage.css";
-import { useTour } from "@reactour/tour";
+import { useEffect } from 'react';
+import { Steps, Collapse } from 'antd';
+import iphoneImg from '../assets/guideImg/iphoneadd.jpeg';
+import iphoneImg2 from '../assets/guideImg/iphoneadd2.jpeg';
+import galaxyguide from '../assets/guideImg/galaxyguide.jpg';
+import galaxyguide2 from '../assets/guideImg/galaxyguide2.jpg';
+import qrguide from '../assets/guideImg/qrguide.png';
+import qrguide2 from '../assets/guideImg/qrguide2.png';
+import { useSelector } from 'react-redux';
+import './AppGuidePage.css';
+import { useTour } from '@reactour/tour';
+import { APP_GUIDE_STEPS } from '../constant/tourStep';
 
 const { Step } = Steps;
 const { Panel } = Collapse;
 
-const faqs = [
+const FAQS = [
   {
-    question: "앱 바로가기 등록하기 (아이폰)",
+    question: '앱 바로가기 등록하기 (아이폰)',
     guideSteps: [
       {
-        title: "Safari로 해당 앱 접속",
+        title: 'Safari로 해당 앱 접속',
         description: (
           <div>
             <p>
               Safari 브라우저를 통해서
-              <a href="https://britec-attd-app.web.app">
-                https://britec-attd-app.web.app
-              </a>
+              <a href="https://britec-attd-app.web.app">https://britec-attd-app.web.app</a>
               에 접속한 후, <br />
               가운데 아래 공유 버튼을 클릭합니다.
             </p>
@@ -34,13 +33,12 @@ const faqs = [
         ),
       },
       {
-        title: "홈 화면 추가 버튼 클릭",
+        title: '홈 화면 추가 버튼 클릭',
         description: (
           <div>
             <p>
               공유 버튼 클릭 후 아래로 스크롤 하여 <br />
-              <span className="text-gray-700">홈 화면에 추가 버튼</span>을 클릭
-              하여 바탕화면에 추가할 수 있습니다.
+              <span className="text-gray-700">홈 화면에 추가 버튼</span>을 클릭 하여 바탕화면에 추가할 수 있습니다.
             </p>
             <img src={iphoneImg2} alt="step1" className="w-full" />
           </div>
@@ -49,17 +47,15 @@ const faqs = [
     ],
   },
   {
-    question: "앱 바로가기 등록하기 (갤럭시)",
+    question: '앱 바로가기 등록하기 (갤럭시)',
     guideSteps: [
       {
-        title: "크롬 브라우저로 해당 앱 접속",
+        title: '크롬 브라우저로 해당 앱 접속',
         description: (
           <div>
             <p>
               구글 크롬 브라우저를 통해
-              <a href="https://britec-attd-app.web.app">
-                https://britec-attd-app.web.app
-              </a>
+              <a href="https://britec-attd-app.web.app">https://britec-attd-app.web.app</a>
               <br />
               에 접속한 후, <br />
               오른쪽 위 점 세개를 클릭합니다.
@@ -69,14 +65,13 @@ const faqs = [
         ),
       },
       {
-        title: "홈 화면 추가 버튼 클릭",
+        title: '홈 화면 추가 버튼 클릭',
         description: (
           <div>
             <p>
               <span className="text-gray-700">홈 화면에 추가 버튼</span>
               <br />
-              (혹은, 웹 어플리케이션 다운)을 클릭 하여 바탕화면에 추가할 수
-              있습니다.
+              (혹은, 웹 어플리케이션 다운)을 클릭 하여 바탕화면에 추가할 수 있습니다.
             </p>
             <img src={galaxyguide2} alt="step2" className="w-full" />
             <div className="text-sm text-red-300">
@@ -92,10 +87,10 @@ const faqs = [
     ],
   },
   {
-    question: "QR 출퇴근 하는 방법",
+    question: 'QR 출퇴근 하는 방법',
     guideSteps: [
       {
-        title: "홈 화면의 QR SCAN을 클릭.",
+        title: '홈 화면의 QR SCAN을 클릭.',
         description: (
           <div>
             <p>
@@ -107,17 +102,13 @@ const faqs = [
         ),
       },
       {
-        title: "관리자가 제공한 QR을 스캔",
+        title: '관리자가 제공한 QR을 스캔',
         description: (
           <div>
             <p>
-              <span className="text-gray-700">
-                빨간 곳의 카메라 허용 버튼을 클릭
-              </span>
-              후 start scanning 버튼을 클릭해 관리자가 제공한 QR을 <br />{" "}
-              <span className="text-gray-700">
-                출근할 때 한번 퇴근할 때 한번 스캔
-              </span>
+              <span className="text-gray-700">빨간 곳의 카메라 허용 버튼을 클릭</span>
+              후 start scanning 버튼을 클릭해 관리자가 제공한 QR을 <br />{' '}
+              <span className="text-gray-700">출근할 때 한번 퇴근할 때 한번 스캔</span>
               하시면 됩니다!
             </p>
             <img src={qrguide2} alt="step2" className="w-full" />
@@ -129,24 +120,14 @@ const faqs = [
 ];
 
 const AppGuidePage = () => {
-  const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const { darkMode } = useSelector(state => state.darkmodeSlice);
   const { isOpen, setCurrentStep, setSteps } = useTour();
 
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
         setCurrentStep(0);
-        setSteps([
-          {
-            selector: '[data-tour="step-30"]',
-            content: `안녕하세요! Attandance App 에
-오신 것을 환영합니다. 여기는 App Guide 페이지 입니다. 우선 원활한 앱사용을 위해서 아래 문서를 통해서 바탕화면에 위 앱을 등록해서 사용하세요!`,
-          },
-          {
-            selector: '[data-tour="step-31"]',
-            content: `완료 하셨다면 위의 메뉴바를 클릭하셔서 HOME으로 이동해 오른쪽아래 "?" 아이콘을 통해 가이드를 다시 진행해 주세요!`,
-          },
-        ]);
+        setSteps(APP_GUIDE_STEPS);
       }, 300);
 
       return () => {
@@ -159,13 +140,13 @@ const AppGuidePage = () => {
     <div className="absolute top-0 w-full" data-tour="step-30">
       <div className="my-3 font-bold text-base">APP GUIDE</div>
       <Collapse>
-        {faqs.map((faq, index) => (
+        {FAQS.map((faq, index) => (
           <Panel
-            className={!darkMode ? "lightMode" : "darkMode"}
+            className={!darkMode ? 'lightMode' : 'darkMode'}
             header={
               <span
                 style={{
-                  color: !darkMode ? "black" : "white",
+                  color: !darkMode ? 'black' : 'white',
                 }}>
                 {faq.question}
               </span>
@@ -175,11 +156,7 @@ const AppGuidePage = () => {
               {faq.guideSteps.map((step, index) => (
                 <Step
                   key={index}
-                  title={
-                    <span style={{ color: "black", fontWeight: "bold" }}>
-                      {step.title}
-                    </span>
-                  }
+                  title={<span style={{ color: 'black', fontWeight: 'bold' }}>{step.title}</span>}
                   description={step.description}
                 />
               ))}
