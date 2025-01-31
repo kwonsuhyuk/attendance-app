@@ -1,4 +1,4 @@
-import { get, getDatabase, ref, onValue, off, update } from 'firebase/database';
+import { get, set, getDatabase, ref, onValue, off, update } from 'firebase/database';
 
 const db = getDatabase();
 
@@ -234,6 +234,313 @@ export async function saveHolidaySettings(companyCode, { holidays, isHoliday, ho
     return { success: true };
   } catch (error) {
     console.error('Error saving holiday settings:', error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function fetchCompanyAndJobInfo(companyCode, userId) {
+  try {
+    const db = getDatabase();
+    const companySnapshot = await get(ref(db, `companyCode/${companyCode}/companyInfo`));
+    const jobSnapshot = await get(ref(db, `companyCode/${companyCode}/users/${userId}/jobName`));
+
+    if (companySnapshot.exists() && jobSnapshot.exists()) {
+      return {
+        success: true,
+        data: {
+          companyInfo: companySnapshot.val(),
+          jobName: jobSnapshot.val(),
+        },
+      };
+    }
+    return {
+      success: false,
+      error: '회사 정보를 찾을 수 없습니다.',
+    };
+  } catch (error) {
+    console.error('Error fetching company info:', error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function processQRScan(companyCode, userId, scanTime) {
+  try {
+    const db = getDatabase();
+    const date = new Date(scanTime);
+    const offset = date.getTimezoneOffset() * 60000;
+    const now = new Date(Date.now() - offset);
+
+    const nowStr = now.toISOString().slice(0, 10);
+    const yesterdayForNow = new Date(Date.now() - offset);
+    yesterdayForNow.setDate(yesterdayForNow.getDate() - 1);
+    const yesterdayStr = yesterdayForNow.toISOString().slice(0, 10);
+
+    // 현재 날짜와 이전 날짜의 데이터 참조
+    const todayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
+    const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
+    const yesterdayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
+    const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
+
+    const todaySnapshot = await get(todayRef);
+    const yesterdaySnapshot = await get(yesterdayRef);
+
+    // 다양한 출퇴근 상황 처리
+    if (yesterdaySnapshot.exists() || todaySnapshot.exists()) {
+      // 어제 출근, 퇴근 미처리
+      if (
+        !todaySnapshot.exists() &&
+        yesterdaySnapshot.exists() &&
+        yesterdaySnapshot.val().startTime &&
+        !yesterdaySnapshot.val().endTime
+      ) {
+        await update(yesterdayRef, { endTime: scanTime });
+        return { success: true, message: '다음 날 퇴근 인증이 완료되었습니다' };
+      }
+
+      // 오늘 출근, 퇴근 처리
+      if (todaySnapshot.exists() && todaySnapshot.val().startTime && !todaySnapshot.val().endTime) {
+        await update(todayRef, { endTime: scanTime });
+        return { success: true, message: '퇴근 인증이 완료되었습니다' };
+      }
+
+      // 오늘 퇴근만 있고 출근 기록이 없는 경우
+      if (todaySnapshot.exists() && todaySnapshot.val().endTime && !todaySnapshot.val().startTime) {
+        const startTime = yesterdaySnapshot.val().startTime;
+        const endTime = todaySnapshot.val().endTime;
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+        const workHours = Number((24 - start.getHours() + end.getHours()).toFixed(1));
+
+        await set(todayRef, { startTime: scanTime });
+        await update(yesterdayRef, { endTime: endTime });
+        await update(yesterdayWorkRef, { workHour: workHours });
+        await set(todayWorkRef, {
+          workHour: 0,
+          daySalary: 0,
+          nightSalary: 0,
+          holidayAndWeekendSalary: 0,
+        });
+
+        return { success: true, message: '출근 인증이 완료되었습니다' };
+      }
+
+      // 새로운 날 출근
+      if (!todaySnapshot.exists() && yesterdaySnapshot.val().startTime && yesterdaySnapshot.val().endTime) {
+        await set(todayRef, { startTime: scanTime });
+        await set(todayWorkRef, {
+          workHour: 0,
+          daySalary: 0,
+          nightSalary: 0,
+          holidayAndWeekendSalary: 0,
+        });
+
+        return { success: true, message: '출근 인증이 완료되었습니다' };
+      }
+    } else {
+      // 최초 출근
+      await set(todayRef, { startTime: scanTime });
+      await set(todayWorkRef, {
+        workHour: 0,
+        daySalary: 0,
+        nightSalary: 0,
+        holidayAndWeekendSalary: 0,
+      });
+
+      return { success: true, message: '출근 인증이 완료되었습니다' };
+    }
+
+    return { success: false, error: '처리할 수 없는 상태입니다.' };
+  } catch (error) {
+    console.error('Error processing QR scan:', error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function registerOutWork(companyCode, userId) {
+  try {
+    const db = getDatabase();
+    const date = new Date();
+    const offset = date.getTimezoneOffset() * 60000;
+    const now = new Date(Date.now() - offset);
+    const nowStr = now.toISOString().slice(0, 10);
+
+    await set(ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`), {
+      startTime: '외근',
+      endTime: '외근',
+    });
+    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), { workHour: '외근' });
+
+    return { success: true, message: '외근 등록이 완료되었습니다.' };
+  } catch (error) {
+    console.error('Error registering out work:', error);
+    return {
+      success: false,
+      error: '정상적으로 기록되지 않았습니다.',
+    };
+  }
+}
+
+// 급여일 정보와 급여 데이터 조회
+export async function fetchSalaryInfo(companyCode, userId) {
+  try {
+    const db = getDatabase();
+    const workDateRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates`);
+    const salaryDayRef = ref(db, `companyCode/${companyCode}/companyInfo/payCheckDay`);
+
+    const [workDateSnapshot, salaryDaySnapshot] = await Promise.all([get(workDateRef), get(salaryDayRef)]);
+
+    const salaryDay = salaryDaySnapshot.exists() ? salaryDaySnapshot.val() : 0;
+    const workDates = workDateSnapshot.exists() ? workDateSnapshot.val() : {};
+
+    let totalDayHour1 = 0,
+      totalNightHour1 = 0,
+      totalHolidayHour1 = 0;
+    let totalDayHour2 = 0,
+      totalNightHour2 = 0,
+      totalHolidayHour2 = 0;
+    let totalDayPay1 = 0,
+      totalNightPay1 = 0,
+      totalHolidayPay1 = 0;
+    let totalDayPay2 = 0,
+      totalNightPay2 = 0,
+      totalHolidayPay2 = 0;
+    let totalWorkHour1 = 0,
+      totalWorkHour2 = 0;
+    let totalSalaryPay1 = 0,
+      totalSalaryPay2 = 0;
+
+    const today = new Date();
+
+    for (const date in workDates) {
+      const dateObj = new Date(date);
+      const workData = workDates[date];
+
+      if (workData.workHour === '외근') continue;
+
+      const { workHour, daySalary, nightSalary, holidayAndWeekendSalary } = workData;
+
+      // 급여일 이후 데이터
+      if (dateObj.getMonth() === today.getMonth() && dateObj.getDate() >= salaryDay) {
+        if (daySalary > 0) {
+          totalDayHour1 += workHour;
+          totalDayPay1 += daySalary;
+        }
+        if (nightSalary > 0) {
+          totalNightHour1 += workHour;
+          totalNightPay1 += nightSalary;
+        }
+        if (holidayAndWeekendSalary > 0) {
+          totalHolidayHour1 += workHour;
+          totalHolidayPay1 += holidayAndWeekendSalary;
+        }
+        totalWorkHour1 += workHour;
+        totalSalaryPay1 += daySalary + nightSalary + holidayAndWeekendSalary;
+      }
+      // 이전 급여일부터 현재 급여일까지의 데이터
+      else if (
+        (dateObj.getMonth() === today.getMonth() && dateObj.getDate() < salaryDay) ||
+        (dateObj.getMonth() === today.getMonth() - 1 && dateObj.getDate() >= salaryDay)
+      ) {
+        if (daySalary > 0) {
+          totalDayHour2 += workHour;
+          totalDayPay2 += daySalary;
+        }
+        if (nightSalary > 0) {
+          totalNightHour2 += workHour;
+          totalNightPay2 += nightSalary;
+        }
+        if (holidayAndWeekendSalary > 0) {
+          totalHolidayHour2 += workHour;
+          totalHolidayPay2 += holidayAndWeekendSalary;
+        }
+        totalWorkHour2 += workHour;
+        totalSalaryPay2 += daySalary + nightSalary + holidayAndWeekendSalary;
+      }
+    }
+
+    return {
+      success: true,
+      data: {
+        salaryDay,
+        period1: {
+          dayHours: totalDayHour1,
+          nightHours: totalNightHour1,
+          holidayHours: totalHolidayHour1,
+          dayPay: totalDayPay1,
+          nightPay: totalNightPay1,
+          holidayPay: totalHolidayPay1,
+          totalWorkHours: totalWorkHour1,
+          totalPay: totalSalaryPay1,
+        },
+        period2: {
+          dayHours: totalDayHour2,
+          nightHours: totalNightHour2,
+          holidayHours: totalHolidayHour2,
+          dayPay: totalDayPay2,
+          nightPay: totalNightPay2,
+          holidayPay: totalHolidayPay2,
+          totalWorkHours: totalWorkHour2,
+          totalPay: totalSalaryPay2,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching salary info:', error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function fetchCurrentDayWork(companyCode, userId) {
+  try {
+    const db = getDatabase();
+    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
+    const nightStartRef = ref(db, `companyCode/${companyCode}/companyInfo/nightStart`);
+    const nightEndRef = ref(db, `companyCode/${companyCode}/companyInfo/nightEnd`);
+    const holidayListRef = ref(db, `companyCode/${companyCode}/companyInfo/holidayList`);
+    const holidayPayRef = ref(db, `companyCode/${companyCode}/companyInfo/holidayPay`);
+    const isNightPayRef = ref(db, `companyCode/${companyCode}/companyInfo/isNightPay`);
+
+    const [
+      dateSnapshot,
+      nightStartSnapshot,
+      nightEndSnapshot,
+      holidayListSnapshot,
+      holidayPaySnapshot,
+      isNightPaySnapshot,
+    ] = await Promise.all([
+      get(dateRef),
+      get(nightStartRef),
+      get(nightEndRef),
+      get(holidayListRef),
+      get(holidayPayRef),
+      get(isNightPayRef),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        dates: dateSnapshot.val() || {},
+        nightStart: nightStartSnapshot.val(),
+        nightEnd: nightEndSnapshot.val(),
+        holidayList: holidayListSnapshot.val() || {},
+        holidayPay: holidayPaySnapshot.val(),
+        isNightPay: isNightPaySnapshot.val(),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching current day work:', error);
     return {
       success: false,
       error: error.message,
