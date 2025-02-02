@@ -1,4 +1,4 @@
-import { get, set, getDatabase, ref, onValue, off, update } from 'firebase/database';
+import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
 
 const db = getDatabase();
 
@@ -8,7 +8,7 @@ export async function fetchData(path) {
     const snapshot = await get(ref(db, path));
     return snapshot.val() || null;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return null;
   }
 }
@@ -54,7 +54,7 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
 
     return { success: true };
   } catch (error) {
-    console.error('Error updating employee settings:', error);
+    console.error("Error updating employee settings:", error);
     return { success: false, error };
   }
 }
@@ -62,13 +62,13 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
 function getNextDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() + 1);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 
 function getPrevDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() - 1);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 
 export async function fetchWorkTimes(companyCode, userId) {
@@ -88,15 +88,15 @@ export async function fetchWorkTimes(companyCode, userId) {
       const { startTime, endTime } = dates[date];
       let start, end, workDate;
 
-      if (startTime === '외근') {
-        newWorkTimes[date] = '외근';
+      if (startTime === "외근") {
+        newWorkTimes[date] = "외근";
         continue;
       }
 
       // Handle start time
       if (startTime) {
         start = new Date(startTime);
-        workDate = start.toLocaleDateString('fr-CA');
+        workDate = start.toLocaleDateString("fr-CA");
       } else {
         const prevDay = getPrevDate(date);
         const prevDayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${prevDay}`);
@@ -153,7 +153,7 @@ export async function fetchWorkTimes(companyCode, userId) {
       datesList: dates,
     };
   } catch (error) {
-    console.error('Error fetching work times:', error);
+    console.error("Error fetching work times:", error);
     return {
       success: false,
       error: error.message,
@@ -176,7 +176,7 @@ export async function fetchHolidaySettings(companyCode) {
       },
     };
   } catch (error) {
-    console.error('Error fetching holiday settings:', error);
+    console.error("Error fetching holiday settings:", error);
     return {
       success: false,
       error: error.message,
@@ -203,7 +203,7 @@ export async function fetchHolidayList(companyCode) {
       dates: [],
     };
   } catch (error) {
-    console.error('Error fetching holiday list:', error);
+    console.error("Error fetching holiday list:", error);
     return {
       success: false,
       error: error.message,
@@ -216,8 +216,8 @@ export async function saveHolidaySettings(companyCode, { holidays, isHoliday, ho
   try {
     const holidayList = holidays.reduce((obj, date) => {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       const dateStr = `${year}-${month}-${day}`;
       obj[dateStr] = true;
       return obj;
@@ -233,7 +233,7 @@ export async function saveHolidaySettings(companyCode, { holidays, isHoliday, ho
     await update(ref(db), updates);
     return { success: true };
   } catch (error) {
-    console.error('Error saving holiday settings:', error);
+    console.error("Error saving holiday settings:", error);
     return {
       success: false,
       error: error.message,
@@ -258,10 +258,10 @@ export async function fetchCompanyAndJobInfo(companyCode, userId) {
     }
     return {
       success: false,
-      error: '회사 정보를 찾을 수 없습니다.',
+      error: "회사 정보를 찾을 수 없습니다.",
     };
   } catch (error) {
-    console.error('Error fetching company info:', error);
+    console.error("Error fetching company info:", error);
     return {
       success: false,
       error: error.message,
@@ -300,13 +300,13 @@ export async function processQRScan(companyCode, userId, scanTime) {
         !yesterdaySnapshot.val().endTime
       ) {
         await update(yesterdayRef, { endTime: scanTime });
-        return { success: true, message: '다음 날 퇴근 인증이 완료되었습니다' };
+        return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 출근, 퇴근 처리
       if (todaySnapshot.exists() && todaySnapshot.val().startTime && !todaySnapshot.val().endTime) {
         await update(todayRef, { endTime: scanTime });
-        return { success: true, message: '퇴근 인증이 완료되었습니다' };
+        return { success: true, message: "퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 퇴근만 있고 출근 기록이 없는 경우
@@ -327,7 +327,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
           holidayAndWeekendSalary: 0,
         });
 
-        return { success: true, message: '출근 인증이 완료되었습니다' };
+        return { success: true, message: "출근 인증이 완료되었습니다" };
       }
 
       // 새로운 날 출근
@@ -340,7 +340,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
           holidayAndWeekendSalary: 0,
         });
 
-        return { success: true, message: '출근 인증이 완료되었습니다' };
+        return { success: true, message: "출근 인증이 완료되었습니다" };
       }
     } else {
       // 최초 출근
@@ -352,12 +352,12 @@ export async function processQRScan(companyCode, userId, scanTime) {
         holidayAndWeekendSalary: 0,
       });
 
-      return { success: true, message: '출근 인증이 완료되었습니다' };
+      return { success: true, message: "출근 인증이 완료되었습니다" };
     }
 
-    return { success: false, error: '처리할 수 없는 상태입니다.' };
+    return { success: false, error: "처리할 수 없는 상태입니다." };
   } catch (error) {
-    console.error('Error processing QR scan:', error);
+    console.error("Error processing QR scan:", error);
     return {
       success: false,
       error: error.message,
@@ -374,17 +374,17 @@ export async function registerOutWork(companyCode, userId) {
     const nowStr = now.toISOString().slice(0, 10);
 
     await set(ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`), {
-      startTime: '외근',
-      endTime: '외근',
+      startTime: "외근",
+      endTime: "외근",
     });
-    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), { workHour: '외근' });
+    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), { workHour: "외근" });
 
-    return { success: true, message: '외근 등록이 완료되었습니다.' };
+    return { success: true, message: "외근 등록이 완료되었습니다." };
   } catch (error) {
-    console.error('Error registering out work:', error);
+    console.error("Error registering out work:", error);
     return {
       success: false,
-      error: '정상적으로 기록되지 않았습니다.',
+      error: "정상적으로 기록되지 않았습니다.",
     };
   }
 }
@@ -424,7 +424,7 @@ export async function fetchSalaryInfo(companyCode, userId) {
       const dateObj = new Date(date);
       const workData = workDates[date];
 
-      if (workData.workHour === '외근') continue;
+      if (workData.workHour === "외근") continue;
 
       const { workHour, daySalary, nightSalary, holidayAndWeekendSalary } = workData;
 
@@ -471,7 +471,7 @@ export async function fetchSalaryInfo(companyCode, userId) {
       success: true,
       data: {
         salaryDay,
-        period1: {
+        currentPeriod: {
           dayHours: totalDayHour1,
           nightHours: totalNightHour1,
           holidayHours: totalHolidayHour1,
@@ -481,7 +481,7 @@ export async function fetchSalaryInfo(companyCode, userId) {
           totalWorkHours: totalWorkHour1,
           totalPay: totalSalaryPay1,
         },
-        period2: {
+        previousPeriod: {
           dayHours: totalDayHour2,
           nightHours: totalNightHour2,
           holidayHours: totalHolidayHour2,
@@ -494,7 +494,7 @@ export async function fetchSalaryInfo(companyCode, userId) {
       },
     };
   } catch (error) {
-    console.error('Error fetching salary info:', error);
+    console.error("Error fetching salary info:", error);
     return {
       success: false,
       error: error.message,
@@ -540,7 +540,7 @@ export async function fetchCurrentDayWork(companyCode, userId) {
       },
     };
   } catch (error) {
-    console.error('Error fetching current day work:', error);
+    console.error("Error fetching current day work:", error);
     return {
       success: false,
       error: error.message,

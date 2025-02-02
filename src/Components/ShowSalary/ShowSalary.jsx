@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import SalaryType from '../../util/SalaryType';
-import { formatMoney } from '../../util/formatMoney';
-import convertTime from '../../util/formatTime';
-import GuidePopover from '../GuidePopover';
-import Loading from '../common/Loading';
-import { fetchSalaryInfo } from '../../api';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import SalaryType from "../../util/SalaryType";
+import { formatMoney } from "../../util/formatMoney";
+import convertTime from "../../util/formatTime";
+import GuidePopover from "../GuidePopover";
+import Loading from "../common/Loading";
+import { fetchSalaryInfo } from "../../api";
+import { toast } from "react-toastify";
+import SalaryInfoCard from "./SalaryInfoCard.jsx";
 
 //import SalaryDay from '../Utils/SalaryDay';
 
@@ -13,7 +15,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
   const [isLoading, setIsLoading] = useState(false);
   const [salaryInfo, setSalaryInfo] = useState({
     salaryDay: 0,
-    period1: {
+    currentPeriod: {
+      // 현재 급여 계산 기간 (급여일 이후)
       dayHours: 0,
       nightHours: 0,
       holidayHours: 0,
@@ -23,7 +26,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
       totalWorkHours: 0,
       totalPay: 0,
     },
-    period2: {
+    previousPeriod: {
+      // 이전 급여 계산 기간
       dayHours: 0,
       nightHours: 0,
       holidayHours: 0,
@@ -50,13 +54,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
       setIsLoading(true);
       try {
         const salaryResult = await fetchSalaryInfo(companyCode, userId);
-        // currentWorkResult 제거
-
         if (salaryResult.success) {
           setSalaryInfo(salaryResult.data);
+        } else {
+          toast.error("급여 정보를 불러오는데 실패했습니다.");
         }
       } catch (error) {
-        console.error('Error loading salary data:', error);
+        console.error("Error loading salary data:", error);
+        toast.error("급여 정보 로딩 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
       }
@@ -69,12 +74,27 @@ function ShowSalary({ matchCalendar, matchHome }) {
     return <Loading />;
   }
 
-  const currentPeriod = now > salaryInfo.salaryDay ? salaryInfo.period1 : salaryInfo.period2;
+  const activePeriod = now > salaryInfo.salaryDay ? salaryInfo.currentPeriod : salaryInfo.previousPeriod;
+
+  // 홈 화면 렌더링 데이터 개선
+  const getRenderData = () => {
+    if (!activePeriod) return []; // activePeriod가 없을 경우 빈 배열 반환
+
+    if (monthlyPay > 0) {
+      return [{ workType: "월급", amount: monthlyPay }];
+    }
+
+    return [
+      activePeriod.dayPay > 0 && { workType: "주간", amount: activePeriod.dayPay },
+      activePeriod.nightPay > 0 && { workType: "야간", amount: activePeriod.nightPay },
+      activePeriod.holidayPay > 0 && { workType: "공휴일 및 주말", amount: activePeriod.holidayPay },
+    ].filter(Boolean);
+  };
 
   if (matchCalendar) {
     return (
       <>
-        {(currentPeriod.totalWorkHours || salaryPayment || monthlyPay) && (
+        {(activePeriod.totalWorkHours || salaryPayment || monthlyPay) && (
           <div className="relative w-full h-full overflow-x-auto">
             <div className="py-2 text-base font-bold flex items-center">
               이번달 근무내역 <GuidePopover text="회사의 정산일부터 계산된 내용입니다." show={false} />
@@ -107,10 +127,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                     주간
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                    {convertTime(currentPeriod.dayHours.toFixed(1))}
+                    {convertTime(activePeriod.dayHours.toFixed(1))}
                   </td>
                   <td className="pl-6 py-3 text-end text-nowrap">
-                    {monthlyPay ? null : formatMoney(currentPeriod.dayPay)}원
+                    {monthlyPay ? null : formatMoney(activePeriod.dayPay)}원
                   </td>
                 </tr>
                 <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -120,10 +140,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                     야간
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                    {convertTime(currentPeriod.nightHours.toFixed(1))}
+                    {convertTime(activePeriod.nightHours.toFixed(1))}
                   </td>
                   <td className="pl-6 py-3 text-end text-nowrap">
-                    {monthlyPay ? null : formatMoney(currentPeriod.nightPay)}원
+                    {monthlyPay ? null : formatMoney(activePeriod.nightPay)}원
                   </td>
                 </tr>
                 <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
@@ -133,10 +153,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                     공휴일 및 주말
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                    {convertTime(currentPeriod.holidayHours.toFixed(1))}
+                    {convertTime(activePeriod.holidayHours.toFixed(1))}
                   </td>
                   <td className="pl-6 py-3 text-end text-nowrap">
-                    {monthlyPay ? null : formatMoney(currentPeriod.holidayPay)}원
+                    {monthlyPay ? null : formatMoney(activePeriod.holidayPay)}원
                   </td>
                 </tr>
                 <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
@@ -146,10 +166,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
                     이번 달 총합
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
-                    {convertTime(currentPeriod.totalWorkHours.toFixed(1))}
+                    {convertTime(activePeriod.totalWorkHours.toFixed(1))}
                   </td>
                   <td className="pl-6 py-3 text-end text-nowrap">
-                    {monthlyPay ? formatMoney(monthlyPay) : formatMoney(currentPeriod.totalPay)}원
+                    {monthlyPay ? formatMoney(monthlyPay) : formatMoney(activePeriod.totalPay)}원
                   </td>
                 </tr>
               </tbody>
@@ -161,81 +181,15 @@ function ShowSalary({ matchCalendar, matchHome }) {
   }
 
   if (matchHome) {
+    const renderData = getRenderData();
     return (
       <div className="flex flex-col justify-between items-center text-sm w-full">
         <div className="flex flex-row justify-between items-center w-full">
-          {currentPeriod.dayPay > 0 && !monthlyPay && (
-            <div className="flex flex-col justify-between items-center space-y-4 w-full">
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">최근 일한 날짜</div>
-                <div className="flex items-baseline">{today}</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-start">최근 근무 형태</div>
-                <div className="flex items-baseline">주간</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">해당 급여</div>
-                <div className="flex items-baseline">{formatMoney(currentPeriod.dayPay)}원</div>
-              </div>
-            </div>
-          )}
-          {currentPeriod.nightPay > 0 && !monthlyPay && (
-            <div className="flex flex-col justify-between items-center space-y-4 w-full">
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">최근 일한 날짜</div>
-                <div className="flex items-baseline">{today}</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-start">최근 근무 형태</div>
-                <div className="flex items-baseline">야간</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">해당 급여</div>
-                <div className="flex items-baseline">{formatMoney(currentPeriod.nightPay)}원</div>
-              </div>
-            </div>
-          )}
-          {currentPeriod.holidayPay > 0 && !monthlyPay && (
-            <div className="flex flex-col justify-between items-center space-y-4 w-full">
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">최근 일한 날짜</div>
-                <div className="flex items-baseline">{today}</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-start">최근 근무 형태</div>
-                <div className="flex items-baseline">공휴일 및 주말</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">해당 급여</div>
-                <div className="flex items-baseline">{formatMoney(currentPeriod.holidayPay)}원</div>
-              </div>
-            </div>
-          )}
-          {monthlyPay > 0 && (
-            <div className="flex flex-col justify-between items-center space-y-4 w-full">
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">최근 일한 날짜</div>
-                <div className="flex items-baseline">{today}</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-start">최근 근무 형태</div>
-                <div className="flex items-baseline">월급</div>
-              </div>
-              <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-              <div className="flex flex-row w-full justify-between items-center">
-                <div className="flex items-baseline">해당 급여</div>
-                <div className="flex items-baseline">{formatMoney(monthlyPay)}원</div>
-              </div>
-            </div>
-          )}
+          {renderData &&
+            renderData.length > 0 &&
+            renderData.map((data, index) => (
+              <SalaryInfoCard key={index} date={today} workType={data.workType} amount={data.amount} />
+            ))}
         </div>
       </div>
     );

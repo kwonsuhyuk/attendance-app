@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import moment from 'moment/moment.js';
-import { useSelector } from 'react-redux';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import './MyCalendar.css';
-import CloseIcon from '@mui/icons-material/Close';
-import convertTime from '../../util/formatTime';
-import { toast } from 'react-toastify';
-import { fetchWorkTimes } from '../../api';
+import { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import moment from "moment/moment.js";
+import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import "./MyCalendar.css";
+import CloseIcon from "@mui/icons-material/Close";
+import convertTime from "../../util/formatTime";
+import { toast } from "react-toastify";
+import { fetchWorkTimes } from "../../api";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '70vw',
-  height: '50vh',
-  bgcolor: 'background.paper',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "70vw",
+  height: "50vh",
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
@@ -28,7 +28,7 @@ function MyCalendar() {
   const [date, setDate] = useState(new Date());
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [modalContent, setModalContent] = useState("");
   const { currentUser } = useSelector(state => state.user);
   const companyCode = currentUser?.photoURL; //회사 코드
   const userId = currentUser?.uid;
@@ -36,60 +36,56 @@ function MyCalendar() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-
     const loadWorkTimes = async () => {
+      if (!companyCode || !userId) return;
+
       setIsLoading(true);
+      try {
+        const result = await fetchWorkTimes(companyCode, userId);
 
-      const result = await fetchWorkTimes(companyCode, userId);
-
-      if (isMounted) {
         if (result.success) {
           setWorkTimes(result.workTimes);
           setDatesList(result.datesList);
         } else {
           toast.error(result.error);
         }
+      } catch (error) {
+        toast.error("근무 시간 정보를 불러오는데 실패했습니다.");
+      } finally {
         setIsLoading(false);
       }
     };
 
-    if (companyCode && userId) {
-      loadWorkTimes();
-    }
-
-    return () => {
-      isMounted = false;
-    };
+    loadWorkTimes();
   }, [companyCode, userId]);
 
   const tileClassName = ({ date: tileDate, view }) => {
-    if (view === 'month') {
-      const dateStr = tileDate.toLocaleDateString('fr-CA');
+    if (view === "month") {
+      const dateStr = tileDate.toLocaleDateString("fr-CA");
 
       const workHours = workTimes[dateStr];
       if (workHours) {
-        if (workHours == '외근') {
-          return 'bg-blue-300';
+        if (workHours == "외근") {
+          return "bg-blue-300";
         }
         if (workHours >= 8) {
-          return 'bg-green-300';
+          return "bg-green-300";
         } else if (workHours >= 4) {
-          return 'bg-yellow-300';
+          return "bg-yellow-300";
         } else {
-          return 'bg-red-300';
+          return "bg-red-300";
         }
       }
     }
   };
 
   const onClickDay = value => {
-    const dateStr = value.toLocaleDateString('fr-CA');
+    const dateStr = value.toLocaleDateString("fr-CA");
 
     if (datesList[dateStr]?.startTime) {
       const workHours = workTimes[dateStr];
 
-      if (workHours == '외근') {
+      if (workHours == "외근") {
         setModalContent(
           <div className="flex flex-col gap-3">
             <div className="flex flex-row w-full text-white-text">
@@ -107,21 +103,21 @@ function MyCalendar() {
             </div>
             <div className="w-full h-[2px] bg-black"></div>
             <div className="flex flex-row w-full justify-between text-white-text">
-              <div>출근 시간</div>{' '}
+              <div>출근 시간</div>{" "}
               <div>
-                {new Date(datesList[dateStr].startTime).getHours()}시{' '}
-                {new Date(datesList[dateStr].startTime).getMinutes()}분{' '}
+                {new Date(datesList[dateStr].startTime).getHours()}시{" "}
+                {new Date(datesList[dateStr].startTime).getMinutes()}분{" "}
                 {new Date(datesList[dateStr].startTime).getSeconds()}초
               </div>
             </div>
             <div className="w-full h-[1px] bg-black"></div>
             <div className="flex flex-row w-full justify-between text-white-text">
-              <div>퇴근 시간</div>{' '}
+              <div>퇴근 시간</div>{" "}
               <div>
                 {datesList[dateStr].endTime && (
                   <>
-                    {new Date(datesList[dateStr].endTime).getHours()}시{' '}
-                    {new Date(datesList[dateStr].endTime).getMinutes()}분{' '}
+                    {new Date(datesList[dateStr].endTime).getHours()}시{" "}
+                    {new Date(datesList[dateStr].endTime).getMinutes()}분{" "}
                     {new Date(datesList[dateStr].endTime).getSeconds()}초
                   </>
                 )}
@@ -164,7 +160,7 @@ function MyCalendar() {
         value={date}
         tileClassName={tileClassName}
         onClickDay={onClickDay}
-        formatDay={(locale, date) => moment(date).format('DD')}
+        formatDay={(locale, date) => moment(date).format("DD")}
       />
       <Modal
         open={open}
@@ -174,8 +170,8 @@ function MyCalendar() {
         <Box
           sx={{
             ...style,
-            display: 'flex',
-            flexDirection: 'column',
+            display: "flex",
+            flexDirection: "column",
             gap: 3,
           }}>
           <div className="absolute top-3 right-3">
@@ -188,7 +184,7 @@ function MyCalendar() {
             className="flex justify-center items-center text-white-text font-bold">
             상세기록
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2, p: 3, border: '1px solid black' }}>
+          <Typography id="modal-modal-description" sx={{ mt: 2, p: 3, border: "1px solid black" }}>
             {modalContent}
           </Typography>
         </Box>

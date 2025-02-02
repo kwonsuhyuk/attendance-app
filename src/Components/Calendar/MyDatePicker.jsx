@@ -1,18 +1,18 @@
-import DatePicker from 'react-datepicker';
-import { useState, useEffect } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import './MyDatePicker.css';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import HelpIcon from '@mui/icons-material/Help';
-import { Checkbox, FormControlLabel, Input } from '@mui/material';
-import { Button } from 'antd';
-import CloseIcon from '@mui/icons-material/Close';
-import { useTour } from '@reactour/tour';
-import Loading from '../common/Loading';
-import { fetchHolidaySettings, fetchHolidayList, saveHolidaySettings } from '../../api';
+import DatePicker from "react-datepicker";
+import { useState, useEffect } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "./MyDatePicker.css";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import HelpIcon from "@mui/icons-material/Help";
+import { Checkbox, FormControlLabel, Input } from "@mui/material";
+import { Button } from "antd";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTour } from "@reactour/tour";
+import Loading from "../common/Loading";
+import { fetchHolidaySettings, fetchHolidayList, saveHolidaySettings } from "../../api";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
@@ -58,7 +58,7 @@ const MyDatePicker = () => {
         setIsHoliday(result.data.isHoliday);
         setHolidayPay(result.data.holidayPay);
       } else {
-        toast.error('공휴일 설정을 불러오는데 실패했습니다.');
+        toast.error("공휴일 설정을 불러오는데 실패했습니다.");
       }
       setIsLoading(false);
     };
@@ -76,7 +76,7 @@ const MyDatePicker = () => {
         setSelectedHolidays(result.dates);
         setUpdatedHolidays(result.dates);
       } else {
-        toast.error('공휴일 목록을 불러오는데 실패했습니다.');
+        toast.error("공휴일 목록을 불러오는데 실패했습니다.");
       }
     };
 
@@ -92,7 +92,7 @@ const MyDatePicker = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   const handleDateSelect = (date, event) => {
     if (event.detail === 2) {
@@ -120,9 +120,9 @@ const MyDatePicker = () => {
 
     if (result.success) {
       setSelectedHolidays(updatedHolidays);
-      toast.success('공휴일 정보가 성공적으로 저장되었습니다.');
+      toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
     } else {
-      toast.error('공휴일 정보 저장에 실패했습니다.');
+      toast.error("공휴일 정보 저장에 실패했습니다.");
     }
   };
 
@@ -136,18 +136,18 @@ const MyDatePicker = () => {
         <div
           className="flex flex-col gap-7"
           style={{
-            borderRight: !darkMode ? '1px solid #00000033' : '1px solid #FFFFFF33',
+            borderRight: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
           }}>
           <div className="font-black">공휴일 설정 및 수정</div>
           <FormControlLabel
             control={
               <Checkbox
                 sx={{
-                  color: darkMode ? 'white' : 'black',
+                  color: darkMode ? "white" : "black",
                 }}
                 checked={isholiday}
                 onChange={event => setIsHoliday(event.target.checked)}
-                inputProps={{ 'aria-label': 'controlled' }}
+                inputProps={{ "aria-label": "controlled" }}
               />
             }
             label="공휴일(주말) 구분 하기"
@@ -164,7 +164,7 @@ const MyDatePicker = () => {
                   type="number"
                   inputProps={{ min: 1 }}
                   value={holidayPay}
-                  sx={{ color: !darkMode ? 'black' : 'white' }}
+                  sx={{ color: !darkMode ? "black" : "white" }}
                   onChange={e => setHolidayPay(e.target.value)}
                 />
                 배 지급
@@ -180,13 +180,13 @@ const MyDatePicker = () => {
               <DatePicker
                 dateFormat="yyyy.MM.dd"
                 shouldCloseOnSelect
-                minDate={new Date('2000-01-01')}
+                minDate={new Date("2000-01-01")}
                 onSelect={handleDateSelect}
                 inline
                 highlightDates={updatedHolidays.map(date => ({
-                  'react-datepicker__day--highlighted-custom-1': [date],
+                  "react-datepicker__day--highlighted-custom-1": [date],
                 }))}
-                dayClassName={date => (updatedHolidays.find(d => d.getTime() === date.getTime()) ? 'red' : undefined)}
+                dayClassName={date => (updatedHolidays.find(d => d.getTime() === date.getTime()) ? "red" : undefined)}
               />
               <div>
                 <HelpIcon onClick={handlePopoverClick} style={{ padding: 3 }} />
@@ -196,8 +196,8 @@ const MyDatePicker = () => {
                   anchorEl={anchorEl}
                   onClose={handlePopoverClose}
                   transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: "bottom",
+                    horizontal: "left",
                   }}>
                   <Typography sx={{ p: 2 }}>
                     회사 공휴일로 설정할 날짜를 찾아 더블 클릭을 하면 추가하실 수 있습니다.
@@ -209,8 +209,8 @@ const MyDatePicker = () => {
             <ul className="overflow-y-auto lg:h-80" data-tour="step-27">
               {updatedHolidays.map((date, index) => {
                 const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
                 const dateStr = `${year}.${month}.${day}`;
 
                 return (
@@ -218,7 +218,7 @@ const MyDatePicker = () => {
                     <div
                       className="flex justify-between items-center gap-3 p-3 mb-5"
                       style={{
-                        borderBottom: !darkMode ? '1px solid #00000033' : '1px solid #FFFFFF33',
+                        borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
                       }}>
                       {dateStr}
                       <CloseIcon className="cursor-pointer" onClick={() => handleDateRemove(date)} />
