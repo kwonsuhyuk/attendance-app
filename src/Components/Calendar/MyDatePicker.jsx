@@ -30,14 +30,7 @@ const MyDatePicker = () => {
     if (isOpen) {
       const timer = setTimeout(() => {
         setCurrentStep(6);
-        setSteps(prev => [
-          ...prev,
-          {
-            selector: '[data-tour="step-25"]',
-            content: `공휴일을 구분해 급여 배율을 다르게 할지 설정하는 페이지 입니다. 마찬가지로 체크항목을 체크시에 공휴일 급여 배율을 설정할 수 있습니다.`,
-          },
-          // ... 나머지 tour steps
-        ]);
+        setSteps(prev => [...prev, MY_DATE_PICKER_STPES]);
       }, 300);
 
       return () => {
@@ -60,6 +53,7 @@ const MyDatePicker = () => {
       } else {
         toast.error("공휴일 설정을 불러오는데 실패했습니다.");
       }
+
       setIsLoading(false);
     };
 
@@ -92,8 +86,7 @@ const MyDatePicker = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
+  const id = open ? 'simple-popover' : undefined;
   const handleDateSelect = (date, event) => {
     if (event.detail === 2) {
       handleDateAdd(date);
@@ -102,7 +95,10 @@ const MyDatePicker = () => {
 
   const handleDateAdd = date => {
     const isAlreadySelected = updatedHolidays.some(d => d.getTime() === date.getTime());
+
     if (!isAlreadySelected) {
+      // 새로운 공휴일이면 추가
+
       setUpdatedHolidays(prevHolidays => [...prevHolidays, date]);
     }
   };
@@ -112,6 +108,7 @@ const MyDatePicker = () => {
   };
 
   const handleSaveChanges = async () => {
+
     const result = await saveHolidaySettings(companyCode, {
       holidays: updatedHolidays,
       isHoliday: isholiday,
@@ -123,6 +120,7 @@ const MyDatePicker = () => {
       toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
     } else {
       toast.error("공휴일 정보 저장에 실패했습니다.");
+
     }
   };
 
@@ -143,7 +141,7 @@ const MyDatePicker = () => {
             control={
               <Checkbox
                 sx={{
-                  color: darkMode ? "white" : "black",
+                  color: darkMode ? 'white' : 'black',
                 }}
                 checked={isholiday}
                 onChange={event => setIsHoliday(event.target.checked)}
@@ -180,7 +178,7 @@ const MyDatePicker = () => {
               <DatePicker
                 dateFormat="yyyy.MM.dd"
                 shouldCloseOnSelect
-                minDate={new Date("2000-01-01")}
+                minDate={new Date('2000-01-01')}
                 onSelect={handleDateSelect}
                 inline
                 highlightDates={updatedHolidays.map(date => ({
@@ -196,8 +194,8 @@ const MyDatePicker = () => {
                   anchorEl={anchorEl}
                   onClose={handlePopoverClose}
                   transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
+                    vertical: 'bottom',
+                    horizontal: 'left',
                   }}>
                   <Typography sx={{ p: 2 }}>
                     회사 공휴일로 설정할 날짜를 찾아 더블 클릭을 하면 추가하실 수 있습니다.
@@ -209,8 +207,8 @@ const MyDatePicker = () => {
             <ul className="overflow-y-auto lg:h-80" data-tour="step-27">
               {updatedHolidays.map((date, index) => {
                 const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const day = String(date.getDate()).padStart(2, "0");
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
                 const dateStr = `${year}.${month}.${day}`;
 
                 return (

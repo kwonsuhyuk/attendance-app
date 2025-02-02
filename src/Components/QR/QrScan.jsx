@@ -41,7 +41,7 @@ function QrScan({ companyLogo }) {
   }, [companyCode, userId]);
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
+    const scanner = new Html5QrcodeScanner('reader', {
       qrbox: { width: 250, height: 250 },
       fps: 5,
     });
@@ -111,7 +111,7 @@ function QrScan({ companyLogo }) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
-        <DialogTitle>{"정말 외근으로 출근 하시는게 맞습니까?"}</DialogTitle>
+        <DialogTitle>{'정말 외근으로 출근 하시는게 맞습니까?'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             금일 {`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일`}을 외근으로
