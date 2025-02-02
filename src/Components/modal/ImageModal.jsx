@@ -1,23 +1,13 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Button, Input } from "antd";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "../../firebase";
-import {
-  getDownloadURL,
-  getStorage,
-  ref as refStorage,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, getStorage, ref as refStorage, uploadBytes } from "firebase/storage";
 import AvatarEditor from "react-avatar-editor";
 
 function ImageModal({ open, handleClose, companyName, setImageUrl }) {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector(state => state.user);
   const [previewImage, setPreviewImage] = useState("");
   const [croppedImage, setCroppedImage] = useState("");
   const [uploadedCroppedImage, setuploadedCroppedImage] = useState("");
@@ -32,7 +22,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
     setuploadedCroppedImage("");
   }, [handleClose]);
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback(e => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -48,7 +38,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
   }, []);
 
   const handleCropImage = useCallback(() => {
-    editorRef.current.getImageScaledToCanvas().toBlob((blob) => {
+    editorRef.current.getImageScaledToCanvas().toBlob(blob => {
       const imageUrl = URL.createObjectURL(blob);
       setCroppedImage(imageUrl);
       setBlob(blob);
@@ -101,22 +91,14 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
             />
           )}
           {croppedImage && (
-            <img
-              src={croppedImage}
-              alt="cropped"
-              style={{ marginLeft: "50px" }}
-              width={100}
-              height={100}
-            />
+            <img src={croppedImage} alt="cropped" style={{ marginLeft: "50px" }} width={100} height={100} />
           )}
         </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>취소</Button>
         {previewImage && <Button onClick={handleCropImage}>이미지 crop</Button>}
-        {croppedImage && (
-          <Button onClick={uploadCroppedImage}>로고 저장</Button>
-        )}
+        {croppedImage && <Button onClick={uploadCroppedImage}>로고 저장</Button>}
       </DialogActions>
     </Dialog>
   );

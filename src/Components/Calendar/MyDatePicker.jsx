@@ -1,20 +1,18 @@
-import DatePicker from 'react-datepicker';
-import { useState, useEffect } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import { child, getDatabase, push, ref, set, update, get, remove, onValue } from 'firebase/database';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import './MyDatePicker.css';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import HelpIcon from '@mui/icons-material/Help';
-import { Checkbox, FormControlLabel, Input } from '@mui/material';
-import { ClipLoader } from 'react-spinners';
-import { Button } from 'antd';
-import CloseIcon from '@mui/icons-material/Close';
-import { useTour } from '@reactour/tour';
-import Loading from '../common/Loading';
-import { MY_DATE_PICKER_STPES } from '../../constant/tourStep';
+import DatePicker from "react-datepicker";
+import { useState, useEffect } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "./MyDatePicker.css";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import HelpIcon from "@mui/icons-material/Help";
+import { Checkbox, FormControlLabel, Input } from "@mui/material";
+import { Button } from "antd";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTour } from "@reactour/tour";
+import Loading from "../common/Loading";
+import { fetchHolidaySettings, fetchHolidayList, saveHolidaySettings } from "../../api";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
@@ -27,6 +25,7 @@ const MyDatePicker = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [updatedHolidays, setUpdatedHolidays] = useState(selectedHolidays);
   const { isOpen, setCurrentStep, setSteps } = useTour();
+
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
@@ -35,24 +34,49 @@ const MyDatePicker = () => {
       }, 300);
 
       return () => {
-        clearTimeout(timer), setSteps([]);
+        clearTimeout(timer);
+        setSteps([]);
       };
     }
   }, [isOpen, setCurrentStep, setSteps]);
 
+  // 공휴일 설정 데이터 불러오기
   useEffect(() => {
-    async function getData() {
-      setIsLoading(true);
-      const snapshot = await get(ref(getDatabase(), 'companyCode/' + currentUser?.photoURL + '/companyInfo'));
-      const data = snapshot?.val();
-      setIsHoliday(data?.isholiday);
-      setHolidayPay(data?.holidayPay);
-      setIsLoading(false);
-    }
+    const loadHolidaySettings = async () => {
+      if (!companyCode) return;
 
-    getData();
-  }, [currentUser?.photoURL]);
-  //popover
+      setIsLoading(true);
+      const result = await fetchHolidaySettings(companyCode);
+      if (result.success) {
+        setIsHoliday(result.data.isHoliday);
+        setHolidayPay(result.data.holidayPay);
+      } else {
+        toast.error("공휴일 설정을 불러오는데 실패했습니다.");
+      }
+
+      setIsLoading(false);
+    };
+
+    loadHolidaySettings();
+  }, [companyCode]);
+
+  // 공휴일 목록 불러오기
+  useEffect(() => {
+    const loadHolidayList = async () => {
+      if (!companyCode) return;
+
+      const result = await fetchHolidayList(companyCode);
+      if (result.success) {
+        setSelectedHolidays(result.dates);
+        setUpdatedHolidays(result.dates);
+      } else {
+        toast.error("공휴일 목록을 불러오는데 실패했습니다.");
+      }
+    };
+
+    loadHolidayList();
+  }, [companyCode]);
+
   const handlePopoverClick = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -63,28 +87,8 @@ const MyDatePicker = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
-  useEffect(() => {
-    const fetchHolidays = async () => {
-      const dbref = ref(getDatabase(), `companyCode/${companyCode}/companyInfo/holidayList`);
-      const snapshot = await get(dbref);
-      if (snapshot.exists()) {
-        let holidays = snapshot.val();
-        let dates = Object.keys(holidays).map(dateStr => new Date(dateStr));
-        setSelectedHolidays(dates);
-        setUpdatedHolidays(dates); // 초기값으로 설정
-      } else {
-        setSelectedHolidays([]);
-        setUpdatedHolidays([]);
-      }
-    };
-
-    fetchHolidays();
-  }, [companyCode]);
-
   const handleDateSelect = (date, event) => {
     if (event.detail === 2) {
-      // 더블 클릭 이벤트 확인
       handleDateAdd(date);
     }
   };
@@ -94,6 +98,7 @@ const MyDatePicker = () => {
 
     if (!isAlreadySelected) {
       // 새로운 공휴일이면 추가
+
       setUpdatedHolidays(prevHolidays => [...prevHolidays, date]);
     }
   };
@@ -103,29 +108,19 @@ const MyDatePicker = () => {
   };
 
   const handleSaveChanges = async () => {
-    const holidayList = updatedHolidays.reduce((obj, date) => {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const dateStr = `${year}-${month}-${day}`;
-      obj[dateStr] = true;
-      return obj;
-    }, {});
 
-    const dbref = ref(getDatabase(), `companyCode/${companyCode}/companyInfo/holidayList`);
+    const result = await saveHolidaySettings(companyCode, {
+      holidays: updatedHolidays,
+      isHoliday: isholiday,
+      holidayPay: holidayPay,
+    });
 
-    const dbref2 = ref(getDatabase(), `companyCode/${companyCode}/companyInfo/isholiday`);
-
-    const dbref3 = ref(getDatabase(), `companyCode/${companyCode}/companyInfo/holidayPay`);
-
-    try {
-      await set(dbref, holidayList);
-      await set(dbref2, isholiday);
-      await set(dbref3, parseFloat(holidayPay));
+    if (result.success) {
       setSelectedHolidays(updatedHolidays);
-      toast.success('공휴일 정보가 성공적으로 저장되었습니다.');
-    } catch (error) {
-      toast.error('공휴일 정보 저장에 실패했습니다: ', error);
+      toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
+    } else {
+      toast.error("공휴일 정보 저장에 실패했습니다.");
+
     }
   };
 
@@ -139,7 +134,7 @@ const MyDatePicker = () => {
         <div
           className="flex flex-col gap-7"
           style={{
-            borderRight: !darkMode ? '1px solid #00000033' : '1px solid #FFFFFF33',
+            borderRight: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
           }}>
           <div className="font-black">공휴일 설정 및 수정</div>
           <FormControlLabel
@@ -150,7 +145,7 @@ const MyDatePicker = () => {
                 }}
                 checked={isholiday}
                 onChange={event => setIsHoliday(event.target.checked)}
-                inputProps={{ 'aria-label': 'controlled' }}
+                inputProps={{ "aria-label": "controlled" }}
               />
             }
             label="공휴일(주말) 구분 하기"
@@ -167,7 +162,7 @@ const MyDatePicker = () => {
                   type="number"
                   inputProps={{ min: 1 }}
                   value={holidayPay}
-                  sx={{ color: !darkMode ? 'black' : 'white' }}
+                  sx={{ color: !darkMode ? "black" : "white" }}
                   onChange={e => setHolidayPay(e.target.value)}
                 />
                 배 지급
@@ -187,9 +182,9 @@ const MyDatePicker = () => {
                 onSelect={handleDateSelect}
                 inline
                 highlightDates={updatedHolidays.map(date => ({
-                  'react-datepicker__day--highlighted-custom-1': [date],
+                  "react-datepicker__day--highlighted-custom-1": [date],
                 }))}
-                dayClassName={date => (updatedHolidays.find(d => d.getTime() === date.getTime()) ? 'red' : undefined)}
+                dayClassName={date => (updatedHolidays.find(d => d.getTime() === date.getTime()) ? "red" : undefined)}
               />
               <div>
                 <HelpIcon onClick={handlePopoverClick} style={{ padding: 3 }} />
@@ -221,7 +216,7 @@ const MyDatePicker = () => {
                     <div
                       className="flex justify-between items-center gap-3 p-3 mb-5"
                       style={{
-                        borderBottom: !darkMode ? '1px solid #00000033' : '1px solid #FFFFFF33',
+                        borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
                       }}>
                       {dateStr}
                       <CloseIcon className="cursor-pointer" onClick={() => handleDateRemove(date)} />
