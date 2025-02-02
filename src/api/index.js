@@ -29,13 +29,11 @@ export async function getCompanyInfo(currentUser) {
 // jobName
 export function subscribeToJobNames(companyCode, callback) {
   const jobRef = ref(db, `companyCode/${companyCode}/companyInfo/jobName`);
-
   // 데이터 구독 시작
   onValue(jobRef, snapshot => {
     const data = snapshot.val();
     callback(Object.values(data));
   });
-
   // 구독 해제 함수 반환
   return () => off(jobRef);
 }
@@ -43,8 +41,8 @@ export function subscribeToJobNames(companyCode, callback) {
 // 복잡한 비즈니스 로직이 포함된 특수 함수
 export async function updateEmployeeSettings(companyCode, uid, settings) {
   try {
-    const db = getDatabase();
-    const userRef = ref(db, `companyCode/${companyCode}/users/${uid}`);
+    const path = `companyCode/${companyCode}/users/${uid}`;
+    const userRef = ref(db, path);
 
     await update(userRef, {
       jobName: settings.jobName,
@@ -59,29 +57,29 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
   }
 }
 
+// 이부분은 api호출과 관련 없으므로 추후에 컴포넌트로 제자리
 function getNextDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() + 1);
   return date.toISOString().split("T")[0];
 }
-
 function getPrevDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() - 1);
   return date.toISOString().split("T")[0];
 }
+//
 
 export async function fetchWorkTimes(companyCode, userId) {
   try {
-    const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
-    const snapshot = await get(dateRef);
+    const path = `companyCode/${companyCode}/users/${userId}/date`;
+    const dateRef = fetchData(path);
 
-    if (!snapshot.exists()) {
+    if (!dateRef.exists()) {
       return { success: true, workTimes: {}, datesList: null };
     }
 
-    const dates = snapshot.val();
+    const dates = dateRef;
     let newWorkTimes = {};
 
     for (let date in dates) {
@@ -98,11 +96,11 @@ export async function fetchWorkTimes(companyCode, userId) {
         start = new Date(startTime);
         workDate = start.toLocaleDateString("fr-CA");
       } else {
+        const path = `companyCode/${companyCode}/users/${userId}/date/${prevDay}`;
         const prevDay = getPrevDate(date);
-        const prevDayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${prevDay}`);
-        const prevDaySnapShot = await get(prevDayRef);
-        if (prevDaySnapShot.exists() && prevDaySnapShot.val().startTime) {
-          start = new Date(prevDaySnapShot.val().startTime);
+        const prevDayRef = fetchData(path);
+        if (prevDayRef.exists() && prevDayRef.startTime) {
+          start = new Date(prevDayRef.startTime);
         } else {
           throw new Error(`${date}의 시작 시간이 없습니다.`);
         }
@@ -112,12 +110,12 @@ export async function fetchWorkTimes(companyCode, userId) {
       if (endTime) {
         end = new Date(endTime);
       } else {
+        const path = `companyCode/${companyCode}/users/${userId}/date/${nextDay}`;
         const nextDay = getNextDate(date);
-        const nextDayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nextDay}`);
-        const nextDaySnapshot = await get(nextDayRef);
+        const nextDayRef = fetchData(path);
 
-        if (nextDaySnapshot.exists() && nextDaySnapshot.val().endTime) {
-          end = new Date(nextDaySnapshot.val().endTime);
+        if (nextDayRef.exists() && nextDayRef.val().endTime) {
+          end = new Date(nextDayRef.val().endTime);
         } else {
           throw new Error(`${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`);
         }
@@ -165,8 +163,8 @@ export async function fetchWorkTimes(companyCode, userId) {
 
 export async function fetchHolidaySettings(companyCode) {
   try {
-    const snapshot = await get(ref(getDatabase(), `companyCode/${companyCode}/companyInfo`));
-    const data = snapshot?.val();
+    const path = `companyCode/${companyCode}/companyInfo`;
+    const data = await fetchData(path);
 
     return {
       success: true,
@@ -186,11 +184,10 @@ export async function fetchHolidaySettings(companyCode) {
 
 export async function fetchHolidayList(companyCode) {
   try {
-    const dbref = ref(getDatabase(), `companyCode/${companyCode}/companyInfo/holidayList`);
-    const snapshot = await get(dbref);
+    const path = `companyCode/${companyCode}/companyInfo/holidayList`;
+    const holidays = await fetchData(path);
 
-    if (snapshot.exists()) {
-      const holidays = snapshot.val();
+    if (holidays) {
       const dates = Object.keys(holidays).map(dateStr => new Date(dateStr));
       return {
         success: true,
@@ -223,7 +220,6 @@ export async function saveHolidaySettings(companyCode, { holidays, isHoliday, ho
       return obj;
     }, {});
 
-    const db = getDatabase();
     const updates = {
       [`companyCode/${companyCode}/companyInfo/holidayList`]: holidayList,
       [`companyCode/${companyCode}/companyInfo/isholiday`]: isHoliday,
@@ -243,16 +239,17 @@ export async function saveHolidaySettings(companyCode, { holidays, isHoliday, ho
 
 export async function fetchCompanyAndJobInfo(companyCode, userId) {
   try {
-    const db = getDatabase();
-    const companySnapshot = await get(ref(db, `companyCode/${companyCode}/companyInfo`));
-    const jobSnapshot = await get(ref(db, `companyCode/${companyCode}/users/${userId}/jobName`));
+    const com_path = `companyCode/${companyCode}/companyInfo`;
+    const job_path = `companyCode/${companyCode}/users/${userId}/jobName`;
+    const companySnapshot = fetchData(com_path);
+    const jobSnapshot = fetchData(job_path);
 
     if (companySnapshot.exists() && jobSnapshot.exists()) {
       return {
         success: true,
         data: {
-          companyInfo: companySnapshot.val(),
-          jobName: jobSnapshot.val(),
+          companyInfo: companySnapshot,
+          jobName: jobSnapshot,
         },
       };
     }
@@ -271,7 +268,6 @@ export async function fetchCompanyAndJobInfo(companyCode, userId) {
 
 export async function processQRScan(companyCode, userId, scanTime) {
   try {
-    const db = getDatabase();
     const date = new Date(scanTime);
     const offset = date.getTimezoneOffset() * 60000;
     const now = new Date(Date.now() - offset);
@@ -282,13 +278,13 @@ export async function processQRScan(companyCode, userId, scanTime) {
     const yesterdayStr = yesterdayForNow.toISOString().slice(0, 10);
 
     // 현재 날짜와 이전 날짜의 데이터 참조
-    const todayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
     const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
-    const yesterdayRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
     const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
+    const today_path = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
+    const yesterday_path = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
 
-    const todaySnapshot = await get(todayRef);
-    const yesterdaySnapshot = await get(yesterdayRef);
+    const todaySnapshot = fetchData(today_path);
+    const yesterdaySnapshot = fetchData(yesterday_path);
 
     // 다양한 출퇴근 상황 처리
     if (yesterdaySnapshot.exists() || todaySnapshot.exists()) {
@@ -296,29 +292,29 @@ export async function processQRScan(companyCode, userId, scanTime) {
       if (
         !todaySnapshot.exists() &&
         yesterdaySnapshot.exists() &&
-        yesterdaySnapshot.val().startTime &&
-        !yesterdaySnapshot.val().endTime
+        yesterdaySnapshot.startTime &&
+        !yesterdaySnapshot.endTime
       ) {
-        await update(yesterdayRef, { endTime: scanTime });
+        await update(yesterdaySnapshot, { endTime: scanTime });
         return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 출근, 퇴근 처리
       if (todaySnapshot.exists() && todaySnapshot.val().startTime && !todaySnapshot.val().endTime) {
-        await update(todayRef, { endTime: scanTime });
+        await update(todaySnapshot, { endTime: scanTime });
         return { success: true, message: "퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 퇴근만 있고 출근 기록이 없는 경우
-      if (todaySnapshot.exists() && todaySnapshot.val().endTime && !todaySnapshot.val().startTime) {
-        const startTime = yesterdaySnapshot.val().startTime;
-        const endTime = todaySnapshot.val().endTime;
+      if (todaySnapshot.exists() && todaySnapshot.endTime && !todaySnapshot.startTime) {
+        const startTime = yesterdaySnapshot.startTime;
+        const endTime = todaySnapshot.endTime;
         const start = new Date(startTime);
         const end = new Date(endTime);
         const workHours = Number((24 - start.getHours() + end.getHours()).toFixed(1));
 
-        await set(todayRef, { startTime: scanTime });
-        await update(yesterdayRef, { endTime: endTime });
+        await set(todaySnapshot, { startTime: scanTime });
+        await update(yesterdaySnapshot, { endTime: endTime });
         await update(yesterdayWorkRef, { workHour: workHours });
         await set(todayWorkRef, {
           workHour: 0,
@@ -330,9 +326,9 @@ export async function processQRScan(companyCode, userId, scanTime) {
         return { success: true, message: "출근 인증이 완료되었습니다" };
       }
 
-      // 새로운 날 출근
+      // 새로운 날 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
       if (!todaySnapshot.exists() && yesterdaySnapshot.val().startTime && yesterdaySnapshot.val().endTime) {
-        await set(todayRef, { startTime: scanTime });
+        await set(todaySnapshot, { startTime: scanTime });
         await set(todayWorkRef, {
           workHour: 0,
           daySalary: 0,
@@ -343,8 +339,8 @@ export async function processQRScan(companyCode, userId, scanTime) {
         return { success: true, message: "출근 인증이 완료되었습니다" };
       }
     } else {
-      // 최초 출근
-      await set(todayRef, { startTime: scanTime });
+      // 최초 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
+      await set(todaySnapshot, { startTime: scanTime });
       await set(todayWorkRef, {
         workHour: 0,
         daySalary: 0,
@@ -367,7 +363,6 @@ export async function processQRScan(companyCode, userId, scanTime) {
 
 export async function registerOutWork(companyCode, userId) {
   try {
-    const db = getDatabase();
     const date = new Date();
     const offset = date.getTimezoneOffset() * 60000;
     const now = new Date(Date.now() - offset);
@@ -392,14 +387,13 @@ export async function registerOutWork(companyCode, userId) {
 // 급여일 정보와 급여 데이터 조회
 export async function fetchSalaryInfo(companyCode, userId) {
   try {
-    const db = getDatabase();
-    const workDateRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates`);
-    const salaryDayRef = ref(db, `companyCode/${companyCode}/companyInfo/payCheckDay`);
+    const workDate_path = `companyCode/${companyCode}/users/${userId}/workDates`;
+    const salaryDay_path = `companyCode/${companyCode}/companyInfo/payCheckDay`;
+    const workDateData = fetchData(workDate_path);
+    const salaryDayData = fetchData(salaryDay_path);
 
-    const [workDateSnapshot, salaryDaySnapshot] = await Promise.all([get(workDateRef), get(salaryDayRef)]);
-
-    const salaryDay = salaryDaySnapshot.exists() ? salaryDaySnapshot.val() : 0;
-    const workDates = workDateSnapshot.exists() ? workDateSnapshot.val() : {};
+    const salaryDay = salaryDayData.exists() ? salaryDayData.val() : 0;
+    const workDates = workDateData.exists() ? workDateData.val() : {};
 
     let totalDayHour1 = 0,
       totalNightHour1 = 0,
@@ -504,39 +498,29 @@ export async function fetchSalaryInfo(companyCode, userId) {
 
 export async function fetchCurrentDayWork(companyCode, userId) {
   try {
-    const db = getDatabase();
-    const dateRef = ref(db, `companyCode/${companyCode}/users/${userId}/date`);
-    const nightStartRef = ref(db, `companyCode/${companyCode}/companyInfo/nightStart`);
-    const nightEndRef = ref(db, `companyCode/${companyCode}/companyInfo/nightEnd`);
-    const holidayListRef = ref(db, `companyCode/${companyCode}/companyInfo/holidayList`);
-    const holidayPayRef = ref(db, `companyCode/${companyCode}/companyInfo/holidayPay`);
-    const isNightPayRef = ref(db, `companyCode/${companyCode}/companyInfo/isNightPay`);
+    const date_path = `companyCode/${companyCode}/users/${userId}/date`;
+    const nightStart_path = `companyCode/${companyCode}/companyInfo/nightStart`;
+    const nightEnd_path = `companyCode/${companyCode}/companyInfo/nightEnd`;
+    const holidayList_path = `companyCode/${companyCode}/companyInfo/holidayList`;
+    const holidayPay_path = `companyCode/${companyCode}/companyInfo/holidayPay`;
+    const isNightPay_path = `companyCode/${companyCode}/companyInfo/isNightPay`;
 
-    const [
-      dateSnapshot,
-      nightStartSnapshot,
-      nightEndSnapshot,
-      holidayListSnapshot,
-      holidayPaySnapshot,
-      isNightPaySnapshot,
-    ] = await Promise.all([
-      get(dateRef),
-      get(nightStartRef),
-      get(nightEndRef),
-      get(holidayListRef),
-      get(holidayPayRef),
-      get(isNightPayRef),
-    ]);
+    const dateData = await fetchData(date_path);
+    const nightStartData = await fetchData(nightStart_path);
+    const nightEndData = await fetchData(nightEnd_path);
+    const holidayListData = await fetchData(holidayList_path);
+    const holidayPayData = await fetchData(holidayPay_path);
+    const isNightPayData = await fetchData(isNightPay_path);
 
     return {
       success: true,
       data: {
-        dates: dateSnapshot.val() || {},
-        nightStart: nightStartSnapshot.val(),
-        nightEnd: nightEndSnapshot.val(),
-        holidayList: holidayListSnapshot.val() || {},
-        holidayPay: holidayPaySnapshot.val(),
-        isNightPay: isNightPaySnapshot.val(),
+        dates: dateData.val() || {},
+        nightStart: nightStartData.val(),
+        nightEnd: nightEndData.val(),
+        holidayList: holidayListData.val() || {},
+        holidayPay: holidayPayData.val(),
+        isNightPay: isNightPayData.val(),
       },
     };
   } catch (error) {
