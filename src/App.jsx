@@ -22,10 +22,10 @@ import { getUser } from "./api";
 
 function App() {
   const dispatch = useDispatch();
-  const { currentUser, isLoading } = useSelector((state) => state.user);
+  const { currentUser, isLoading } = useSelector(state => state.user);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), user => {
       if (user) {
         dispatch(setUser(user));
         // navigate(`/${currentUser?.photoURL}/companymain`);
@@ -62,12 +62,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer
-        position="bottom-right"
-        theme="light"
-        pauseOnHover
-        autoClose={1500}
-      />
+      <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
       <GuideFab />
       <Routes>
         <Route path="/" element={<IndexPage />} />
@@ -77,13 +72,7 @@ function App() {
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route
           path="/signin"
-          element={
-            currentUser ? (
-              <Navigate to={`/${currentUser?.photoURL}/companymain`} />
-            ) : (
-              <LoginPage />
-            )
-          }
+          element={currentUser ? <Navigate to={`/${currentUser?.photoURL}/companymain`} /> : <LoginPage />}
         />
         <Route path="/*" element={<Notfound />} />
       </Routes>
