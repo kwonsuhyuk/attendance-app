@@ -1,48 +1,43 @@
-import {
-  Alert,
-  Avatar,
-  Box,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Avatar, Box, Container, Grid, TextField, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import "../firebase";
+import { login } from "../api/auth/index";
+import { TLoginForm } from "../model";
 
 function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const login = useCallback(async (email, password) => {
+  const handleLogin = useCallback(async (loginForm: TLoginForm) => {
+    // 화살표 함수 앞의 괄호를 수정
     setLoading(true);
-    const auth = getAuth();
-    await signInWithEmailAndPassword(auth, email, password).catch((error) => {
-      const errorMessage = error.message;
-      setError(errorMessage);
-    });
+    const response = await login(loginForm);
+    if (!response.success) {
+      setError(response.error || "로그인 실패");
+    }
     setLoading(false);
   }, []);
 
   const handleSubmit = useCallback(
-    (event) => {
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      const email = data.get("email");
-      const password = data.get("password");
+      const form = event.currentTarget;
 
-      if (!email || !password) {
+      const loginForm = {
+        email: form.email.value,
+        password: form.password.value,
+      };
+
+      if (!loginForm.email || !loginForm.password) {
         setError("모든 항목을 입력해주세요");
         return;
       }
-      login(email, password);
+      login(loginForm);
     },
-    [login]
+    [login],
   );
 
   useEffect(() => {
@@ -62,28 +57,10 @@ function LoginPage() {
           <Typography component="h1" variant="h5" color="black">
             로그인
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             {/* 관리자 직원에 따라 추가정보 요구 */}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="이메일"
-              name="email"
-              autoComplete="off"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="비밀번호"
-              name="password"
-              type="password"
-            />
+            <TextField margin="normal" required fullWidth label="이메일" name="email" autoComplete="off" />
+            <TextField margin="normal" required fullWidth label="비밀번호" name="password" type="password" />
             {/* 에러시 오류 표시 */}
             {error ? (
               <Alert sx={{ mt: 3 }} severity="error">
@@ -102,9 +79,7 @@ function LoginPage() {
             </LoadingButton>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  to="/signup"
-                  style={{ textDecoration: "none", color: "gray" }}>
+                <Link to="/signup" style={{ textDecoration: "none", color: "gray" }}>
                   계정이 없나요? 회원가입으로 이동
                 </Link>
               </Grid>
