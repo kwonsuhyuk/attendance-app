@@ -52,18 +52,21 @@ function QrScan({ companyLogo }: QrScanProps) {
     const qrScanner = new QrScanner(
       videoRef.current,
       async result => {
-        qrScanner.stop();
-        setScanResult(result.data);
-
         if (companyCode && userId) {
-          const scanResult = await processQRScan(companyCode, userId, new Date().toString());
-
-          if (scanResult.success && scanResult.message) {
-            setScanMessage(scanResult.message);
-            toast.success(scanResult.message);
-            navigate(`/${companyCode}/companymain`);
+          qrScanner.stop();
+          if (result.data === companyCode) {
+            const scanResult = await processQRScan(companyCode, userId, new Date().toString());
+            if (scanResult.success && scanResult.message) {
+              setScanMessage(scanResult.message);
+              toast.success(scanResult.message);
+              navigate(`/${companyCode}/companymain`);
+            } else {
+              toast.error(scanResult.error);
+              qrScanner.start(); // 에러 발생 시 다시 스캔 시작
+            }
           } else {
-            toast.error(scanResult.error);
+            toast.error("유효하지 않은 QR 코드입니다.");
+            qrScanner.start(); // 스캔 재시작
           }
         }
       },
@@ -82,7 +85,7 @@ function QrScan({ companyLogo }: QrScanProps) {
     return () => {
       qrScanner.destroy();
     };
-  }, [companyCode, userId, navigate]);
+  }, [companyCode, userId]);
 
   const handleCheckOutJob = () => {
     setOpen(true);

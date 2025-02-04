@@ -5,7 +5,7 @@ import DateCheckPage from "./DateCheckPage";
 import ManagerSettingPage from "./ManagerSettingPage";
 import EmployeeListPage from "./EmployeeListPage";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
@@ -15,12 +15,14 @@ import Loading from "../Components/common/Loading";
 import Footer from "../Components/common/Footer";
 import { getCompanyInfo } from "../api";
 import Header from "../Components/common/Header";
+import { setCompany } from "@/store/companySlice";
 
 function MainPage() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector(state => state.user);
   const [currentCompany, setCurrentCompany] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { setIsOpen } = useTour();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getCompany() {
@@ -28,11 +30,12 @@ function MainPage() {
       const data = await getCompanyInfo(currentUser);
       if (data) {
         setCurrentCompany(data);
+        dispatch(setCompany(data));
       }
       setIsLoading(false);
     }
     getCompany();
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
   useEffect(() => {
     // LocalStorage에서 tourShown 값을 확인
@@ -55,16 +58,8 @@ function MainPage() {
       <Header currentCompany={currentCompany} />
       <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto relative">
         <Routes>
-          <Route
-            path="/companymain"
-            element={<CompanyMain companyInfo={currentCompany} />}
-          />
-          <Route
-            path="/camera"
-            element={
-              <AccessCameraPage companyLogo={currentCompany?.companyLogo} />
-            }
-          />
+          <Route path="/companymain" element={<CompanyMain companyInfo={currentCompany} />} />
+          <Route path="/camera" element={<AccessCameraPage companyLogo={currentCompany?.companyLogo} />} />
 
           <Route
             path="/datecheck/:id?"

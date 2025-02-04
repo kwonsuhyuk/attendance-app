@@ -33,7 +33,6 @@ import "../../firebase";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
-import QrGenerator from "../../Components/QR/QrGenerator";
 import AddCardIcon from "@mui/icons-material/AddCard";
 
 const steps = ["회사 기본 설정", "회사 추가 설정", "직원 초대 코드"];
@@ -117,22 +116,6 @@ function ManagerFirstPage() {
     setJobNameInput("");
   };
 
-  // const handlePayWayChange = (index, value) => {
-  //   setJobTags((prevTags) => {
-  //     const newTags = [...prevTags];
-  //     newTags[index].payWay = value;
-  //     return newTags;
-  //   });
-  // };
-
-  // const handlePayChange = (index, value) => {
-  //   setJobTags((prev) => {
-  //     const updatedTags = [...prev];
-  //     updatedTags[index].defaultPay = parseInt(value) || "";
-  //     return updatedTags;
-  //   });
-  // };
-
   useEffect(() => {
     const text = document.querySelector(".animate-text");
     gsap.fromTo(
@@ -148,18 +131,6 @@ function ManagerFirstPage() {
       },
     );
   }, [activeStep]);
-
-  // 회사 id 복사 클릭시
-  const handleCopyCompId = () => {
-    navigator.clipboard
-      .writeText(companyID)
-      .then(() => {
-        toast.success("회사 ID가 클립보드에 복사되었습니다.");
-      })
-      .catch(() => {
-        toast.error("회사 ID를 클립보드에 복사하는데 실패하였습니다. 다시 시도해주세요.");
-      });
-  };
 
   const pushJobData = async () => {
     const db = getDatabase();
@@ -193,6 +164,7 @@ function ManagerFirstPage() {
       isNightPay: parseFloat(isNightPay),
       isholiday: isholiday,
       holidayPay: parseFloat(holidayPay),
+      qrValue: companyID,
     };
 
     // 관리자 user 정보 data
