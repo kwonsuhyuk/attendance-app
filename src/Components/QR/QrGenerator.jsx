@@ -1,13 +1,16 @@
 // QrGenerator.js
 import React, { useEffect, useRef } from "react";
 import QRCode from "qrcode.react";
+import { useSelector } from "react-redux";
 
 function QrGenerator() {
   const qrRef = useRef(null);
   const [qrUrl, setQrUrl] = React.useState("");
+  const { currentUser } = useSelector(state => state.user);
+  const companyCode = currentUser?.photoURL;
 
   // 랜덤한 문자열을 생성합니다.
-  const randomValue = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const randomValue = companyCode;
 
   useEffect(() => {
     if (qrRef.current) {

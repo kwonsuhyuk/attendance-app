@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { useState, useEffect, useRef } from "react";
+import QrScanner from "qr-scanner";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -11,57 +11,77 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { fetchCompanyAndJobInfo, processQRScan, registerOutWork } from "../../api";
 
-function QrScan({ companyLogo }) {
-  const [scanResult, setScanResult] = useState(null);
-  const [scanMessage, setScanMessage] = useState(null);
-  const { currentUser } = useSelector(state => state.user);
+interface QrScanProps {
+  companyLogo: string;
+}
+
+function QrScan({ companyLogo }: QrScanProps) {
+  const [scanResult, setScanResult] = useState<string | null>(null);
+  const [scanMessage, setScanMessage] = useState<string | null>(null);
+  const { currentUser } = useSelector((state: any) => state.user);
   const companyCode = currentUser?.photoURL; // 회사 코드
   const userId = currentUser?.uid; // 유저 아이디
-  const [currentCompany, setCurrentCompany] = useState();
-  const [jobName, setJobName] = useState();
+  // 회사 타입 지정후 재지정 필요
+  const [currentCompany, setCurrentCompany] = useState<any>(null);
+  const [jobName, setJobName] = useState<string | null>(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const loadCompanyInfo = async () => {
-      const result = await fetchCompanyAndJobInfo(companyCode, userId);
-      if (result.success) {
-        setCurrentCompany(result.data.companyInfo);
-        setJobName(result.data.jobName);
-      } else {
-        toast.error("회사 정보를 불러오는데 실패했습니다.");
+      if (companyCode && userId) {
+        const result = await fetchCompanyAndJobInfo(companyCode, userId);
+        if (result.success && result.data) {
+          setCurrentCompany(result?.data.companyInfo);
+          setJobName(result.data.jobName);
+        } else {
+          toast.error("회사 정보를 불러오는데 실패했습니다.");
+        }
       }
     };
 
-    if (companyCode && userId) {
-      loadCompanyInfo();
-    }
+    loadCompanyInfo();
 
     return () => setCurrentCompany(null);
   }, [companyCode, userId]);
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner('reader', {
-      qrbox: { width: 250, height: 250 },
-      fps: 5,
+    if (!videoRef.current) return;
+
+    const qrScanner = new QrScanner(
+      videoRef.current,
+      async result => {
+        qrScanner.stop();
+        setScanResult(result.data);
+
+        if (companyCode && userId) {
+          const scanResult = await processQRScan(companyCode, userId, new Date().toString());
+
+          if (scanResult.success && scanResult.message) {
+            setScanMessage(scanResult.message);
+            toast.success(scanResult.message);
+            navigate(`/${companyCode}/companymain`);
+          } else {
+            toast.error(scanResult.error);
+          }
+        }
+      },
+      {
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+        onDecodeError: error => {},
+      },
+    );
+
+    qrScanner.start().catch((error: Error) => {
+      console.error("Failed to start QR scanner:", error);
+      toast.error("QR 스캐너를 시작하는데 실패했습니다.");
     });
 
-    scanner.render(async result => {
-      scanner.clear();
-      setScanResult(result);
-
-      const scanResult = await processQRScan(companyCode, userId, new Date().toString());
-
-      if (scanResult.success) {
-        setScanMessage(scanResult.message);
-        toast.success(scanResult.message);
-        navigate(`/${companyCode}/companymain`);
-      } else {
-        toast.error(scanResult.error);
-      }
-    });
-
-    return () => {};
+    return () => {
+      qrScanner.destroy();
+    };
   }, [companyCode, userId, navigate]);
 
   const handleCheckOutJob = () => {
@@ -73,13 +93,15 @@ function QrScan({ companyLogo }) {
   };
 
   const submitOutJob = async () => {
-    const result = await registerOutWork(companyCode, userId);
+    if (companyCode && userId) {
+      const result = await registerOutWork(companyCode, userId);
 
-    if (result.success) {
-      handleClose();
-      toast.success(result.message);
-    } else {
-      toast.error(result.error);
+      if (result.success) {
+        handleClose();
+        toast.success(result.message);
+      } else {
+        toast.error(result.error);
+      }
     }
   };
 
@@ -87,7 +109,7 @@ function QrScan({ companyLogo }) {
     <>
       <div className="flex flex-col gap-10" data-tour="step-35">
         <div className="flex flex-col items-center gap-4">
-          <img src={companyLogo} alt="회사로고" className="rounded-full w-[130px] h-[130px]" />
+          <img src={companyLogo || "/placeholder.svg"} alt="회사로고" className="rounded-full w-[130px] h-[130px]" />
           <div className="font-black">{currentCompany?.companyName}</div>
           <div className="flex items-center">
             {currentUser?.displayName}/{jobName}
@@ -95,7 +117,7 @@ function QrScan({ companyLogo }) {
         </div>
 
         <div className="h-full w-full" data-tour="step-36">
-          <div id="reader" className="p-12"></div>
+          <video ref={videoRef} className="w-full h-[250px] object-cover" />
         </div>
 
         <div
@@ -111,7 +133,7 @@ function QrScan({ companyLogo }) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
-        <DialogTitle>{'정말 외근으로 출근 하시는게 맞습니까?'}</DialogTitle>
+        <DialogTitle>{"정말 외근으로 출근 하시는게 맞습니까?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             금일 {`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일`}을 외근으로
