@@ -278,26 +278,28 @@ export async function processQRScan(companyCode, userId, scanTime) {
     const yesterdayStr = yesterdayForNow.toISOString().slice(0, 10);
 
     // 현재 날짜와 이전 날짜의 데이터 참조
-    const today_path = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
+    const todayPath = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
+    const todayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
     const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
 
-    const yesterday_path = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
+    const yesterdayPath = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
+    const yesterdayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
     const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
 
-    const todaySnapshot = await fetchData(today_path);
-    const yesterdaySnapshot = await fetchData(yesterday_path);
+    const todaySnapshot = await fetchData(todayPath);
+    const yesterdaySnapshot = await fetchData(yesterdayPath);
 
     // 다양한 출퇴근 상황 처리
     if (yesterdaySnapshot || todaySnapshot) {
       // 어제 출근, 퇴근 미처리
       if (!todaySnapshot && yesterdaySnapshot && yesterdaySnapshot.startTime && !yesterdaySnapshot.endTime) {
-        await update(yesterdaySnapshot, { endTime: scanTime });
+        await update(yesterdayPathRef, { endTime: scanTime });
         return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 출근, 퇴근 처리
       if (todaySnapshot && todaySnapshot.startTime && !todaySnapshot.endTime) {
-        await update(todaySnapshot, { endTime: scanTime });
+        await update(todayPathRef, { endTime: scanTime });
         return { success: true, message: "퇴근 인증이 완료되었습니다" };
       }
 
@@ -309,8 +311,8 @@ export async function processQRScan(companyCode, userId, scanTime) {
         const end = new Date(endTime);
         const workHours = Number((24 - start.getHours() + end.getHours()).toFixed(1));
 
-        await set(today_path, { startTime: scanTime });
-        await update(yesterday_path, { endTime: endTime });
+        await set(todayPathRef, { startTime: scanTime });
+        await update(yesterdayPathRef, { endTime: endTime });
         await update(yesterdayWorkRef, { workHour: workHours });
         await set(todayWorkRef, {
           workHour: 0,
@@ -324,7 +326,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
 
       // 새로운 날 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
       if (!todaySnapshot && yesterdaySnapshot.startTime && yesterdaySnapshot.endTime) {
-        await set(today_path, { startTime: scanTime });
+        await set(todayPathRef, { startTime: scanTime });
         await set(todayWorkRef, {
           workHour: 0,
           daySalary: 0,
@@ -336,7 +338,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
       }
     } else {
       // 최초 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
-      await set(today_path, { startTime: scanTime });
+      await set(todayPathRef, { startTime: scanTime });
       await set(todayWorkRef, {
         workHour: 0,
         daySalary: 0,
