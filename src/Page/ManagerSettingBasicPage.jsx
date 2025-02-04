@@ -2,28 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import "../firebase";
 import { get, getDatabase, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
-import { ClipLoader } from "react-spinners";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Input,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Input, MenuItem, Select } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "antd";
 import { toast } from "react-toastify";
-import QRCode from "qrcode.react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Loading from "../Components/common/Loading";
+import QrGenerator from "@/Components/QR/QrGenerator";
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector(state => state.user);
   const [jobName, setJobTags] = useState([]);
   const [isdaynight, setIsdaynight] = useState();
   const [isNightPay, setIsNightPay] = useState(0);
@@ -31,46 +23,25 @@ const ManagerSettingBasicPage = () => {
   const [nightStart, setNightStart] = useState(0);
   const [jobNameInput, setJobNameInput] = useState("");
   const [day, setDay] = useState(1);
-  const [qrUrl, setQrUrl] = useState("");
-  const qrRef = useRef(null);
 
-  useEffect(() => {
-    if (qrRef?.current) {
-      const canvas = qrRef?.current.querySelector("canvas");
-      setQrUrl(canvas.toDataURL("image/png"));
-    }
-  }, []);
-
-  //
-  const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const { darkMode } = useSelector(state => state.darkmodeSlice);
   const handleInfoUpdate = async () => {
-    await set(
-      ref(
-        getDatabase(),
-        "companyCode/" + currentUser?.photoURL + "/companyInfo"
-      ),
-      {
-        ...companyData,
-        isNightPay: parseFloat(isNightPay),
-        isdaynight,
-        nightEnd: parseInt(nightEnd),
-        nightStart: parseInt(nightStart),
-        jobName,
-        payCheckDay: day,
-      }
-    );
+    await set(ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"), {
+      ...companyData,
+      isNightPay: parseFloat(isNightPay),
+      isdaynight,
+      nightEnd: parseInt(nightEnd),
+      nightStart: parseInt(nightStart),
+      jobName,
+      payCheckDay: day,
+    });
     toast.success("정보 수정을 완료하였습니다.");
   };
 
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
-      const snapshot = await get(
-        ref(
-          getDatabase(),
-          "companyCode/" + currentUser?.photoURL + "/companyInfo"
-        )
-      );
+      const snapshot = await get(ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"));
       const data = snapshot?.val();
       setCompanyData(data);
       setIsLoading(false);
@@ -111,20 +82,20 @@ const ManagerSettingBasicPage = () => {
   }, [companyData]);
 
   // 태그 삭제
-  const handleDeleteTag = (deleteTagKey) => {
-    setJobTags((prev) => {
+  const handleDeleteTag = deleteTagKey => {
+    setJobTags(prev => {
       const updatedTags = { ...prev };
       delete updatedTags[deleteTagKey];
       return updatedTags;
     });
   };
 
-  const handleTagSubmit = (e) => {
+  const handleTagSubmit = e => {
     e.preventDefault();
     if (!jobNameInput) {
       return;
     }
-    setJobTags((prev) => ({
+    setJobTags(prev => ({
       ...prev,
       [uuidv4()]: {
         jobName: jobNameInput,
@@ -135,7 +106,7 @@ const ManagerSettingBasicPage = () => {
 
     setJobNameInput("");
   };
-  const handlePayCheckDayChange = (event) => {
+  const handlePayCheckDayChange = event => {
     setDay(event.target.value);
   };
 
@@ -150,9 +121,7 @@ const ManagerSettingBasicPage = () => {
         toast.success("회사 ID가 클립보드에 복사되었습니다.");
       })
       .catch(() => {
-        toast.error(
-          "회사 ID를 클립보드에 복사하는데 실패하였습니다. 다시 시도해주세요."
-        );
+        toast.error("회사 ID를 클립보드에 복사하는데 실패하였습니다. 다시 시도해주세요.");
       });
   };
 
@@ -163,18 +132,7 @@ const ManagerSettingBasicPage = () => {
           <div>
             <div className="font-black">회사 QR , ID코드</div>
             <div className="grid grid-cols-2">
-              <div
-                ref={qrRef}
-                className="flex flex-col justify-center items-center gap-3">
-                <QRCode value={companyData?.qrValue} />
-                <div
-                  className="flex justify-center items-center bg-gray-500 p-2 "
-                  style={{ borderRadius: "20px" }}>
-                  <a href={qrUrl} download="QRCode.png" className="text-white">
-                    QR 다운로드
-                  </a>
-                </div>
-              </div>
+              <QrGenerator />
               <div className="flex flex-col justify-center items-center">
                 <div
                   className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
@@ -200,15 +158,13 @@ const ManagerSettingBasicPage = () => {
                   value={jobNameInput}
                   placeholder="직종을 추가하세요"
                   className="bg-transparent focus:outline-none h-full text-base"
-                  onChange={(e) => setJobNameInput(e.target.value)}
+                  onChange={e => setJobNameInput(e.target.value)}
                   style={{
                     width: "90%",
                     maxWidth: { xs: "150px", sm: "48rem" },
                     fontSize: { xs: "0.8rem", sm: "1rem" },
                     border: "none",
-                    borderBottom: !darkMode
-                      ? "1px solid #00000080"
-                      : "1px solid #FFFFFF80",
+                    borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
                     color: !darkMode ? "black" : "white",
                   }}
                 />
@@ -219,24 +175,17 @@ const ManagerSettingBasicPage = () => {
                 className="col-span-3 overflow-y-auto"
                 style={{
                   padding: "1rem 2rem",
-                  borderLeft: !darkMode
-                    ? "1px solid #00000080"
-                    : "1px solid #FFFFFF80",
+                  borderLeft: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
                 }}>
                 {Object.entries(jobName).map(([tagKey, tag], index) => (
                   <li key={index}>
                     <div
                       className="flex justify-between items-center gap-3 p-3 mb-5"
                       style={{
-                        borderBottom: !darkMode
-                          ? "1px solid #00000033"
-                          : "1px solid #FFFFFF33",
+                        borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
                       }}>
                       {tag.jobName}
-                      <CloseIcon
-                        className="cursor-pointer"
-                        onClick={() => handleDeleteTag(tagKey)}
-                      />
+                      <CloseIcon className="cursor-pointer" onClick={() => handleDeleteTag(tagKey)} />
                     </div>
                   </li>
                 ))}
@@ -256,9 +205,7 @@ const ManagerSettingBasicPage = () => {
               className="h-10 ml-5"
               sx={{
                 color: !darkMode ? "black" : "white",
-                border: !darkMode
-                  ? "1px solid #00000080"
-                  : "1px solid #FFFFFF80",
+                border: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
               }}
               onChange={handlePayCheckDayChange}>
               {[...Array(31)].map((x, i) => (
@@ -269,19 +216,15 @@ const ManagerSettingBasicPage = () => {
             </Select>
             일
             <div className="text-xs mt-3">
-              (급여 정산 기능 이용 시,전 달{" "}
-              <span className="text-red-500">{day}</span>일 부터{" "}
+              (급여 정산 기능 이용 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
               {day != 1 ? "이번 달 " : "전 달 "}
-              <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일
-              까지 급여를 계산합니다.)
+              <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를 계산합니다.)
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-7" data-tour="step-22">
           <div className="mb-3 font-black">주간 야간 설정</div>
-          <div className="text-xs">
-            (주간, 야간을 구분해서 급여를 지급할지 설정합니다.)
-          </div>
+          <div className="text-xs">(주간, 야간을 구분해서 급여를 지급할지 설정합니다.)</div>
           <div className="grid grid-cols-2 grid-flow-col gap-4">
             <div>
               <FormControlLabel
@@ -289,7 +232,7 @@ const ManagerSettingBasicPage = () => {
                   <Checkbox
                     sx={{ color: !darkMode ? "black" : "white" }}
                     checked={isdaynight}
-                    onChange={(event) => setIsdaynight(event.target.checked)}
+                    onChange={event => setIsdaynight(event.target.checked)}
                     inputProps={{ "aria-label": "controlled" }}
                   />
                 }
@@ -303,7 +246,7 @@ const ManagerSettingBasicPage = () => {
                       className="m-3 h-10"
                       value={nightStart}
                       sx={{ color: !darkMode ? "black" : "white" }}
-                      onChange={(e) => setNightStart(e.target.value)}>
+                      onChange={e => setNightStart(e.target.value)}>
                       <MenuItem value="">시작 시간</MenuItem>
                       {[...Array(25)].map((_, index) => (
                         <MenuItem key={index} value={index}>
@@ -316,7 +259,7 @@ const ManagerSettingBasicPage = () => {
                       className="m-3 h-10"
                       value={nightEnd}
                       sx={{ color: !darkMode ? "black" : "white" }}
-                      onChange={(e) => setNightEnd(e.target.value)}>
+                      onChange={e => setNightEnd(e.target.value)}>
                       <MenuItem value="">끝나는 시간</MenuItem>
                       {[...Array(25)].map((_, index) => (
                         <MenuItem key={index} value={index}>
@@ -335,13 +278,11 @@ const ManagerSettingBasicPage = () => {
                       inputProps={{ min: 1 }}
                       value={isNightPay}
                       sx={{ color: !darkMode ? "black" : "white" }}
-                      onChange={(e) => setIsNightPay(e.target.value)}
+                      onChange={e => setIsNightPay(e.target.value)}
                     />
                     배 지급
                   </div>
-                  <div className="text-sm text-blue-500">
-                    기본급:10000원 일시 &gt; {isNightPay * 10000}원
-                  </div>
+                  <div className="text-sm text-blue-500">기본급:10000원 일시 &gt; {isNightPay * 10000}원</div>
                 </div>
               )}
             </div>
