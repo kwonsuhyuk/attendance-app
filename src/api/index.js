@@ -73,9 +73,9 @@ function getPrevDate(dateStr) {
 export async function fetchWorkTimes(companyCode, userId) {
   try {
     const path = `companyCode/${companyCode}/users/${userId}/date`;
-    const dateRef = fetchData(path);
+    const dateRef = await fetchData(path);
 
-    if (!dateRef.exists()) {
+    if (!dateRef) {
       return { success: true, workTimes: {}, datesList: null };
     }
 
@@ -98,8 +98,8 @@ export async function fetchWorkTimes(companyCode, userId) {
       } else {
         const path = `companyCode/${companyCode}/users/${userId}/date/${prevDay}`;
         const prevDay = getPrevDate(date);
-        const prevDayRef = fetchData(path);
-        if (prevDayRef.exists() && prevDayRef.startTime) {
+        const prevDayRef = await fetchData(path);
+        if (prevDayRef && prevDayRef.startTime) {
           start = new Date(prevDayRef.startTime);
         } else {
           throw new Error(`${date}의 시작 시간이 없습니다.`);
@@ -112,10 +112,10 @@ export async function fetchWorkTimes(companyCode, userId) {
       } else {
         const path = `companyCode/${companyCode}/users/${userId}/date/${nextDay}`;
         const nextDay = getNextDate(date);
-        const nextDayRef = fetchData(path);
+        const nextDayRef = await fetchData(path);
 
-        if (nextDayRef.exists() && nextDayRef.val().endTime) {
-          end = new Date(nextDayRef.val().endTime);
+        if (nextDayRef && nextDayRef.endTime) {
+          end = new Date(nextDayRef.endTime);
         } else {
           throw new Error(`${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`);
         }
@@ -136,8 +136,8 @@ export async function fetchWorkTimes(companyCode, userId) {
         }
 
         const workDateRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`);
-        const workDateSnapshot = await get(workDateRef);
-        if (workDateSnapshot.exists() && workDateSnapshot.val()) {
+        const workDateSnapshot = await fetchData(workDateRef);
+        if (workDateSnapshot) {
           await update(workDateRef, { workHour: workHours });
         }
 
@@ -241,10 +241,10 @@ export async function fetchCompanyAndJobInfo(companyCode, userId) {
   try {
     const com_path = `companyCode/${companyCode}/companyInfo`;
     const job_path = `companyCode/${companyCode}/users/${userId}/jobName`;
-    const companySnapshot = fetchData(com_path);
-    const jobSnapshot = fetchData(job_path);
+    const companySnapshot = await fetchData(com_path);
+    const jobSnapshot = await fetchData(job_path);
 
-    if (companySnapshot.exists() && jobSnapshot.exists()) {
+    if (companySnapshot && jobSnapshot) {
       return {
         success: true,
         data: {
@@ -278,43 +278,39 @@ export async function processQRScan(companyCode, userId, scanTime) {
     const yesterdayStr = yesterdayForNow.toISOString().slice(0, 10);
 
     // 현재 날짜와 이전 날짜의 데이터 참조
+    const today_path = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
     const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
-    const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
-    const today_path = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
-    const yesterday_path = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
 
-    const todaySnapshot = fetchData(today_path);
-    const yesterdaySnapshot = fetchData(yesterday_path);
+    const yesterday_path = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
+    const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
+
+    const todaySnapshot = await fetchData(today_path);
+    const yesterdaySnapshot = await fetchData(yesterday_path);
 
     // 다양한 출퇴근 상황 처리
-    if (yesterdaySnapshot.exists() || todaySnapshot.exists()) {
+    if (yesterdaySnapshot || todaySnapshot) {
       // 어제 출근, 퇴근 미처리
-      if (
-        !todaySnapshot.exists() &&
-        yesterdaySnapshot.exists() &&
-        yesterdaySnapshot.startTime &&
-        !yesterdaySnapshot.endTime
-      ) {
+      if (!todaySnapshot && yesterdaySnapshot && yesterdaySnapshot.startTime && !yesterdaySnapshot.endTime) {
         await update(yesterdaySnapshot, { endTime: scanTime });
         return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 출근, 퇴근 처리
-      if (todaySnapshot.exists() && todaySnapshot.val().startTime && !todaySnapshot.val().endTime) {
+      if (todaySnapshot && todaySnapshot.startTime && !todaySnapshot.endTime) {
         await update(todaySnapshot, { endTime: scanTime });
         return { success: true, message: "퇴근 인증이 완료되었습니다" };
       }
 
       // 오늘 퇴근만 있고 출근 기록이 없는 경우
-      if (todaySnapshot.exists() && todaySnapshot.endTime && !todaySnapshot.startTime) {
+      if (todaySnapshot && todaySnapshot.endTime && !todaySnapshot.startTime) {
         const startTime = yesterdaySnapshot.startTime;
         const endTime = todaySnapshot.endTime;
         const start = new Date(startTime);
         const end = new Date(endTime);
         const workHours = Number((24 - start.getHours() + end.getHours()).toFixed(1));
 
-        await set(todaySnapshot, { startTime: scanTime });
-        await update(yesterdaySnapshot, { endTime: endTime });
+        await set(today_path, { startTime: scanTime });
+        await update(yesterday_path, { endTime: endTime });
         await update(yesterdayWorkRef, { workHour: workHours });
         await set(todayWorkRef, {
           workHour: 0,
@@ -327,8 +323,8 @@ export async function processQRScan(companyCode, userId, scanTime) {
       }
 
       // 새로운 날 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
-      if (!todaySnapshot.exists() && yesterdaySnapshot.val().startTime && yesterdaySnapshot.val().endTime) {
-        await set(todaySnapshot, { startTime: scanTime });
+      if (!todaySnapshot && yesterdaySnapshot.startTime && yesterdaySnapshot.endTime) {
+        await set(today_path, { startTime: scanTime });
         await set(todayWorkRef, {
           workHour: 0,
           daySalary: 0,
@@ -340,7 +336,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
       }
     } else {
       // 최초 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
-      await set(todaySnapshot, { startTime: scanTime });
+      await set(today_path, { startTime: scanTime });
       await set(todayWorkRef, {
         workHour: 0,
         daySalary: 0,
@@ -389,11 +385,11 @@ export async function fetchSalaryInfo(companyCode, userId) {
   try {
     const workDate_path = `companyCode/${companyCode}/users/${userId}/workDates`;
     const salaryDay_path = `companyCode/${companyCode}/companyInfo/payCheckDay`;
-    const workDateData = fetchData(workDate_path);
-    const salaryDayData = fetchData(salaryDay_path);
+    const workDateData = await fetchData(workDate_path);
+    const salaryDayData = await fetchData(salaryDay_path);
 
-    const salaryDay = salaryDayData.exists() ? salaryDayData.val() : 0;
-    const workDates = workDateData.exists() ? workDateData.val() : {};
+    const salaryDay = salaryDayData ? salaryDayData : 0;
+    const workDates = workDateData ? workDateData : {};
 
     let totalDayHour1 = 0,
       totalNightHour1 = 0,
@@ -515,12 +511,12 @@ export async function fetchCurrentDayWork(companyCode, userId) {
     return {
       success: true,
       data: {
-        dates: dateData.val() || {},
-        nightStart: nightStartData.val(),
-        nightEnd: nightEndData.val(),
-        holidayList: holidayListData.val() || {},
-        holidayPay: holidayPayData.val(),
-        isNightPay: isNightPayData.val(),
+        dates: dateData || {},
+        nightStart: nightStartData,
+        nightEnd: nightEndData,
+        holidayList: holidayListData || {},
+        holidayPay: holidayPayData,
+        isNightPay: isNightPayData,
       },
     };
   } catch (error) {
