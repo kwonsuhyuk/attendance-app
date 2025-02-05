@@ -11,7 +11,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { fetchCompanyAndJobInfo, processQRScan, registerOutWork } from "../../api";
 import { TCompanyInfo } from "@/model";
-import { decrypt } from "@/util/encryptDecrypt";
+import { decrypt, encrypt } from "@/util/encryptDecrypt";
+import { QRSCAN_PERIOD } from "@/constant/qr";
 
 interface QrScanProps {
   companyLogo: string;
@@ -27,8 +28,7 @@ function QrScan({ companyLogo }: QrScanProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  console.log("companyCode", currentCompany);
+  const lastErrorTime = useRef<number>(0);
 
   // useEffect(() => {
   //   const loadCompanyInfo = async () => {
@@ -55,21 +55,23 @@ function QrScan({ companyLogo }: QrScanProps) {
       videoRef.current,
       async result => {
         if (companyCode && userId) {
-          qrScanner.stop();
-          console.log("result", result);
-          console.log(companyCode);
           if (decrypt(result.data) === companyCode) {
+            qrScanner.stop();
             const scanResult = await processQRScan(companyCode, userId, new Date().toString());
+
             if (scanResult.success && scanResult.message) {
-              navigate(`/${companyCode}/companymain`);
               toast.success(scanResult.message);
+              navigate(`/${companyCode}/companymain`);
             } else {
               toast.error(scanResult.error);
-              qrScanner.start(); // 에러 발생 시 다시 스캔 시작
+              qrScanner.start();
             }
           } else {
-            toast.error("유효하지 않은 QR 코드입니다.");
-            qrScanner.start(); // 스캔 재시작
+            const currentTime = Date.now();
+            if (currentTime - lastErrorTime.current > QRSCAN_PERIOD) {
+              toast.error("유효하지 않은 QR 코드입니다.");
+              lastErrorTime.current = currentTime;
+            }
           }
         }
       },
@@ -88,7 +90,7 @@ function QrScan({ companyLogo }: QrScanProps) {
     return () => {
       qrScanner.destroy();
     };
-  }, [companyCode, userId]);
+  }, [companyCode, userId, navigate]);
 
   const handleCheckOutJob = () => {
     setOpen(true);

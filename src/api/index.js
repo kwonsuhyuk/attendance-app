@@ -349,7 +349,7 @@ export async function processQRScan(companyCode, userId, scanTime) {
       return { success: true, message: "출근 인증이 완료되었습니다" };
     }
 
-    return { success: false, error: "처리할 수 없는 상태입니다." };
+    return { success: false, error: "금일 출근, 퇴근을 이미 완료했습니다" };
   } catch (error) {
     console.error("Error processing QR scan:", error);
     return {
