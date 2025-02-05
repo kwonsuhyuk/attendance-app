@@ -10,41 +10,43 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { fetchCompanyAndJobInfo, processQRScan, registerOutWork } from "../../api";
+import { TCompanyInfo } from "@/model";
+import { decrypt } from "@/util/encryptDecrypt";
 
 interface QrScanProps {
   companyLogo: string;
 }
 
 function QrScan({ companyLogo }: QrScanProps) {
-  const [scanResult, setScanResult] = useState<string | null>(null);
-  const [scanMessage, setScanMessage] = useState<string | null>(null);
   const { currentUser } = useSelector((state: any) => state.user);
-  const companyCode = currentUser?.photoURL; // 회사 코드
+  const { currentCompany } = useSelector(state => state.company); // 회사 코드
+  const companyCode = currentCompany?.companyCode;
   const userId = currentUser?.uid; // 유저 아이디
-  // 회사 타입 지정후 재지정 필요
-  const [currentCompany, setCurrentCompany] = useState<any>(null);
+  // const [currentCompany, setCurrentCompany] = useState<TCompanyInfo | null>(null);
   const [jobName, setJobName] = useState<string | null>(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    const loadCompanyInfo = async () => {
-      if (companyCode && userId) {
-        const result = await fetchCompanyAndJobInfo(companyCode, userId);
-        if (result.success && result.data) {
-          setCurrentCompany(result?.data.companyInfo);
-          setJobName(result.data.jobName);
-        } else {
-          toast.error("회사 정보를 불러오는데 실패했습니다.");
-        }
-      }
-    };
+  console.log("companyCode", currentCompany);
 
-    loadCompanyInfo();
+  // useEffect(() => {
+  //   const loadCompanyInfo = async () => {
+  //     if (companyCode && userId) {
+  //       const result = await fetchCompanyAndJobInfo(companyCode, userId);
+  //       if (result.success && result.data) {
+  //         setCurrentCompany(result?.data.companyInfo);
+  //         setJobName(result.data.jobName);
+  //       } else {
+  //         toast.error("회사 정보를 불러오는데 실패했습니다.");
+  //       }
+  //     }
+  //   };
 
-    return () => setCurrentCompany(null);
-  }, [companyCode, userId]);
+  //   loadCompanyInfo();
+
+  //   return () => setCurrentCompany(null);
+  // }, [companyCode, userId]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -54,12 +56,13 @@ function QrScan({ companyLogo }: QrScanProps) {
       async result => {
         if (companyCode && userId) {
           qrScanner.stop();
-          if (result.data === companyCode) {
+          console.log("result", result);
+          console.log(companyCode);
+          if (decrypt(result.data) === companyCode) {
             const scanResult = await processQRScan(companyCode, userId, new Date().toString());
             if (scanResult.success && scanResult.message) {
-              setScanMessage(scanResult.message);
-              toast.success(scanResult.message);
               navigate(`/${companyCode}/companymain`);
+              toast.success(scanResult.message);
             } else {
               toast.error(scanResult.error);
               qrScanner.start(); // 에러 발생 시 다시 스캔 시작

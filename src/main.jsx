@@ -7,12 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./store/index.js";
 import { Provider } from "react-redux";
 import { TourProvider } from "@reactour/tour";
-import steps from "./Components/steps.js";
+import steps from "./constant/steps.js";
 
 function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 ReactDOM.render(
@@ -29,11 +27,11 @@ ReactDOM.render(
           }}
           onClickMask={({ setCurrentStep, currentStep, steps }) => {
             if (steps && currentStep !== steps.length - 1) {
-              setCurrentStep((s) => s + 1);
+              setCurrentStep(s => s + 1);
             }
           }}
           styles={{
-            popover: (base) => ({
+            popover: base => ({
               ...base,
               "--reactour-accent": "black",
               borderRadius: 10,
@@ -43,11 +41,11 @@ ReactDOM.render(
               maxWidth: isMobile() ? "70vw" : "25vw",
               maxHeight: isMobile() ? "300px" : "auto",
             }),
-            maskArea: (base) => ({ ...base, rx: 10 }),
-            maskWrapper: (base) => ({ ...base, color: "black" }),
-            badge: (base) => ({ ...base, left: "auto", right: "-0.8125em" }),
-            controls: (base) => ({ ...base, marginTop: 100 }),
-            close: (base) => ({
+            maskArea: base => ({ ...base, rx: 10 }),
+            maskWrapper: base => ({ ...base, color: "black" }),
+            badge: base => ({ ...base, left: "auto", right: "-0.8125em" }),
+            controls: base => ({ ...base, marginTop: 100 }),
+            close: base => ({
               ...base,
               right: "auto",
               left: 8,
@@ -60,5 +58,5 @@ ReactDOM.render(
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );

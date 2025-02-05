@@ -34,9 +34,10 @@ import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
 import AddCardIcon from "@mui/icons-material/AddCard";
+import { encrypt } from "@/util/encryptDecrypt";
 
 const steps = ["회사 기본 설정", "회사 추가 설정", "직원 초대 코드"];
-const companyID = uuidv4().slice(0, 8);
+const companyCode = uuidv4().slice(0, 8);
 
 function ManagerFirstPage() {
   const { state } = useLocation();
@@ -135,7 +136,7 @@ function ManagerFirstPage() {
   const pushJobData = async () => {
     const db = getDatabase();
     jobTags.forEach(item => {
-      const jobRef = ref(db, `companyCode/${companyID}/companyInfo/jobName`);
+      const jobRef = ref(db, `companyCode/${companyCode}/companyInfo/jobName`);
       set(push(jobRef), {
         jobName: item.jobName,
         // payWay: item.payWay,
@@ -151,11 +152,12 @@ function ManagerFirstPage() {
     const db = getDatabase();
     const auth = getAuth();
     //회사 정보 data
-    const companyRef1 = ref(db, `companyCode/${companyID}/`);
-    const companyRef = ref(db, `companyCode/${companyID}/companyInfo`);
+    const companyRef1 = ref(db, `companyCode/${companyCode}/`);
+    const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
     const companyBasicData = {
       companyName: companyName,
       companyLogo: imageUrl,
+      companyCode: companyCode,
       adminName: adminName,
       isdaynight: isdaynight,
       nightStart: nightStart,
@@ -164,11 +166,11 @@ function ManagerFirstPage() {
       isNightPay: parseFloat(isNightPay),
       isholiday: isholiday,
       holidayPay: parseFloat(holidayPay),
-      qrValue: companyID,
+      qrValue: encrypt(companyCode),
     };
 
     // 관리자 user 정보 data
-    const userRef = ref(db, `companyCode/${companyID}/users/${currentUser.uid}`);
+    const userRef = ref(db, `companyCode/${companyCode}/users/${currentUser.uid}`);
     const userData = {
       name: state.name,
       uid: state.id,
@@ -179,10 +181,10 @@ function ManagerFirstPage() {
 
     try {
       await updateProfile(auth.currentUser, {
-        photoURL: companyID,
+        photoURL: companyCode,
       });
       await set(companyRef1, {
-        companyId: companyID,
+        companyCode: companyCode,
       });
       // userdata 입력
       await set(userRef, userData);
@@ -190,7 +192,7 @@ function ManagerFirstPage() {
       await set(companyRef, companyBasicData);
       await pushJobData();
       setLoading(false);
-      navigate(`/${companyID}/companymain`);
+      navigate(`/${companyCode}/companymain`);
     } catch (e) {
       toast.error(e.message);
       setLoading(false);
@@ -669,7 +671,7 @@ function ManagerFirstPage() {
                   <div
                     className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
                     style={{ borderRadius: "20px" }}>
-                    {companyID}
+                    {companyCode}
                     <span className="absolute right-7 cursor-pointer">
                       <ContentCopyIcon onClick={handleCopyCompId} />
                     </span>
