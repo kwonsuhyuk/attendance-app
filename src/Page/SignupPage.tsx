@@ -17,16 +17,13 @@ import {
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { get, ref, getDatabase } from "firebase/database";
 import { Button } from "antd";
+import { TSignUpForm, TUserData, TSignUpFormData } from "src/model";
 
 function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -47,11 +44,11 @@ function SignupPage() {
     }, 3000);
   }, [error]);
 
-  const handlePositionChange = e => {
+  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPosition(e.target.value);
   };
 
-  const checkCompanyCode = async code => {
+  const checkCompanyCode = async (code: string) => {
     const database = getDatabase();
     const idRef = ref(database, "companyCode/" + code);
     const snapshot = await get(idRef);
@@ -67,15 +64,11 @@ function SignupPage() {
   };
 
   const sendUserInfo = useCallback(
-    async (name, email, password, companyCode, phoneNumber) => {
+    async ({ name, email, password, companyCode, phoneNumber }: TSignUpForm) => {
       setLoading(true);
       try {
         const auth = getAuth();
-        const { user } = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password,
-        );
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(user, {
           displayName: name,
           photoURL: companyCode,
@@ -83,7 +76,7 @@ function SignupPage() {
 
         dispatch(setUser(user));
         // 유저 정보 다음 페이지로 이동해서 한번에 보낼거임
-        const userData = {
+        const userData: TUserData = {
           name: name,
           id: user.uid,
           companyCode: companyCode,
@@ -97,7 +90,7 @@ function SignupPage() {
           navigate("/employeefirst", { state: userData });
         }
       } catch (e) {
-        setError(e.message);
+        setError(e instanceof Error ? e.message : "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -106,16 +99,25 @@ function SignupPage() {
   );
 
   const handleSubmit = useCallback(
-    async e => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
-      const name = data.get("name");
-      const email = data.get("email");
-      const phoneNumber = data.get("phoneNumber");
-      const password = data.get("password");
-      const confirmPW = data.get("confirmPW");
+      const formData: TSignUpFormData = {
+        name: data.get("name"),
+        email: data.get("email"),
+        phoneNumber: data.get("phoneNumber"),
+        password: data.get("password"),
+        confirmPW: data.get("confirmPW"),
+        companyCode: companyCode, // state에서 관리되는 값
+      } as TSignUpFormData;
 
-      if (!name || !email || !password || !confirmPW || !phoneNumber) {
+      if (
+        !formData.name ||
+        !formData.email ||
+        !formData.password ||
+        !formData.confirmPW ||
+        !formData.phoneNumber
+      ) {
         setError("모든 항목을 입력해주세요");
         return;
       }
@@ -140,15 +142,16 @@ function SignupPage() {
         }
       }
       if (
-        password !== confirmPW ||
-        password.length < 6 ||
-        confirmPW.length < 6
+        formData.password !== formData.confirmPW ||
+        formData.password.length < 6 ||
+        formData.confirmPW.length < 6
       ) {
         setError("비밀번호를 확인해 주세요");
         return;
       }
 
-      sendUserInfo(name, email, password, companyCode, phoneNumber);
+      const { name, email, password, phoneNumber } = formData;
+      sendUserInfo({ name, email, password, companyCode, phoneNumber });
     },
     [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode],
   );
@@ -161,6 +164,7 @@ function SignupPage() {
     }
   }, [isManagerCheck]);
 
+  // varient="p" 임시 제거
   return (
     <div className="mt-20">
       <Container component="main" maxWidth="xs">
@@ -177,30 +181,16 @@ function SignupPage() {
           <Typography component="h1" variant="h5" color="black">
             회원 가입
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <div className="p-3 rounded border-solid border-2 border-blue-400">
-              <FormLabel id="demo-controlled-radio-buttons-group">
-                가입 포지션
-              </FormLabel>
+              <FormLabel id="demo-controlled-radio-buttons-group">가입 포지션</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
                 value={position}
                 onChange={handlePositionChange}>
-                <FormControlLabel
-                  value="manager"
-                  control={<Radio />}
-                  label="관리자"
-                />
-                <FormControlLabel
-                  value="employee"
-                  control={<Radio />}
-                  label="직원"
-                />
+                <FormControlLabel value="manager" control={<Radio />} label="관리자" />
+                <FormControlLabel value="employee" control={<Radio />} label="직원" />
               </RadioGroup>
             </div>
             {/* 관리자 직원에 따라 추가정보 요구 */}
@@ -219,11 +209,7 @@ function SignupPage() {
               </>
             ) : position === "employee" ? (
               <>
-                <Typography
-                  component="p"
-                  variant="p"
-                  color="black"
-                  sx={{ mt: 2 }}>
+                <Typography component="p" color="black" sx={{ mt: 2 }}>
                   가입 회사 정보
                 </Typography>
                 <div className="flex flex-col items-stretch mb-2">
@@ -255,11 +241,7 @@ function SignupPage() {
                     회사찾기
                   </Button>
                 </div>
-                <Typography
-                  component="p"
-                  variant="p"
-                  color="gray"
-                  sx={{ fontSize: "12px", mb: 2 }}>
+                <Typography component="p" color="gray" sx={{ fontSize: "12px", mb: 2 }}>
                   (회사 관리자에게 받은 회사코드를 입력해주세요.)
                 </Typography>
               </>
@@ -267,7 +249,7 @@ function SignupPage() {
               <div></div>
             )}
             <Divider />
-            <Typography component="p" variant="p" color="black" sx={{ mt: 2 }}>
+            <Typography component="p" color="black" sx={{ mt: 2 }}>
               개인 정보
             </Typography>
             <TextField
@@ -286,11 +268,7 @@ function SignupPage() {
               name="email"
               autoComplete="off"
             />
-            <Typography
-              component="p"
-              variant="p"
-              color="gray"
-              sx={{ fontSize: "12px" }}>
+            <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
               (유효한 이메일을 작성해주셔야 합니다!) <br />
               (이메일형식예시 : hongildong@naver.com)
             </Typography>
@@ -309,11 +287,7 @@ function SignupPage() {
               name="password"
               type="password"
             />
-            <Typography
-              component="p"
-              variant="p"
-              color="gray"
-              sx={{ fontSize: "12px" }}>
+            <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
               (비밀번호는 6자리 이상으로 작성해주세요.)
             </Typography>
             <TextField
@@ -342,9 +316,7 @@ function SignupPage() {
             </LoadingButton>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  to="/signin"
-                  style={{ textDecoration: "none", color: "gray" }}>
+                <Link to="/signin" style={{ textDecoration: "none", color: "gray" }}>
                   계정이 있나요? 로그인으로 이동
                 </Link>
               </Grid>
