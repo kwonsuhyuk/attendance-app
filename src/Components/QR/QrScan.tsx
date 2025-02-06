@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import QrScanner from "qr-scanner";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

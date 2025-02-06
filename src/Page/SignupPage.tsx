@@ -17,13 +17,13 @@ import {
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
-import "../firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
-import { get, ref, getDatabase } from "firebase/database";
 import { Button } from "antd";
+
 import { TSignUpForm, TUserData, TSignUpFormData } from "src/model";
+import { validateCompanyCode } from "../api/index";
+import { signup } from "../api/auth";
 
 function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -49,17 +49,13 @@ function SignupPage() {
   };
 
   const checkCompanyCode = async (code: string) => {
-    const database = getDatabase();
-    const idRef = ref(database, "companyCode/" + code);
-    const snapshot = await get(idRef);
-    if (snapshot.exists()) {
-      setTempCompInfo(snapshot.val().companyInfo.companyName);
+    const result = await validateCompanyCode(code);
+    if (result.isValid && result.companyName) {
+      setTempCompInfo(result.companyName);
       setIsCodeValid(true);
-      return;
     } else {
-      setError("일치하는 회사가 없습니다.");
+      setError(result.error || "회사 코드 확인 중 오류가 발생했습니다.");
       setIsCodeValid(false);
-      return;
     }
   };
 
@@ -67,23 +63,27 @@ function SignupPage() {
     async ({ name, email, password, companyCode, phoneNumber }: TSignUpForm) => {
       setLoading(true);
       try {
-        const auth = getAuth();
-        const { user } = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(user, {
-          displayName: name,
-          photoURL: companyCode,
+        const result = await signup({
+          name,
+          email,
+          password,
+          companyCode,
+          phoneNumber,
         });
 
-        dispatch(setUser(user));
-        // 유저 정보 다음 페이지로 이동해서 한번에 보낼거임
+        if (!result.success || !result.userId) {
+          throw new Error(result.error || "회원가입 중 오류가 발생했습니다.");
+        }
+
         const userData: TUserData = {
-          name: name,
-          id: user.uid,
-          companyCode: companyCode,
-          phoneNumber: phoneNumber,
+          id: result.userId,
+          name,
+          companyCode,
+          phoneNumber,
         };
 
-        // 추가 정보 입력창으로 이동하게 함
+        dispatch(setUser(userData));
+
         if (position === "manager") {
           navigate("/managerfirst", { state: userData });
         } else if (position === "employee") {

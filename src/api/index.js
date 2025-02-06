@@ -1,4 +1,5 @@
 import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
+import "../firebase";
 
 const db = getDatabase();
 
@@ -117,7 +118,9 @@ export async function fetchWorkTimes(companyCode, userId) {
         if (nextDayRef && nextDayRef.endTime) {
           end = new Date(nextDayRef.endTime);
         } else {
-          throw new Error(`${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`);
+          throw new Error(
+            `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`,
+          );
         }
       }
 
@@ -135,7 +138,10 @@ export async function fetchWorkTimes(companyCode, userId) {
           }
         }
 
-        const workDateRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`);
+        const workDateRef = ref(
+          db,
+          `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`,
+        );
         const workDateSnapshot = await fetchData(workDateRef);
         if (workDateSnapshot) {
           await update(workDateRef, { workHour: workHours });
@@ -209,7 +215,10 @@ export async function fetchHolidayList(companyCode) {
   }
 }
 
-export async function saveHolidaySettings(companyCode, { holidays, isHoliday, holidayPay }) {
+export async function saveHolidaySettings(
+  companyCode,
+  { holidays, isHoliday, holidayPay },
+) {
   try {
     const holidayList = holidays.reduce((obj, date) => {
       const year = date.getFullYear();
@@ -279,12 +288,24 @@ export async function processQRScan(companyCode, userId, scanTime) {
 
     // 현재 날짜와 이전 날짜의 데이터 참조
     const todayPath = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
-    const todayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
-    const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
+    const todayPathRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${userId}/date/${nowStr}`,
+    );
+    const todayWorkRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`,
+    );
 
     const yesterdayPath = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
-    const yesterdayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`);
-    const yesterdayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`);
+    const yesterdayPathRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`,
+    );
+    const yesterdayWorkRef = ref(
+      db,
+      `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`,
+    );
 
     const todaySnapshot = await fetchData(todayPath);
     const yesterdaySnapshot = await fetchData(yesterdayPath);
@@ -292,7 +313,12 @@ export async function processQRScan(companyCode, userId, scanTime) {
     // 다양한 출퇴근 상황 처리
     if (yesterdaySnapshot || todaySnapshot) {
       // 어제 출근, 퇴근 미처리
-      if (!todaySnapshot && yesterdaySnapshot && yesterdaySnapshot.startTime && !yesterdaySnapshot.endTime) {
+      if (
+        !todaySnapshot &&
+        yesterdaySnapshot &&
+        yesterdaySnapshot.startTime &&
+        !yesterdaySnapshot.endTime
+      ) {
         await update(yesterdayPathRef, { endTime: scanTime });
         return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
       }
@@ -370,7 +396,9 @@ export async function registerOutWork(companyCode, userId) {
       startTime: "외근",
       endTime: "외근",
     });
-    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), { workHour: "외근" });
+    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), {
+      workHour: "외근",
+    });
 
     return { success: true, message: "외근 등록이 완료되었습니다." };
   } catch (error) {
@@ -525,6 +553,35 @@ export async function fetchCurrentDayWork(companyCode, userId) {
     console.error("Error fetching current day work:", error);
     return {
       success: false,
+      error: error.message,
+    };
+  }
+}
+
+// signupPage
+
+export async function validateCompanyCode(code) {
+  try {
+    const companyCodeData = await fetchData(`companyCode/${code}`);
+
+    if (
+      companyCodeData &&
+      companyCodeData.companyInfo &&
+      companyCodeData.companyInfo.companyName
+    ) {
+      return {
+        isValid: true,
+        companyName: companyCodeData.companyInfo.companyName,
+      };
+    }
+
+    return {
+      isValid: false,
+      error: "일치하는 회사가 없습니다.",
+    };
+  } catch (error) {
+    return {
+      isValid: false,
       error: error.message,
     };
   }
