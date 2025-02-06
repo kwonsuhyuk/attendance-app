@@ -47,11 +47,11 @@ function SignupPage() {
     }, 3000);
   }, [error]);
 
-  const handlePositionChange = (e) => {
+  const handlePositionChange = e => {
     setPosition(e.target.value);
   };
 
-  const checkCompanyCode = async (code) => {
+  const checkCompanyCode = async code => {
     const database = getDatabase();
     const idRef = ref(database, "companyCode/" + code);
     const snapshot = await get(idRef);
@@ -74,7 +74,7 @@ function SignupPage() {
         const { user } = await createUserWithEmailAndPassword(
           auth,
           email,
-          password
+          password,
         );
         await updateProfile(user, {
           displayName: name,
@@ -102,11 +102,11 @@ function SignupPage() {
         setLoading(false);
       }
     },
-    [dispatch, position, navigate]
+    [dispatch, position, navigate],
   );
 
   const handleSubmit = useCallback(
-    async (e) => {
+    async e => {
       e.preventDefault();
       const data = new FormData(e.currentTarget);
       const name = data.get("name");
@@ -150,13 +150,13 @@ function SignupPage() {
 
       sendUserInfo(name, email, password, companyCode, phoneNumber);
     },
-    [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode]
+    [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode],
   );
 
   useEffect(() => {
     if (window.innerWidth <= 600 && isManagerCheck) {
       alert(
-        "관리자는 PC 전용 서비스 입니다. PC버전으로 회원가입을 진행하셔야 추후에 문제가 발생하지 않습니다. PC로 회원가입 진행 부탁드립니다."
+        "관리자는 PC 전용 서비스 입니다. PC버전으로 회원가입을 진행하셔야 추후에 문제가 발생하지 않습니다. PC로 회원가입 진행 부탁드립니다.",
       );
     }
   }, [isManagerCheck]);
@@ -212,7 +212,7 @@ function SignupPage() {
                   control={
                     <Checkbox
                       checked={isManagerCheck}
-                      onChange={(e) => setManagerCheck(e.target.checked)}
+                      onChange={e => setManagerCheck(e.target.checked)}
                     />
                   }
                 />
@@ -238,7 +238,7 @@ function SignupPage() {
                       sx={{ border: error && "1px solid red" }}
                       disabled={isCodeValid}
                       value={companyCode}
-                      onChange={(e) => setCompanyCode(e.target.value)}
+                      onChange={e => setCompanyCode(e.target.value)}
                     />
                   ) : (
                     <TextField
