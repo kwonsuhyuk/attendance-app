@@ -4,22 +4,11 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { TLoginForm, TSignUpForm } from "../../model/index";
+import { TLoginForm, TSignUpForm, TLoginResponse, TSignUpResponse } from "../../model/index";
 
 const auth = getAuth();
 
-interface ILoginResponse {
-  success: boolean;
-  error?: string;
-}
-
-interface ISignUpResponse {
-  success: boolean;
-  userId?: string;
-  error?: string;
-}
-
-export async function login({ email, password }: TLoginForm): Promise<ILoginResponse> {
+export async function login({ email, password }: TLoginForm): Promise<TLoginResponse> {
   try {
     await signInWithEmailAndPassword(auth, email, password);
     return { success: true };
@@ -37,7 +26,7 @@ export async function signup({
   name,
   companyCode,
   phoneNumber,
-}: TSignUpForm): Promise<ISignUpResponse> {
+}: TSignUpForm): Promise<TSignUpResponse> {
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, {
@@ -46,7 +35,7 @@ export async function signup({
     });
     return {
       success: true,
-      userId: user.uid,
+      data: { userId: user.uid },
     };
   } catch (error: any) {
     return {

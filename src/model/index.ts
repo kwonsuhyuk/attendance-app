@@ -3,7 +3,7 @@ export type TLoginForm = {
   password: string;
 };
 
-export type TUserBase = {
+type TUserBase = {
   name: string;
   companyCode: string;
   phoneNumber: string;
@@ -18,3 +18,16 @@ export type TUserData = TUserBase & {
 export type TSignUpFormData = TSignUpForm & {
   confirmPW: string; // 회원가입 폼에만 필요한 추가 필드
 };
+
+export type TLoginResponse {
+  success: boolean;
+  error?: string;
+}
+
+export type TSignUpResponse {
+  success: boolean;
+  data?: {
+    userId: string;
+  };
+  error?: string;
+}

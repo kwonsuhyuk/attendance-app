@@ -7,12 +7,14 @@ import {
   Container,
   Divider,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Grid,
   Radio,
   RadioGroup,
   TextField,
   Typography,
+  FormControl,
 } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -26,13 +28,13 @@ import { TSignUpForm, TUserData, TSignUpFormData } from "src/model";
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
-function SignupPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [position, setPosition] = useState("");
-  const [isManagerCheck, setManagerCheck] = useState(false);
-  const [isCodeValid, setIsCodeValid] = useState(false);
-  const [tempCompInfo, setTempCompInfo] = useState("");
+const SignupPage = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [position, setPosition] = useState<string>("");
+  const [isManagerCheck, setManagerCheck] = useState<boolean>(false);
+  const [isCodeValid, setIsCodeValid] = useState<boolean>(false);
+  const [tempCompInfo, setTempCompInfo] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -122,81 +124,8 @@ function SignupPage() {
   );
 
   const onSubmit = (data: TSignUpFormData) => {
-    if (position === "manager" && !isManagerCheck) {
-      setError("체크 항목을 체크해주세요.");
-      return;
-    }
-    if (position === "employee") {
-      if (!data.companyCode) {
-        setError("회사코드를 입력해주세요.");
-        return;
-      }
-      if (!isCodeValid) {
-        setError("회사코드 인증버튼을 눌러주세요.");
-        return;
-      }
-    }
-
     sendUserInfo(data);
   };
-
-  // const handleSubmit = useCallback(
-  //   async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     const data = new FormData(e.currentTarget);
-  //     const formData: TSignUpFormData = {
-  //       name: data.get("name"),
-  //       email: data.get("email"),
-  //       phoneNumber: data.get("phoneNumber"),
-  //       password: data.get("password"),
-  //       confirmPW: data.get("confirmPW"),
-  //       companyCode: companyCode, // state에서 관리되는 값
-  //     } as TSignUpFormData;
-
-  //     if (
-  //       !formData.name ||
-  //       !formData.email ||
-  //       !formData.password ||
-  //       !formData.confirmPW ||
-  //       !formData.phoneNumber
-  //     ) {
-  //       setError("모든 항목을 입력해주세요");
-  //       return;
-  //     }
-
-  //     // 관리자일시 체크 확인
-  //     if (position === "manager") {
-  //       if (!isManagerCheck) {
-  //         setError("체크 항목을 체크해주세요.");
-  //         return;
-  //       }
-  //     }
-
-  //     // 직원 일시 회사코드 입력
-  //     if (position === "employee") {
-  //       if (companyCode === "") {
-  //         setError("회사코드를 입력해주세요.");
-  //         return;
-  //       }
-  //       if (!isCodeValid) {
-  //         setError("회사코드 인증버튼을 눌러주세요.");
-  //         return;
-  //       }
-  //     }
-  //     if (
-  //       formData.password !== formData.confirmPW ||
-  //       formData.password.length < 6 ||
-  //       formData.confirmPW.length < 6
-  //     ) {
-  //       setError("비밀번호를 확인해 주세요");
-  //       return;
-  //     }
-
-  //     const { name, email, password, phoneNumber } = formData;
-  //     sendUserInfo({ name, email, password, companyCode, phoneNumber });
-  //   },
-  //   [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode],
-  // );
 
   useEffect(() => {
     if (window.innerWidth <= 600 && isManagerCheck) {
@@ -234,16 +163,21 @@ function SignupPage() {
             </div>
 
             {position === "manager" && (
-              <FormControlLabel
-                className="text-red-500"
-                label="관리자로 가입하는 것이 맞습니까?"
-                control={
-                  <Checkbox
-                    checked={isManagerCheck}
-                    onChange={e => setManagerCheck(e.target.checked)}
-                  />
-                }
-              />
+              <FormControl error={position === "manager" && !isManagerCheck}>
+                <FormControlLabel
+                  className="text-red-500"
+                  label="관리자로 가입하는 것이 맞습니까?"
+                  control={
+                    <Checkbox
+                      checked={isManagerCheck}
+                      onChange={e => setManagerCheck(e.target.checked)}
+                    />
+                  }
+                />
+                {position === "manager" && !isManagerCheck && (
+                  <FormHelperText>체크 항목을 체크해주세요</FormHelperText>
+                )}
+              </FormControl>
             )}
 
             {position === "employee" && (
@@ -256,7 +190,13 @@ function SignupPage() {
                     <Controller
                       name="companyCode"
                       control={control}
-                      rules={{ required: position === "employee" && "회사코드를 입력해주세요" }}
+                      rules={{
+                        required: position === "employee" && "회사코드를 입력해주세요",
+                        validate: value =>
+                          position === "employee" && !isCodeValid
+                            ? "회사코드 인증버튼을 눌러주세요"
+                            : true,
+                      }}
                       render={({ field }) => (
                         <TextField
                           {...field}
@@ -442,6 +382,6 @@ function SignupPage() {
       </Container>
     </div>
   );
-}
+};
 
 export default SignupPage;
