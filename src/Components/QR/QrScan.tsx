@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import QrScanner from "qr-scanner";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -117,7 +116,11 @@ function QrScan({ companyLogo }: QrScanProps) {
     <>
       <div className="flex flex-col gap-10" data-tour="step-35">
         <div className="flex flex-col items-center gap-4">
-          <img src={companyLogo || "/placeholder.svg"} alt="회사로고" className="rounded-full w-[130px] h-[130px]" />
+          <img
+            src={companyLogo || "/placeholder.svg"}
+            alt="회사로고"
+            className="rounded-full w-[130px] h-[130px]"
+          />
           <div className="font-black">{currentCompany?.companyName}</div>
           <div className="flex items-center">
             {currentUser?.displayName}/{jobName}
@@ -144,8 +147,11 @@ function QrScan({ companyLogo }: QrScanProps) {
         <DialogTitle>{"정말 외근으로 출근 하시는게 맞습니까?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            금일 {`${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 ${new Date().getDate()}일`}을 외근으로
-            출근 시 회사 출퇴근 시간이 기록되지 않습니다.
+            금일{" "}
+            {`${new Date().getFullYear()}년 ${
+              new Date().getMonth() + 1
+            }월 ${new Date().getDate()}일`}
+            을 외근으로 출근 시 회사 출퇴근 시간이 기록되지 않습니다.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

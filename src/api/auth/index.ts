@@ -1,16 +1,42 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { TLoginForm } from "../../model/index";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { TLoginForm, TSignUpForm, TLoginResponse, TSignUpResponse } from "../../model/index";
 
-interface ILoginResponse {
-  success: boolean;
-  error?: string;
-}
+const auth = getAuth();
 
-export async function login({ email, password }: TLoginForm): Promise<ILoginResponse> {
+export async function login({ email, password }: TLoginForm): Promise<TLoginResponse> {
   try {
-    const auth = getAuth();
     await signInWithEmailAndPassword(auth, email, password);
     return { success: true };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function signup({
+  email,
+  password,
+  name,
+  companyCode,
+  phoneNumber,
+}: TSignUpForm): Promise<TSignUpResponse> {
+  try {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(user, {
+      displayName: name,
+      photoURL: companyCode,
+    });
+    return {
+      success: true,
+      data: { userId: user.uid },
+    };
   } catch (error: any) {
     return {
       success: false,
