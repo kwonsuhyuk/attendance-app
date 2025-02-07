@@ -64,7 +64,7 @@
 
   - 어르신 분들이 IT 기기 사용에 익숙치 않아 사용하기 힘들어 하신다는 의견을 받아 상세한 AppGuide 페이지 제공 및 각 페이지 마다 React-Tour 를 이용해서 상세한 사용법 제공해 드려 조금이나마 쉽게 사용하실 수 있도록 도와드리고자 노력했습니다.
 
-    [ Appguide Page 제공 및 React-Tour 제공 ] (### Appguide Page 제공 및 React-Tour 제공)
+    [Appguide Page 제공 및 React-Tour 제공](#appguide-page-제공-및-react-tour-제공)
 
   - 또한 휴가 등록 및 외근 , 공휴일 야간 수당 구분 등 회사에 필요한 기능들 지속적으로 피드백받아서 구현중에 있습니다.
 
