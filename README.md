@@ -148,7 +148,7 @@
 
 ### [직원 정보 및 이번달 근무 시간 확인]
 
-![Image](https://github.com/user-attachments/assets/687d5520-33ed-423c-af89-e415ed458dde)
+![Image](https://github.com/user-attachments/assets/6dffffe3-f9da-4a35-a836-ab70b87f0d23)
 
 - 직원의 근무 형태 및 이번달 근무 시간 등 자신의 근태 기록을 한눈에 볼 수 있습니다.
 
