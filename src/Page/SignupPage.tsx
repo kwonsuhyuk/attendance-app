@@ -20,6 +20,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { Button } from "antd";
+import { useForm, Controller } from "react-hook-form";
 
 import { TSignUpForm, TUserData, TSignUpFormData } from "src/model";
 import { validateCompanyCode } from "../api/index";
@@ -30,18 +31,36 @@ function SignupPage() {
   const [error, setError] = useState("");
   const [position, setPosition] = useState("");
   const [isManagerCheck, setManagerCheck] = useState(false);
-  const [companyCode, setCompanyCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [tempCompInfo, setTempCompInfo] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    setValue,
+  } = useForm<TSignUpFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      confirmPW: "",
+      companyCode: "",
+    },
+  });
+
+  const password = watch("password");
+  const companyCode = watch("companyCode");
+
+  // cleanup 함수 추가 -> 이전 타이머를 정리하고 새로운 타이머로 시작 -> 메모리 누수 방지
   useEffect(() => {
     if (!error) return;
-
-    setTimeout(() => {
-      setError("");
-    }, 3000);
+    const timer = setTimeout(() => setError(""), 3000);
+    return () => clearTimeout(timer);
   }, [error]);
 
   const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,15 +79,15 @@ function SignupPage() {
   };
 
   const sendUserInfo = useCallback(
-    async ({ name, email, password, companyCode, phoneNumber }: TSignUpForm) => {
+    async (formData: TSignUpFormData) => {
       setLoading(true);
       try {
         const result = await signup({
-          name,
-          email,
-          password,
-          companyCode,
-          phoneNumber,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          companyCode: formData.companyCode,
+          phoneNumber: formData.phoneNumber,
         });
 
         if (!result.success || !result.userId) {
@@ -77,17 +96,21 @@ function SignupPage() {
 
         const userData: TUserData = {
           id: result.userId,
-          name,
-          companyCode,
-          phoneNumber,
+          name: formData.name,
+          companyCode: formData.companyCode,
+          phoneNumber: formData.phoneNumber,
         };
 
         dispatch(setUser(userData));
 
         if (position === "manager") {
-          navigate("/managerfirst", { state: userData });
+          navigate("/managerfirst", {
+            state: userData,
+          });
         } else if (position === "employee") {
-          navigate("/employeefirst", { state: userData });
+          navigate("/employeefirst", {
+            state: userData,
+          });
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : "An error occurred");
@@ -98,63 +121,82 @@ function SignupPage() {
     [dispatch, position, navigate],
   );
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const data = new FormData(e.currentTarget);
-      const formData: TSignUpFormData = {
-        name: data.get("name"),
-        email: data.get("email"),
-        phoneNumber: data.get("phoneNumber"),
-        password: data.get("password"),
-        confirmPW: data.get("confirmPW"),
-        companyCode: companyCode, // state에서 관리되는 값
-      } as TSignUpFormData;
-
-      if (
-        !formData.name ||
-        !formData.email ||
-        !formData.password ||
-        !formData.confirmPW ||
-        !formData.phoneNumber
-      ) {
-        setError("모든 항목을 입력해주세요");
+  const onSubmit = (data: TSignUpFormData) => {
+    if (position === "manager" && !isManagerCheck) {
+      setError("체크 항목을 체크해주세요.");
+      return;
+    }
+    if (position === "employee") {
+      if (!data.companyCode) {
+        setError("회사코드를 입력해주세요.");
         return;
       }
-
-      // 관리자일시 체크 확인
-      if (position === "manager") {
-        if (!isManagerCheck) {
-          setError("체크 항목을 체크해주세요.");
-          return;
-        }
-      }
-
-      // 직원 일시 회사코드 입력
-      if (position === "employee") {
-        if (companyCode === "") {
-          setError("회사코드를 입력해주세요.");
-          return;
-        }
-        if (!isCodeValid) {
-          setError("회사코드 인증버튼을 눌러주세요.");
-          return;
-        }
-      }
-      if (
-        formData.password !== formData.confirmPW ||
-        formData.password.length < 6 ||
-        formData.confirmPW.length < 6
-      ) {
-        setError("비밀번호를 확인해 주세요");
+      if (!isCodeValid) {
+        setError("회사코드 인증버튼을 눌러주세요.");
         return;
       }
+    }
 
-      const { name, email, password, phoneNumber } = formData;
-      sendUserInfo({ name, email, password, companyCode, phoneNumber });
-    },
-    [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode],
-  );
+    sendUserInfo(data);
+  };
+
+  // const handleSubmit = useCallback(
+  //   async (e: React.FormEvent<HTMLFormElement>) => {
+  //     e.preventDefault();
+  //     const data = new FormData(e.currentTarget);
+  //     const formData: TSignUpFormData = {
+  //       name: data.get("name"),
+  //       email: data.get("email"),
+  //       phoneNumber: data.get("phoneNumber"),
+  //       password: data.get("password"),
+  //       confirmPW: data.get("confirmPW"),
+  //       companyCode: companyCode, // state에서 관리되는 값
+  //     } as TSignUpFormData;
+
+  //     if (
+  //       !formData.name ||
+  //       !formData.email ||
+  //       !formData.password ||
+  //       !formData.confirmPW ||
+  //       !formData.phoneNumber
+  //     ) {
+  //       setError("모든 항목을 입력해주세요");
+  //       return;
+  //     }
+
+  //     // 관리자일시 체크 확인
+  //     if (position === "manager") {
+  //       if (!isManagerCheck) {
+  //         setError("체크 항목을 체크해주세요.");
+  //         return;
+  //       }
+  //     }
+
+  //     // 직원 일시 회사코드 입력
+  //     if (position === "employee") {
+  //       if (companyCode === "") {
+  //         setError("회사코드를 입력해주세요.");
+  //         return;
+  //       }
+  //       if (!isCodeValid) {
+  //         setError("회사코드 인증버튼을 눌러주세요.");
+  //         return;
+  //       }
+  //     }
+  //     if (
+  //       formData.password !== formData.confirmPW ||
+  //       formData.password.length < 6 ||
+  //       formData.confirmPW.length < 6
+  //     ) {
+  //       setError("비밀번호를 확인해 주세요");
+  //       return;
+  //     }
+
+  //     const { name, email, password, phoneNumber } = formData;
+  //     sendUserInfo({ name, email, password, companyCode, phoneNumber });
+  //   },
+  //   [sendUserInfo, position, isManagerCheck, isCodeValid, companyCode],
+  // );
 
   useEffect(() => {
     if (window.innerWidth <= 600 && isManagerCheck) {
@@ -174,57 +216,60 @@ function SignupPage() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Avatar sx={{ m: 1, bgcolor: "black" }}>
             <LockOpenIcon />
           </Avatar>
           <Typography component="h1" variant="h5" color="black">
             회원 가입
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <div className="p-3 rounded border-solid border-2 border-blue-400">
               <FormLabel id="demo-controlled-radio-buttons-group">가입 포지션</FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={position}
-                onChange={handlePositionChange}>
+              <RadioGroup value={position} onChange={handlePositionChange}>
                 <FormControlLabel value="manager" control={<Radio />} label="관리자" />
                 <FormControlLabel value="employee" control={<Radio />} label="직원" />
               </RadioGroup>
             </div>
-            {/* 관리자 직원에 따라 추가정보 요구 */}
-            {position === "manager" ? (
-              <>
-                <FormControlLabel
-                  className="text-red-500"
-                  label="관리자로 가입하는 것이 맞습니까?"
-                  control={
-                    <Checkbox
-                      checked={isManagerCheck}
-                      onChange={e => setManagerCheck(e.target.checked)}
-                    />
-                  }
-                />
-              </>
-            ) : position === "employee" ? (
+
+            {position === "manager" && (
+              <FormControlLabel
+                className="text-red-500"
+                label="관리자로 가입하는 것이 맞습니까?"
+                control={
+                  <Checkbox
+                    checked={isManagerCheck}
+                    onChange={e => setManagerCheck(e.target.checked)}
+                  />
+                }
+              />
+            )}
+
+            {position === "employee" && (
               <>
                 <Typography component="p" color="black" sx={{ mt: 2 }}>
                   가입 회사 정보
                 </Typography>
                 <div className="flex flex-col items-stretch mb-2">
                   {!isCodeValid ? (
-                    <TextField
-                      className="w-full flex-grow"
-                      margin="normal"
-                      required
-                      label="회사코드"
-                      name="companycode"
-                      autoComplete="off"
-                      sx={{ border: error && "1px solid red" }}
-                      disabled={isCodeValid}
-                      value={companyCode}
-                      onChange={e => setCompanyCode(e.target.value)}
+                    <Controller
+                      name="companyCode"
+                      control={control}
+                      rules={{ required: position === "employee" && "회사코드를 입력해주세요" }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          className="w-full flex-grow"
+                          margin="normal"
+                          required
+                          label="회사코드"
+                          autoComplete="off"
+                          error={!!errors.companyCode}
+                          helperText={errors.companyCode?.message}
+                          disabled={isCodeValid}
+                        />
+                      )}
                     />
                   ) : (
                     <TextField
@@ -237,7 +282,8 @@ function SignupPage() {
                   )}
                   <Button
                     className="w-full flex-grow"
-                    onClick={() => checkCompanyCode(companyCode)}>
+                    onClick={() => checkCompanyCode(companyCode || "")}
+                  >
                     회사찾기
                   </Button>
                 </div>
@@ -245,75 +291,145 @@ function SignupPage() {
                   (회사 관리자에게 받은 회사코드를 입력해주세요.)
                 </Typography>
               </>
-            ) : (
-              <div></div>
             )}
+
             <Divider />
             <Typography component="p" color="black" sx={{ mt: 2 }}>
               개인 정보
             </Typography>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="이름"
+
+            <Controller
               name="name"
-              autoComplete="off"
+              control={control}
+              rules={{ required: "이름을 입력해주세요" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="이름"
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                  autoComplete="off"
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="이메일"
+
+            <Controller
               name="email"
-              autoComplete="off"
+              control={control}
+              rules={{
+                required: "이메일을 입력해주세요",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "유효한 이메일 주소를 입력해주세요",
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="이메일"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  autoComplete="off"
+                />
+              )}
             />
+
             <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
               (유효한 이메일을 작성해주셔야 합니다!) <br />
               (이메일형식예시 : hongildong@naver.com)
             </Typography>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="전화번호"
+
+            <Controller
               name="phoneNumber"
+              control={control}
+              rules={{ required: "전화번호를 입력해주세요" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="전화번호"
+                  error={!!errors.phoneNumber}
+                  helperText={errors.phoneNumber?.message}
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="비밀번호"
+
+            <Controller
               name="password"
-              type="password"
+              control={control}
+              rules={{
+                required: "비밀번호를 입력해주세요",
+                minLength: {
+                  value: 6,
+                  message: "비밀번호는 6자리 이상이어야 합니다",
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="비밀번호"
+                  type="password"
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                />
+              )}
             />
+
             <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
               (비밀번호는 6자리 이상으로 작성해주세요.)
             </Typography>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="비밀번호확인"
+
+            <Controller
               name="confirmPW"
-              type="password"
+              control={control}
+              rules={{
+                required: "비밀번호 확인을 입력해주세요",
+                validate: value => value === password || "비밀번호가 일치하지 않습니다",
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="비밀번호확인"
+                  type="password"
+                  error={!!errors.confirmPW}
+                  helperText={errors.confirmPW?.message}
+                />
+              )}
             />
-            {/* 에러시 오류 표시 */}
-            {error ? (
+
+            {error && (
               <Alert sx={{ mt: 3 }} severity="error">
                 {error}
               </Alert>
-            ) : null}
+            )}
+
             <Divider />
+
             <LoadingButton
               type="submit"
               fullWidth
               variant="outlined"
               color="primary"
               loading={loading}
-              sx={{ mt: 1, mb: 2 }}>
+              sx={{ mt: 1, mb: 2 }}
+            >
               회원가입
             </LoadingButton>
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/signin" style={{ textDecoration: "none", color: "gray" }}>
