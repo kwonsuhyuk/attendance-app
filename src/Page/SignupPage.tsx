@@ -28,6 +28,8 @@ import { TSignupForm, TSignupUserData, TSignupFormData, TSignupResponse } from "
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
+import AuthFooter from "@/Components/auth/AuthFooter";
+
 const SignupPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -359,24 +361,13 @@ const SignupPage = () => {
 
             <Divider />
 
-            <LoadingButton
-              type="submit"
-              fullWidth
-              variant="outlined"
-              color="primary"
+            {/* 버튼과 페이지이동 */}
+            <AuthFooter
+              buttonText="회원가입"
+              linkText="계정이 있나요? 로그인으로 이동"
+              linkTo="/signin"
               loading={loading}
-              sx={{ mt: 1, mb: 2 }}
-            >
-              회원가입
-            </LoadingButton>
-
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/signin" style={{ textDecoration: "none", color: "gray" }}>
-                  계정이 있나요? 로그인으로 이동
-                </Link>
-              </Grid>
-            </Grid>
+            />
           </Box>
         </Box>
       </Container>

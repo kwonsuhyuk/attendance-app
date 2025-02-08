@@ -8,11 +8,12 @@ import { login } from "../api/auth/index";
 import { TLoginForm } from "../model";
 import { useForm } from "react-hook-form";
 
+import AuthFooter from "@/Components/auth/AuthFooter";
+
 const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // react-hook-form 설정
   const {
     register,
     handleSubmit,
@@ -110,29 +111,12 @@ const LoginPage = () => {
               </Alert>
             ) : null}
             <Divider />
-            <LoadingButton
-              type="submit"
-              fullWidth
-              variant="outlined"
-              color="primary"
+            <AuthFooter
+              buttonText="로그인"
+              linkText="계정이 없나요? 회원가입으로 이동"
+              linkTo="/signup"
               loading={loading}
-              sx={{ mt: 1, mb: 2 }}
-            >
-              로그인
-            </LoadingButton>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link
-                  to="/signup"
-                  style={{
-                    textDecoration: "none",
-                    color: "gray",
-                  }}
-                >
-                  계정이 없나요? 회원가입으로 이동
-                </Link>
-              </Grid>
-            </Grid>
+            />
           </Box>
         </Box>
       </Container>
