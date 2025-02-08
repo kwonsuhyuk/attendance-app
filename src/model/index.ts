@@ -3,22 +3,35 @@ export type TLoginForm = {
   password: string;
 };
 
-type TUserBase = {
+type TSignupUserBase = {
   name: string;
   companyCode: string;
   phoneNumber: string;
 };
 
-export type TSignUpForm = TLoginForm & TUserBase;
+export type TSignupForm = TLoginForm & TSignupUserBase;
 
-export type TUserData = TUserBase & {
+export type TSignupUserData = TSignupUserBase & {
   id: string;
 };
 
-export type TSignUpFormData = TSignUpForm & {
+// 회원가입 폼에만 필요한 추가 필드
+export type TSignupFormData = TSignupForm & {
   confirmPW: string;
 };
-// 회원가입 폼에만 필요한 추가 필드
+
+export type TLoginResponse = {
+  success: boolean;
+  error?: string;
+};
+
+export type TSignupResponse = {
+  success: boolean;
+  data?: {
+    userId: string;
+  };
+  error?: string;
+};
 
 export type TJob = {
   jobName: string;
@@ -37,17 +50,4 @@ export type TCompanyInfo = {
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
-};
-
-export type TLoginResponse = {
-  success: boolean;
-  error?: string;
-};
-
-export type TSignUpResponse = {
-  success: boolean;
-  data?: {
-    userId: string;
-  };
-  error?: string;
 };

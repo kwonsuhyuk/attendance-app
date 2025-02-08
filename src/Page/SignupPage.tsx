@@ -24,7 +24,7 @@ import { setUser } from "../store/userSlice";
 import { Button } from "antd";
 import { useForm, Controller } from "react-hook-form";
 
-import { TSignUpForm, TUserData, TSignUpFormData, TSignUpResponse } from "../model";
+import { TSignupForm, TSignupUserData, TSignupFormData, TSignupResponse } from "../model";
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
@@ -44,7 +44,7 @@ const SignupPage = () => {
     watch,
     formState: { errors },
     setValue,
-  } = useForm<TSignUpFormData>({
+  } = useForm<TSignupFormData>({
     defaultValues: {
       name: "",
       email: "",
@@ -81,7 +81,7 @@ const SignupPage = () => {
   };
 
   const sendUserInfo = useCallback(
-    async (formData: TSignUpFormData) => {
+    async (formData: TSignupFormData) => {
       setLoading(true);
       try {
         const result = await signup({
@@ -96,7 +96,7 @@ const SignupPage = () => {
           throw new Error(result.error || "회원가입 중 오류가 발생했습니다.");
         }
 
-        const userData: TUserData = {
+        const userData: TSignupUserData = {
           id: result.data.userId,
           name: formData.name,
           companyCode: formData.companyCode,
@@ -123,7 +123,7 @@ const SignupPage = () => {
     [dispatch, position, navigate],
   );
 
-  const onSubmit = (data: TSignUpFormData) => {
+  const onSubmit = (data: TSignupFormData) => {
     sendUserInfo(data);
   };
 

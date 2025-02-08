@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Avatar,
-  Box,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Avatar, Box, Container, Grid, TextField, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useCallback, useEffect, useState } from "react";
@@ -16,7 +8,7 @@ import { login } from "../api/auth/index";
 import { TLoginForm } from "../model";
 import { useForm } from "react-hook-form";
 
-function LoginPage() {
+const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -82,17 +74,14 @@ function LoginPage() {
             sx={{
               m: 1,
               bgcolor: "black",
-            }}>
+            }}
+          >
             <LoginIcon />
           </Avatar>
           <Typography component="h1" variant="h5" color="black">
             로그인
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             {/* 관리자 직원에 따라 추가정보 요구 */}
             <TextField
               margin="normal"
@@ -127,7 +116,8 @@ function LoginPage() {
               variant="outlined"
               color="primary"
               loading={loading}
-              sx={{ mt: 1, mb: 2 }}>
+              sx={{ mt: 1, mb: 2 }}
+            >
               로그인
             </LoadingButton>
             <Grid container justifyContent="flex-end">
@@ -137,7 +127,8 @@ function LoginPage() {
                   style={{
                     textDecoration: "none",
                     color: "gray",
-                  }}>
+                  }}
+                >
                   계정이 없나요? 회원가입으로 이동
                 </Link>
               </Grid>
@@ -147,6 +138,6 @@ function LoginPage() {
       </Container>
     </div>
   );
-}
+};
 
 export default LoginPage;

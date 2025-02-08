@@ -118,9 +118,7 @@ export async function fetchWorkTimes(companyCode, userId) {
         if (nextDayRef && nextDayRef.endTime) {
           end = new Date(nextDayRef.endTime);
         } else {
-          throw new Error(
-            `${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`,
-          );
+          throw new Error(`${date}의 퇴근 시간이 없습니다. 아직 퇴근을 하지 않았을 수 있습니다.`);
         }
       }
 
@@ -215,10 +213,7 @@ export async function fetchHolidayList(companyCode) {
   }
 }
 
-export async function saveHolidaySettings(
-  companyCode,
-  { holidays, isHoliday, holidayPay },
-) {
+export async function saveHolidaySettings(companyCode, { holidays, isHoliday, holidayPay }) {
   try {
     const holidayList = holidays.reduce((obj, date) => {
       const year = date.getFullYear();
@@ -288,14 +283,8 @@ export async function processQRScan(companyCode, userId, scanTime) {
 
     // 현재 날짜와 이전 날짜의 데이터 참조
     const todayPath = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
-    const todayPathRef = ref(
-      db,
-      `companyCode/${companyCode}/users/${userId}/date/${nowStr}`,
-    );
-    const todayWorkRef = ref(
-      db,
-      `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`,
-    );
+    const todayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
+    const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
 
     const yesterdayPath = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
     const yesterdayPathRef = ref(
@@ -564,11 +553,7 @@ export async function validateCompanyCode(code) {
   try {
     const companyCodeData = await fetchData(`companyCode/${code}`);
 
-    if (
-      companyCodeData &&
-      companyCodeData.companyInfo &&
-      companyCodeData.companyInfo.companyName
-    ) {
+    if (companyCodeData && companyCodeData.companyInfo && companyCodeData.companyInfo.companyName) {
       return {
         isValid: true,
         companyName: companyCodeData.companyInfo.companyName,
