@@ -1,33 +1,23 @@
-import {
-  Alert,
-  Avatar,
-  Box,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import LoginIcon from "@mui/icons-material/Login";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Divider } from "antd";
-import { login } from "../api/auth/index";
-import { TLoginForm } from "../model";
-import { useForm } from "react-hook-form";
+import { Alert, Avatar, Box, Container, Grid, TextField, Typography, Button } from "@mui/material"
+import LoginIcon from "@mui/icons-material/Login"
+import LoadingButton from "@mui/lab/LoadingButton"
+import { useCallback, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { Divider } from "antd"
+import { login } from "../api/auth/index"
+import type { TLoginForm } from "../model"
+import { useForm } from "react-hook-form"
 
 function LoginPage() {
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  // react-hook-form 설정
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>();
+  } = useForm<TLoginForm>()
 
-  // 폼 검증 규칙
   const validationRules = {
     email: {
       required: "이메일을 입력해주세요",
@@ -43,36 +33,48 @@ function LoginPage() {
         message: "비밀번호는 최소 6자 이상이어야 합니다",
       },
     },
-  };
+  }
 
-  // 변수명을 바꾼 이유는 react-hook-form 기능에 handleSubmit라는 이름이 있어 onSubmit으로 변경
-  // useCallback을 쓰지않은 이유 단지 로그인 버튼인데 리렌더링에 최적화된 callback을 사용할 이유가 분명하지 않음
   const onSubmit = async (formData: TLoginForm) => {
     try {
-      setLoading(true);
-      const response = await login(formData);
+      setLoading(true)
+      const response = await login(formData)
       if (!response.success) {
-        let errorMessage = "로그인 실패";
+        let errorMessage = "로그인 실패"
         if (response.error?.includes("wrong-password")) {
-          errorMessage = "비밀번호가 올바르지 않습니다";
+          errorMessage = "비밀번호가 올바르지 않습니다"
         } else if (response.error?.includes("user-not-found")) {
-          errorMessage = "등록되지 않은 이메일입니다";
+          errorMessage = "등록되지 않은 이메일입니다"
         }
-        setError(errorMessage);
+        setError(errorMessage)
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다");
+      setError("로그인 중 오류가 발생했습니다")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const handleGuestLogin = useCallback(async (email: string, password: string) => {
+    try {
+      setLoading(true)
+      const response = await login({ email, password })
+      if (!response.success) {
+        setError("게스트 로그인 실패")
+      }
+    } catch (error) {
+      setError("게스트 로그인 중 오류가 발생했습니다")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    if (!error) return;
+    if (!error) return
     setTimeout(() => {
-      setError("");
-    }, 3000);
-  }, [error]);
+      setError("")
+    }, 3000)
+  }, [error])
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -82,18 +84,14 @@ function LoginPage() {
             sx={{
               m: 1,
               bgcolor: "black",
-            }}>
+            }}
+          >
             <LoginIcon />
           </Avatar>
           <Typography component="h1" variant="h5" color="black">
             로그인
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1 }}>
-            {/* 관리자 직원에 따라 추가정보 요구 */}
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -114,7 +112,6 @@ function LoginPage() {
               error={!!errors.password}
               helperText={errors.password?.message}
             />
-            {/* 에러시 오류 표시 */}
             {error ? (
               <Alert sx={{ mt: 3 }} severity="error">
                 {error}
@@ -127,9 +124,30 @@ function LoginPage() {
               variant="outlined"
               color="primary"
               loading={loading}
-              sx={{ mt: 1, mb: 2 }}>
+              sx={{ mt: 1, mb: 2 }}
+            >
               로그인
             </LoadingButton>
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              onClick={() => handleGuestLogin("test@naver.com", "qweqwe")}
+              disabled={loading}
+              sx={{ mb: 2 }}
+            >
+              관리자 Guest 로그인
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="info"
+              onClick={() => handleGuestLogin("testep@naver.com", "qweqwe")}
+              disabled={loading}
+              sx={{ mb: 2 }}
+            >
+              직원 Guest 로그인
+            </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link
@@ -137,7 +155,8 @@ function LoginPage() {
                   style={{
                     textDecoration: "none",
                     color: "gray",
-                  }}>
+                  }}
+                >
                   계정이 없나요? 회원가입으로 이동
                 </Link>
               </Grid>
@@ -146,7 +165,8 @@ function LoginPage() {
         </Box>
       </Container>
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage
+
