@@ -24,7 +24,7 @@ import { setUser } from "../store/userSlice";
 import { Button } from "antd";
 import { useForm, Controller } from "react-hook-form";
 
-import { TSignUpForm, TUserData, TSignUpFormData } from "src/model";
+import { TSignUpForm, TUserData, TSignUpFormData, TSignUpResponse } from "../model";
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
@@ -92,12 +92,12 @@ const SignupPage = () => {
           phoneNumber: formData.phoneNumber,
         });
 
-        if (!result.success || !result.userId) {
+        if (!result.success || !result.data) {
           throw new Error(result.error || "회원가입 중 오류가 발생했습니다.");
         }
 
         const userData: TUserData = {
-          id: result.userId,
+          id: result.data.userId,
           name: formData.name,
           companyCode: formData.companyCode,
           phoneNumber: formData.phoneNumber,
