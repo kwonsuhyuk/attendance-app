@@ -8,7 +8,7 @@ export default defineConfig({
   assetsInclude: ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
   resolve: {
     alias: {
-      "@": path.resolve("./src"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });

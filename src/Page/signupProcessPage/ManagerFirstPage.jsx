@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import gsap from "gsap";
-import ImageModal from "../../Components/modal/ImageModal";
+import ImageModal from "../../components/modal/ImageModal";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
@@ -222,8 +222,15 @@ function ManagerFirstPage() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-            }}>
-            <ClipLoader loading={loading} color="black" size={150} aria-label="Loading Spinner" data-testid="loader" />
+            }}
+          >
+            <ClipLoader
+              loading={loading}
+              color="black"
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
             {loading && (
               <Typography sx={{ fontSize: "1.5rem" }} className="animate-text">
                 회사 데이터 설정하는 중
@@ -240,7 +247,8 @@ function ManagerFirstPage() {
               gap: 10,
               display: "flex",
               flexDirection: "column",
-            }}>
+            }}
+          >
             <Typography sx={{ fontSize: "1.5rem" }} className="animate-text">
               회사의 기본 설정을 시작하겠습니다! 기본 설정은 바꾸기 어려우니 신중히 작성해주세요.
             </Typography>
@@ -250,7 +258,8 @@ function ManagerFirstPage() {
                 gap: 10,
                 display: "flex",
                 flexDirection: "column",
-              }}>
+              }}
+            >
               <TextField
                 required
                 autoComplete="off"
@@ -285,8 +294,13 @@ function ManagerFirstPage() {
                   justifyContent: "center",
                   alignItems: "center",
                   border: "4px solid gray",
-                }}>
-                {!imageUrl ? "+" : <img src={imageUrl} alt="로고 이미지" className="w-full h-full" />}
+                }}
+              >
+                {!imageUrl ? (
+                  "+"
+                ) : (
+                  <img src={imageUrl} alt="로고 이미지" className="w-full h-full" />
+                )}
               </div>
               <ImageModal
                 setImageUrl={setImageUrl}
@@ -301,7 +315,9 @@ function ManagerFirstPage() {
               Back
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
           </Box>
         </React.Fragment>
       ) : activeStep === 1 ? (
@@ -315,22 +331,25 @@ function ManagerFirstPage() {
               display: "flex",
               flexDirection: "column",
               overflowY: "scroll",
-            }}>
+            }}
+          >
             <Typography sx={{ fontSize: "1.5rem" }} className="animate-text">
-              회사의 정확한 관리를 위한 추가설정 칸 입니다. 회원가입 이후 설정창에서 재설정할 수 있습니다.
+              회사의 정확한 관리를 위한 추가설정 칸 입니다. 회원가입 이후 설정창에서 재설정할 수
+              있습니다.
             </Typography>
             {/* 직책 태그 */}
             <div className="text-gray-500 w-3/5">
               <div className="text-black mb-3 font-black">직책 태그 추가</div>
               <div className="text-xs mb-7">
-                (회사 직원들의 직책을 분류, 정리 하기 위한 칸으로 직원들이 가입시에 직책을 선택할 수 있고, 추후에
-                직원들을 직책별로 정리해서 볼 수 있게 해주는 태그입니다.)
+                (회사 직원들의 직책을 분류, 정리 하기 위한 칸으로 직원들이 가입시에 직책을 선택할 수
+                있고, 추후에 직원들을 직책별로 정리해서 볼 수 있게 해주는 태그입니다.)
               </div>
               <div className="h-64 grid grid-cols-5 grid-flow-col gap-4">
                 <Box
                   className="col-span-2 h-10 flex justify-start items-center"
                   component="form"
-                  onSubmit={handleTagSubmit}>
+                  onSubmit={handleTagSubmit}
+                >
                   <TextField
                     id="jobName"
                     label="직책추가"
@@ -346,7 +365,8 @@ function ManagerFirstPage() {
                   style={{
                     borderLeft: "2px solid #e9e9e9",
                     padding: "1rem 2rem",
-                  }}>
+                  }}
+                >
                   {jobTags.length === 0 ? (
                     <div>직책을 추가하세요.</div>
                   ) : (
@@ -354,9 +374,13 @@ function ManagerFirstPage() {
                       <li key={index}>
                         <div
                           className="flex justify-between items-center gap-3 p-3 mb-5"
-                          style={{ borderBottom: "1px solid #e9e9e9" }}>
+                          style={{ borderBottom: "1px solid #e9e9e9" }}
+                        >
                           {tag.jobName}
-                          <CloseIcon className="cursor-pointer" onClick={() => handleDeleteTag(tag)} />
+                          <CloseIcon
+                            className="cursor-pointer"
+                            onClick={() => handleDeleteTag(tag)}
+                          />
                         </div>
                       </li>
                     ))
@@ -454,7 +478,8 @@ function ManagerFirstPage() {
                 id="demo-simple-select"
                 value={day}
                 className="h-10 ml-5"
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 {[...Array(31)].map((x, i) => (
                   <MenuItem key={i} value={i + 1}>
                     {i + 1}
@@ -465,14 +490,17 @@ function ManagerFirstPage() {
               <div className="text-xs mt-3">
                 (급여 정산 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
                 {day != 1 ? "이번 달 " : "전 달 "}
-                <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를 계산합니다.)
+                <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를
+                계산합니다.)
               </div>
             </div>
 
             {/* 주간야간 시간 설정 */}
             <div className="text-gray-500 w-3/5">
               <div className="text-black mb-3 font-black">주간 야간 공휴일 설정</div>
-              <div className="text-xs mb-7">(주간, 야간 ,공휴일 등을 구분해서 급여를 지급할지 설정합니다.)</div>
+              <div className="text-xs mb-7">
+                (주간, 야간 ,공휴일 등을 구분해서 급여를 지급할지 설정합니다.)
+              </div>
               <div className="grid grid-cols-2 grid-flow-col gap-4">
                 <div style={{ borderRight: "2px solid #e9e9e9" }}>
                   <FormControlLabel
@@ -489,7 +517,11 @@ function ManagerFirstPage() {
                     <div className="flex flex-col gap-5">
                       <div className="flex items-center">
                         야간 시간 설정 :
-                        <Select className="m-3 h-10" value={nightStart} onChange={handleNightStartChange}>
+                        <Select
+                          className="m-3 h-10"
+                          value={nightStart}
+                          onChange={handleNightStartChange}
+                        >
                           <MenuItem value="">시작 시간</MenuItem>
                           {[...Array(25)].map((_, index) => (
                             <MenuItem key={index} value={index}>
@@ -498,7 +530,11 @@ function ManagerFirstPage() {
                           ))}
                         </Select>
                         시 ~
-                        <Select className="m-3 h-10" value={nightEnd} onChange={handleNightEndChange}>
+                        <Select
+                          className="m-3 h-10"
+                          value={nightEnd}
+                          onChange={handleNightEndChange}
+                        >
                           <MenuItem value="">끝나는 시간</MenuItem>
                           {[...Array(25)].map((_, index) => (
                             <MenuItem key={index} value={index}>
@@ -520,7 +556,9 @@ function ManagerFirstPage() {
                         />
                         배 지급
                       </div>
-                      <div className="text-sm text-blue-500">기본급:10000원 일시 &gt; {isNightPay * 10000}원</div>
+                      <div className="text-sm text-blue-500">
+                        기본급:10000원 일시 &gt; {isNightPay * 10000}원
+                      </div>
                     </div>
                   )}
                 </div>
@@ -539,7 +577,8 @@ function ManagerFirstPage() {
                     <>
                       <div>
                         <div className="text-xs mb-3">
-                          주말(토,일) 과 국가 지정 공휴일에 적용되는 시급 배율을 입력해주세요. <br />
+                          주말(토,일) 과 국가 지정 공휴일에 적용되는 시급 배율을 입력해주세요.{" "}
+                          <br />
                           (회사에서 지정하는 공휴일은 가입후 설정에서 가능합니다.)
                         </div>
                         <Input
@@ -550,7 +589,9 @@ function ManagerFirstPage() {
                         />
                         배 지급
                       </div>
-                      <div className="text-sm text-blue-500">기본급:10000원 일시 &gt; {holidayPay * 10000}원</div>
+                      <div className="text-sm text-blue-500">
+                        기본급:10000원 일시 &gt; {holidayPay * 10000}원
+                      </div>
                     </>
                   )}
                 </div>
@@ -562,7 +603,9 @@ function ManagerFirstPage() {
               Back
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
           </Box>
         </React.Fragment>
       ) : (
@@ -575,12 +618,16 @@ function ManagerFirstPage() {
               display: "flex",
               flexDirection: "column",
               overflowY: "scroll",
-            }}>
+            }}
+          >
             <Typography sx={{ fontSize: "1.5rem" }} className="animate-text">
-              기본적인 회사 설정을 마쳤습니다. 지금까지 입력하신 회사 정보 및 설정을 확인 해주세요. <br />
+              기본적인 회사 설정을 마쳤습니다. 지금까지 입력하신 회사 정보 및 설정을 확인 해주세요.{" "}
+              <br />
               <span className="bg-yellow-200">아래 회사ID로 직원들을 초대할 수 있고</span>
               {"    "}
-              <span className="bg-green-200">QR코드로 직원들의 출근 퇴근을 체크할 수 있습니다.</span>
+              <span className="bg-green-200">
+                QR코드로 직원들의 출근 퇴근을 체크할 수 있습니다.
+              </span>
               <br />
               가입 후 회사 정보란에서 회사ID와 QR코드를 계속 확인할 수 있습니다.
             </Typography>
@@ -589,7 +636,12 @@ function ManagerFirstPage() {
                 {/* 입력한 회사정보 확인 시켜주는 칸 */}
                 <div className="flex items-center justify-center gap-3 relative">
                   {imageUrl && (
-                    <img style={{ borderRadius: "50%" }} src={imageUrl} alt="로고 이미지" className="w-20 h-20" />
+                    <img
+                      style={{ borderRadius: "50%" }}
+                      src={imageUrl}
+                      alt="로고 이미지"
+                      className="w-20 h-20"
+                    />
                   )}
                   <span className="text-3xl" style={{ fontFamily: "Roboto Slab" }}>
                     {companyName}
@@ -604,12 +656,17 @@ function ManagerFirstPage() {
                     직책
                   </div>
                   <div className="text-xs text-gray-500 font-thin">
-                    (보여지는 급여는 기본 설정 급여이며, 직원별 급여는 가입 후 직원별로 설정하실 수 있습니다.)
+                    (보여지는 급여는 기본 설정 급여이며, 직원별 급여는 가입 후 직원별로 설정하실 수
+                    있습니다.)
                   </div>
                 </div>
                 <ul className="text-base text-gray-500 flex flex-col gap-5 mb-10">
                   {jobTags.map((tagEl, index) => (
-                    <li key={index} className="flex gap-5 items-end" style={{ borderBottom: "1px solid #e9e9e9" }}>
+                    <li
+                      key={index}
+                      className="flex gap-5 items-end"
+                      style={{ borderBottom: "1px solid #e9e9e9" }}
+                    >
                       <div className="text-lg text-gray-800">- {tagEl.jobName}</div>
                       {/* <div>{tagEl.payWay}</div>
                       <div>{formatMoney(tagEl.defaultPay)}원</div> */}
@@ -627,7 +684,8 @@ function ManagerFirstPage() {
                   <div className="text-xs mt-3">
                     (급여 정산 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
                     {day != 1 ? "이번 달 " : "전 달 "}
-                    <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를 계산합니다.)
+                    <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를
+                    계산합니다.)
                   </div>
                 </div>
                 {/* 주말 야간 , 공휴일 선택 유무 배당 확인 */}
