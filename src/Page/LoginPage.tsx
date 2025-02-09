@@ -9,6 +9,7 @@ import { TLoginForm } from "../model";
 import { useForm } from "react-hook-form";
 
 import AuthFooter from "@/Components/auth/AuthFooter";
+import LoginForm from "@/Components/auth/LoginForm";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -20,26 +21,6 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<TLoginForm>();
 
-  // 폼 검증 규칙
-  const validationRules = {
-    email: {
-      required: "이메일을 입력해주세요",
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: "올바른 이메일 형식이 아닙니다",
-      },
-    },
-    password: {
-      required: "비밀번호를 입력해주세요",
-      minLength: {
-        value: 6,
-        message: "비밀번호는 최소 6자 이상이어야 합니다",
-      },
-    },
-  };
-
-  // 변수명을 바꾼 이유는 react-hook-form 기능에 handleSubmit라는 이름이 있어 onSubmit으로 변경
-  // useCallback을 쓰지않은 이유 단지 로그인 버튼인데 리렌더링에 최적화된 callback을 사용할 이유가 분명하지 않음
   const onSubmit = async (formData: TLoginForm) => {
     try {
       setLoading(true);
@@ -83,28 +64,7 @@ const LoginPage = () => {
             로그인
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
-            {/* 관리자 직원에 따라 추가정보 요구 */}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="이메일"
-              autoComplete="off"
-              {...register("email", validationRules.email)}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="비밀번호"
-              type="password"
-              {...register("password", validationRules.password)}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-            {/* 에러시 오류 표시 */}
+            <LoginForm register={register} errors={errors} />
             {error ? (
               <Alert sx={{ mt: 3 }} severity="error">
                 {error}

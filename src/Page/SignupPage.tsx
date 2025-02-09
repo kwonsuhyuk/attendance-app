@@ -155,6 +155,7 @@ const SignupPage = () => {
           <Typography component="h1" variant="h5" color="black">
             회원 가입
           </Typography>
+
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <div className="p-3 rounded border-solid border-2 border-blue-400">
               <FormLabel id="demo-controlled-radio-buttons-group">가입 포지션</FormLabel>
@@ -353,12 +354,11 @@ const SignupPage = () => {
               )}
             />
 
-            {error && (
+            {error ? (
               <Alert sx={{ mt: 3 }} severity="error">
                 {error}
               </Alert>
-            )}
-
+            ) : null}
             <Divider />
 
             {/* 버튼과 페이지이동 */}
