@@ -40,35 +40,6 @@ export type TSignupResponse = {
   error?: string;
 };
 
-// 회원가입 가입 포지션
-export type TPosition = "manager" | "employee" | "";
-
-export type TPositionSelectorProps = {
-  position: TPosition;
-  onPositionChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
-// 관리자 선택시
-export type TManagerConfirmationProps = {
-  isManagerCheck: boolean;
-  setManagerCheck: (checked: boolean) => void;
-};
-// 직원 선택시
-export interface TEmployeeCompanyFormProps {
-  control: Control<TSignupFormData>;
-  errors: FieldErrors<TSignupFormData>;
-  isCodeValid: boolean;
-  tempCompInfo: string;
-  companyCode: string | undefined;
-  checkCompanyCode: (code: string) => Promise<void>;
-}
-
-// 가입 정보
-export interface TPersonalInfoFormProps {
-  control: Control<TSignupFormData>;
-  errors: FieldErrors<TSignupFormData>;
-  password: string;
-}
-
 export type TJob = {
   jobName: string;
 };

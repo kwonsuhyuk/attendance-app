@@ -2,7 +2,12 @@ import { TextField } from "@mui/material";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { TLoginForm } from "@/model";
 
-const LoginForm = ({ register, errors }: any) => {
+interface ILoginFormProps {
+  register: UseFormRegister<TLoginForm>;
+  errors: FieldErrors<TLoginForm>;
+}
+
+const LoginForm = ({ register, errors }: ILoginFormProps) => {
   // 폼 검증 규칙
   const validationRules = {
     email: {

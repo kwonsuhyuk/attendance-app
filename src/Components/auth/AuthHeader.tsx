@@ -1,7 +1,13 @@
 import React from "react";
 import { Avatar, Typography } from "@mui/material";
+import { SvgIconComponent } from "@mui/icons-material";
 
-const AuthHeader = ({ icon: Icon, title }: any) => {
+interface IAuthHeaderProps {
+  icon: SvgIconComponent;
+  title: string;
+}
+
+const AuthHeader = ({ icon: Icon, title }: IAuthHeaderProps) => {
   return (
     <>
       <Avatar

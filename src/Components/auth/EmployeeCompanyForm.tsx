@@ -1,6 +1,15 @@
 import { Typography, TextField, Button } from "@mui/material";
-import { Controller } from "react-hook-form";
-import { TEmployeeCompanyFormProps } from "@/model";
+import { Controller, Control, FieldErrors } from "react-hook-form";
+import { TSignupFormData } from "@/model";
+
+interface IEmployeeCompanyFormProps {
+  control: Control<TSignupFormData>;
+  errors: FieldErrors<TSignupFormData>;
+  isCodeValid: boolean;
+  tempCompInfo: string;
+  companyCode: string | undefined;
+  checkCompanyCode: (code: string) => Promise<void>;
+}
 
 export const EmployeeCompanyForm = ({
   control,
@@ -9,7 +18,7 @@ export const EmployeeCompanyForm = ({
   tempCompInfo,
   companyCode,
   checkCompanyCode,
-}: TEmployeeCompanyFormProps) => {
+}: IEmployeeCompanyFormProps) => {
   return (
     <>
       <Typography component="p" color="black" sx={{ mt: 2 }}>

@@ -1,10 +1,15 @@
 import { FormControl, FormControlLabel, Checkbox, FormHelperText } from "@mui/material";
 import { TManagerConfirmationProps } from "@/model";
 
+interface IManagerConfirmationProps {
+  isManagerCheck: boolean;
+  setManagerCheck: (checked: boolean) => void;
+}
+
 export const ManagerConfirmation = ({
   isManagerCheck,
   setManagerCheck,
-}: TManagerConfirmationProps) => {
+}: IManagerConfirmationProps) => {
   return (
     <FormControl error={!isManagerCheck}>
       <FormControlLabel

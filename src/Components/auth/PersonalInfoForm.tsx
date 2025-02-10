@@ -1,9 +1,15 @@
 import React from "react";
 import { TextField, Typography } from "@mui/material";
-import { Control, Controller } from "react-hook-form";
-import { TSignupFormData, TPersonalInfoFormProps } from "@/model";
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { TSignupFormData } from "@/model";
 
-export const PersonalInfoForm = ({ control, errors, password }: TPersonalInfoFormProps) => {
+interface IPersonalInfoFormProps {
+  control: Control<TSignupFormData>;
+  errors: FieldErrors<TSignupFormData>;
+  password: string;
+}
+
+export const PersonalInfoForm = ({ control, errors, password }: IPersonalInfoFormProps) => {
   return (
     <>
       <Typography component="p" color="black" sx={{ mt: 2 }}>
