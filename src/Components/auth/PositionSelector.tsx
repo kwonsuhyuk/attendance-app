@@ -1,7 +1,8 @@
 import { FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import { TPosition } from "@/model";
 
-export interface IPositionSelectorProps {
-  position: "manager" | "employee" | "";
+interface IPositionSelectorProps {
+  position: TPosition;
   onPositionChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

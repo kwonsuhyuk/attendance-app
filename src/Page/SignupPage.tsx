@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { useForm } from "react-hook-form";
 
-import { TSignupUserData, TSignupFormData } from "@/model";
+import { TSignupUserData, TSignupFormData, TPosition } from "@/model";
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
@@ -18,12 +18,10 @@ import { ManagerConfirmation } from "@/Components/auth/ManagerConfirmation";
 import { EmployeeCompanyForm } from "@/Components/auth/EmployeeCompanyForm";
 import { PersonalInfoForm } from "@/Components/auth/PersonalInfoForm";
 
-import { IPositionSelectorProps } from "@/Components/auth/PositionSelector";
-
 const SignupPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [position, setPosition] = useState<IPositionSelectorProps["position"]>("");
+  const [position, setPosition] = useState<TPosition>("");
   const [isManagerCheck, setManagerCheck] = useState<boolean>(false);
   const [isCodeValid, setIsCodeValid] = useState<boolean>(false);
   const [tempCompInfo, setTempCompInfo] = useState<string>("");
@@ -56,7 +54,7 @@ const SignupPage = () => {
   }, [error]);
 
   const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPosition(e.target.value as "manager" | "employee" | "");
+    setPosition(e.target.value as TPosition);
   };
 
   const checkCompanyCode = async (code: string) => {

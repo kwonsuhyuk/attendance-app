@@ -40,6 +40,8 @@ export type TSignupResponse = {
   error?: string;
 };
 
+export type TPosition = "manager" | "employee" | "";
+
 export type TJob = {
   jobName: string;
 };
