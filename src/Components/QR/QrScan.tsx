@@ -12,6 +12,7 @@ import { fetchCompanyAndJobInfo, processQRScan, registerOutWork } from "../../ap
 import { TCompanyInfo } from "@/model";
 import { decrypt, encrypt } from "@/util/encryptDecrypt";
 import { QRSCAN_PERIOD } from "@/constant/qr";
+import QrScanner from "qr-scanner";
 
 interface QrScanProps {
   companyLogo: string;
@@ -134,7 +135,8 @@ function QrScan({ companyLogo }: QrScanProps) {
         <div
           data-tour="step-38"
           className="underline text-sm text-red-500 text-center mb-3"
-          onClick={handleCheckOutJob}>
+          onClick={handleCheckOutJob}
+        >
           외근 시 여기를 클릭해주세요.
         </div>
         <div data-tour="step-37" className="absolute right-0 bottom-0 w-52 h-10"></div>
@@ -143,7 +145,8 @@ function QrScan({ companyLogo }: QrScanProps) {
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description">
+        aria-describedby="alert-dialog-description"
+      >
         <DialogTitle>{"정말 외근으로 출근 하시는게 맞습니까?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
