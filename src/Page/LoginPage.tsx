@@ -1,13 +1,17 @@
 import { Alert, Avatar, Box, Container, Grid, TextField, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import LoadingButton from "@mui/lab/LoadingButton";
+
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
-import { login } from "../api/auth/index";
-import { TLoginForm } from "../model";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { login } from "../api/auth/index";
+import { loginFormSchema, TLoginForm } from "../model";
+
+import AuthHeader from "@/Components/auth/AuthHeader";
 import AuthFooter from "@/Components/auth/AuthFooter";
 import LoginForm from "@/Components/auth/LoginForm";
 
@@ -19,20 +23,14 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>();
+  } = useForm<TLoginForm>({ resolver: zodResolver(loginFormSchema) });
 
   const onSubmit = async (formData: TLoginForm) => {
     try {
       setLoading(true);
       const response = await login(formData);
       if (!response.success) {
-        let errorMessage = "로그인 실패";
-        if (response.error?.includes("wrong-password")) {
-          errorMessage = "비밀번호가 올바르지 않습니다";
-        } else if (response.error?.includes("user-not-found")) {
-          errorMessage = "등록되지 않은 이메일입니다";
-        }
-        setError(errorMessage);
+        setError("이메일 또는 비밀번호가 올바르지 않습니다");
       }
     } catch (error) {
       setError("로그인 중 오류가 발생했습니다");
@@ -52,17 +50,7 @@ const LoginPage = () => {
     <div className="flex justify-center items-center h-screen">
       <Container component="main" maxWidth="xs">
         <Box className="flex flex-col justify-center items-center">
-          <Avatar
-            sx={{
-              m: 1,
-              bgcolor: "black",
-            }}
-          >
-            <LoginIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5" color="black">
-            로그인
-          </Typography>
+          <AuthHeader icon={LoginIcon} title="로그인" />
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <LoginForm register={register} errors={errors} />
             {error ? (

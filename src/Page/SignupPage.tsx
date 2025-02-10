@@ -28,6 +28,7 @@ import { TSignupForm, TSignupUserData, TSignupFormData, TSignupResponse } from "
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
+import AuthHeader from "@/Components/auth/AuthHeader";
 import AuthFooter from "@/Components/auth/AuthFooter";
 
 const SignupPage = () => {
@@ -149,12 +150,7 @@ const SignupPage = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "black" }}>
-            <LockOpenIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5" color="black">
-            회원 가입
-          </Typography>
+          <AuthHeader icon={LockOpenIcon} title="회원가입" />
 
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <div className="p-3 rounded border-solid border-2 border-blue-400">
@@ -359,6 +355,7 @@ const SignupPage = () => {
                 {error}
               </Alert>
             ) : null}
+
             <Divider />
 
             {/* 버튼과 페이지이동 */}

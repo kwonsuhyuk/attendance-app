@@ -1,7 +1,18 @@
-export type TLoginForm = {
-  email: string;
-  password: string;
-};
+import { z } from "zod";
+
+// 로그인 스키마 정의 (유효성 검사)
+export const loginFormSchema = z.object({
+  email: z.string().email({ message: "유효한 이메일을 입력하세요." }),
+  password: z.string().min(6, { message: "비밀번호는 최소 6자 이상이어야 합니다." }),
+});
+
+// TypeScript 타입 자동 생성
+export type TLoginForm = z.infer<typeof loginFormSchema>;
+
+// export type TLoginForm = {
+//   email: string;
+//   password: string;
+// };
 
 type TSignupUserBase = {
   name: string;
