@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "antd";
 import { toast } from "react-toastify";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Loading from "../Components/common/Loading";
-import QrGenerator from "@/Components/QR/QrGenerator";
+import Loading from "../components/common/Loading";
+import QrGenerator from "@/components/QR/QrGenerator";
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
@@ -41,7 +41,9 @@ const ManagerSettingBasicPage = () => {
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
-      const snapshot = await get(ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"));
+      const snapshot = await get(
+        ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"),
+      );
       const data = snapshot?.val();
       setCompanyData(data);
       setIsLoading(false);
@@ -136,7 +138,8 @@ const ManagerSettingBasicPage = () => {
               <div className="flex flex-col justify-center items-center">
                 <div
                   className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
-                  style={{ borderRadius: "20px" }}>
+                  style={{ borderRadius: "20px" }}
+                >
                   {currentUser?.photoURL}
                   <span className="absolute right-7 cursor-pointer">
                     <ContentCopyIcon onClick={handleCopyCompId} />
@@ -151,7 +154,8 @@ const ManagerSettingBasicPage = () => {
               <Box
                 className="col-span-2 h-10 flex justify-start items-center"
                 component="form"
-                onSubmit={handleTagSubmit}>
+                onSubmit={handleTagSubmit}
+              >
                 <input
                   type="text"
                   id="jobName"
@@ -176,16 +180,21 @@ const ManagerSettingBasicPage = () => {
                 style={{
                   padding: "1rem 2rem",
                   borderLeft: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
-                }}>
+                }}
+              >
                 {Object.entries(jobName).map(([tagKey, tag], index) => (
                   <li key={index}>
                     <div
                       className="flex justify-between items-center gap-3 p-3 mb-5"
                       style={{
                         borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
-                      }}>
+                      }}
+                    >
                       {tag.jobName}
-                      <CloseIcon className="cursor-pointer" onClick={() => handleDeleteTag(tagKey)} />
+                      <CloseIcon
+                        className="cursor-pointer"
+                        onClick={() => handleDeleteTag(tagKey)}
+                      />
                     </div>
                   </li>
                 ))}
@@ -207,7 +216,8 @@ const ManagerSettingBasicPage = () => {
                 color: !darkMode ? "black" : "white",
                 border: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
               }}
-              onChange={handlePayCheckDayChange}>
+              onChange={handlePayCheckDayChange}
+            >
               {[...Array(31)].map((x, i) => (
                 <MenuItem key={i} value={i + 1}>
                   {i + 1}
@@ -218,7 +228,8 @@ const ManagerSettingBasicPage = () => {
             <div className="text-xs mt-3">
               (급여 정산 기능 이용 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
               {day != 1 ? "이번 달 " : "전 달 "}
-              <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를 계산합니다.)
+              <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를
+              계산합니다.)
             </div>
           </div>
         </div>
@@ -246,7 +257,8 @@ const ManagerSettingBasicPage = () => {
                       className="m-3 h-10"
                       value={nightStart}
                       sx={{ color: !darkMode ? "black" : "white" }}
-                      onChange={e => setNightStart(e.target.value)}>
+                      onChange={e => setNightStart(e.target.value)}
+                    >
                       <MenuItem value="">시작 시간</MenuItem>
                       {[...Array(25)].map((_, index) => (
                         <MenuItem key={index} value={index}>
@@ -259,7 +271,8 @@ const ManagerSettingBasicPage = () => {
                       className="m-3 h-10"
                       value={nightEnd}
                       sx={{ color: !darkMode ? "black" : "white" }}
-                      onChange={e => setNightEnd(e.target.value)}>
+                      onChange={e => setNightEnd(e.target.value)}
+                    >
                       <MenuItem value="">끝나는 시간</MenuItem>
                       {[...Array(25)].map((_, index) => (
                         <MenuItem key={index} value={index}>
@@ -282,7 +295,9 @@ const ManagerSettingBasicPage = () => {
                     />
                     배 지급
                   </div>
-                  <div className="text-sm text-blue-500">기본급:10000원 일시 &gt; {isNightPay * 10000}원</div>
+                  <div className="text-sm text-blue-500">
+                    기본급:10000원 일시 &gt; {isNightPay * 10000}원
+                  </div>
                 </div>
               )}
             </div>

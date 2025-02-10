@@ -11,10 +11,10 @@ import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
 import AboutPage from "./AboutPage";
 import { useTour } from "@reactour/tour";
-import Loading from "../Components/common/Loading";
-import Footer from "../Components/common/Footer";
+import Loading from "../components/common/Loading";
+import Footer from "../components/common/Footer";
 import { getCompanyInfo } from "../api";
-import Header from "../Components/common/Header";
+import Header from "../components/common/Header";
 import { setCompany } from "@/store/companySlice";
 
 function MainPage() {
@@ -59,7 +59,10 @@ function MainPage() {
       <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto relative">
         <Routes>
           <Route path="/companymain" element={<CompanyMain companyInfo={currentCompany} />} />
-          <Route path="/camera" element={<AccessCameraPage companyLogo={currentCompany?.companyLogo} />} />
+          <Route
+            path="/camera"
+            element={<AccessCameraPage companyLogo={currentCompany?.companyLogo} />}
+          />
 
           <Route
             path="/datecheck/:id?"

@@ -25,17 +25,31 @@ const LoginPage = () => {
 
   const onSubmit = async (formData: TLoginForm) => {
     try {
-      setLoading(true);
-      const response = await login(formData);
+      setLoading(true)
+      const response = await login(formData)
       if (!response.success) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다");
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다");
+      setError("로그인 중 오류가 발생했습니다")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const handleGuestLogin = useCallback(async (email: string, password: string) => {
+    try {
+      setLoading(true)
+      const response = await login({ email, password })
+      if (!response.success) {
+        setError("게스트 로그인 실패")
+      }
+    } catch (error) {
+      setError("게스트 로그인 중 오류가 발생했습니다")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (!error) return;
@@ -69,4 +83,5 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginPage
+
