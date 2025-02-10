@@ -11,30 +11,46 @@ import EmployeeFirstPage from "./Page/signupProcessPage/EmployeeFirstPage";
 import IndexPage from "./Page/IndexPage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./firebase";
-import { useDispatch, useSelector } from "react-redux";
-import { clearUser, setUser, setUserType } from "./store/userSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toggleMode } from "./store/darkmodeSlice";
-import GuideFab from "./Components/GuideFab";
-import Loading from "./Components/common/Loading";
+import GuideFab from "./components/GuideFab";
+import Loading from "./components/common/Loading";
 import { getUser } from "./api";
+import { useUserStore } from "./store/user.store";
+import { useDispatch } from "react-redux";
+import { useShallow } from "zustand/shallow";
 
-function App() {
+const App = () => {
   const dispatch = useDispatch();
-  const { currentUser, isLoading } = useSelector(state => state.user);
+  const { currentUser, isLoading, setUser, clearUser } = useUserStore(
+    useShallow(state => ({
+      currentUser: state?.currentUser,
+      isLoading: state?.isLoading,
+      setUser: state.setUser,
+      clearUser: state.clearUser,
+    })),
+  );
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), user => {
+    const unsubscribe = onAuthStateChanged(getAuth(), async user => {
+      console.log("Firebase user:", user);
       if (user) {
-        dispatch(setUser(user));
-        // navigate(`/${currentUser?.photoURL}/companymain`);
+        try {
+          const data = await getUser(user);
+
+          setUser(data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          clearUser();
+        }
       } else {
-        dispatch(clearUser());
+        clearUser();
       }
     });
+
     return () => unsubscribe();
-  }, [dispatch, isLoading, currentUser]);
+  }, [setUser, clearUser]);
 
   useEffect(() => {
     const savedMode = window.localStorage.getItem("darkMode");
@@ -46,15 +62,6 @@ function App() {
       body.classList.remove("dark");
     }
   }, [dispatch]);
-
-  useEffect(() => {
-    async function getEmployeeInfo() {
-      const data = await getUser(currentUser);
-
-      dispatch(setUserType(data?.userType));
-    }
-    getEmployeeInfo();
-  }, [currentUser, dispatch]);
 
   if (isLoading) {
     return <Loading />;
@@ -72,12 +79,18 @@ function App() {
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route
           path="/signin"
-          element={currentUser ? <Navigate to={`/${currentUser?.photoURL}/companymain`} /> : <LoginPage />}
+          element={
+            currentUser ? (
+              <Navigate to={`/${currentUser?.companyCode}/companymain`} />
+            ) : (
+              <LoginPage />
+            )
+          }
         />
         <Route path="/*" element={<Notfound />} />
       </Routes>
     </>
   );
-}
+};
 
 export default App;

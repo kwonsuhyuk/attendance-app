@@ -4,24 +4,25 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { PAYMENT } from "../constant/payment";
 import ShowSalary from "./ShowSalary/ShowSalary";
 import { getUser } from "../api";
+import { useUserStore } from "@/store/user.store";
+import { useShallow } from "zustand/shallow";
 
-export default function MainContent({ userType, currentCompany, currentUser }) {
+export default function MainContent({ userType, currentCompany }) {
   const navigate = useNavigate();
   const { darkMode } = useSelector(state => state.darkmodeSlice);
-  const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
-  const matchHome = useMatch(`/${currentUser?.photoURL}/companymain`);
-  const [jobName, setJobName] = useState("");
-  const [userpaytype, setUserpaytype] = useState("");
 
-  useEffect(() => {
-    async function getEmployeeInfo() {
-      const data = await getUser(currentUser);
+  // currentUser 없을때 조건 부 설정하기 (다른 파일도)
+  const { companyCode, name, jobName, salaryType } = useUserStore(
+    useShallow(state => ({
+      companyCode: state.currentUser?.companyCode,
+      name: state.currentUser?.name,
+      jobName: state.currentUser?.jobName,
+      salaryType: state.currentUser?.salaryType,
+    })),
+  );
+  const matchCalendar = useMatch(`/${companyCode}/calendar`);
+  const matchHome = useMatch(`/${companyCode}/companymain`);
 
-      setJobName(data.jobName);
-      setUserpaytype(data.salaryType);
-    }
-    getEmployeeInfo();
-  }, [currentUser]);
 
   if (userType === "admin") {
     if (window.innerWidth <= 600) {
@@ -38,7 +39,7 @@ export default function MainContent({ userType, currentCompany, currentUser }) {
             <div className="flex flex-col items-center justify-center gap-7 cursor-pointer absolute left-[30%] top-[10%]">
               <div
                 className="bg-gradient-to-b from-black to-transparent w-80 h-80 rounded-full"
-                onClick={() => navigate(`/${currentUser?.photoURL}/employeelist`)}
+                onClick={() => navigate(`/${companyCode}/employeelist`)}
               ></div>
               <div className="font-black text-lg">PEOPLE</div>
               <div className="font-normal text-xs">직원 리스트와 요약 보기 및 정산</div>
@@ -46,14 +47,15 @@ export default function MainContent({ userType, currentCompany, currentUser }) {
               <div className="flex flex-col items-center justify-center gap-7 cursor-pointer z-9 absolute left-[65%]">
                 <div
                   className="w-80 h-80 rounded-full bg-[#B8B8B84D]"
-                  onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}
+                  onClick={() => navigate(`/${companyCode}/datecheck`)}
+
                 ></div>
                 <div className="font-black text-lg">CALENDAR</div>
                 <div className="font-normal text-xs">직원 달력 별 보기</div>
 
                 <div
                   className="flex flex-col items-center justify-center gap-7 cursor-pointer z-10 absolute left-[65%]"
-                  onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}
+                  onClick={() => navigate(`/${companyCode}/setting`)}
                 >
                   <div className="bg-gradient-to-b from-gray-300 to-transparent w-80 h-80 rounded-full "></div>
                   <div className="font-black text-lg">SETTING</div>
@@ -77,14 +79,14 @@ export default function MainContent({ userType, currentCompany, currentUser }) {
             />
             <div className="font-black text-base">{currentCompany?.companyName}</div>
             <div className="flex items-center text-xs">
-              {currentUser?.displayName}/{jobName}
+              {name}/{jobName}
             </div>
           </div>
           <div className="flex flex-col items-center gap-4">
             <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
             <div
               className="flex flex-row justify-between w-full items-center cursor-pointer text-sm"
-              onClick={() => navigate(`/${currentUser.photoURL}/calendar`)}
+              onClick={() => navigate(`/${companyCode}/calendar`)}
             >
               <div>캘린더 바로가기</div>
 
@@ -93,7 +95,7 @@ export default function MainContent({ userType, currentCompany, currentUser }) {
             <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
             <div className="flex flex-row justify-between w-full items-center text-sm">
               <div>급여 지급/계산 방식</div>
-              <div>{PAYMENT[userpaytype]}</div>
+              <div>{PAYMENT[salaryType]}</div>
             </div>
             <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
             <div className="w-full" data-tour="step-33">
@@ -105,7 +107,7 @@ export default function MainContent({ userType, currentCompany, currentUser }) {
             <div
               data-tour="step-34"
               className="cursor-pointer text-lg font-extrabold flex justify-center items-center pb-5 underline"
-              onClick={() => navigate(`/${currentUser.photoURL}/camera`)}
+              onClick={() => navigate(`/${companyCode}/camera`)}
             >
               QR SCAN
             </div>

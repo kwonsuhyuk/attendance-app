@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import convertTime from "../../util/formatTime";
 import { toast } from "react-toastify";
 import { fetchWorkTimes } from "../../api";
+import { useUserStore } from "@/store/user.store";
 
 const style = {
   position: "absolute",
@@ -29,9 +30,9 @@ function MyCalendar() {
   const [workTimes, setWorkTimes] = useState({});
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
-  const { currentUser } = useSelector(state => state.user);
-  const companyCode = currentUser?.photoURL; //회사 코드
-  const userId = currentUser?.uid;
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const userId = useUserStore(state => state.currentUser?.uid);
+
   const [datesList, setDatesList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -127,7 +128,9 @@ function MyCalendar() {
             <div className="flex flex-row w-full justify-between text-white-text">
               <div>일한 시간</div> <div>{convertTime(workTimes[dateStr] && workHours)}</div>
             </div>
-            <div className="text-xs text-gray-500">(9시간 이상 근무시 점심시간 1시간 제외하고 계산.)</div>
+            <div className="text-xs text-gray-500">
+              (9시간 이상 근무시 점심시간 1시간 제외하고 계산.)
+            </div>
           </div>,
         );
       }
@@ -166,14 +169,16 @@ function MyCalendar() {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box
           sx={{
             ...style,
             display: "flex",
             flexDirection: "column",
             gap: 3,
-          }}>
+          }}
+        >
           <div className="absolute top-3 right-3">
             <CloseIcon onClick={() => setOpen(false)} />
           </div>
@@ -181,7 +186,8 @@ function MyCalendar() {
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            className="flex justify-center items-center text-white-text font-bold">
+            className="flex justify-center items-center text-white-text font-bold"
+          >
             상세기록
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, p: 3, border: "1px solid black" }}>

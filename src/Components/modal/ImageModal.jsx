@@ -1,13 +1,13 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Button, Input } from "antd";
 import { useCallback, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import "../../firebase";
 import { getDownloadURL, getStorage, ref as refStorage, uploadBytes } from "firebase/storage";
 import AvatarEditor from "react-avatar-editor";
+import { useUserStore } from "@/store/user.store";
 
 function ImageModal({ open, handleClose, companyName, setImageUrl }) {
-  const { currentUser } = useSelector(state => state.user);
+  const userId = useUserStore(state => state.currentUser?.userId);
   const [previewImage, setPreviewImage] = useState("");
   const [croppedImage, setCroppedImage] = useState("");
   const [uploadedCroppedImage, setuploadedCroppedImage] = useState("");
@@ -46,7 +46,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
   }, []);
 
   const uploadCroppedImage = useCallback(async () => {
-    if (!currentUser?.uid) return;
+    if (!userId) return;
     const storageRef = refStorage(getStorage(), `logo/${companyName}`);
     const uploadTask = await uploadBytes(storageRef, blob);
     const downloadUrl = await getDownloadURL(uploadTask.ref);
@@ -54,7 +54,7 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
     setuploadedCroppedImage(downloadUrl);
 
     closeModal();
-  }, [currentUser?.uid, blob, closeModal, companyName, setImageUrl]);
+  }, [userId, blob, closeModal, companyName, setImageUrl]);
 
   return (
     <Dialog
@@ -67,7 +67,8 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
           height: "auto", // 모달의 높이를 자동으로 설정
           maxHeight: "90vh", // 화면 높이의 90%를 최대 높이로 설정
         },
-      }}>
+      }}
+    >
       <DialogTitle>회사 로고 사진 업로드</DialogTitle>
       <DialogContent>
         <Input
@@ -91,7 +92,13 @@ function ImageModal({ open, handleClose, companyName, setImageUrl }) {
             />
           )}
           {croppedImage && (
-            <img src={croppedImage} alt="cropped" style={{ marginLeft: "50px" }} width={100} height={100} />
+            <img
+              src={croppedImage}
+              alt="cropped"
+              style={{ marginLeft: "50px" }}
+              width={100}
+              height={100}
+            />
           )}
         </div>
       </DialogContent>

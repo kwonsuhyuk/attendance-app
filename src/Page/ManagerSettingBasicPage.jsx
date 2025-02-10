@@ -11,11 +11,13 @@ import { toast } from "react-toastify";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Loading from "../components/common/Loading";
 import QrGenerator from "@/components/QR/QrGenerator";
+import { useUserStore } from "@/store/user.store";
+
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { currentUser } = useSelector(state => state.user);
+  const companyCode = useUserStore(state => state.currentUser.companyCode);
   const [jobName, setJobTags] = useState([]);
   const [isdaynight, setIsdaynight] = useState();
   const [isNightPay, setIsNightPay] = useState(0);
@@ -26,7 +28,7 @@ const ManagerSettingBasicPage = () => {
 
   const { darkMode } = useSelector(state => state.darkmodeSlice);
   const handleInfoUpdate = async () => {
-    await set(ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"), {
+    await set(ref(getDatabase(), "companyCode/" + companyCode + "/companyInfo"), {
       ...companyData,
       isNightPay: parseFloat(isNightPay),
       isdaynight,
@@ -41,9 +43,7 @@ const ManagerSettingBasicPage = () => {
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
-      const snapshot = await get(
-        ref(getDatabase(), "companyCode/" + currentUser?.photoURL + "/companyInfo"),
-      );
+      const snapshot = await get(ref(getDatabase(), "companyCode/" + companyCode + "/companyInfo"));
       const data = snapshot?.val();
       setCompanyData(data);
       setIsLoading(false);
@@ -54,7 +54,7 @@ const ManagerSettingBasicPage = () => {
     return () => {
       setCompanyData([]);
     };
-  }, [currentUser?.photoURL]);
+  }, [companyCode]);
 
   // const handlePayChange = (tagKey, value) => {
   //   setJobTags((prev) => {
@@ -118,7 +118,7 @@ const ManagerSettingBasicPage = () => {
   // 회사 id 복사 클릭시
   const handleCopyCompId = () => {
     navigator.clipboard
-      .writeText(currentUser?.photoURL)
+      .writeText(companyCode)
       .then(() => {
         toast.success("회사 ID가 클립보드에 복사되었습니다.");
       })
@@ -140,7 +140,7 @@ const ManagerSettingBasicPage = () => {
                   className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
                   style={{ borderRadius: "20px" }}
                 >
-                  {currentUser?.photoURL}
+                  {companyCode}
                   <span className="absolute right-7 cursor-pointer">
                     <ContentCopyIcon onClick={handleCopyCompId} />
                   </span>

@@ -22,7 +22,7 @@ export async function getUser(currentUser) {
 
 export async function getCompanyInfo(currentUser) {
   if (!currentUser) return null;
-  const path = `companyCode/${currentUser.photoURL}/companyInfo`;
+  const path = `companyCode/${currentUser.companyCode}/companyInfo`;
   return await fetchData(path);
 }
 

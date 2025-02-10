@@ -4,9 +4,12 @@ import { useSelector } from "react-redux";
 import { useTour } from "@reactour/tour";
 import { ADMIN_STEP, EMPLOYEE_STEP } from "../constant/tourStep";
 import MainContent from "../components/MainContent";
+import { useUserStore } from "@/store/user.store";
+
 
 const CompanyMain = ({ companyInfo }) => {
-  const { currentUser, userType } = useSelector(state => state.user);
+  const userType = useUserStore(state => state.userType);
+
   const [currentCompany, setCurrentCompany] = useState();
   const { isOpen, setCurrentStep, setSteps } = useTour();
 
@@ -38,9 +41,9 @@ const CompanyMain = ({ companyInfo }) => {
     if (companyInfo) setCurrentCompany(companyInfo);
   }, [companyInfo]);
 
-  return (
-    <MainContent currentCompany={currentCompany} currentUser={currentUser} userType={userType} />
-  );
+
+  return <MainContent currentCompany={currentCompany} userType={userType} />;
+
 };
 
 export default CompanyMain;
