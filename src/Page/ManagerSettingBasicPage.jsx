@@ -13,6 +13,7 @@ import Loading from "../components/common/Loading";
 import QrGenerator from "@/components/QR/QrGenerator";
 import { useUserStore } from "@/store/user.store";
 
+
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
   const [isLoading, setIsLoading] = useState(false);

@@ -13,6 +13,7 @@ import Loading from "../components/common/Loading";
 import { EMPLOYEE_LIST_STEPS } from "../constant/tourStep";
 import { useUserStore } from "@/store/user.store";
 
+
 const EmployeeListPage = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [employeeList, setEmployeeList] = useState([]);
@@ -57,6 +58,7 @@ const EmployeeListPage = () => {
       setIsLoading(true);
       const snapshot = await get(
         child(ref(getDatabase()), "companyCode/" + companyCode + "/companyInfo/jobName"),
+
       );
 
       setCompanyData(snapshot.val() ? Object.values(snapshot.val()) : []);

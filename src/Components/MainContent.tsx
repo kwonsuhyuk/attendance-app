@@ -10,6 +10,7 @@ import { useShallow } from "zustand/shallow";
 export default function MainContent({ userType, currentCompany }) {
   const navigate = useNavigate();
   const { darkMode } = useSelector(state => state.darkmodeSlice);
+
   // currentUser 없을때 조건 부 설정하기 (다른 파일도)
   const { companyCode, name, jobName, salaryType } = useUserStore(
     useShallow(state => ({
@@ -21,6 +22,7 @@ export default function MainContent({ userType, currentCompany }) {
   );
   const matchCalendar = useMatch(`/${companyCode}/calendar`);
   const matchHome = useMatch(`/${companyCode}/companymain`);
+
 
   if (userType === "admin") {
     if (window.innerWidth <= 600) {
@@ -46,6 +48,7 @@ export default function MainContent({ userType, currentCompany }) {
                 <div
                   className="w-80 h-80 rounded-full bg-[#B8B8B84D]"
                   onClick={() => navigate(`/${companyCode}/datecheck`)}
+
                 ></div>
                 <div className="font-black text-lg">CALENDAR</div>
                 <div className="font-normal text-xs">직원 달력 별 보기</div>

@@ -16,6 +16,7 @@ import QrScanner from "qr-scanner";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 
+
 interface QrScanProps {
   companyLogo: string;
 }

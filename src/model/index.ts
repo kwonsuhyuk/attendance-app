@@ -1,24 +1,46 @@
-export type TLoginForm = {
-  email: string;
-  password: string;
-};
+import { z } from "zod";
+import { Control, FieldErrors } from "react-hook-form";
 
-type TUserBase = {
+// 로그인 스키마 정의 (유효성 검사)
+export const loginFormSchema = z.object({
+  email: z.string().email({ message: "유효한 이메일을 입력하세요." }),
+  password: z.string().min(6, { message: "비밀번호는 최소 6자 이상이어야 합니다." }),
+});
+
+// TypeScript 타입 자동 생성
+export type TLoginForm = z.infer<typeof loginFormSchema>;
+
+type TSignupUserBase = {
   name: string;
   companyCode: string;
   phoneNumber: string;
 };
 
-export type TSignUpForm = TLoginForm & TUserBase;
+export type TSignupForm = TLoginForm & TSignupUserBase;
 
-export type TUserData = TUserBase & {
+export type TSignupUserData = TSignupUserBase & {
   id: string;
 };
 
-export type TSignUpFormData = TSignUpForm & {
+// 회원가입 폼에만 필요한 추가 필드
+export type TSignupFormData = TSignupForm & {
   confirmPW: string;
 };
-// 회원가입 폼에만 필요한 추가 필드
+
+export type TLoginResponse = {
+  success: boolean;
+  error?: string;
+};
+
+export type TSignupResponse = {
+  success: boolean;
+  data?: {
+    userId: string;
+  };
+  error?: string;
+};
+
+export type TPosition = "manager" | "employee" | "";
 
 export type TJob = {
   jobName: string;
@@ -38,6 +60,7 @@ export type TCompanyInfo = {
   payCheckDay: number;
   qrValue: string;
 };
+
 
 export type TLoginResponse = {
   success: boolean;
@@ -85,3 +108,4 @@ export type UserData = {
   userType: string;
   workDates: DateMap<WorkData>;
 };
+
