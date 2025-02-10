@@ -11,9 +11,10 @@ import { useTour } from "@reactour/tour";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/common/Loading";
 import { EMPLOYEE_LIST_STEPS } from "../constant/tourStep";
+import { useUserStore } from "@/store/user.store";
 
 const EmployeeListPage = () => {
-  const { currentUser } = useSelector(state => state.user);
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [employeeList, setEmployeeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchName, setSearchName] = useState("");
@@ -55,7 +56,7 @@ const EmployeeListPage = () => {
     async function getData() {
       setIsLoading(true);
       const snapshot = await get(
-        child(ref(getDatabase()), "companyCode/" + currentUser?.photoURL + "/companyInfo/jobName"),
+        child(ref(getDatabase()), "companyCode/" + companyCode + "/companyInfo/jobName"),
       );
 
       setCompanyData(snapshot.val() ? Object.values(snapshot.val()) : []);
@@ -67,13 +68,13 @@ const EmployeeListPage = () => {
     return () => {
       setCompanyData([]);
     };
-  }, [currentUser?.photoURL]);
+  }, [companyCode]);
 
   useEffect(() => {
     async function getEmployeeInfo() {
       setIsLoading(true);
       const snapshot = await get(
-        child(ref(getDatabase()), "companyCode/" + currentUser?.photoURL + "/users"),
+        child(ref(getDatabase()), "companyCode/" + companyCode + "/users"),
       );
       setEmployeeList(snapshot.val() ? Object.values(snapshot.val()) : []);
       setIsLoading(false);
@@ -82,7 +83,7 @@ const EmployeeListPage = () => {
     return () => {
       setEmployeeList([]);
     };
-  }, [currentUser?.photoURL]);
+  }, [companyCode]);
 
   const handleSearchChange = event => {
     setSearchName(event.target.value);
@@ -194,7 +195,7 @@ const EmployeeListPage = () => {
           <span
             className="w-auto text-sm lg:text-base cursor-pointer"
             data-tour="step-8"
-            onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}
+            onClick={() => navigate(`/${companyCode}/datecheck`)}
           >
             상세보기 & 정산 {">"}
           </span>

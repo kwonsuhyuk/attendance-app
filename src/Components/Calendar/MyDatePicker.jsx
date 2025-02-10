@@ -13,11 +13,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTour } from "@reactour/tour";
 import Loading from "../common/Loading";
 import { fetchHolidaySettings, fetchHolidayList, saveHolidaySettings } from "../../api";
+import { useUserStore } from "@/store/user.store";
+import { MY_DATE_PICKER_STPES } from "@/constant/tourStep";
 
 const MyDatePicker = () => {
   const [selectedHolidays, setSelectedHolidays] = useState([]);
-  const { currentUser } = useSelector(state => state.user);
-  const companyCode = currentUser?.photoURL; //회사 코드
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isholiday, setIsHoliday] = useState();
   const [holidayPay, setHolidayPay] = useState(0);
@@ -86,7 +87,7 @@ const MyDatePicker = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
   const handleDateSelect = (date, event) => {
     if (event.detail === 2) {
       handleDateAdd(date);
@@ -104,11 +105,12 @@ const MyDatePicker = () => {
   };
 
   const handleDateRemove = dateToRemove => {
-    setUpdatedHolidays(prevHolidays => prevHolidays.filter(date => date.getTime() !== dateToRemove.getTime()));
+    setUpdatedHolidays(prevHolidays =>
+      prevHolidays.filter(date => date.getTime() !== dateToRemove.getTime()),
+    );
   };
 
   const handleSaveChanges = async () => {
-
     const result = await saveHolidaySettings(companyCode, {
       holidays: updatedHolidays,
       isHoliday: isholiday,
@@ -120,7 +122,6 @@ const MyDatePicker = () => {
       toast.success("공휴일 정보가 성공적으로 저장되었습니다.");
     } else {
       toast.error("공휴일 정보 저장에 실패했습니다.");
-
     }
   };
 
@@ -135,13 +136,14 @@ const MyDatePicker = () => {
           className="flex flex-col gap-7"
           style={{
             borderRight: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
-          }}>
+          }}
+        >
           <div className="font-black">공휴일 설정 및 수정</div>
           <FormControlLabel
             control={
               <Checkbox
                 sx={{
-                  color: darkMode ? 'white' : 'black',
+                  color: darkMode ? "white" : "black",
                 }}
                 checked={isholiday}
                 onChange={event => setIsHoliday(event.target.checked)}
@@ -167,7 +169,9 @@ const MyDatePicker = () => {
                 />
                 배 지급
               </div>
-              <div className="text-sm text-blue-500">기본급:10000원 일시 &gt; {holidayPay * 10000}원</div>
+              <div className="text-sm text-blue-500">
+                기본급:10000원 일시 &gt; {holidayPay * 10000}원
+              </div>
             </>
           )}
         </div>
@@ -178,13 +182,15 @@ const MyDatePicker = () => {
               <DatePicker
                 dateFormat="yyyy.MM.dd"
                 shouldCloseOnSelect
-                minDate={new Date('2000-01-01')}
+                minDate={new Date("2000-01-01")}
                 onSelect={handleDateSelect}
                 inline
                 highlightDates={updatedHolidays.map(date => ({
                   "react-datepicker__day--highlighted-custom-1": [date],
                 }))}
-                dayClassName={date => (updatedHolidays.find(d => d.getTime() === date.getTime()) ? "red" : undefined)}
+                dayClassName={date =>
+                  updatedHolidays.find(d => d.getTime() === date.getTime()) ? "red" : undefined
+                }
               />
               <div>
                 <HelpIcon onClick={handlePopoverClick} style={{ padding: 3 }} />
@@ -194,9 +200,10 @@ const MyDatePicker = () => {
                   anchorEl={anchorEl}
                   onClose={handlePopoverClose}
                   transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}>
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
                   <Typography sx={{ p: 2 }}>
                     회사 공휴일로 설정할 날짜를 찾아 더블 클릭을 하면 추가하실 수 있습니다.
                   </Typography>
@@ -207,8 +214,8 @@ const MyDatePicker = () => {
             <ul className="overflow-y-auto lg:h-80" data-tour="step-27">
               {updatedHolidays.map((date, index) => {
                 const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
                 const dateStr = `${year}.${month}.${day}`;
 
                 return (
@@ -217,9 +224,13 @@ const MyDatePicker = () => {
                       className="flex justify-between items-center gap-3 p-3 mb-5"
                       style={{
                         borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
-                      }}>
+                      }}
+                    >
                       {dateStr}
-                      <CloseIcon className="cursor-pointer" onClick={() => handleDateRemove(date)} />
+                      <CloseIcon
+                        className="cursor-pointer"
+                        onClick={() => handleDateRemove(date)}
+                      />
 
                       {/* 삭제 버튼 */}
                     </div>

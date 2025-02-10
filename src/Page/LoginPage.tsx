@@ -1,22 +1,22 @@
-import { Alert, Avatar, Box, Container, Grid, TextField, Typography, Button } from "@mui/material"
-import LoginIcon from "@mui/icons-material/Login"
-import LoadingButton from "@mui/lab/LoadingButton"
-import { useCallback, useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { Divider } from "antd"
-import { login } from "../api/auth/index"
-import type { TLoginForm } from "../model"
-import { useForm } from "react-hook-form"
+import { Alert, Avatar, Box, Container, Grid, TextField, Typography, Button } from "@mui/material";
+import LoginIcon from "@mui/icons-material/Login";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Divider } from "antd";
+import { login } from "../api/auth/index";
+import type { TLoginForm } from "../model";
+import { useForm } from "react-hook-form";
 
 function LoginPage() {
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>()
+  } = useForm<TLoginForm>();
 
   const validationRules = {
     email: {
@@ -33,48 +33,49 @@ function LoginPage() {
         message: "비밀번호는 최소 6자 이상이어야 합니다",
       },
     },
-  }
+  };
 
   const onSubmit = async (formData: TLoginForm) => {
     try {
-      setLoading(true)
-      const response = await login(formData)
+      setLoading(true);
+      const response = await login(formData);
       if (!response.success) {
-        let errorMessage = "로그인 실패"
+        let errorMessage = "로그인 실패";
         if (response.error?.includes("wrong-password")) {
-          errorMessage = "비밀번호가 올바르지 않습니다"
+          errorMessage = "비밀번호가 올바르지 않습니다";
         } else if (response.error?.includes("user-not-found")) {
-          errorMessage = "등록되지 않은 이메일입니다"
+          errorMessage = "등록되지 않은 이메일입니다";
         }
-        setError(errorMessage)
+        setError(errorMessage);
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다")
+      setError("로그인 중 오류가 발생했습니다");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGuestLogin = useCallback(async (email: string, password: string) => {
     try {
-      setLoading(true)
-      const response = await login({ email, password })
+      setLoading(true);
+
+      const response = await login({ email, password });
       if (!response.success) {
-        setError("게스트 로그인 실패")
+        setError("게스트 로그인 실패");
       }
     } catch (error) {
-      setError("게스트 로그인 중 오류가 발생했습니다")
+      setError("게스트 로그인 중 오류가 발생했습니다");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (!error) return
+    if (!error) return;
     setTimeout(() => {
-      setError("")
-    }, 3000)
-  }, [error])
+      setError("");
+    }, 3000);
+  }, [error]);
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -165,8 +166,7 @@ function LoginPage() {
         </Box>
       </Container>
     </div>
-  )
+  );
 }
 
-export default LoginPage
-
+export default LoginPage;

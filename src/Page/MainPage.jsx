@@ -1,3 +1,5 @@
+"use client";
+
 import "../firebase";
 import { Route, Routes } from "react-router-dom";
 import AccessCameraPage from "./AccessCameraPage";
@@ -5,7 +7,7 @@ import DateCheckPage from "./DateCheckPage";
 import ManagerSettingPage from "./ManagerSettingPage";
 import EmployeeListPage from "./EmployeeListPage";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
@@ -16,9 +18,10 @@ import Footer from "../components/common/Footer";
 import { getCompanyInfo } from "../api";
 import Header from "../components/common/Header";
 import { setCompany } from "@/store/companySlice";
+import { useUserStore } from "@/store/user.store";
 
 function MainPage() {
-  const { currentUser } = useSelector(state => state.user);
+  const currentUser = useUserStore(state => state.currentUser);
   const [currentCompany, setCurrentCompany] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const { setIsOpen } = useTour();
@@ -26,28 +29,32 @@ function MainPage() {
 
   useEffect(() => {
     async function getCompany() {
-      setIsLoading(true);
-      const data = await getCompanyInfo(currentUser);
-      if (data) {
-        setCurrentCompany(data);
-        dispatch(setCompany(data));
+      if (currentUser) {
+        setIsLoading(true);
+        try {
+          const data = await getCompanyInfo(currentUser);
+          if (data) {
+            setCurrentCompany(data);
+            dispatch(setCompany(data));
+          }
+        } catch (error) {
+          console.error("Error fetching company info:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
     }
     getCompany();
   }, [currentUser, dispatch]);
 
   useEffect(() => {
-    // LocalStorage에서 tourShown 값을 확인
     const tourShown = localStorage.getItem("tourShown");
-
-    // tourShown 값이 없거나 'false'인 경우, 투어를 시작
     if (!tourShown || tourShown === "false") {
       setTimeout(() => {
         setIsOpen(true);
       }, 1000);
     }
-  }, []);
+  }, [setIsOpen]);
 
   if (isLoading) {
     return <Loading />;
@@ -63,7 +70,6 @@ function MainPage() {
             path="/camera"
             element={<AccessCameraPage companyLogo={currentCompany?.companyLogo} />}
           />
-
           <Route
             path="/datecheck/:id?"
             element={

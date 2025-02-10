@@ -5,11 +5,12 @@ import { useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useTour } from "@reactour/tour";
 import { CALENDAR_STEPS } from "../constant/tourStep";
+import { useUserStore } from "@/store/user.store";
 
 const ShowCalendarPage = () => {
-  const { currentUser } = useSelector(state => state.user);
-  const matchCalendar = useMatch(`/${currentUser?.photoURL}/calendar`);
-  const matchHome = useMatch(`/${currentUser?.photoURL}`);
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const matchCalendar = useMatch(`/${companyCode}/calendar`);
+  const matchHome = useMatch(`/${companyCode}`);
   const { isOpen, setCurrentStep, setSteps, setIsOpen } = useTour();
 
   useEffect(() => {
