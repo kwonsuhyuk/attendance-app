@@ -23,7 +23,7 @@ const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps)
       >
         {buttonText}
       </LoadingButton>
-      <Grid container justifyContent="flex-end">
+      <Grid container justifyContent="flex-end" mb={5}>
         <Grid item>
           <Link
             to={linkTo}

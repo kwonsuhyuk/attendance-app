@@ -41,9 +41,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (!error) return;
-    setTimeout(() => {
-      setError("");
-    }, 3000);
+    const timer = setTimeout(() => setError(""), 3000);
+    return () => clearTimeout(timer);
   }, [error]);
 
   return (
