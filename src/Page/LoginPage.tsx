@@ -1,17 +1,17 @@
-import { Alert, Avatar, Box, Container, Grid, TextField, Typography } from "@mui/material";
+import { useEffect, useState, useCallback } from "react";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 import LoginIcon from "@mui/icons-material/Login";
 
-import { useEffect, useState } from "react";
-import { Divider } from "antd";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { login } from "../api/auth/index";
-import { loginFormSchema, TLoginForm } from "../model";
-
-import AuthHeader from "@/Components/auth/AuthHeader";
-import AuthFooter from "@/Components/auth/AuthFooter";
-import LoginForm from "@/Components/auth/LoginForm";
+import type { TLoginForm } from "../model";
+import AuthHeader from "@/components/auth/AuthHeader";
+import AuthFooter from "@/components/auth/AuthFooter";
+import LoginForm from "@/components/auth/LoginForm";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -21,35 +21,35 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>({ resolver: zodResolver(loginFormSchema) });
+  } = useForm<TLoginForm>();
 
   const onSubmit = async (formData: TLoginForm) => {
     try {
-      setLoading(true)
-      const response = await login(formData)
+      setLoading(true);
+      const response = await login(formData);
       if (!response.success) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다");
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다")
+      setError("로그인 중 오류가 발생했습니다");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGuestLogin = useCallback(async (email: string, password: string) => {
     try {
-      setLoading(true)
-      const response = await login({ email, password })
+      setLoading(true);
+      const response = await login({ email, password });
       if (!response.success) {
-        setError("게스트 로그인 실패")
+        setError("게스트 로그인 실패");
       }
     } catch (error) {
-      setError("게스트 로그인 중 오류가 발생했습니다")
+      setError("게스트 로그인 중 오류가 발생했습니다");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!error) return;
@@ -58,30 +58,57 @@ const LoginPage = () => {
   }, [error]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Container component="main" maxWidth="xs">
-        <Box className="flex flex-col justify-center items-center">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-md">
+        <CardContent className="p-6 space-y-6">
           <AuthHeader icon={LoginIcon} title="로그인" />
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <LoginForm register={register} errors={errors} />
-            {error ? (
-              <Alert sx={{ mt: 3 }} severity="error">
-                {error}
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
-            ) : null}
-            <Divider />
-            <AuthFooter
-              buttonText="로그인"
-              linkText="계정이 없나요? 회원가입으로 이동"
-              linkTo="/signup"
-              loading={loading}
-            />
-          </Box>
-        </Box>
-      </Container>
+            )}
+
+            <div className="space-y-6">
+              <Separator />
+
+              <div className="space-y-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() => handleGuestLogin("test@naver.com", "qweqwe")}
+                  disabled={loading}
+                >
+                  관리자 Guest 로그인
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleGuestLogin("testep@naver.com", "qweqwe")}
+                  disabled={loading}
+                >
+                  직원 Guest 로그인
+                </Button>
+              </div>
+
+              <AuthFooter
+                buttonText="로그인"
+                linkText="계정이 없나요? 회원가입으로 이동"
+                linkTo="/signup"
+                loading={loading}
+              />
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default LoginPage
-
+export default LoginPage;

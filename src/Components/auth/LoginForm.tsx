@@ -1,4 +1,5 @@
-import { TextField } from "@mui/material";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { TLoginForm } from "@/model";
 
@@ -27,28 +28,37 @@ const LoginForm = ({ register, errors }: ILoginFormProps) => {
   };
 
   return (
-    <>
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        label="이메일"
-        autoComplete="off"
-        {...register("email", validationRules.email)}
-        error={!!errors.email}
-        helperText={errors.email?.message}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        label="비밀번호"
-        type="password"
-        {...register("password", validationRules.password)}
-        error={!!errors.password}
-        helperText={errors.password?.message}
-      />
-    </>
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Input
+          id="email"
+          type="email"
+          placeholder="이메일을 입력하세요"
+          {...register("email", validationRules.email)}
+          aria-describedby="email-error"
+        />
+        {errors.email && (
+          <p className="text-sm text-destructive" id="email-error">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Input
+          id="password"
+          type="password"
+          placeholder="비밀번호를 입력하세요"
+          {...register("password", validationRules.password)}
+          aria-describedby="password-error"
+        />
+        {errors.password && (
+          <p className="text-sm text-destructive" id="password-error">
+            {errors.password.message}
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 

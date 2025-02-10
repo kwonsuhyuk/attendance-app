@@ -16,8 +16,8 @@ import { clearUser, setUser, setUserType } from "./store/userSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toggleMode } from "./store/darkmodeSlice";
-import GuideFab from "./Components/GuideFab";
-import Loading from "./Components/common/Loading";
+import GuideFab from "./components/GuideFab";
+import Loading from "./components/common/Loading";
 import { getUser } from "./api";
 
 function App() {
@@ -72,7 +72,9 @@ function App() {
         <Route path="/employeefirst" element={<EmployeeFirstPage />} />
         <Route
           path="/signin"
-          element={currentUser ? <Navigate to={`/${currentUser?.photoURL}/companymain`} /> : <LoginPage />}
+          element={
+            currentUser ? <Navigate to={`/${currentUser?.photoURL}/companymain`} /> : <LoginPage />
+          }
         />
         <Route path="/*" element={<Notfound />} />
       </Routes>
