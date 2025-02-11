@@ -1,14 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { LogInIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import LoginIcon from "@mui/icons-material/Login";
 
 import { login } from "../api/auth/index";
 import type { TLoginForm } from "../model";
+
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthFooter from "@/components/auth/AuthFooter";
 import LoginForm from "@/components/auth/LoginForm";
@@ -61,7 +62,7 @@ const LoginPage = () => {
     <div className="flex min-h-screen items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-md">
         <CardContent className="p-6 space-y-6">
-          <AuthHeader icon={LoginIcon} title="로그인" />
+          <AuthHeader icon={LogInIcon} title="로그인" />
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <LoginForm register={register} errors={errors} />

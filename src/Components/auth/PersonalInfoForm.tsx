@@ -1,42 +1,37 @@
 import React from "react";
-import { TextField, Typography } from "@mui/material";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { TSignupFormData } from "@/model";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface IPersonalInfoFormProps {
-  control: Control<TSignupFormData>;
-  errors: FieldErrors<TSignupFormData>;
+  form: UseFormReturn<TSignupFormData>;
   password: string;
 }
 
-export const PersonalInfoForm = ({ control, errors, password }: IPersonalInfoFormProps) => {
+export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
   return (
-    <>
-      <Typography component="p" color="black" sx={{ mt: 2 }}>
-        개인 정보
-      </Typography>
+    <div className="space-y-4">
+      <h4 className="text-black font-medium">개인 정보</h4>
 
-      <Controller
+      <FormField
+        control={form.control}
         name="name"
-        control={control}
         rules={{ required: "이름을 입력해주세요" }}
         render={({ field }) => (
-          <TextField
-            {...field}
-            margin="normal"
-            required
-            fullWidth
-            label="이름"
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            autoComplete="off"
-          />
+          <FormItem>
+            <FormLabel>이름</FormLabel>
+            <FormControl>
+              <Input {...field} autoComplete="off" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
 
-      <Controller
+      <FormField
+        control={form.control}
         name="email"
-        control={control}
         rules={{
           required: "이메일을 입력해주세요",
           pattern: {
@@ -45,44 +40,39 @@ export const PersonalInfoForm = ({ control, errors, password }: IPersonalInfoFor
           },
         }}
         render={({ field }) => (
-          <TextField
-            {...field}
-            margin="normal"
-            required
-            fullWidth
-            label="이메일"
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            autoComplete="off"
-          />
+          <FormItem>
+            <FormLabel>이메일</FormLabel>
+            <FormControl>
+              <Input {...field} autoComplete="off" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
 
-      <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
+      <p className="text-gray-500 text-sm">
         (유효한 이메일을 작성해주셔야 합니다!) <br />
         (이메일형식예시 : hongildong@naver.com)
-      </Typography>
+      </p>
 
-      <Controller
+      <FormField
+        control={form.control}
         name="phoneNumber"
-        control={control}
         rules={{ required: "전화번호를 입력해주세요" }}
         render={({ field }) => (
-          <TextField
-            {...field}
-            margin="normal"
-            required
-            fullWidth
-            label="전화번호"
-            error={!!errors.phoneNumber}
-            helperText={errors.phoneNumber?.message}
-          />
+          <FormItem>
+            <FormLabel>전화번호</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
 
-      <Controller
+      <FormField
+        control={form.control}
         name="password"
-        control={control}
         rules={{
           required: "비밀번호를 입력해주세요",
           minLength: {
@@ -91,43 +81,37 @@ export const PersonalInfoForm = ({ control, errors, password }: IPersonalInfoFor
           },
         }}
         render={({ field }) => (
-          <TextField
-            {...field}
-            margin="normal"
-            required
-            fullWidth
-            label="비밀번호"
-            type="password"
-            error={!!errors.password}
-            helperText={errors.password?.message}
-          />
+          <FormItem>
+            <FormLabel>비밀번호</FormLabel>
+            <FormControl>
+              <Input type="password" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
 
-      <Typography component="p" color="gray" sx={{ fontSize: "12px" }}>
-        (비밀번호는 6자리 이상으로 작성해주세요.)
-      </Typography>
+      <p className="text-gray-500 text-sm">(비밀번호는 6자리 이상으로 작성해주세요.)</p>
 
-      <Controller
+      <FormField
+        control={form.control}
         name="confirmPW"
-        control={control}
         rules={{
           required: "비밀번호 확인을 입력해주세요",
-          validate: value => value === password || "비밀번호가 일치하지 않습니다",
+          validate: value => value === form.watch("password") || "비밀번호가 일치하지 않습니다",
         }}
         render={({ field }) => (
-          <TextField
-            {...field}
-            margin="normal"
-            required
-            fullWidth
-            label="비밀번호확인"
-            type="password"
-            error={!!errors.confirmPW}
-            helperText={errors.confirmPW?.message}
-          />
+          <FormItem>
+            <FormLabel>비밀번호확인</FormLabel>
+            <FormControl>
+              <Input type="password" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
-    </>
+    </div>
   );
 };
+
+export default PersonalInfoForm;

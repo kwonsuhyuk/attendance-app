@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import { Alert, Container, Divider } from "@mui/material";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import { useForm } from "react-hook-form";
+import { LockIcon } from "lucide-react";
+
+import { Form } from "@/components/ui/form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 
 import { TSignupUserData, TSignupFormData, TPosition } from "@/model";
 import { validateCompanyCode } from "../api/index";
@@ -28,12 +30,7 @@ const SignupPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<TSignupFormData>({
+  const form = useForm<TSignupFormData>({
     defaultValues: {
       name: "",
       email: "",
@@ -44,8 +41,8 @@ const SignupPage = () => {
     },
   });
 
-  const password = watch("password");
-  const companyCode = watch("companyCode");
+  const password = form.watch("password");
+  const companyCode = form.watch("companyCode");
 
   useEffect(() => {
     if (!error) return;
@@ -120,59 +117,53 @@ const SignupPage = () => {
 
   return (
     <div className="mt-10">
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <AuthHeader icon={LockOpenIcon} title="회원가입" />
+      <div className="max-w-md mx-auto px-4">
+        <div className="flex flex-col justify-center items-center">
+          <AuthHeader icon={LockIcon} title="회원가입" />
 
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
-            <PositionSelector position={position} onPositionChange={handlePositionChange} />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-4 space-y-6">
+              <PositionSelector position={position} onPositionChange={handlePositionChange} />
 
-            {position === "manager" && (
-              <ManagerConfirmation
-                isManagerCheck={isManagerCheck}
-                setManagerCheck={setManagerCheck}
+              {position === "manager" && (
+                <ManagerConfirmation
+                  isManagerCheck={isManagerCheck}
+                  setManagerCheck={setManagerCheck}
+                />
+              )}
+
+              {position === "employee" && (
+                <EmployeeCompanyForm
+                  form={form}
+                  isCodeValid={isCodeValid}
+                  tempCompInfo={tempCompInfo}
+                  companyCode={companyCode}
+                  checkCompanyCode={checkCompanyCode}
+                />
+              )}
+
+              <Separator />
+
+              <PersonalInfoForm form={form} password={password} />
+
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
+              <Separator />
+
+              <AuthFooter
+                buttonText="회원가입"
+                linkText="계정이 있나요? 로그인으로 이동"
+                linkTo="/signin"
+                loading={loading}
               />
-            )}
-
-            {position === "employee" && (
-              <EmployeeCompanyForm
-                control={control}
-                errors={errors}
-                isCodeValid={isCodeValid}
-                tempCompInfo={tempCompInfo}
-                companyCode={companyCode}
-                checkCompanyCode={checkCompanyCode}
-              />
-            )}
-
-            <Divider />
-
-            <PersonalInfoForm control={control} errors={errors} password={password} />
-
-            {error && (
-              <Alert sx={{ mt: 3 }} severity="error">
-                {error}
-              </Alert>
-            )}
-
-            <Divider />
-
-            <AuthFooter
-              buttonText="회원가입"
-              linkText="계정이 있나요? 로그인으로 이동"
-              linkTo="/signin"
-              loading={loading}
-            />
-          </Box>
-        </Box>
-      </Container>
+            </form>
+          </Form>
+        </div>
+      </div>
     </div>
   );
 };

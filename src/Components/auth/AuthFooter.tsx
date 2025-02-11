@@ -1,6 +1,5 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 interface TAuthFooterProps {
@@ -24,8 +23,11 @@ const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps)
         )}
       </Button>
 
-      <div className="flex justify-end mb-4">
-        <Link to={linkTo} className="text-muted-foreground hover:text-primary transition-colors">
+      <div className="flex justify-end mb-8">
+        <Link
+          to={linkTo}
+          className="mb-8 text-muted-foreground hover:text-primary transition-colors"
+        >
           {linkText}
         </Link>
       </div>
