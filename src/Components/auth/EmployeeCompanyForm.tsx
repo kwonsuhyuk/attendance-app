@@ -28,10 +28,6 @@ export const EmployeeCompanyForm = ({
           <FormField
             control={form.control}
             name="companyCode"
-            rules={{
-              required: "회사코드를 입력해주세요",
-              validate: value => (!isCodeValid ? "회사코드 인증버튼을 눌러주세요" : true),
-            }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>회사코드</FormLabel>

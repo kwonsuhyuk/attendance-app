@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Control, FieldErrors } from "react-hook-form";
 
 // 로그인 스키마 정의 (유효성 검사)
 export const loginFormSchema = z.object({
@@ -10,22 +9,37 @@ export const loginFormSchema = z.object({
 // TypeScript 타입 자동 생성
 export type TLoginForm = z.infer<typeof loginFormSchema>;
 
-type TSignupUserBase = {
-  name: string;
-  companyCode: string;
-  phoneNumber: string;
-};
+// 기본 회원가입 정보 스키마
+const signupUserBaseSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "이름은 2자 이상이어야 합니다." })
+    .regex(/^[가-힣a-zA-Z\s]+$/, { message: "올바른 이름 형식이 아닙니다" }),
+  companyCode: z.string().min(5, { message: "올바른 회사 코드를 입력해주세요" }),
+  phoneNumber: z.string().regex(/^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/, {
+    message: "올바른 전화번호 형식이 아닙니다 (예: 010-1234-5678)",
+  }),
+});
 
-export type TSignupForm = TLoginForm & TSignupUserBase;
+export const signupFormSchema = loginFormSchema
+  .merge(signupUserBaseSchema)
+  .extend({
+    confirmPW: z.string().min(1, { message: "비밀번호 확인을 입력해주세요" }),
+    companyCode: z.string().min(5, { message: "올바른 회사 코드를 입력해주세요" }),
+  })
+  .refine(data => data.password === data.confirmPW, {
+    message: "비밀번호가 일치하지 않습니다",
+    path: ["confirmPW"],
+  });
 
-export type TSignupUserData = TSignupUserBase & {
-  id: string;
-};
+// 회원가입 데이터 스키마 (id 포함)
+export const signupUserDataSchema = signupUserBaseSchema.extend({
+  id: z.string(),
+});
 
-// 회원가입 폼에만 필요한 추가 필드
-export type TSignupFormData = TSignupForm & {
-  confirmPW: string;
-};
+// TypeScript 타입 생성
+export type TSignupFormData = z.infer<typeof signupFormSchema>;
+export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 
 export type TLoginResponse = {
   success: boolean;

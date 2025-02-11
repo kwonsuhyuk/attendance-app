@@ -6,10 +6,16 @@ import { Input } from "@/components/ui/input";
 
 interface IPersonalInfoFormProps {
   form: UseFormReturn<TSignupFormData>;
-  password: string;
 }
 
 export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
+  const formatPhoneNumber = (value: string) => {
+    const numbers = value.replace(/[^\d]/g, "");
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+  };
+
   return (
     <div className="space-y-4">
       <h4 className="text-black font-medium">개인 정보</h4>
@@ -17,7 +23,6 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
       <FormField
         control={form.control}
         name="name"
-        rules={{ required: "이름을 입력해주세요" }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>이름</FormLabel>
@@ -32,18 +37,11 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
       <FormField
         control={form.control}
         name="email"
-        rules={{
-          required: "이메일을 입력해주세요",
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "유효한 이메일 주소를 입력해주세요",
-          },
-        }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>이메일</FormLabel>
             <FormControl>
-              <Input {...field} autoComplete="off" />
+              <Input {...field} autoComplete="off" type="email" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -58,12 +56,17 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
       <FormField
         control={form.control}
         name="phoneNumber"
-        rules={{ required: "전화번호를 입력해주세요" }}
-        render={({ field }) => (
+        render={({ field: { onChange, ...field } }) => (
           <FormItem>
             <FormLabel>전화번호</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input
+                {...field}
+                onChange={e => {
+                  const formatted = formatPhoneNumber(e.target.value);
+                  onChange(formatted);
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -73,13 +76,6 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
       <FormField
         control={form.control}
         name="password"
-        rules={{
-          required: "비밀번호를 입력해주세요",
-          minLength: {
-            value: 6,
-            message: "비밀번호는 6자리 이상이어야 합니다",
-          },
-        }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>비밀번호</FormLabel>
@@ -96,10 +92,6 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
       <FormField
         control={form.control}
         name="confirmPW"
-        rules={{
-          required: "비밀번호 확인을 입력해주세요",
-          validate: value => value === form.watch("password") || "비밀번호가 일치하지 않습니다",
-        }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>비밀번호확인</FormLabel>
