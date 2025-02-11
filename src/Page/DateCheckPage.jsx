@@ -22,6 +22,8 @@ import {
   DATE_CHECK_STEPS5,
 } from "../constant/tourStep";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
+import { useShallow } from "zustand/shallow";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -34,13 +36,21 @@ const paymentMethods = {
   hourPay: "시급 지급",
 };
 
-const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay, holidayList }) => {
-  const [modalDates, setModalDates] = useState([
-    dayjs().subtract(1, "month").date(modalDefaultValue),
-    dayjs().subtract(1, "day"),
-  ]);
+const DateCheckPage = () => {
   const [date, setDate] = useState(dayjs());
   const [workTimes, setWorkTimes] = useState({});
+  const { nightPay, holidayPay, holidayList, paycheckDay } = useCompanyStore(
+    useShallow(state => ({
+      paycheckDay: state.currentCompany?.payCheckDay,
+      nightPay: state.currentCompany?.isNightPay,
+      holidayPay: state.currentCompany?.holidayPay,
+      holidayList: state.currentCompany?.holidayList,
+    })),
+  );
+  const [modalDates, setModalDates] = useState([
+    dayjs().subtract(1, "month").date(paycheckDay),
+    dayjs().subtract(1, "day"),
+  ]);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const { darkMode } = useSelector(state => state.darkmodeSlice);

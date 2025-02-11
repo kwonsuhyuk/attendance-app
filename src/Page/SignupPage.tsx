@@ -11,12 +11,12 @@ import { TSignupUserData, TSignupFormData, TPosition } from "@/model";
 import { validateCompanyCode } from "../api/index";
 import { signup } from "../api/auth";
 
-import AuthHeader from "@/Components/auth/AuthHeader";
-import AuthFooter from "@/Components/auth/AuthFooter";
-import { PositionSelector } from "@/Components/auth/PositionSelector";
-import { ManagerConfirmation } from "@/Components/auth/ManagerConfirmation";
-import { EmployeeCompanyForm } from "@/Components/auth/EmployeeCompanyForm";
-import { PersonalInfoForm } from "@/Components/auth/PersonalInfoForm";
+import AuthHeader from "@/components/auth/AuthHeader";
+import AuthFooter from "@/components/auth/AuthFooter";
+import { PositionSelector } from "@/components/auth/PositionSelector";
+import { ManagerConfirmation } from "@/components/auth/ManagerConfirmation";
+import { EmployeeCompanyForm } from "@/components/auth/EmployeeCompanyForm";
+import { PersonalInfoForm } from "@/components/auth/PersonalInfoForm";
 
 const SignupPage = () => {
   const [loading, setLoading] = useState<boolean>(false);

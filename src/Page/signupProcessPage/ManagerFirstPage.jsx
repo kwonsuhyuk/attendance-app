@@ -29,7 +29,6 @@ import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import "../../firebase";
 import { getDatabase, push, ref, set } from "firebase/database";
-import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { encrypt } from "@/util/encryptDecrypt";
@@ -173,6 +172,7 @@ function ManagerFirstPage() {
     const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
     const userData = {
       name: state.name,
+      companyCode: companyCode,
       uid: state.id,
       email: email,
       phoneNumber: state.phoneNumber,

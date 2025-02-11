@@ -15,13 +15,9 @@ import { QRSCAN_PERIOD } from "@/constant/qr";
 import QrScanner from "qr-scanner";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
+import { useCompanyStore } from "@/store/company.store";
 
-
-interface QrScanProps {
-  companyLogo: string;
-}
-
-function QrScan({ companyLogo }: QrScanProps) {
+const QrScan = () => {
   const { companyCode, userId, name } = useUserStore(
     useShallow(state => ({
       companyCode: state.currentUser?.companyCode,
@@ -29,30 +25,31 @@ function QrScan({ companyLogo }: QrScanProps) {
       name: state.currentUser?.name,
     })),
   );
-  const [currentCompany, setCurrentCompany] = useState<TCompanyInfo | null>(null);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
   const [jobName, setJobName] = useState<string | null>(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastErrorTime = useRef<number>(0);
 
-  useEffect(() => {
-    const loadCompanyInfo = async () => {
-      if (companyCode && userId) {
-        const result = await fetchCompanyAndJobInfo(companyCode, userId);
-        if (result.success && result.data) {
-          setCurrentCompany(result?.data.companyInfo);
-          setJobName(result.data.jobName);
-        } else {
-          toast.error("회사 정보를 불러오는데 실패했습니다.");
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const loadCompanyInfo = async () => {
+  //     if (companyCode && userId) {
+  //       const result = await fetchCompanyAndJobInfo(companyCode, userId);
+  //       if (result.success && result.data) {
+  //         setCurrentCompany(result?.data.companyInfo);
+  //         setJobName(result.data.jobName);
+  //       } else {
+  //         toast.error("회사 정보를 불러오는데 실패했습니다.");
+  //       }
+  //     }
+  //   };
 
-    loadCompanyInfo();
+  //   loadCompanyInfo();
 
-    return () => setCurrentCompany(null);
-  }, [companyCode, userId]);
+  //   return () => setCurrentCompany(null);
+  // }, [companyCode, userId]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -128,7 +125,7 @@ function QrScan({ companyLogo }: QrScanProps) {
             alt="회사로고"
             className="rounded-full w-[130px] h-[130px]"
           />
-          <div className="font-black">{currentCompany?.companyName}</div>
+          <div className="font-black">{companyName}</div>
           <div className="flex items-center">
             {name}/{jobName}
           </div>
@@ -172,6 +169,6 @@ function QrScan({ companyLogo }: QrScanProps) {
       </Dialog>
     </>
   );
-}
+};
 
 export default QrScan;

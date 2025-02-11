@@ -1,5 +1,3 @@
-"use client";
-
 import "../firebase";
 import { Route, Routes } from "react-router-dom";
 import AccessCameraPage from "./AccessCameraPage";
@@ -7,7 +5,6 @@ import DateCheckPage from "./DateCheckPage";
 import ManagerSettingPage from "./ManagerSettingPage";
 import EmployeeListPage from "./EmployeeListPage";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import CompanyMain from "./CompanyMain";
 import ShowCalendarPage from "./ShowCalendarPage";
 import AppGuidePage from "./AppGuidePage";
@@ -17,26 +14,22 @@ import Loading from "../components/common/Loading";
 import Footer from "../components/common/Footer";
 import { getCompanyInfo } from "../api";
 import Header from "../components/common/Header";
-import { setCompany } from "@/store/companySlice";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 
-function MainPage() {
-  const currentUser = useUserStore(state => state.currentUser);
-  const [currentCompany, setCurrentCompany] = useState();
+const MainPage = () => {
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const setCompany = useCompanyStore(state => state.setCompany);
   const [isLoading, setIsLoading] = useState(false);
   const { setIsOpen } = useTour();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getCompany() {
-      if (currentUser) {
+      if (companyCode) {
         setIsLoading(true);
         try {
-          const data = await getCompanyInfo(currentUser);
-          if (data) {
-            setCurrentCompany(data);
-            dispatch(setCompany(data));
-          }
+          const data = await getCompanyInfo(companyCode);
+          setCompany(data);
         } catch (error) {
           console.error("Error fetching company info:", error);
         } finally {
@@ -45,7 +38,7 @@ function MainPage() {
       }
     }
     getCompany();
-  }, [currentUser, dispatch]);
+  }, [setCompany, companyCode]);
 
   useEffect(() => {
     const tourShown = localStorage.getItem("tourShown");
@@ -62,25 +55,12 @@ function MainPage() {
 
   return (
     <main className="min-h-screen min-w-screen bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text flex flex-col">
-      <Header currentCompany={currentCompany} />
+      <Header />
       <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto relative">
         <Routes>
-          <Route path="/companymain" element={<CompanyMain companyInfo={currentCompany} />} />
-          <Route
-            path="/camera"
-            element={<AccessCameraPage companyLogo={currentCompany?.companyLogo} />}
-          />
-          <Route
-            path="/datecheck/:id?"
-            element={
-              <DateCheckPage
-                modalDefaultValue={currentCompany?.payCheckDay}
-                nightPay={currentCompany?.isNightPay}
-                holidayPay={currentCompany?.holidayPay}
-                holidayList={currentCompany?.holidayList}
-              />
-            }
-          />
+          <Route path="/companymain" element={<CompanyMain />} />
+          <Route path="/camera" element={<AccessCameraPage />} />
+          <Route path="/datecheck/:id?" element={<DateCheckPage />} />
           <Route path="/setting/*" element={<ManagerSettingPage />} />
           <Route path="/employeelist" element={<EmployeeListPage />} />
           <Route path="/calendar" element={<ShowCalendarPage />} />
@@ -91,6 +71,6 @@ function MainPage() {
       <Footer />
     </main>
   );
-}
+};
 
 export default MainPage;

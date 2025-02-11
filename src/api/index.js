@@ -20,9 +20,10 @@ export async function getUser(currentUser) {
   return await fetchData(path);
 }
 
-export async function getCompanyInfo(currentUser) {
-  if (!currentUser) return null;
-  const path = `companyCode/${currentUser.companyCode}/companyInfo`;
+export async function getCompanyInfo(companyCode) {
+  if (!companyCode) return null;
+  const path = `companyCode/${companyCode}/companyInfo`;
+
   return await fetchData(path);
 }
 

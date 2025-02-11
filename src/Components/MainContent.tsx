@@ -6,23 +6,26 @@ import ShowSalary from "./ShowSalary/ShowSalary";
 import { getUser } from "../api";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
+import { useCompanyStore } from "@/store/company.store";
+import { stat } from "fs";
 
-export default function MainContent({ userType, currentCompany }) {
+export default function MainContent() {
   const navigate = useNavigate();
   const { darkMode } = useSelector(state => state.darkmodeSlice);
-
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   // currentUser 없을때 조건 부 설정하기 (다른 파일도)
-  const { companyCode, name, jobName, salaryType } = useUserStore(
+  const { companyCode, name, jobName, salaryType, userType } = useUserStore(
     useShallow(state => ({
       companyCode: state.currentUser?.companyCode,
       name: state.currentUser?.name,
       jobName: state.currentUser?.jobName,
       salaryType: state.currentUser?.salaryType,
+      userType: state?.userType,
     })),
   );
   const matchCalendar = useMatch(`/${companyCode}/calendar`);
   const matchHome = useMatch(`/${companyCode}/companymain`);
-
 
   if (userType === "admin") {
     if (window.innerWidth <= 600) {
@@ -48,7 +51,6 @@ export default function MainContent({ userType, currentCompany }) {
                 <div
                   className="w-80 h-80 rounded-full bg-[#B8B8B84D]"
                   onClick={() => navigate(`/${companyCode}/datecheck`)}
-
                 ></div>
                 <div className="font-black text-lg">CALENDAR</div>
                 <div className="font-normal text-xs">직원 달력 별 보기</div>
@@ -72,12 +74,8 @@ export default function MainContent({ userType, currentCompany }) {
       <div data-tour="step-32">
         <div className="flex flex-col gap-16">
           <div className="flex flex-col items-center gap-4">
-            <img
-              src={currentCompany?.companyLogo}
-              alt="회사로고"
-              className="rounded-full w-[130px] h-[130px]"
-            />
-            <div className="font-black text-base">{currentCompany?.companyName}</div>
+            <img src={companyLogo} alt="회사로고" className="rounded-full w-[130px] h-[130px]" />
+            <div className="font-black text-base">{companyName}</div>
             <div className="flex items-center text-xs">
               {name}/{jobName}
             </div>

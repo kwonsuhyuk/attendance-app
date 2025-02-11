@@ -1,11 +1,11 @@
 import QrScan from "../components/QR/QrScan";
 
-function AccessCameraPage({ companyLogo }) {
+const AccessCameraPage = () => {
   return (
     <div>
-      <QrScan companyLogo={companyLogo} />
+      <QrScan />
     </div>
   );
-}
+};
 
 export default AccessCameraPage;

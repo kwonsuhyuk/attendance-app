@@ -51,6 +51,7 @@ export type TCompanyInfo = {
   companyLogo: string;
   companyName: string;
   holidayPay: number;
+  holidayList?: string[];
   isNightPay: number;
   isdaynight: boolean;
   isholiday: boolean;
@@ -59,12 +60,6 @@ export type TCompanyInfo = {
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
-};
-
-
-export type TLoginResponse = {
-  success: boolean;
-  error?: string;
 };
 
 export type TSignUpResponse = {
@@ -108,4 +103,3 @@ export type UserData = {
   userType: string;
   workDates: DateMap<WorkData>;
 };
-

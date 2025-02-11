@@ -34,11 +34,9 @@ const App = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async user => {
-      console.log("Firebase user:", user);
       if (user) {
         try {
           const data = await getUser(user);
-
           setUser(data);
         } catch (error) {
           console.error("Error fetching user data:", error);
