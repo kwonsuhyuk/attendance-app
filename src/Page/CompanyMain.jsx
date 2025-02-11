@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTour } from "@reactour/tour";
 import { ADMIN_STEP, EMPLOYEE_STEP } from "../constant/tourStep";
-import MainContent from "../Components/MainContent";
+import MainContent from "../components/MainContent";
 
 const CompanyMain = ({ companyInfo }) => {
   const { currentUser, userType } = useSelector(state => state.user);

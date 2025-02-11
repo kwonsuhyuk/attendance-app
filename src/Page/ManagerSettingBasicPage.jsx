@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "../firebase";
 import { get, getDatabase, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "antd";
 import { toast } from "react-toastify";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Loading from "../Components/common/Loading";
-import QrGenerator from "@/Components/QR/QrGenerator";
+import QrGenerator from "@/components/QR/QrGenerator";
+import { Loading } from "@/components/common/Loading";
 
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});

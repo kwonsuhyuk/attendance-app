@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-import MyCalendar from '../Components/Calendar/MyCalendar';
-import ShowSalary from '../Components/ShowSalary/ShowSalary';
-import { useMatch } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useTour } from '@reactour/tour';
-import { CALENDAR_STEPS } from '../constant/tourStep';
+import { useSelector } from "react-redux";
+import MyCalendar from "../components/Calendar/MyCalendar";
+import ShowSalary from "../components/ShowSalary/ShowSalary";
+import { useMatch } from "react-router-dom";
+import { useEffect } from "react";
+import { useTour } from "@reactour/tour";
+import { CALENDAR_STEPS } from "../constant/tourStep";
 
 const ShowCalendarPage = () => {
   const { currentUser } = useSelector(state => state.user);

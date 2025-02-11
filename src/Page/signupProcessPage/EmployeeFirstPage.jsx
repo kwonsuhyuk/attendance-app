@@ -1,19 +1,19 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
-import { ClipLoader } from 'react-spinners';
-import '../../firebase';
-import { get, getDatabase, push, ref, set } from 'firebase/database';
-import gsap from 'gsap';
-import { toast } from 'react-toastify';
-import { Input } from 'antd';
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import { ClipLoader } from "react-spinners";
+import "../../firebase";
+import { get, getDatabase, ref, set } from "firebase/database";
+import gsap from "gsap";
+import { toast } from "react-toastify";
+import { Input } from "antd";
 
-const steps = ['회사 직책 선택', '사용법'];
+const steps = ["회사 직책 선택", "사용법"];
 
 function EmployeeFirstPage() {
   const { state } = useLocation();
@@ -24,12 +24,12 @@ function EmployeeFirstPage() {
   const [currentCompanyInfo, setCurrentCompanyInfo] = useState();
   const [jobList, setJobList] = useState([]);
   const [selectJob, setSelectJob] = useState([]);
-  const [salaryType, setSalaryType] = useState('');
+  const [salaryType, setSalaryType] = useState("");
   const [salaryAmount, setSalaryAmount] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const text = document.querySelector('.animate-text');
+    const text = document.querySelector(".animate-text");
     gsap.fromTo(
       text,
       {
@@ -48,13 +48,14 @@ function EmployeeFirstPage() {
     async function getCompData() {
       setLoading(true);
       try {
-        const compRef = ref(getDatabase(), 'companyCode/' + companyCode + '/companyInfo');
+        const compRef = ref(getDatabase(), "companyCode/" + companyCode + "/companyInfo");
         const snapshot = await get(compRef);
         if (snapshot.exists()) {
           setCurrentCompanyInfo(snapshot.val());
           setJobList(snapshot.val().jobName ? Object.values(snapshot.val().jobName) : []);
         }
       } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
@@ -81,7 +82,7 @@ function EmployeeFirstPage() {
   const handleGoMain = async () => {
     setLoading(true);
     if (!selectJob) {
-      toast.error('직종을 선택해주세요.');
+      toast.error("직종을 선택해주세요.");
       return;
     }
     handleNext();
@@ -95,9 +96,9 @@ function EmployeeFirstPage() {
       phoneNumber: state.phoneNumber,
       companyCode: companyCode,
       jobName: selectJob.jobName,
-      userType: 'employee',
+      userType: "employee",
       salaryAmount: salaryAmount ? parseInt(salaryAmount) : 0,
-      salaryType: salaryType ? salaryType : 'hourPay',
+      salaryType: salaryType ? salaryType : "hourPay",
     };
     try {
       await set(userRef, userData);
@@ -110,8 +111,8 @@ function EmployeeFirstPage() {
   };
 
   return (
-    <Box sx={{ width: '100%', height: '100vh' }}>
-      <Stepper activeStep={activeStep} sx={{ height: '10%' }}>
+    <Box sx={{ width: "100%", height: "100vh" }}>
+      <Stepper activeStep={activeStep} sx={{ height: "10%" }}>
         {steps.map(label => {
           const stepProps = {};
           const labelProps = {};
@@ -126,11 +127,11 @@ function EmployeeFirstPage() {
         <React.Fragment>
           <Box
             sx={{
-              height: '80%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              height: "80%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}>
             <Typography sx={{ mt: 2, mb: 1 }} className="animate-text">
               <ClipLoader
@@ -147,11 +148,11 @@ function EmployeeFirstPage() {
         <>
           <Box
             sx={{
-              height: '75%',
-              padding: '0 1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              overflowY: 'scroll',
+              height: "75%",
+              padding: "0 1rem",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "scroll",
               gap: 5,
             }}
             className="text-gray-500 ">
@@ -169,13 +170,13 @@ function EmployeeFirstPage() {
                 <FormLabel
                   id="demo-row-radio-buttons-group-label"
                   className="flex flex-col"
-                  sx={{ borderBottom: '1px solid #e9e9e9', color: 'black' }}>
+                  sx={{ borderBottom: "1px solid #e9e9e9", color: "black" }}>
                   회사 직종 선택
                   <span className="text-red-500 text-xs">(직종은 관리자에 의해 임의로 재변경될 수 있습니다.)</span>
                 </FormLabel>
                 <RadioGroup
                   value={selectJob.jobName}
-                  sx={{ display: 'flex', flexDirection: 'column' }}
+                  sx={{ display: "flex", flexDirection: "column" }}
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
@@ -192,7 +193,7 @@ function EmployeeFirstPage() {
                 <FormLabel
                   id="demo-row-radio-buttons-group-label"
                   className="flex flex-col"
-                  sx={{ borderBottom: '1px solid #e9e9e9', color: 'black' }}>
+                  sx={{ borderBottom: "1px solid #e9e9e9", color: "black" }}>
                   급여 지급 방법 및 급여 입력
                   <span className="text-red-500 text-xs">
                     (급여 지급 방법 및 급여 또한 관리자에 의해 재변경될 수 있습니다.)
@@ -221,22 +222,22 @@ function EmployeeFirstPage() {
               )}
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
               Back
             </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? 'Finish' : 'Next'}</Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
           </Box>
         </>
       ) : (
         <>
           <Box
             sx={{
-              height: '75%',
-              padding: '0 2rem',
-              display: 'flex',
-              flexDirection: 'column',
+              height: "75%",
+              padding: "0 2rem",
+              display: "flex",
+              flexDirection: "column",
               gap: 10,
             }}
             className="">
@@ -264,12 +265,12 @@ function EmployeeFirstPage() {
               </div>
             </div>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
               Back
             </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleGoMain}>{activeStep === steps.length - 1 ? 'Finish' : 'Next'}</Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+            <Button onClick={handleGoMain}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
           </Box>
         </>
       )}
