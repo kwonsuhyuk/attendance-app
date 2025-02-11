@@ -9,7 +9,7 @@ interface IUserState {
   clearUser: () => void;
 }
 
-export const useUserStore = create<IUserState>((set, get) => ({
+export const useUserStore = create<IUserState>(set => ({
   currentUser: null,
   isLoading: true,
   userType: null,

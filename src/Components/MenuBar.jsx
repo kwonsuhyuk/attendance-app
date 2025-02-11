@@ -25,11 +25,14 @@ import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 
-const MenuBar = ({ companyName, companyLogo }) => {
+const MenuBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userName = useUserStore(state => state.currentUser?.name);
