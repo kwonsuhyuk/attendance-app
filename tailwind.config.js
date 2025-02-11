@@ -61,7 +61,7 @@ export default {
         },
       },
       fontFamily: {
-        noto: ["Noto Sans KR"],
+        baseFont: ["Montserrat", "sans-serif"],
       },
       keyframes: {
         underline: {
