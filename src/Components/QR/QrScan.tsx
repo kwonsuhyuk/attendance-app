@@ -8,6 +8,7 @@ import QrScanner from "qr-scanner";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 
+
 const QrScan = () => {
   const { companyCode, userId } = useUserStore(
     useShallow(state => ({

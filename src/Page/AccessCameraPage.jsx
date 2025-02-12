@@ -3,6 +3,7 @@ import QrScan from "../components/QR/QrScan";
 import CompanyInfoHeader from "@/components/employee/CompanyInfoHeader";
 
 const AccessCameraPage = () => {
+
   return (
     <div className="flex flex-col gap-10" data-tour="step-35">
       <CompanyInfoHeader />
@@ -10,6 +11,7 @@ const AccessCameraPage = () => {
       <OutWorkingModal />
     </div>
   );
+
 };
 
 export default AccessCameraPage;
