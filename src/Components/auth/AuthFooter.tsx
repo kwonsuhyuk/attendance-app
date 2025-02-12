@@ -12,7 +12,7 @@ interface TAuthFooterProps {
 const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps) => {
   return (
     <div className="space-y-4">
-      <Button type="submit" className="w-full" disabled={loading} variant="outline">
+      <Button type="submit" className="w-full" disabled={loading} variant="secondary">
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

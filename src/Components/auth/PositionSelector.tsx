@@ -21,7 +21,7 @@ export const PositionSelector = ({ position, onPositionChange }: IPositionSelect
   };
 
   return (
-    <div className="p-3 rounded border-2 border-blue-400">
+    <div className="p-1 rounded border-2 border-blue-400">
       <Label className="block mb-3">가입 포지션</Label>
       <RadioGroup value={position} onValueChange={handleRadioChange} className="space-y-2">
         <div className="flex items-center space-x-2">

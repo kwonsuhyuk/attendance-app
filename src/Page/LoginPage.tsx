@@ -83,7 +83,7 @@ const LoginPage = () => {
               <div className="space-y-2">
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="outline"
                   className="w-full"
                   onClick={() => handleGuestLogin("test@naver.com", "qweqwe")}
                   disabled={loading}

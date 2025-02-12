@@ -9,7 +9,7 @@ interface ILoginFormProps {
 
 const LoginForm = ({ register, errors }: ILoginFormProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mr-10">
       <div className="space-y-2">
         <Input
           id="email"
@@ -17,6 +17,7 @@ const LoginForm = ({ register, errors }: ILoginFormProps) => {
           placeholder="이메일을 입력하세요"
           {...register("email")}
           aria-describedby="email-error"
+          className="px-5"
         />
         {errors.email && (
           <p className="text-sm text-destructive" id="email-error">
@@ -32,6 +33,7 @@ const LoginForm = ({ register, errors }: ILoginFormProps) => {
           placeholder="비밀번호를 입력하세요"
           {...register("password")}
           aria-describedby="password-error"
+          className="px-5"
         />
         {errors.password && (
           <p className="text-sm text-destructive" id="password-error">
