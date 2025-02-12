@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { TLoginForm } from "@/model";
 
@@ -9,24 +8,6 @@ interface ILoginFormProps {
 }
 
 const LoginForm = ({ register, errors }: ILoginFormProps) => {
-  // 폼 검증 규칙
-  const validationRules = {
-    email: {
-      required: "이메일을 입력해주세요",
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: "올바른 이메일 형식이 아닙니다",
-      },
-    },
-    password: {
-      required: "비밀번호를 입력해주세요",
-      minLength: {
-        value: 6,
-        message: "비밀번호는 최소 6자 이상이어야 합니다",
-      },
-    },
-  };
-
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -34,7 +15,7 @@ const LoginForm = ({ register, errors }: ILoginFormProps) => {
           id="email"
           type="email"
           placeholder="이메일을 입력하세요"
-          {...register("email", validationRules.email)}
+          {...register("email")}
           aria-describedby="email-error"
         />
         {errors.email && (
@@ -49,7 +30,7 @@ const LoginForm = ({ register, errors }: ILoginFormProps) => {
           id="password"
           type="password"
           placeholder="비밀번호를 입력하세요"
-          {...register("password", validationRules.password)}
+          {...register("password")}
           aria-describedby="password-error"
         />
         {errors.password && (

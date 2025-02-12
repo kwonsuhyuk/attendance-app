@@ -75,6 +75,7 @@ const SignupPage = () => {
           password: formData.password,
           companyCode: formData.companyCode,
           phoneNumber: formData.phoneNumber,
+          confirmPW: formData.confirmPW,
         });
 
         if (!result.success || !result.data) {

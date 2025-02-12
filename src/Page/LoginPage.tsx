@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { LogInIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
 import { login } from "../api/auth/index";
+import { loginFormSchema } from "../model";
 import type { TLoginForm } from "../model";
 
 import AuthHeader from "@/components/auth/AuthHeader";
@@ -22,7 +24,9 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>();
+  } = useForm<TLoginForm>({
+    resolver: zodResolver(loginFormSchema), // Zod 스키마 적용
+  });
 
   const onSubmit = async (formData: TLoginForm) => {
     try {

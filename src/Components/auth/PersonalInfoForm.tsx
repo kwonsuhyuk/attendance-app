@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 
 interface IPersonalInfoFormProps {
   form: UseFormReturn<TSignupFormData>;
+  password: string;
 }
 
 export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
