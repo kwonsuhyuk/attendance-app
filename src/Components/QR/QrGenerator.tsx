@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode.react";
-import { useSelector } from "react-redux";
 import { useCompanyStore } from "@/store/company.store";
 
 const QrGenerator = () => {

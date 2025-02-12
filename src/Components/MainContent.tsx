@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 import { useCompanyStore } from "@/store/company.store";
 import { stat } from "fs";
+import CompanyInfoHeader from "./employee/CompanyInfoHeader";
 
 export default function MainContent() {
   const navigate = useNavigate();
@@ -73,13 +74,7 @@ export default function MainContent() {
     return (
       <div data-tour="step-32">
         <div className="flex flex-col gap-16">
-          <div className="flex flex-col items-center gap-4">
-            <img src={companyLogo} alt="회사로고" className="rounded-full w-[130px] h-[130px]" />
-            <div className="font-black text-base">{companyName}</div>
-            <div className="flex items-center text-xs">
-              {name}/{jobName}
-            </div>
-          </div>
+          <CompanyInfoHeader />
           <div className="flex flex-col items-center gap-4">
             <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
             <div
