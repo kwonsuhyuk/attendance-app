@@ -25,7 +25,7 @@ export const ManagerConfirmation = ({
         </Label>
       </div>
       {!isManagerCheck && (
-        <p className="text-sm text-red-500 font-medium">체크 항목을 체크해주세요</p>
+        <p className="text-sm text-red-500 font-medium">*체크 항목을 체크해주세요*</p>
       )}
     </div>
   );
