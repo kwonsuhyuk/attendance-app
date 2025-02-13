@@ -10,7 +10,7 @@ import AuthTestLoginBtn from "@/components/auth/AuthTestLoginBtn";
 import { useLogin } from "../hooks/useLogin";
 
 const LoginPage = () => {
-  const { error, loading, emailRef, passwordRef, handleSubmit, handleGuestLogin } = useLogin();
+  const { error, isloading, emailRef, passwordRef, handleSubmit, handleGuestLogin } = useLogin();
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 bg-background">
@@ -27,13 +27,13 @@ const LoginPage = () => {
               </Alert>
             )}
 
-            <AuthTestLoginBtn handleGuestLogin={handleGuestLogin} loading={loading} />
+            <AuthTestLoginBtn handleGuestLogin={handleGuestLogin} loading={isloading} />
 
             <AuthFooter
               buttonText="로그인"
               linkText="계정이 없나요? 회원가입으로 이동"
               linkTo="/signup"
-              loading={loading}
+              loading={isloading}
             />
           </form>
         </CardContent>
