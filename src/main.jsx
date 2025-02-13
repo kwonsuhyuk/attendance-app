@@ -10,9 +10,7 @@ import { TourProvider } from "@reactour/tour";
 import steps from "./constant/steps.js";
 
 function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent,
-  );
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -56,7 +54,8 @@ root.render(
               top: 8,
               fontSize: 10,
             }),
-          }}>
+          }}
+        >
           <App />
         </TourProvider>
       </BrowserRouter>

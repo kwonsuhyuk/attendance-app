@@ -4,9 +4,7 @@ import { useSelector } from "react-redux";
 import "./DateCheckPage.css";
 import Calendar from "react-calendar";
 import { useNavigate, useParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import GuidePopover from "../components/GuidePopover";
 import { Button, DatePicker, Input, Modal } from "antd";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -23,6 +21,10 @@ import {
   DATE_CHECK_STEPS4,
   DATE_CHECK_STEPS5,
 } from "../constant/tourStep";
+import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
+import { useShallow } from "zustand/shallow";
+
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
@@ -34,15 +36,22 @@ const paymentMethods = {
   hourPay: "시급 지급",
 };
 
-const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay, holidayList }) => {
-  const [modalDates, setModalDates] = useState([
-    dayjs().subtract(1, "month").date(modalDefaultValue),
-    dayjs().subtract(1, "day"),
-  ]);
+const DateCheckPage = () => {
   const [date, setDate] = useState(dayjs());
   const [workTimes, setWorkTimes] = useState({});
-  const { currentUser } = useSelector(state => state.user);
-  const companyCode = currentUser?.photoURL; //회사 코드
+  const { nightPay, holidayPay, holidayList, paycheckDay } = useCompanyStore(
+    useShallow(state => ({
+      paycheckDay: state.currentCompany?.payCheckDay,
+      nightPay: state.currentCompany?.isNightPay,
+      holidayPay: state.currentCompany?.holidayPay,
+      holidayList: state.currentCompany?.holidayList,
+    })),
+  );
+  const [modalDates, setModalDates] = useState([
+    dayjs().subtract(1, "month").date(paycheckDay),
+    dayjs().subtract(1, "day"),
+  ]);
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const { darkMode } = useSelector(state => state.darkmodeSlice);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +84,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay, holidayList })
     async function getuserinfo() {
       setIsLoading(true);
       const db = getDatabase();
-      const dbRef = ref(db, `companyCode/${currentUser?.photoURL}/users/${id}`);
+      const dbRef = ref(db, `companyCode/${companyCode}/users/${id}`);
       const snapshot = await get(dbRef);
       if (snapshot.val()) {
         setUser(snapshot.val());
@@ -86,7 +95,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay, holidayList })
     return () => {
       setUser([]);
     };
-  }, [currentUser?.photoURL, id]);
+  }, [companyCode, id]);
 
   useEffect(() => {
     const db = getDatabase();
@@ -362,7 +371,7 @@ const DateCheckPage = ({ modalDefaultValue, nightPay, holidayPay, holidayList })
             <div
               style={{ borderRadius: "10px" }}
               className="text-xl flex items-center cursor-pointer p-3 underline"
-              onClick={() => navigate(`/${currentUser?.photoURL}/employeelist`)}
+              onClick={() => navigate(`/${companyCode}/employeelist`)}
             >
               직원 리스트로 가기
               <ArrowForwardIcon />{" "}

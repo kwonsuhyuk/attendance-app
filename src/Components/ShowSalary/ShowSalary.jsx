@@ -8,6 +8,7 @@ import Loading from "../common/Loading";
 import { fetchSalaryInfo } from "../../api";
 import { toast } from "react-toastify";
 import SalaryInfoCard from "./SalaryInfoCard.jsx";
+import { useUserStore } from "@/store/user.store";
 
 //import SalaryDay from '../Utils/SalaryDay';
 
@@ -39,9 +40,9 @@ function ShowSalary({ matchCalendar, matchHome }) {
     },
   });
 
-  const { currentUser } = useSelector(state => state.user);
-  const companyCode = currentUser?.photoURL;
-  const userId = currentUser?.uid;
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const userId = useUserStore(state => state.currentUser?.uid);
+
   const { salaryPayment, monthlyPay } = SalaryType(companyCode, userId);
   const now = new Date().getDate();
 
@@ -74,7 +75,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
     return <Loading />;
   }
 
-  const activePeriod = now > salaryInfo.salaryDay ? salaryInfo.currentPeriod : salaryInfo.previousPeriod;
+  const activePeriod =
+    now > salaryInfo.salaryDay ? salaryInfo.currentPeriod : salaryInfo.previousPeriod;
 
   // 홈 화면 렌더링 데이터 개선
   const getRenderData = () => {
@@ -87,7 +89,10 @@ function ShowSalary({ matchCalendar, matchHome }) {
     return [
       activePeriod.dayPay > 0 && { workType: "주간", amount: activePeriod.dayPay },
       activePeriod.nightPay > 0 && { workType: "야간", amount: activePeriod.nightPay },
-      activePeriod.holidayPay > 0 && { workType: "공휴일 및 주말", amount: activePeriod.holidayPay },
+      activePeriod.holidayPay > 0 && {
+        workType: "공휴일 및 주말",
+        amount: activePeriod.holidayPay,
+      },
     ].filter(Boolean);
   };
 
@@ -97,7 +102,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
         {(activePeriod.totalWorkHours || salaryPayment || monthlyPay) && (
           <div className="relative w-full h-full overflow-x-auto">
             <div className="py-2 text-base font-bold flex items-center">
-              이번달 근무내역 <GuidePopover text="회사의 정산일부터 계산된 내용입니다." show={false} />
+              이번달 근무내역{" "}
+              <GuidePopover text="회사의 정산일부터 계산된 내용입니다." show={false} />
             </div>
 
             <div className="text-xs pb-1">(외근은 포함되지 않습니다. 관리자에게 문의해주세요.)</div>
@@ -106,12 +112,14 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <tr>
                   <th
                     scope="col"
-                    className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+                    className="pr-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                  >
                     Work
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
+                    className="px-6 py-3 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end"
+                  >
                     Time
                   </th>
                   <th scope="col" className="pl-6 py-3 text-end">
@@ -123,7 +131,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                   <th
                     scope="row"
-                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                  >
                     주간
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -136,7 +145,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                   <th
                     scope="row"
-                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                  >
                     야간
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -149,7 +159,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <tr className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
                   <th
                     scope="row"
-                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start">
+                    className="pr-6 py-3 font-medium whitespace-nowrap border-r border-solid border-white-border-sub dark:border-dark-border-sub text-start"
+                  >
                     공휴일 및 주말
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -162,7 +173,8 @@ function ShowSalary({ matchCalendar, matchHome }) {
                 <tr className="px-6 border-b border-solid border-white-border-sub dark:border-dark-border-sub font-bold">
                   <th
                     scope="row"
-                    className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase">
+                    className="pr-6 py-3 text-start text-gray-900 whitespace-nowrap dark:text-white border-r border-solid border-white-border-sub dark:border-dark-border-sub uppercase"
+                  >
                     이번 달 총합
                   </th>
                   <td className="px-6 border-r border-solid border-white-border-sub dark:border-dark-border-sub text-end">
@@ -188,7 +200,12 @@ function ShowSalary({ matchCalendar, matchHome }) {
           {renderData &&
             renderData.length > 0 &&
             renderData.map((data, index) => (
-              <SalaryInfoCard key={index} date={today} workType={data.workType} amount={data.amount} />
+              <SalaryInfoCard
+                key={index}
+                date={today}
+                workType={data.workType}
+                amount={data.amount}
+              />
             ))}
         </div>
       </div>

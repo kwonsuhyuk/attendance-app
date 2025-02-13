@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode.react";
 import { useSelector } from "react-redux";
+import { useCompanyStore } from "@/store/company.store";
 
 const QrGenerator = () => {
   const qrRef = useRef<HTMLDivElement | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
-  const { currentCompany } = useSelector(state => state.company);
-  const qrValue = currentCompany?.qrValue || "";
+  const qrValue = useCompanyStore(state => state.currentCompany?.qrValue) || "";
 
   useEffect(() => {
     if (qrRef.current) {

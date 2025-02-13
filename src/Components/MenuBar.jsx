@@ -24,12 +24,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "antd";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import ReplayIcon from "@mui/icons-material/Replay";
+import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 
-const MenuBar = ({ companyName, companyLogo }) => {
+const MenuBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { userType, currentUser } = useSelector(state => state.user);
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
+  const userType = useUserStore(state => state.userType);
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const userName = useUserStore(state => state.currentUser?.name);
   const { darkMode } = useSelector(state => state.darkmodeSlice);
   const [open, setOpen] = useState(false);
 
@@ -44,7 +50,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
     {
       title: "APP GUIDE",
       handle: () => {
-        navigate(`/${currentUser?.photoURL}/appguide`);
+        navigate(`/${companyCode}/appguide`);
         setOpen(false);
       },
       icon: <LiveHelpIcon />,
@@ -63,7 +69,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
     {
       title: "HOME",
       handle: () => {
-        navigate(`/${currentUser?.photoURL}/companymain`);
+        navigate(`/${companyCode}/companymain`);
         setOpen(false);
       },
       icon: <HomeIcon />,
@@ -71,7 +77,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
     {
       title: "CALENDAR",
       handle: () => {
-        navigate(`/${currentUser?.photoURL}/calendar`);
+        navigate(`/${companyCode}/calendar`);
         setOpen(false);
       },
       icon: <CalendarTodayIcon />,
@@ -79,7 +85,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
     {
       title: "QR SCAN",
       handle: () => {
-        navigate(`/${currentUser?.photoURL}/camera`);
+        navigate(`/${companyCode}/camera`);
         setOpen(false);
       },
       icon: <CameraAltIcon />,
@@ -95,7 +101,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
     {
       title: "ABOUT",
       handle: () => {
-        navigate(`/${currentUser?.photoURL}/about`);
+        navigate(`/${companyCode}/about`);
         setOpen(false);
       },
       icon: <InfoIcon />,
@@ -193,11 +199,11 @@ const MenuBar = ({ companyName, companyLogo }) => {
               >
                 <div
                   className={`${
-                    location.pathname === `/${currentUser?.photoURL}/companymain`
+                    location.pathname === `/${companyCode}/companymain`
                       ? "text-white-nav-selected dark:text-dark-nav-selected"
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
-                  onClick={() => navigate(`/${currentUser?.photoURL}/companymain`)}
+                  onClick={() => navigate(`/${companyCode}/companymain`)}
                   style={{
                     border: "none",
                   }}
@@ -207,48 +213,48 @@ const MenuBar = ({ companyName, companyLogo }) => {
                 <div
                   data-tour="step-3"
                   className={`${
-                    location.pathname === `/${currentUser?.photoURL}/employeelist`
+                    location.pathname === `/${companyCode}/employeelist`
                       ? "text-white-nav-selected dark:text-dark-nav-selected"
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
                   style={{ border: "none" }}
                   onClick={() => {
-                    navigate(`/${currentUser?.photoURL}/employeelist`);
+                    navigate(`/${companyCode}/employeelist`);
                   }}
                 >
                   PEOPLE
                 </div>
                 <div
                   className={`${
-                    location.pathname.includes(`/${currentUser?.photoURL}/datecheck`)
+                    location.pathname.includes(`/${companyCode}/datecheck`)
                       ? "text-white-nav-selected dark:text-dark-nav-selected"
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
                   style={{ border: "none" }}
-                  onClick={() => navigate(`/${currentUser?.photoURL}/datecheck`)}
+                  onClick={() => navigate(`/${companyCode}/datecheck`)}
                 >
                   CALENDAR
                 </div>
                 <div
                   data-tour="step-18"
                   className={`${
-                    location.pathname.includes(`/${currentUser?.photoURL}/setting`)
+                    location.pathname.includes(`/${companyCode}/setting`)
                       ? "text-white-nav-selected dark:text-dark-nav-selected"
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
                   style={{ border: "none" }}
-                  onClick={() => navigate(`/${currentUser?.photoURL}/setting`)}
+                  onClick={() => navigate(`/${companyCode}/setting`)}
                 >
                   SETTING
                 </div>
                 <div
                   className={`${
-                    location.pathname.includes(`/${currentUser?.photoURL}/about`)
+                    location.pathname.includes(`/${companyCode}/about`)
                       ? "text-white-nav-selected dark:text-dark-nav-selected"
                       : "text-white-nav-text dark:text-dark-nav-text"
                   } cursor-pointer`}
                   style={{ border: "none" }}
-                  onClick={() => navigate(`/${currentUser?.photoURL}/about`)}
+                  onClick={() => navigate(`/${companyCode}/about`)}
                 >
                   ABOUT
                 </div>
@@ -341,7 +347,7 @@ const MenuBar = ({ companyName, companyLogo }) => {
             <div className="flex flex-col justify-center items-center gap-3">
               <img src={companyLogo} alt="회사로고" className="rounded-full w-10 h-10" />
               <Typography variant="h6" component="div">
-                {currentUser?.displayName}
+                {userName}
               </Typography>
             </div>
             <div className="flex gap-5 mb-3">

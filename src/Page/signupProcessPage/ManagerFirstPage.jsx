@@ -23,25 +23,24 @@ import ImageModal from "../../components/modal/ImageModal";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { v4 as uuidv4 } from "uuid";
-import { numToKorean, formatMoney } from "../../util/formatMoney";
 import WorkIcon from "@mui/icons-material/Work";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import "../../firebase";
 import { getDatabase, push, ref, set } from "firebase/database";
-import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { encrypt } from "@/util/encryptDecrypt";
+import { useUserStore } from "@/store/user.store";
 
 const steps = ["회사 기본 설정", "회사 추가 설정", "직원 초대 코드"];
 const companyCode = uuidv4().slice(0, 8);
 
 function ManagerFirstPage() {
   const { state } = useLocation();
-  const { currentUser } = useSelector(state => state.user);
+  const userId = useUserStore(state => state.currentUser.uid);
+  const email = useUserStore(state => state.currentUser.email);
   const [activeStep, setActiveStep] = useState(0);
   const [imageOpenModal, setImageOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -170,11 +169,12 @@ function ManagerFirstPage() {
     };
 
     // 관리자 user 정보 data
-    const userRef = ref(db, `companyCode/${companyCode}/users/${currentUser.uid}`);
+    const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
     const userData = {
       name: state.name,
+      companyCode: companyCode,
       uid: state.id,
-      email: currentUser.email,
+      email: email,
       phoneNumber: state.phoneNumber,
       userType: "admin",
     };

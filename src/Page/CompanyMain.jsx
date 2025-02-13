@@ -1,13 +1,12 @@
 import "../firebase";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useTour } from "@reactour/tour";
 import { ADMIN_STEP, EMPLOYEE_STEP } from "../constant/tourStep";
 import MainContent from "../components/MainContent";
+import { useUserStore } from "@/store/user.store";
 
-const CompanyMain = ({ companyInfo }) => {
-  const { currentUser, userType } = useSelector(state => state.user);
-  const [currentCompany, setCurrentCompany] = useState();
+const CompanyMain = () => {
+  const userType = useUserStore(state => state.userType);
   const { isOpen, setCurrentStep, setSteps } = useTour();
 
   useEffect(() => {
@@ -34,13 +33,7 @@ const CompanyMain = ({ companyInfo }) => {
     }
   }, [isOpen, setCurrentStep, setSteps, userType]);
 
-  useEffect(() => {
-    if (companyInfo) setCurrentCompany(companyInfo);
-  }, [companyInfo]);
-
-  return (
-    <MainContent currentCompany={currentCompany} currentUser={currentUser} userType={userType} />
-  );
+  return <MainContent />;
 };
 
 export default CompanyMain;

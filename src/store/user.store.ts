@@ -1,12 +1,12 @@
+import { UserData } from "@/model";
 import { create } from "zustand";
 
 interface IUserState {
-  currentUser: any | null;
+  currentUser: UserData | null;
   isLoading: boolean;
   userType: string | null;
-  setUser: (user: any) => void;
+  setUser: (user: UserData) => void;
   clearUser: () => void;
-  setUserType: (type: string) => void;
 }
 
 export const useUserStore = create<IUserState>(set => ({
@@ -14,7 +14,10 @@ export const useUserStore = create<IUserState>(set => ({
   isLoading: true,
   userType: null,
 
-  setUser: user => set({ currentUser: user, isLoading: false }),
-  clearUser: () => set({ currentUser: null, userType: null, isLoading: false }),
-  setUserType: type => set({ userType: type }),
+  setUser: user => {
+    set({ currentUser: user, isLoading: false, userType: user?.userType });
+  },
+  clearUser: () => {
+    set({ currentUser: null, userType: null, isLoading: false });
+  },
 }));
