@@ -1,31 +1,41 @@
-import { useState, useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { login } from "../api/auth";
 import { loginFormSchema } from "../model";
-import type { TLoginForm } from "../model";
+import { z } from "zod";
 
 export const useLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TLoginForm>({
-    resolver: zodResolver(loginFormSchema),
-  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const onSubmit = async (formData: TLoginForm) => {
+    const formData = {
+      email: emailRef.current?.value || "",
+      password: passwordRef.current?.value || "",
+    };
+
     try {
+      loginFormSchema.parse(formData);
       setLoading(true);
       const response = await login(formData);
+
       if (!response.success) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다");
       }
     } catch (error) {
-      setError("로그인 중 오류가 발생했습니다");
+      if (error instanceof z.ZodError) {
+        const fieldName = error.errors[0].path[0];
+        if (fieldName === "email") {
+          setError("이메일 형식이 올바르지 않습니다");
+        } else if (fieldName === "password") {
+          setError("비밀번호는 6자 이상이어야 합니다");
+        }
+      } else {
+        setError("로그인 중 오류가 발생했습니다");
+      }
     } finally {
       setLoading(false);
     }
@@ -54,9 +64,9 @@ export const useLogin = () => {
   return {
     error,
     loading,
-    register,
-    errors,
-    handleSubmit: handleSubmit(onSubmit),
+    emailRef,
+    passwordRef,
+    handleSubmit,
     handleGuestLogin,
   };
 };

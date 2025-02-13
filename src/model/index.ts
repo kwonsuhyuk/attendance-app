@@ -2,11 +2,10 @@ import { z } from "zod";
 
 // 로그인 스키마 정의 (유효성 검사)
 export const loginFormSchema = z.object({
-  email: z.string().email({ message: "유효한 이메일을 입력하세요." }),
-  password: z.string().min(6, { message: "비밀번호는 최소 6자 이상이어야 합니다." }),
+  email: z.string().email(),
+  password: z.string().min(6),
 });
 
-// TypeScript 타입 자동 생성
 export type TLoginForm = z.infer<typeof loginFormSchema>;
 
 // 기본 회원가입 정보 스키마
@@ -37,10 +36,10 @@ export const signupUserDataSchema = signupUserBaseSchema.extend({
   id: z.string(),
 });
 
-// TypeScript 타입 생성
 export type TSignupFormData = z.infer<typeof signupFormSchema>;
 export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 
+// 로그인,회원가입 auth관련 에러
 export type TLoginResponse = {
   success: boolean;
   error?: string;
@@ -54,6 +53,7 @@ export type TSignupResponse = {
   error?: string;
 };
 
+// 직원,관리자,default
 export type TPosition = "manager" | "employee" | "";
 
 export type TJob = {
