@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { TLoginForm, TSignupForm, TLoginResponse, TSignupResponse } from "../../model/index";
+import { TLoginForm, TSignupFormData, TLoginResponse, TSignupResponse } from "../../model/index";
 
 const auth = getAuth();
 
@@ -26,7 +26,7 @@ export async function signup({
   name,
   companyCode,
   phoneNumber,
-}: TSignupForm): Promise<TSignupResponse> {
+}: TSignupFormData): Promise<TSignupResponse> {
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, {

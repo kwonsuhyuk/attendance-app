@@ -1,11 +1,14 @@
-import { Alert, Avatar, Box, Container, Grid, TextField, Typography } from "@mui/material";
-import LoginIcon from "@mui/icons-material/Login";
-import { useCallback, useEffect, useState } from "react";
-import { Divider } from "antd";
+import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { LogInIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 import { login } from "../api/auth/index";
-import { loginFormSchema, TLoginForm } from "../model";
+import { loginFormSchema } from "../model";
+import type { TLoginForm } from "../model";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthFooter from "@/components/auth/AuthFooter";
 import LoginForm from "@/components/auth/LoginForm";
@@ -18,7 +21,9 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TLoginForm>({ resolver: zodResolver(loginFormSchema) });
+  } = useForm<TLoginForm>({
+    resolver: zodResolver(loginFormSchema), // Zod 스키마 적용
+  });
 
   const onSubmit = async (formData: TLoginForm) => {
     try {
@@ -37,7 +42,6 @@ const LoginPage = () => {
   const handleGuestLogin = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true);
-
       const response = await login({ email, password });
       if (!response.success) {
         setError("게스트 로그인 실패");
@@ -56,27 +60,55 @@ const LoginPage = () => {
   }, [error]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Container component="main" maxWidth="xs">
-        <Box className="flex flex-col justify-center items-center">
-          <AuthHeader icon={LoginIcon} title="로그인" />
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-md">
+        <CardContent className="p-6 space-y-6">
+          <AuthHeader icon={LogInIcon} title="로그인" />
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <LoginForm register={register} errors={errors} />
-            {error ? (
-              <Alert sx={{ mt: 3 }} severity="error">
-                {error}
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
-            ) : null}
-            <Divider />
-            <AuthFooter
-              buttonText="로그인"
-              linkText="계정이 없나요? 회원가입으로 이동"
-              linkTo="/signup"
-              loading={loading}
-            />
-          </Box>
-        </Box>
-      </Container>
+            )}
+
+            <div className="space-y-6">
+              <Separator />
+
+              <div className="space-y-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleGuestLogin("test@naver.com", "qweqwe")}
+                  disabled={loading}
+                >
+                  관리자 Guest 로그인
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleGuestLogin("testep@naver.com", "qweqwe")}
+                  disabled={loading}
+                >
+                  직원 Guest 로그인
+                </Button>
+              </div>
+
+              <AuthFooter
+                buttonText="로그인"
+                linkText="계정이 없나요? 회원가입으로 이동"
+                linkTo="/signup"
+                loading={loading}
+              />
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

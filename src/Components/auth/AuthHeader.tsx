@@ -1,27 +1,22 @@
 import React from "react";
-import { Avatar, Typography } from "@mui/material";
-import { SvgIconComponent } from "@mui/icons-material";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LucideIcon } from "lucide-react";
 
 interface IAuthHeaderProps {
-  icon: SvgIconComponent;
+  icon: LucideIcon;
   title: string;
 }
 
 const AuthHeader = ({ icon: Icon, title }: IAuthHeaderProps) => {
   return (
-    <>
-      <Avatar
-        sx={{
-          m: 1,
-          bgcolor: "black",
-        }}
-      >
-        <Icon />
+    <div className="flex flex-col items-center gap-4">
+      <Avatar className="h-12 w-12 bg-primary">
+        <AvatarFallback className="bg-primary text-primary-foreground">
+          <Icon className="h-6 w-6" />
+        </AvatarFallback>
       </Avatar>
-      <Typography component="h1" variant="h5" color="black">
-        {title}
-      </Typography>
-    </>
+      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+    </div>
   );
 };
 

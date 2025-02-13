@@ -1,10 +1,11 @@
-import { Typography, TextField, Button } from "@mui/material";
-import { Controller, Control, FieldErrors } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { TSignupFormData } from "@/model";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface IEmployeeCompanyFormProps {
-  control: Control<TSignupFormData>;
-  errors: FieldErrors<TSignupFormData>;
+  form: UseFormReturn<TSignupFormData>;
   isCodeValid: boolean;
   tempCompInfo: string;
   companyCode: string | undefined;
@@ -12,57 +13,53 @@ interface IEmployeeCompanyFormProps {
 }
 
 export const EmployeeCompanyForm = ({
-  control,
-  errors,
+  form,
   isCodeValid,
   tempCompInfo,
   companyCode,
   checkCompanyCode,
 }: IEmployeeCompanyFormProps) => {
   return (
-    <>
-      <Typography component="p" color="black" sx={{ mt: 2 }}>
-        가입 회사 정보
-      </Typography>
-      <div className="flex flex-col items-stretch mb-2">
+    <div className="space-y-4">
+      <h4 className="text-black font-medium">가입 회사 정보</h4>
+
+      <div className="space-y-2">
         {!isCodeValid ? (
-          <Controller
+          <FormField
+            control={form.control}
             name="companyCode"
-            control={control}
-            rules={{
-              required: "회사코드를 입력해주세요",
-              validate: value => (!isCodeValid ? "회사코드 인증버튼을 눌러주세요" : true),
-            }}
             render={({ field }) => (
-              <TextField
-                {...field}
-                className="w-full flex-grow"
-                margin="normal"
-                required
-                label="회사코드"
-                autoComplete="off"
-                error={!!errors.companyCode}
-                helperText={errors.companyCode?.message}
-                disabled={isCodeValid}
-              />
+              <FormItem>
+                <FormLabel>회사코드</FormLabel>
+                <FormControl>
+                  <Input {...field} required autoComplete="off" disabled={isCodeValid} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
         ) : (
-          <TextField
-            className="w-full flex-grow"
-            margin="normal"
-            autoComplete="off"
-            disabled={isCodeValid}
-            value={tempCompInfo}
-          />
+          <FormItem>
+            <FormLabel>회사정보</FormLabel>
+            <FormControl>
+              <Input disabled value={tempCompInfo} className="bg-gray-100" />
+            </FormControl>
+          </FormItem>
         )}
-        <Button className="w-full flex-grow" onClick={() => checkCompanyCode(companyCode || "")}>
+
+        <Button
+          type="button"
+          variant="secondary"
+          className="w-full"
+          onClick={() => checkCompanyCode(companyCode || "")}
+        >
           회사찾기
         </Button>
       </div>
-      <Typography component="p" color="gray" sx={{ fontSize: "12px", mb: 2 }}>
-        (회사 관리자에게 받은 회사코드를 입력해주세요.)
-      </Typography>
-    </>
+
+      <p className="text-gray-500 text-sm">(회사 관리자에게 받은 회사코드를 입력해주세요.)</p>
+    </div>
   );
 };
+
+export default EmployeeCompanyForm;

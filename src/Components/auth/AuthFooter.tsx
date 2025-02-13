@@ -1,7 +1,6 @@
-import React from "react";
-import { LoadingButton } from "@mui/lab";
-import { Grid, Alert } from "@mui/material";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface TAuthFooterProps {
   buttonText: string;
@@ -12,31 +11,27 @@ interface TAuthFooterProps {
 
 const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps) => {
   return (
-    <>
-      <LoadingButton
-        type="submit"
-        fullWidth
-        variant="outlined"
-        color="primary"
-        loading={loading}
-        sx={{ mt: 1, mb: 2 }}
-      >
-        {buttonText}
-      </LoadingButton>
-      <Grid container justifyContent="flex-end" mb={5}>
-        <Grid item>
-          <Link
-            to={linkTo}
-            style={{
-              textDecoration: "none",
-              color: "gray",
-            }}
-          >
-            {linkText}
-          </Link>
-        </Grid>
-      </Grid>
-    </>
+    <div className="space-y-4">
+      <Button type="submit" className="w-full" disabled={loading} variant="secondary">
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            로딩중...
+          </>
+        ) : (
+          buttonText
+        )}
+      </Button>
+
+      <div className="flex justify-end mb-8">
+        <Link
+          to={linkTo}
+          className="mb-8 text-muted-foreground hover:text-primary transition-colors"
+        >
+          {linkText}
+        </Link>
+      </div>
+    </div>
   );
 };
 
