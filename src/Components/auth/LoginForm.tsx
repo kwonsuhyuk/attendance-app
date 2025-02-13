@@ -9,7 +9,7 @@ interface ILoginFormProps {
 
 const LoginForm = ({ register, errors }: ILoginFormProps) => {
   return (
-    <div className="space-y-4 mr-6">
+    <div className="space-y-4">
       <div className="space-y-2">
         <Input
           id="email"
