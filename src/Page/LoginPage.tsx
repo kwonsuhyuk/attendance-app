@@ -1,12 +1,11 @@
+// pages/LoginPage.tsx
 import { LogInIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthFooter from "@/components/auth/AuthFooter";
 import LoginForm from "@/components/auth/LoginForm";
-
+import AuthTestLoginBtn from "@/components/auth/AuthTestLoginBtn";
 import { useLogin } from "../hooks/useLogin";
 
 const LoginPage = () => {
@@ -27,38 +26,14 @@ const LoginPage = () => {
               </Alert>
             )}
 
-            <div className="space-y-6">
-              <Separator />
+            <AuthTestLoginBtn handleGuestLogin={handleGuestLogin} loading={loading} />
 
-              <div className="space-y-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleGuestLogin("test@naver.com", "qweqwe")}
-                  disabled={loading}
-                >
-                  관리자 Guest 로그인
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleGuestLogin("testep@naver.com", "qweqwe")}
-                  disabled={loading}
-                >
-                  직원 Guest 로그인
-                </Button>
-              </div>
-
-              <AuthFooter
-                buttonText="로그인"
-                linkText="계정이 없나요? 회원가입으로 이동"
-                linkTo="/signup"
-                loading={loading}
-              />
-            </div>
+            <AuthFooter
+              buttonText="로그인"
+              linkText="계정이 없나요? 회원가입으로 이동"
+              linkTo="/signup"
+              loading={loading}
+            />
           </form>
         </CardContent>
       </Card>
