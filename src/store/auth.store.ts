@@ -5,7 +5,7 @@ import { z } from "zod";
 import { loginFormSchema, TLoginForm } from "@/model";
 
 interface IAuthState {
-  isloading: boolean;
+  isLoading: boolean;
   error: string | null;
   setError: (error: string | null) => void;
   login: (formData: TLoginForm) => Promise<void>;
@@ -13,14 +13,14 @@ interface IAuthState {
 }
 
 export const useAuthStore = create<IAuthState>(set => ({
-  isloading: false,
+  isLoading: false,
   error: null,
   setError: error => set({ error }),
 
   login: async formData => {
     try {
       loginFormSchema.parse(formData);
-      set({ isloading: true, error: null });
+      set({ isLoading: true, error: null });
 
       const response = await login(formData);
       if (!response.success) {
@@ -38,13 +38,13 @@ export const useAuthStore = create<IAuthState>(set => ({
         set({ error: "로그인 중 오류가 발생했습니다" });
       }
     } finally {
-      set({ isloading: false });
+      set({ isLoading: false });
     }
   },
 
   guestLogin: async (email, password) => {
     try {
-      set({ isloading: true, error: null });
+      set({ isLoading: true, error: null });
       const response = await login({ email, password });
       if (!response.success) {
         set({ error: "게스트 로그인 실패" });
@@ -52,7 +52,7 @@ export const useAuthStore = create<IAuthState>(set => ({
     } catch (error) {
       set({ error: "게스트 로그인 중 오류가 발생했습니다" });
     } finally {
-      set({ isloading: false });
+      set({ isLoading: false });
     }
   },
 }));

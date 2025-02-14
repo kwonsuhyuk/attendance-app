@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/auth.store";
 export const useLogin = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const { error, isloading, login, guestLogin, setError } = useAuthStore();
+  const { error, isLoading, login, guestLogin, setError } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export const useLogin = () => {
 
   return {
     error,
-    isloading,
+    isLoading,
     emailRef,
     passwordRef,
     handleSubmit,
