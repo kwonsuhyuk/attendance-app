@@ -8,8 +8,8 @@ interface ILoginFormProps {
 
 const LoginForm = ({ emailRef, passwordRef }: ILoginFormProps) => {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="space-y-8">
+      <div className="space-y-3">
         <Input
           id="email"
           type="email"
