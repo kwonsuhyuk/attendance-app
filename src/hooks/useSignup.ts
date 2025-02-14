@@ -1,24 +1,28 @@
-import { useState, useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { setUser } from "../store/userSlice";
-import { validateCompanyCode } from "../api";
-import { signup } from "../api/auth/index";
-import { signupFormSchema } from "../model";
-import type { TSignupFormData, TPosition, TSignupUserData } from "@/model";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSignupStore } from "@/store/signup.store";
+import { useUserStore } from "@/store/user.store";
+import { signupFormSchema, UserData } from "@/model";
+import type { TSignupFormData, TPosition } from "@/model";
 
 export const useSignup = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [position, setPosition] = useState<TPosition>("");
-  const [isManagerCheck, setManagerCheck] = useState<boolean>(false);
-  const [isCodeValid, setIsCodeValid] = useState<boolean>(false);
-  const [tempCompInfo, setTempCompInfo] = useState<string>("");
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { setUser } = useUserStore();
+  const {
+    isLoading,
+    error,
+    position,
+    isManagerCheck,
+    isCodeValid,
+    tempCompInfo,
+    setError,
+    setPosition,
+    setManagerCheck,
+    checkCompanyCode,
+    submitSignup,
+  } = useSignupStore();
 
   const form = useForm<TSignupFormData>({
     resolver: zodResolver(signupFormSchema),
@@ -37,77 +41,40 @@ export const useSignup = () => {
 
   useEffect(() => {
     if (!error) return;
-    const timer = setTimeout(() => setError(""), 3000);
+    const timer = setTimeout(() => setError(null), 3000);
     return () => clearTimeout(timer);
-  }, [error]);
+  }, [error, setError]);
 
   const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPosition(e.target.value as TPosition);
   };
 
-  const checkCompanyCode = async (code: string) => {
+  const onSubmit = async (data: TSignupFormData) => {
     try {
-      const result = await validateCompanyCode(code);
-      if (result.isValid && result.companyName) {
-        setTempCompInfo(result.companyName);
-        setIsCodeValid(true);
-      } else {
-        form.setError("companyCode", {
-          type: "manual",
-          message: result.error || "유효하지 않은 회사 코드입니다",
-        });
-        setIsCodeValid(false);
-      }
-    } catch (error) {
-      form.setError("companyCode", {
-        type: "manual",
-        message: "회사 코드 확인 중 오류가 발생했습니다",
+      const signupData = await submitSignup(data, form);
+
+      // UserData 형식에 맞게 변환
+      const userData: UserData = {
+        uid: signupData.id,
+        name: signupData.name,
+        email: data.email,
+        companyCode: signupData.companyCode,
+        phoneNumber: signupData.phoneNumber,
+        jobName: "",
+        salaryAmount: 0,
+        salaryType: "",
+        userType: position,
+        date: {},
+        workDates: {},
+      };
+
+      setUser(userData);
+      navigate(position === "manager" ? "/managerfirst" : "/employeefirst", {
+        state: userData,
       });
-      setIsCodeValid(false);
+    } catch (error) {
+      console.error("Signup error:", error);
     }
-  };
-
-  const sendUserInfo = useCallback(
-    async (formData: TSignupFormData) => {
-      setLoading(true);
-      try {
-        const result = await signup({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          companyCode: formData.companyCode,
-          phoneNumber: formData.phoneNumber,
-          confirmPW: formData.confirmPW,
-        });
-
-        if (!result.success || !result.data) {
-          throw new Error(result.error);
-        }
-
-        const userData: TSignupUserData = {
-          id: result.data.userId,
-          name: formData.name,
-          companyCode: formData.companyCode,
-          phoneNumber: formData.phoneNumber,
-        };
-
-        dispatch(setUser(userData));
-
-        navigate(position === "manager" ? "/managerfirst" : "/employeefirst", {
-          state: userData,
-        });
-      } catch (e) {
-        console.error("Detailed error:", e);
-        setError(e instanceof Error ? e.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [dispatch, position, navigate],
-  );
-
-  const onSubmit = (data: TSignupFormData) => {
-    sendUserInfo(data);
   };
 
   useEffect(() => {
@@ -119,7 +86,7 @@ export const useSignup = () => {
   }, [isManagerCheck]);
 
   return {
-    loading,
+    loading: isLoading,
     error,
     position,
     isManagerCheck,
@@ -130,7 +97,7 @@ export const useSignup = () => {
     companyCode,
     setManagerCheck,
     handlePositionChange,
-    checkCompanyCode,
+    checkCompanyCode: (code: string) => checkCompanyCode(code, form),
     onSubmit: form.handleSubmit(onSubmit),
   };
 };
