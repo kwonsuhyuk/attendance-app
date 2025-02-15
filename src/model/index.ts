@@ -36,9 +36,12 @@ export const signupUserDataSchema = signupUserBaseSchema.extend({
 export type TSignupFormData = z.infer<typeof signupFormSchema>;
 export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 
-// 로그인,회원가입 auth관련 에러
 export type TLoginResponse = {
   success: boolean;
+  data?: {
+    user: UserData;
+    company: TCompanyInfo;
+  };
   error?: string;
 };
 
