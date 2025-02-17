@@ -97,15 +97,15 @@ export type DateMap<T> = {
 
 // 사용자 데이터 타입
 export type UserData = {
-  companyCode: string;
-  date: DateMap<WorkTime>;
-  email: string;
-  jobName: string;
+  uid: string;
   name: string;
+  email: string;
+  companyCode: string;
   phoneNumber: string;
+  jobName: string;
   salaryAmount: number;
   salaryType: string;
-  uid: string;
   userType: string;
-  workDates: DateMap<WorkData>;
+  date?: DateMap<WorkTime>;
+  workDates?: DateMap<WorkData>;
 };
