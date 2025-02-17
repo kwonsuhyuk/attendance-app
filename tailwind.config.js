@@ -83,7 +83,7 @@ export default {
       },
     },
   },
-  darkMode: ["class", "class"],
+  darkMode: "class",
   plugins: [require("tailwindcss-animate")],
   important: true,
   mode: "jit",
