@@ -42,17 +42,17 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
           <FormItem>
             <FormLabel className="text-gray-700">이메일</FormLabel>
             <FormControl>
-              <Input {...field} autoComplete="off" type="email" />
+              <Input
+                {...field}
+                autoComplete="off"
+                type="email"
+                placeholder="예) hongildong@naver.com"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-
-      <p className="text-gray-500 text-sm">
-        (유효한 이메일을 작성해주셔야 합니다!) <br />
-        (이메일형식예시 : hongildong@naver.com)
-      </p>
 
       <FormField
         control={form.control}
@@ -67,6 +67,7 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
                   const formatted = formatPhoneNumber(e.target.value);
                   onChange(formatted);
                 }}
+                placeholder="'-'제외하고 숫자만 입력하세요."
               />
             </FormControl>
             <FormMessage />
@@ -81,14 +82,12 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
           <FormItem>
             <FormLabel className="text-gray-700">비밀번호</FormLabel>
             <FormControl>
-              <Input type="password" {...field} />
+              <Input type="password" {...field} placeholder="6자리 이상 작성해주세요." />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-
-      <p className="text-gray-500 text-sm">(비밀번호는 6자리 이상으로 작성해주세요.)</p>
 
       <FormField
         control={form.control}

@@ -3,16 +3,13 @@ import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
 import { login } from "@/api/auth";
 import { z } from "zod";
-import { loginFormSchema, TLoginForm } from "@/model";
+import { loginFormSchema } from "@/model";
 
 export const useLogin = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const setUser = useUserStore(state => state.setUser);
-  const setCompany = useCompanyStore(state => state.setCompany);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,14 +29,6 @@ export const useLogin = () => {
       if (!response.success) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다");
         return;
-      }
-
-      // 사용자와 회사 정보 저장
-      if (response.data?.user) {
-        setUser(response.data.user);
-      }
-      if (response.data?.company) {
-        setCompany(response.data.company);
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -67,14 +56,6 @@ export const useLogin = () => {
       if (!response.success) {
         setError("게스트 로그인 실패");
         return;
-      }
-
-      // 사용자와 회사 정보 저장
-      if (response.data?.user) {
-        setUser(response.data.user);
-      }
-      if (response.data?.company) {
-        setCompany(response.data.company);
       }
     } catch (error) {
       setError("게스트 로그인 중 오류가 발생했습니다");

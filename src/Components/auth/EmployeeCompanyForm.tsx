@@ -52,6 +52,7 @@ export const EmployeeCompanyForm = ({
           variant="secondary"
           className="w-full"
           onClick={() => checkCompanyCode(companyCode || "")}
+          disabled={isCodeValid}
         >
           회사찾기
         </Button>
