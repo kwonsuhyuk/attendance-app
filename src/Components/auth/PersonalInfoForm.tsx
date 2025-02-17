@@ -67,6 +67,7 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
                   const formatted = formatPhoneNumber(e.target.value);
                   onChange(formatted);
                 }}
+                placeholder="'-'제외하고 숫자만 입력하세요."
               />
             </FormControl>
             <FormMessage />

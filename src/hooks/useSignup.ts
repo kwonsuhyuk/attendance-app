@@ -13,7 +13,6 @@ export const useSignup = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
 
-  // Zustand store의 상태들을 useState로 변환
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [position, setPosition] = useState<TPosition>("");
@@ -36,8 +35,11 @@ export const useSignup = () => {
   const password = form.watch("password");
   const companyCode = form.watch("companyCode");
 
-  // 기존 store의 checkCompanyCode 로직 통합
   const checkCompanyCode = async (code: string) => {
+    if (!code) {
+      setIsCodeValid(false);
+      return;
+    }
     try {
       const result = await validateCompanyCode(code);
       if (result.isValid && result.companyName) {
@@ -59,8 +61,11 @@ export const useSignup = () => {
     }
   };
 
-  // 기존 store의 submitSignup 로직 통합
-  const submitSignup = async (formData: TSignupFormData) => {
+  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPosition(e.target.value as TPosition);
+  };
+
+  const onSubmit = async (formData: TSignupFormData) => {
     setIsLoading(true);
     setError(null);
 
@@ -77,15 +82,31 @@ export const useSignup = () => {
       });
 
       if (!result.success || !result.data) {
-        throw new Error(result.error);
+        throw new Error(result.error || "회원가입에 실패했습니다.");
       }
 
-      return {
+      const signupData = {
         id: result.data.userId,
         name: formData.name,
         companyCode: formData.companyCode,
         phoneNumber: formData.phoneNumber,
       };
+
+      const userData: UserData = {
+        uid: signupData.id,
+        name: signupData.name,
+        email: formData.email,
+        companyCode: signupData.companyCode,
+        phoneNumber: signupData.phoneNumber,
+        jobName: "",
+        salaryAmount: 0,
+        salaryType: "",
+        userType: position,
+      };
+
+      navigate(position === "manager" ? "/managerfirst" : "/employeefirst", {
+        state: userData,
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldName = error.errors[0].path[0];
@@ -95,40 +116,9 @@ export const useSignup = () => {
         });
       }
       setError(error instanceof Error ? error.message : "An error occurred");
-      throw error;
+      console.error("Signup error:", error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPosition(e.target.value as TPosition);
-  };
-
-  const onSubmit = async (data: TSignupFormData) => {
-    try {
-      const signupData = await submitSignup(data);
-
-      const userData: UserData = {
-        uid: signupData.id,
-        name: signupData.name,
-        email: data.email,
-        companyCode: signupData.companyCode,
-        phoneNumber: signupData.phoneNumber,
-        jobName: "",
-        salaryAmount: 0,
-        salaryType: "",
-        userType: position,
-        date: {},
-        workDates: {},
-      };
-
-      setUser(userData);
-      navigate(position === "manager" ? "/managerfirst" : "/employeefirst", {
-        state: userData,
-      });
-    } catch (error) {
-      console.error("Signup error:", error);
     }
   };
 

@@ -19,15 +19,15 @@ import { get, getDatabase, ref, set } from "firebase/database";
 import gsap from "gsap";
 import { toast } from "react-toastify";
 import { Input } from "antd";
-import { useUserStore } from "@/store/user.store";
+// import { useUserStore } from "@/store/user.store";
 
 const steps = ["회사 직책 선택", "사용법"];
 
 function EmployeeFirstPage() {
   const { state } = useLocation();
   const { companyCode } = state;
-  const userId = useUserStore(state => state.currentUser.uid);
-  const email = useUserStore(state => state.currentUser.email);
+  // const userId = useUserStore(state => state.currentUser.uid);
+  // const email = useUserStore(state => state.currentUser.email);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentCompanyInfo, setCurrentCompanyInfo] = useState();
@@ -36,6 +36,8 @@ function EmployeeFirstPage() {
   const [salaryType, setSalaryType] = useState("");
   const [salaryAmount, setSalaryAmount] = useState();
   const navigate = useNavigate();
+
+  console.log(state);
 
   useEffect(() => {
     const text = document.querySelector(".animate-text");
@@ -103,11 +105,11 @@ function EmployeeFirstPage() {
     handleNext();
 
     const db = getDatabase();
-    const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
+    const userRef = ref(db, `companyCode/${companyCode}/users/${state.userId}`);
     const userData = {
       name: state.name,
       uid: state.id,
-      email: email,
+      email: state.email,
       phoneNumber: state.phoneNumber,
       companyCode: companyCode,
       jobName: selectJob.jobName,
