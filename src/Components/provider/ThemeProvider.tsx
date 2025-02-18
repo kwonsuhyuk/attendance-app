@@ -8,7 +8,9 @@ interface ThemeProviderProps extends PropsWithChildren {
 }
 
 export default function ThemeProvider({ children, excludePaths = [] }: ThemeProviderProps) {
-  const { darkMode, initializeMode } = useDarkMode();
+  const darkMode = useDarkMode(state => state.darkMode);
+  const toggleMode = useDarkMode(state => state.toggleMode);
+  const initializeMode = useDarkMode(state => state.initializeMode);
   const location = useLocation();
 
   const isExcluded = excludePaths.some((path: string) => location.pathname === path);
