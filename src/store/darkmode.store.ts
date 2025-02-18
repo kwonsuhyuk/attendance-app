@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { createContext, useContext, useEffect } from "react";
 
 interface DarkModeStore {
   darkMode: boolean;
