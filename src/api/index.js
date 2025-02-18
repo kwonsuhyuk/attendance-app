@@ -549,7 +549,6 @@ export async function fetchCurrentDayWork(companyCode, userId) {
 }
 
 // signupPage
-
 export async function validateCompanyCode(code) {
   try {
     const companyCodeData = await fetchData(`companyCode/${code}`);
@@ -569,6 +568,39 @@ export async function validateCompanyCode(code) {
     return {
       isValid: false,
       error: error.message,
+    };
+  }
+}
+
+export async function setEmployeeUser({
+  name,
+  userId,
+  email,
+  phoneNumber,
+  companyCode,
+  selectJob,
+  employmentType,
+}) {
+  const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
+  const userData = {
+    name: name,
+    uid: userId,
+    email: email,
+    phoneNumber: phoneNumber,
+    companyCode: companyCode,
+    jobName: selectJob,
+    employmentType: employmentType,
+    userType: "employee",
+  };
+  try {
+    await set(userRef, userData);
+    return {
+      success: true,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      error: e.message,
     };
   }
 }
