@@ -54,7 +54,7 @@ const App = () => {
 
   return (
     <>
-      <ThemeProvider>
+      <ThemeProvider excludePaths={["/signin", "/signup"]}>
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <GuideFab />
         <Routes>

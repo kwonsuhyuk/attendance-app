@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createContext, useContext, useEffect } from "react";
 
 interface DarkModeStore {
   darkMode: boolean;
@@ -8,7 +9,10 @@ interface DarkModeStore {
 
 const getInitialMode = (): boolean => {
   const savedMode = localStorage.getItem("darkMode");
-  return savedMode ? JSON.parse(savedMode) : false;
+  if (!savedMode) {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  return JSON.parse(savedMode);
 };
 
 const useDarkMode = create<DarkModeStore>(set => ({
@@ -18,11 +22,13 @@ const useDarkMode = create<DarkModeStore>(set => ({
     set(state => {
       const newMode = !state.darkMode;
       localStorage.setItem("darkMode", JSON.stringify(newMode));
+      document.documentElement.setAttribute("data-theme", newMode ? "dark" : "light");
       return { darkMode: newMode };
     }),
 
   initializeMode: () => {
     const savedMode = getInitialMode();
+    document.documentElement.setAttribute("data-theme", savedMode ? "dark" : "light");
     set({ darkMode: savedMode });
   },
 }));
