@@ -6,9 +6,9 @@ import { useTour } from "@reactour/tour";
 
 export default function GuidePopover({ text, show = true }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { darkMode } = useSelector((state) => state.darkmodeSlice);
+  const { darkMode } = useSelector(state => state.darkmodeSlice);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -20,10 +20,7 @@ export default function GuidePopover({ text, show = true }) {
       <IconButton aria-describedby={id} onClick={handleClick}>
         <ContactSupportIcon sx={{ color: !darkMode ? "black" : "white" }} />
         {show && (
-          <Typography
-            sx={{ fontSize: 14, color: !darkMode ? "black" : "white" }}>
-            GUIDE
-          </Typography>
+          <Typography sx={{ fontSize: 14, color: !darkMode ? "black" : "white" }}>GUIDE</Typography>
         )}
       </IconButton>
     </div>

@@ -39,7 +39,7 @@ export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 export type TLoginResponse = {
   success: boolean;
   data?: {
-    user: UserData;
+    user: TUserData;
     company: TCompanyInfo;
   };
   error?: string;
@@ -69,11 +69,13 @@ export type TCompanyInfo = {
   isNightPay: number;
   isdaynight: boolean;
   isholiday: boolean;
+  // joblist로 변경하기!!!
   jobName: Record<string, TJob>;
   nightEnd: number;
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
+  companyIntro?: string;
 };
 
 // 날짜별 근무 시간 타입
@@ -96,15 +98,15 @@ export type DateMap<T> = {
 };
 
 // 사용자 데이터 타입
-export type UserData = {
+export type TUserData = {
   uid: string;
   name: string;
   email: string;
   companyCode: string;
   phoneNumber: string;
   jobName: string;
-  salaryAmount: number;
-  salaryType: string;
+  salaryAmount?: number;
+  salaryType?: string;
   userType: string;
   date?: DateMap<WorkTime>;
   workDates?: DateMap<WorkData>;

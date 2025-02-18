@@ -1,11 +1,11 @@
-import { UserData } from "@/model";
+import { TUserData } from "@/model";
 import { create } from "zustand";
 
 interface IUserState {
-  currentUser: UserData | null;
+  currentUser: TUserData | null;
   isLoading: boolean;
   userType: string | null;
-  setUser: (user: UserData) => void;
+  setUser: (user: TUserData) => void;
   clearUser: () => void;
 }
 

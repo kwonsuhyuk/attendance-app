@@ -23,7 +23,7 @@ export const EmployeeCompanyForm = ({
     <div className="space-y-4">
       <h4 className="text-black font-medium">가입 회사 정보</h4>
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         {!isCodeValid ? (
           <FormField
             control={form.control}
@@ -32,7 +32,13 @@ export const EmployeeCompanyForm = ({
               <FormItem>
                 <FormLabel className="text-gray-700">회사코드</FormLabel>
                 <FormControl>
-                  <Input {...field} required autoComplete="off" disabled={isCodeValid} />
+                  <Input
+                    {...field}
+                    required
+                    autoComplete="off"
+                    disabled={isCodeValid}
+                    placeholder="회사 관리자에게 받은 회사코드를 입력해주세요."
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -57,8 +63,6 @@ export const EmployeeCompanyForm = ({
           회사찾기
         </Button>
       </div>
-
-      <p className="text-gray-500 text-sm">(회사 관리자에게 받은 회사코드를 입력해주세요.)</p>
     </div>
   );
 };
