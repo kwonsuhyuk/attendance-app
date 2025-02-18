@@ -83,7 +83,8 @@ export default {
       },
     },
   },
-  darkMode: ["class", "class"],
+  darkMode: "class",
+  // eslint-disable-next-line no-undef
   plugins: [require("tailwindcss-animate")],
   important: true,
   mode: "jit",

@@ -9,12 +9,13 @@ import { useShallow } from "zustand/shallow";
 import { useCompanyStore } from "@/store/company.store";
 import { stat } from "fs";
 import CompanyInfoHeader from "./employee/CompanyInfoHeader";
+import useDarkMode from "@/store/darkmode.store";
 
 export default function MainContent() {
   const navigate = useNavigate();
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
-  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
-  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
+  const darkMode = useDarkMode(state => state.darkMode);
+  // const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  // const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   // currentUser 없을때 조건 부 설정하기 (다른 파일도)
   const { companyCode, name, jobName, salaryType, userType } = useUserStore(
     useShallow(state => ({
@@ -35,9 +36,7 @@ export default function MainContent() {
       return (
         <div
           data-tour="step-1"
-          className={`flex justify-center items-center h-[calc(100vh_-_18rem)] ${
-            darkMode ? "border-b border-white/50" : "border-b border-black/50"
-          }`}
+          className="flex justify-center items-center h-[calc(100vh_-_18rem)] bg-white-bg dark:bg-dark-bg text-white-text dark:text-dark-text border-b border-white-border dark:border-dark-border"
         >
           <div className="relative flex items-center h-full w-full">
             <div className="flex flex-col items-center justify-center gap-7 cursor-pointer absolute left-[30%] top-[10%]">
