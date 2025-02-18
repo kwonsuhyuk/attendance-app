@@ -13,7 +13,7 @@ import useDarkMode from "@/store/darkmode.store";
 
 export default function MainContent() {
   const navigate = useNavigate();
-  const { darkMode } = useDarkMode();
+  const darkMode = useDarkMode(state => state.darkMode);
   // const companyName = useCompanyStore(state => state.currentCompany?.companyName);
   // const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   // currentUser 없을때 조건 부 설정하기 (다른 파일도)

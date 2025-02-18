@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import useDarkMode from "@/store/darkmode.store";
+import { useShallow } from "zustand/shallow";
 
 // ThemeProvider의 props 타입 정의
 interface ThemeProviderProps extends PropsWithChildren {
@@ -8,9 +9,13 @@ interface ThemeProviderProps extends PropsWithChildren {
 }
 
 export default function ThemeProvider({ children, excludePaths = [] }: ThemeProviderProps) {
-  const darkMode = useDarkMode(state => state.darkMode);
-  const toggleMode = useDarkMode(state => state.toggleMode);
-  const initializeMode = useDarkMode(state => state.initializeMode);
+  const { darkMode, toggleMode, initializeMode } = useDarkMode(
+    useShallow(state => ({
+      darkMode: state.darkMode,
+      toggleMode: state.toggleMode,
+      initializeMode: state.initializeMode,
+    })),
+  );
   const location = useLocation();
 
   const isExcluded = excludePaths.some((path: string) => location.pathname === path);
