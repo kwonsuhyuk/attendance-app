@@ -1,31 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "../firebase";
 import { getAuth, signOut } from "firebase/auth";
-import { useState } from "react";
-import InfoIcon from "@mui/icons-material/Info";
-import {
-  Box,
-  FormControlLabel,
-  FormGroup,
-  ListItemIcon,
-  SwipeableDrawer,
-  Switch,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { List, ListItem, ListItemText } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { Typography } from "antd";
-import LiveHelpIcon from "@mui/icons-material/LiveHelp";
+// import DarkModeIcon from "@mui/icons-material/DarkMode";
+// import LightModeIcon from "@mui/icons-material/LightMode";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
 import useDarkMode from "@/store/darkmode.store";
 import { useShallow } from "zustand/shallow";
+
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 const MenuBar = () => {
   const navigate = useNavigate();
@@ -41,31 +27,39 @@ const MenuBar = () => {
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userName = useUserStore(state => state.currentUser?.name);
-  const [open, setOpen] = useState(false);
-
-  const toggleDrawer = open => event => {
-    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
-      return;
-    }
-    setOpen(open);
-  };
+  const userEmail = useUserStore(state => state.currentUser?.email);
 
   const subMenuItems = [
-    {
-      title: "APP GUIDE",
-      handle: () => {
-        navigate(`/${companyCode}/appguide`);
-        setOpen(false);
-      },
-      icon: <LiveHelpIcon />,
-    },
     {
       title: "LOGOUT",
       handle: () => {
         logout();
-        setOpen(false);
       },
-      icon: <LogoutIcon />,
+    },
+
+    // Fix: 메뉴바 -> 페이지로 위치 변경 예정
+    // {
+    //   title: darkMode ? "LIGHTMODE" : "DARKMODE",
+    //   handle: () => {
+    //     toggleTheme();
+    //     // setOpen(false);
+    //   },
+    //   icon: darkMode ? <LightModeIcon /> : <DarkModeIcon />,
+    // },
+  ];
+
+  const middleMenuItems = [
+    {
+      title: "APP GUIDE",
+      handle: () => {
+        navigate(`/${companyCode}/appguide`);
+      },
+    },
+    {
+      title: "ABOUT",
+      handle: () => {
+        navigate(`/${companyCode}/about`);
+      },
     },
   ];
 
@@ -74,41 +68,19 @@ const MenuBar = () => {
       title: "HOME",
       handle: () => {
         navigate(`/${companyCode}/companymain`);
-        setOpen(false);
       },
-      icon: <HomeIcon />,
     },
     {
       title: "CALENDAR",
       handle: () => {
         navigate(`/${companyCode}/calendar`);
-        setOpen(false);
       },
-      icon: <CalendarTodayIcon />,
     },
     {
       title: "QR SCAN",
       handle: () => {
         navigate(`/${companyCode}/camera`);
-        setOpen(false);
       },
-      icon: <CameraAltIcon />,
-    },
-    {
-      title: darkMode ? "LIGHTMODE" : "DARKMODE",
-      handle: () => {
-        toggleTheme();
-        setOpen(false);
-      },
-      icon: darkMode ? <LightModeIcon /> : <DarkModeIcon />,
-    },
-    {
-      title: "ABOUT",
-      handle: () => {
-        navigate(`/${companyCode}/about`);
-        setOpen(false);
-      },
-      icon: <InfoIcon />,
     },
   ];
   const refreshPage = () => {
@@ -123,54 +95,6 @@ const MenuBar = () => {
   const toggleTheme = () => {
     toggleMode();
   };
-
-  const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-    width: 62,
-    height: 34,
-    padding: 7,
-    "& .MuiSwitch-switchBase": {
-      margin: 1,
-      padding: 0,
-      transform: "translateX(6px)",
-      transition: "transform 0.5s ease-out",
-      "&.Mui-checked": {
-        color: "#fff",
-        transform: "translateX(22px)",
-        "& .MuiSwitch-thumb:before": {
-          backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
-            "#fff",
-          )}" d="M4.2 2.5l-.7 1.8-1.8.7 1.8.7.7 1.8.6-1.8L6.7 5l-1.9-.7-.6-1.8zm15 8.3a6.7 6.7 0 11-6.6-6.6 5.8 5.8 0 006.6 6.6z"/></svg>')`,
-        },
-        "& + .MuiSwitch-track": {
-          opacity: 1,
-          backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
-        },
-      },
-    },
-    "& .MuiSwitch-thumb": {
-      backgroundColor: theme.palette.mode === "dark" ? "#003892" : "#001e3c",
-      width: 32,
-      height: 32,
-      "&::before": {
-        content: "''",
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        left: 0,
-        top: 0,
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
-          "#fff",
-        )}" d="M9.305 1.667V3.75h1.389V1.667h-1.39zm-4.707 1.95l-.982.982L5.09 6.072l.982-.982-1.473-1.473zm10.802 0L13.927 5.09l.982.982 1.473-1.473-.982-.982zM10 5.139a4.872 4.872 0 00-4.862 4.86A4.872 4.872 0 0010 14.862 4.872 4.872 0 0014.86 10 4.872 4.872 0 0010 5.139zm0 1.389A3.462 3.462 0 0113.471 10a3.462 3.462 0 01-3.473 3.472A3.462 3.462 0 016.527 10 3.462 3.462 0 0110 6.528zM1.665 9.305v1.39h2.083v-1.39H1.666zm14.583 0v1.39h2.084v-1.39h-2.084zM5.09 13.928L3.616 15.4l.982.982 1.473-1.473-.982-.982zm9.82 0l-.982.982 1.473 1.473.982-.982-1.473-1.473zM9.305 16.25v2.083h1.389V16.25h-1.39z"/></svg>')`,
-      },
-    },
-    "& .MuiSwitch-track": {
-      opacity: 1,
-      backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
-      borderRadius: 20 / 2,
-    },
-  }));
 
   // user가 관리자 일시
   if (userType === "admin") {
@@ -191,86 +115,67 @@ const MenuBar = () => {
                 className="flex gap-3 md:justify-between md:items-end md:w-1/3"
                 data-tour="step-2"
               >
-                <div
-                  className={`${
-                    location.pathname === `/${companyCode}/companymain`
-                      ? "text-white-nav-selected dark:text-dark-nav-selected"
-                      : "text-white-nav-text dark:text-dark-nav-text"
-                  } cursor-pointer`}
+                <Button
+                  variant={
+                    location.pathname === `/${companyCode}/companymain` ? "focusMenu" : "menu"
+                  }
                   onClick={() => navigate(`/${companyCode}/companymain`)}
-                  style={{
-                    border: "none",
-                  }}
+                  className="border-none dark:!border-none dark:bg-transparent dark:text-gray-400"
                 >
                   HOME
-                </div>
-                <div
+                </Button>
+                <Button
+                  variant={
+                    location.pathname === `/${companyCode}/employeelist` ? "focusMenu" : "menu"
+                  }
+                  onClick={() => navigate(`/${companyCode}/employeelist`)}
                   data-tour="step-3"
-                  className={`${
-                    location.pathname === `/${companyCode}/employeelist`
-                      ? "text-white-nav-selected dark:text-dark-nav-selected"
-                      : "text-white-nav-text dark:text-dark-nav-text"
-                  } cursor-pointer`}
-                  style={{ border: "none" }}
-                  onClick={() => {
-                    navigate(`/${companyCode}/employeelist`);
-                  }}
+                  className="dark:text-gray-400"
                 >
                   PEOPLE
-                </div>
-                <div
-                  className={`${
-                    location.pathname.includes(`/${companyCode}/datecheck`)
-                      ? "text-white-nav-selected dark:text-dark-nav-selected"
-                      : "text-white-nav-text dark:text-dark-nav-text"
-                  } cursor-pointer`}
-                  style={{ border: "none" }}
+                </Button>
+                <Button
+                  variant={
+                    location.pathname.includes(`/${companyCode}/datecheck`) ? "focusMenu" : "menu"
+                  }
                   onClick={() => navigate(`/${companyCode}/datecheck`)}
+                  className="dark:text-gray-400"
                 >
                   CALENDAR
-                </div>
-                <div
-                  data-tour="step-18"
-                  className={`${
-                    location.pathname.includes(`/${companyCode}/setting`)
-                      ? "text-white-nav-selected dark:text-dark-nav-selected"
-                      : "text-white-nav-text dark:text-dark-nav-text"
-                  } cursor-pointer`}
-                  style={{ border: "none" }}
+                </Button>
+                <Button
+                  variant={
+                    location.pathname.includes(`/${companyCode}/setting`) ? "focusMenu" : "menu"
+                  }
                   onClick={() => navigate(`/${companyCode}/setting`)}
+                  data-tour="step-18"
+                  className="dark:text-gray-400"
                 >
                   SETTING
-                </div>
-                <div
-                  className={`${
-                    location.pathname.includes(`/${companyCode}/about`)
-                      ? "text-white-nav-selected dark:text-dark-nav-selected"
-                      : "text-white-nav-text dark:text-dark-nav-text"
-                  } cursor-pointer`}
-                  style={{ border: "none" }}
+                </Button>
+                <Button
+                  variant={
+                    location.pathname.includes(`/${companyCode}/about`) ? "focusMenu" : "menu"
+                  }
                   onClick={() => navigate(`/${companyCode}/about`)}
+                  className="dark:text-gray-400"
                 >
                   ABOUT
-                </div>
+                </Button>
               </div>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <MaterialUISwitch
-                        sx={{ m: 1 }}
-                        defaultChecked={darkMode}
-                        onChange={toggleTheme}
-                      />
-                    }
-                  />
-                </FormGroup>
+                <Switch checked={darkMode} onCheckedChange={toggleTheme} />
               </div>
-              <div onClick={logout} className="text-sm cursor-pointer">
-                logout
-              </div>
+              <Button
+                variant="menu"
+                size="sm"
+                onClick={logout}
+                className="dark:text-gray-400 px-5 pt-1"
+              >
+                Logout
+              </Button>
             </div>
           </div>
         </div>
@@ -287,9 +192,9 @@ const MenuBar = () => {
               }}
             >
               <div className="font-black text-lg">{companyName}</div>
-              <div onClick={logout} className="text-sm cursor-pointer">
-                logout
-              </div>
+              <Button variant="ghost" size="sm" onClick={logout}>
+                Logout
+              </Button>
             </div>
           </div>
         </div>
@@ -299,7 +204,7 @@ const MenuBar = () => {
     // user가 직원일시
     return (
       <div
-        className="flex pb-3 text-xs justify-between text-white-nav-text dark:text-dark-nav-text"
+        className="flex pb-3 text-xs justify-between items-center text-white-nav-text dark:text-dark-nav-text"
         style={{
           borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
         }}
@@ -318,51 +223,83 @@ const MenuBar = () => {
             : "MENU"}
         </div>
 
-        <ReplayIcon onClick={refreshPage} sx={{ fontSize: "15px" }} data-tour="step-43" />
-
-        <div className="cursor-pointer" onClick={toggleDrawer(true)} data-tour="step-31">
-          MENU
-        </div>
-
-        <SwipeableDrawer
-          anchor="right"
-          open={open}
-          onClose={toggleDrawer(false)}
-          onOpen={toggleDrawer(true)}
+        <Button
+          variant="menu"
+          size="icon"
+          onClick={refreshPage}
+          className="h-5 w-5 p-0 text-white-nav-text dark:text-dark-nav-text hover:text-white-nav-selected dark:hover:text-dark-nav-selected bg-white-bg dark:bg-dark-bg hover:bg-white"
+          data-tour="step-43"
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "16px",
-            }}
-          >
-            <div className="flex flex-col justify-center items-center gap-3">
-              <img src={companyLogo} alt="회사로고" className="rounded-full w-10 h-10" />
-              <Typography variant="h6" component="div">
-                {userName}
-              </Typography>
-            </div>
-            <div className="flex gap-5 mb-3">
-              {subMenuItems.map(item => (
-                <div key={item.title} onClick={item.handle} className="text-sm font-noto">
-                  <span className="text-xs">{item.icon}</span>
-                  <span>{item.title}</span>
+          <ReplayIcon className="h-5 w-5" />
+        </Button>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="menu"
+              className="h-5 w-5 p-0 text-white-nav-text dark:text-dark-nav-text hover:text-white-nav-selected dark:hover:text-dark-nav-selected bg-white-bg dark:bg-dark-bg hover:bg-white"
+              data-tour="step-31"
+            >
+              <SheetTitle className="text-sm">MENU</SheetTitle>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="border-none bg-white-bg text-black">
+            <div className="flex flex-col gap-4 pt-3">
+              <div className="flex gap-3 m-3">
+                <img src={companyLogo} alt="회사로고" className="rounded-full w-10 h-10" />
+                <div className="pb-3">
+                  <h3 className="font-semibold text-lg">{userName}</h3>
+                  <p>{userEmail}</p>
                 </div>
-              ))}
+              </div>
+
+              <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
+
+              <div className="flex flex-col">
+                {menuItems.map(item => (
+                  <Button
+                    key={item.title}
+                    variant="menu"
+                    className="w-full justify-start gap-5 h-12"
+                    onClick={item.handle}
+                  >
+                    <span className="font-semibold text-lg">{item.title}</span>
+                  </Button>
+                ))}
+              </div>
+
+              <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
+
+              <div className="flex flex-col">
+                {middleMenuItems.map(item => (
+                  <Button
+                    key={item.title}
+                    variant="menu"
+                    className="w-full justify-start gap-5 h-12"
+                    onClick={item.handle}
+                  >
+                    <span>{item.title}</span>
+                  </Button>
+                ))}
+              </div>
+
+              <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
+
+              <div>
+                {subMenuItems.map(item => (
+                  <Button
+                    key={item.title}
+                    variant="menu"
+                    className="gap-1 h-auto hover:bg-transparent"
+                    onClick={item.handle}
+                  >
+                    <span className="text-sm font-noto">{item.title}</span>
+                  </Button>
+                ))}
+              </div>
             </div>
-            <div className="w-full h-[1px] bg-slate-500"></div>
-            <List data-tour="step-50">
-              {menuItems.map(item => (
-                <ListItem button key={item.title} onClick={item.handle}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.title} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </SwipeableDrawer>
+          </SheetContent>
+        </Sheet>
       </div>
     );
   }
