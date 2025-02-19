@@ -39,7 +39,7 @@ export const AdminMenuDesktop = ({
             <Button
               variant={location.pathname === `/${companyCode}/companymain` ? "focusMenu" : "menu"}
               onClick={() => navigate(`/${companyCode}/companymain`)}
-              className="border-none dark:!border-none dark:bg-transparent dark:text-gray-400"
+              className="dark:text-gray-400"
             >
               HOME
             </Button>
