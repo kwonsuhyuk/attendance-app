@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-export default function StepperPage({ steps }) {
+export default function StepperPage({ steps }: { steps: string[] }) {
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
