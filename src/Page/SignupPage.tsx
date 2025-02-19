@@ -53,6 +53,7 @@ const SignupPage = () => {
               )}
               <Separator />
               <PersonalInfoForm form={form} password={password} />
+              {/* 토스트로 대체할것 css 깨짐 */}
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>

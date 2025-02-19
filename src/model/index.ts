@@ -19,13 +19,32 @@ const signupUserBaseSchema = z.object({
 });
 
 export const signupFormSchema = loginFormSchema
-  .merge(signupUserBaseSchema)
+  .merge(
+    z.object({
+      name: z.string().min(2, { message: "이름은 2자 이상이어야 합니다." }),
+      phoneNumber: z.string().regex(/^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/, {
+        message: "올바른 전화번호 형식이 아닙니다 (예: 010-1234-5678)",
+      }),
+      position: z.enum(["manager", "employee"]).default("employee"),
+      companyCode: z.string().optional(), // 기본적으로 선택 사항
+    }),
+  )
   .extend({
     confirmPW: z.string().min(1, { message: "비밀번호 확인을 입력해주세요" }),
   })
   .refine(data => data.password === data.confirmPW, {
     message: "비밀번호가 일치하지 않습니다",
     path: ["confirmPW"],
+  })
+  .superRefine((data, ctx) => {
+    // ✅ position이 "employee"일 때만 companyCode 필수 체크
+    if (data.position === "employee" && (!data.companyCode || data.companyCode.trim() === "")) {
+      ctx.addIssue({
+        path: ["companyCode"],
+        code: z.ZodIssueCode.custom,
+        message: "직원은 회사 코드를 입력해야 합니다.",
+      });
+    }
   });
 
 // 회원가입 데이터 스키마 (id 포함)
@@ -39,7 +58,7 @@ export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 export type TLoginResponse = {
   success: boolean;
   data?: {
-    user: TUserData;
+    user: TEmpUserData | TCMUserData;
     company: TCompanyInfo;
   };
   error?: string;
@@ -54,7 +73,7 @@ export type TSignupResponse = {
 };
 
 // 직원,관리자,default
-export type TPosition = "manager" | "employee" | "";
+export type TPosition = "manager" | "employee";
 
 export type TJob = {
   jobName: string;
@@ -98,16 +117,37 @@ export type DateMap<T> = {
 };
 
 // 사용자 데이터 타입
-export type TUserData = {
+// export type TUserData = {
+//   uid: string;
+//   name: string;
+//   email: string;
+//   companyCode: string;
+//   phoneNumber: string;
+//   jobName: string;
+//   salaryAmount?: number;
+//   salaryType?: string;
+//   userType: string;
+//   date?: DateMap<WorkTime>;
+//   workDates?: DateMap<WorkData>;
+// };
+export type TUserBase = {
   uid: string;
   name: string;
   email: string;
   companyCode: string;
   phoneNumber: string;
+  userType: "manager" | "employee"; // 기본적으로 userType을 string에서 제한된 타입으로 변경
+};
+
+export type TEmpUserData = Omit<TUserBase, "userType"> & {
+  userType: "employee"; // 직원(user)으로 고정
   jobName: string;
   salaryAmount?: number;
   salaryType?: string;
-  userType: string;
   date?: DateMap<WorkTime>;
   workDates?: DateMap<WorkData>;
+};
+
+export type TCMUserData = Omit<TUserBase, "userType"> & {
+  userType: "manager"; // 관리자(user)로 고정
 };

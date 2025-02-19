@@ -6,20 +6,21 @@ import { useUserStore } from "@/store/user.store";
 import { signupFormSchema } from "@/model";
 import { getCompanyInfo, validateCompanyCode } from "@/api";
 import { signup } from "@/api/auth";
-import type { TSignupFormData, TPosition, TUserData } from "@/model";
+import type { TSignupFormData, TPosition, TEmpUserData, TCMUserData } from "@/model";
 import { z } from "zod";
 import { useCompanyStore } from "@/store/company.store";
+import { nanoid } from "nanoid";
 
 export const useSignup = () => {
   const navigate = useNavigate();
   const setUser = useUserStore(state => state.setUser);
   const setCompany = useCompanyStore(state => state.setCompany);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [position, setPosition] = useState<TPosition>("");
-  const [isManagerCheck, setManagerCheck] = useState(false);
-  const [isCodeValid, setIsCodeValid] = useState(false);
+  // const [position, setPosition] = useState<TPosition>("");
+  const [isManagerCheck, setManagerCheck] = useState<boolean>(false);
+  const [isCodeValid, setIsCodeValid] = useState<boolean>(false);
   const [tempCompInfo, setTempCompInfo] = useState("");
 
   const form = useForm<TSignupFormData>({
@@ -31,11 +32,12 @@ export const useSignup = () => {
       password: "",
       confirmPW: "",
       companyCode: "",
+      position: undefined,
     },
   });
-
   const password = form.watch("password");
   const companyCode = form.watch("companyCode");
+  const position = form.watch("position");
 
   const checkCompanyCode = async (code: string) => {
     if (!code) {
@@ -63,8 +65,8 @@ export const useSignup = () => {
     }
   };
 
-  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPosition(e.target.value as TPosition);
+  const handlePositionChange = (value: TPosition) => {
+    form.setValue("position", value);
   };
 
   const onSubmit = async (formData: TSignupFormData) => {
@@ -72,14 +74,24 @@ export const useSignup = () => {
     setError(null);
 
     try {
+      if (position === "employee" && !isCodeValid)
+        throw new Error("회사찾기 버튼을 통해 유효한 회사코드를 입력 해주세요");
+
       signupFormSchema.parse(formData);
+
+      let companyCode = formData.companyCode;
+
+      if (position === "manager") {
+        companyCode = nanoid(8);
+      }
 
       const result = await signup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        companyCode: formData.companyCode,
+        companyCode,
         phoneNumber: formData.phoneNumber,
+        position,
         confirmPW: formData.confirmPW,
       });
 
@@ -90,21 +102,37 @@ export const useSignup = () => {
       const signupData = {
         id: result.data.userId,
         name: formData.name,
-        companyCode: formData.companyCode,
+        companyCode,
         phoneNumber: formData.phoneNumber,
       };
 
-      const userData: TUserData = {
-        uid: signupData.id,
-        name: signupData.name,
-        email: formData.email,
-        companyCode: signupData.companyCode,
-        phoneNumber: signupData.phoneNumber,
-        jobName: "",
-        salaryAmount: 0,
-        salaryType: "",
-        userType: position,
-      };
+      // 🔥 userType에 따라 다른 타입 적용
+      let userData: TEmpUserData | TCMUserData;
+
+      if (position === "manager") {
+        userData = {
+          uid: signupData.id,
+          name: signupData.name,
+          email: formData.email,
+          companyCode: signupData.companyCode,
+          phoneNumber: signupData.phoneNumber,
+          userType: "manager",
+        } as TCMUserData;
+      } else {
+        userData = {
+          uid: signupData.id,
+          name: signupData.name,
+          email: formData.email,
+          companyCode: signupData.companyCode,
+          phoneNumber: signupData.phoneNumber,
+          jobName: "",
+          salaryAmount: 0,
+          salaryType: "",
+          userType: "employee",
+          date: undefined,
+          workDates: undefined,
+        } as TEmpUserData;
+      }
 
       const companyData = await getCompanyInfo(signupData.companyCode);
 
