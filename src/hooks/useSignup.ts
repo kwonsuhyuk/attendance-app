@@ -75,7 +75,10 @@ export const useSignup = () => {
 
     try {
       if (position === "employee" && !isCodeValid)
-        throw new Error("회사찾기 버튼을 통해 유효한 회사코드를 입력 해주세요");
+        throw new Error("회사찾기 버튼을 통해 유효한 회사코드를 입력 해주세요.");
+
+      if (position === "manager" && !isManagerCheck)
+        throw new Error("관리자 권한 설명을 읽고 가입 확인을 해주세요.");
 
       signupFormSchema.parse(formData);
 

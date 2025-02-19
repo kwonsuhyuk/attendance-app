@@ -2,7 +2,6 @@ import { LockIcon } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthFooter from "@/components/auth/AuthFooter";
 import { PositionSelector } from "@/components/auth/PositionSelector";
@@ -10,6 +9,8 @@ import { ManagerConfirmation } from "@/components/auth/ManagerConfirmation";
 import { EmployeeCompanyForm } from "@/components/auth/EmployeeCompanyForm";
 import { PersonalInfoForm } from "@/components/auth/PersonalInfoForm";
 import { useSignup } from "../hooks/useSignup";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const SignupPage = () => {
   const {
@@ -27,6 +28,17 @@ const SignupPage = () => {
     checkCompanyCode,
     onSubmit,
   } = useSignup();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "🚨 오류 발생",
+        description: error,
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
 
   return (
     <div className="mt-10">
@@ -53,12 +65,6 @@ const SignupPage = () => {
               )}
               <Separator />
               <PersonalInfoForm form={form} password={password} />
-              {/* 토스트로 대체할것 css 깨짐 */}
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
               <Separator />
               <AuthFooter
                 buttonText="회원가입"
