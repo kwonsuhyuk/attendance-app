@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../firebase";
 import { getAuth, signOut } from "firebase/auth";
@@ -13,7 +12,6 @@ import {
   Switch,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { toggleMode } from "../store/darkmodeSlice";
 import { List, ListItem, ListItemText } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -26,17 +24,23 @@ import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import ReplayIcon from "@mui/icons-material/Replay";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
+import useDarkMode from "@/store/darkmode.store";
+import { useShallow } from "zustand/shallow";
 
 const MenuBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const { darkMode, toggleMode } = useDarkMode(
+    useShallow(state => ({
+      darkMode: state.darkMode,
+      toggleMode: state.toggleMode,
+    })),
+  );
   const companyName = useCompanyStore(state => state.currentCompany?.companyName);
   const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userName = useUserStore(state => state.currentUser?.name);
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = open => event => {
@@ -117,17 +121,7 @@ const MenuBar = () => {
   };
 
   const toggleTheme = () => {
-    dispatch(toggleMode());
-    const body = document.body;
-    const newMode = !body.classList.contains("dark");
-    if (newMode) {
-      body.classList.add("dark");
-    } else {
-      body.classList.remove("dark");
-    }
-
-    // 사용자의 다크 모드 설정을 로컬 스토리지에 저장
-    window.localStorage.setItem("darkMode", newMode);
+    toggleMode();
   };
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -351,7 +345,7 @@ const MenuBar = () => {
               </Typography>
             </div>
             <div className="flex gap-5 mb-3">
-              {subMenuItems.map((item, index) => (
+              {subMenuItems.map(item => (
                 <div key={item.title} onClick={item.handle} className="text-sm font-noto">
                   <span className="text-xs">{item.icon}</span>
                   <span>{item.title}</span>
@@ -360,7 +354,7 @@ const MenuBar = () => {
             </div>
             <div className="w-full h-[1px] bg-slate-500"></div>
             <List data-tour="step-50">
-              {menuItems.map((item, index) => (
+              {menuItems.map(item => (
                 <ListItem button key={item.title} onClick={item.handle}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.title} />
