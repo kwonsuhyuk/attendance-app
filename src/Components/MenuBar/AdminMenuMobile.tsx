@@ -17,12 +17,7 @@ export const AdminMenuMobile = ({
     <div className="flex h-28 items-center">
       <img src={companyLogo} alt="회사로고" className="rounded-full w-24 h-24 mr-5" />
       <div className="grid grid-rows-2 w-full">
-        <div
-          className="flex justify-between w-full items-end pb-2"
-          style={{
-            borderBottom: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
-          }}
-        >
+        <div className="flex justify-between w-full items-end pb-2 border-b border-solid border-black dark:border-gray-300">
           <div className="font-black text-lg">{companyName}</div>
           <Button variant="ghost" size="sm" onClick={logout}>
             Logout
