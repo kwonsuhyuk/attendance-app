@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import ReplayIcon from "@mui/icons-material/Replay";
 import {
   Drawer,
@@ -26,6 +25,8 @@ interface EmployeeMenuProps {
   middleMenuItems: MenuItem[];
   subMenuItems: MenuItem[];
   refreshPage: () => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 export const EmployeeMenuBar = ({
@@ -38,6 +39,8 @@ export const EmployeeMenuBar = ({
   middleMenuItems,
   subMenuItems,
   refreshPage,
+  isOpen,
+  setIsOpen,
 }: EmployeeMenuProps) => {
   const getPageTitle = (pathname: string): string => {
     switch (true) {
@@ -70,7 +73,7 @@ export const EmployeeMenuBar = ({
         <ReplayIcon className="h-5 w-5" />
       </Button>
 
-      <Drawer>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>
           <Button
             variant="menu"
@@ -100,7 +103,10 @@ export const EmployeeMenuBar = ({
                     key={item.title}
                     variant="menu"
                     className="w-full justify-start gap-5 h-12"
-                    onClick={item.handle}
+                    onClick={() => {
+                      item.handle();
+                      setIsOpen(false);
+                    }}
                   >
                     <span className="font-semibold text-lg">{item.title}</span>
                   </Button>
@@ -115,7 +121,10 @@ export const EmployeeMenuBar = ({
                     key={item.title}
                     variant="menu"
                     className="w-full justify-start gap-5 h-12"
-                    onClick={item.handle}
+                    onClick={() => {
+                      item.handle();
+                      setIsOpen(false);
+                    }}
                   >
                     <span>{item.title}</span>
                   </Button>
@@ -130,7 +139,10 @@ export const EmployeeMenuBar = ({
                     key={item.title}
                     variant="menu"
                     className="gap-1 h-auto hover:bg-transparent"
-                    onClick={item.handle}
+                    onClick={() => {
+                      item.handle();
+                      setIsOpen(false);
+                    }}
                   >
                     <span className="text-sm font-noto">{item.title}</span>
                   </Button>

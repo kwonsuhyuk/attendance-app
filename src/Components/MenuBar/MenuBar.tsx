@@ -23,6 +23,8 @@ interface IMenuState extends IUserInfo, TMenuItems, IMenuActions {
   location: {
     pathname: string;
   };
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 const MenuBar = () => {

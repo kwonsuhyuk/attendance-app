@@ -6,6 +6,7 @@ import { useShallow } from "zustand/shallow";
 
 export const useMenuState = () => {
   const [isDataReady, setIsDataReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { darkMode } = useDarkMode(
     useShallow(state => ({
@@ -42,5 +43,7 @@ export const useMenuState = () => {
     userName,
     userEmail,
     isDataReady,
+    isOpen,
+    setIsOpen,
   };
 };
