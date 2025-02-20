@@ -3,15 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/user.store";
-import { signupFormSchema, UserData } from "@/model";
-import { validateCompanyCode } from "@/api";
+import { signupFormSchema } from "@/model";
+import { getCompanyInfo, validateCompanyCode } from "@/api";
 import { signup } from "@/api/auth";
-import type { TSignupFormData, TPosition, TSignupUserData } from "@/model";
+import type { TSignupFormData, TPosition, TUserData } from "@/model";
 import { z } from "zod";
+import { useCompanyStore } from "@/store/company.store";
 
 export const useSignup = () => {
   const navigate = useNavigate();
-  const { setUser } = useUserStore();
+  const setUser = useUserStore(state => state.setUser);
+  const setCompany = useCompanyStore(state => state.setCompany);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export const useSignup = () => {
         phoneNumber: formData.phoneNumber,
       };
 
-      const userData: UserData = {
+      const userData: TUserData = {
         uid: signupData.id,
         name: signupData.name,
         email: formData.email,
@@ -104,9 +106,11 @@ export const useSignup = () => {
         userType: position,
       };
 
-      navigate(position === "manager" ? "/managerfirst" : "/employeefirst", {
-        state: userData,
-      });
+      const companyData = await getCompanyInfo(signupData.companyCode);
+
+      await Promise.all([setUser(userData), setCompany(companyData)]);
+
+      navigate(position === "manager" ? "/managerfirst" : "/employeefirst");
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldName = error.errors[0].path[0];
