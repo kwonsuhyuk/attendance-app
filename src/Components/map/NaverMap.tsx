@@ -13,14 +13,14 @@ const NaverMap = ({ onLocationSelect, selectedLocation }: INaverMapProps) => {
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(selectedLocation.lat, selectedLocation.lng),
       map: map,
-      draggable: true, // ✅ 드래그 가능하도록 설정
+      draggable: true, //  드래그 가능하도록 설정
     });
 
-    // ✅ 마커 드래그 종료 시 이벤트 발생
+    //  마커 드래그 종료 시 이벤트 발생
     naver.maps.Event.addListener(marker, "dragend", function (e) {
       const lat = e.coord.y;
       const lng = e.coord.x;
-      onLocationSelect(lat, lng); // ✅ 부모 상태 업데이트
+      onLocationSelect(lat, lng); //  부모 상태 업데이트
     });
 
     return () => {

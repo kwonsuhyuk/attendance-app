@@ -17,7 +17,7 @@ const QrGenerator = () => {
     }
   }, []);
 
-  // ✅ QR 코드 다운로드 함수
+  //  QR 코드 다운로드 함수
   const handleDownload = () => {
     if (qrUrl) {
       const link = document.createElement("a");
@@ -31,10 +31,10 @@ const QrGenerator = () => {
 
   return (
     <div ref={qrRef} className="relative flex flex-col items-center">
-      {/* ✅ QR 코드 */}
+      {/*  QR 코드 */}
       <QRCode value={qrValue} className="p-2 bg-white rounded-lg shadow-md" />
 
-      {/* ✅ 다운로드 버튼 (QR 코드 위에 표시) */}
+      {/*  다운로드 버튼 (QR 코드 위에 표시) */}
       {qrUrl && (
         <div
           onClick={handleDownload}

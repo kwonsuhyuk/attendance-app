@@ -37,7 +37,7 @@ export const signupFormSchema = loginFormSchema
     path: ["confirmPW"],
   })
   .superRefine((data, ctx) => {
-    // ✅ position이 "employee"일 때만 companyCode 필수 체크
+    // position이 "employee"일 때만 companyCode 필수 체크
     if (data.position === "employee" && (!data.companyCode || data.companyCode.trim() === "")) {
       ctx.addIssue({
         path: ["companyCode"],
@@ -76,19 +76,25 @@ export type TSignupResponse = {
 export type TPosition = "manager" | "employee";
 
 export type TJob = {
-  jobName: string;
+  id: string;
+  name: string;
 };
 
-// ✅ 근무지 타입
+export type TJobList = TJob[];
+
+// 근무지 타입
 export type TWorkPlace = {
   id: string;
   name: string;
+  memo: string;
   address: string;
   lat: number;
   lng: number;
 };
 
-// ✅ 회사 정보 타입 (근무지 목록 추가됨)
+export type TworkPlacesList = TWorkPlace[];
+
+// 회사 정보 타입 (근무지 목록 추가됨)
 export type TCompanyInfo = {
   adminName: string;
   companyLogo: string;
@@ -99,12 +105,12 @@ export type TCompanyInfo = {
   isNightPay: number;
   isDayNight: boolean;
   isHoliday: boolean;
-  jobList: Record<string, TJob>;
+  jobList: TJobList;
   nightEnd: number;
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
-  workPlacesList: TWorkPlace[];
+  workPlacesList: TworkPlacesList;
 };
 
 // 날짜별 근무 시간 타입

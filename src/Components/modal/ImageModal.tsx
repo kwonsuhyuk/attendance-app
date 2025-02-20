@@ -62,7 +62,7 @@ const ImageModal = ({ open, handleClose, companyCode, setImageUrl }: IImageModal
         <div className="flex flex-col gap-3 items-center">
           <Input type="file" accept="image/jpeg, image/jpg, image/png" onChange={handleChange} />
 
-          {/* ✅ ShadCN Avatar 적용 */}
+          {/*  ShadCN Avatar 적용 */}
           <div className="relative">
             <Avatar className="w-32 h-32 border border-gray-300 shadow-md">
               <AvatarImage src={previewImage} alt="회사 로고" />
