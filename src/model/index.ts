@@ -79,22 +79,32 @@ export type TJob = {
   jobName: string;
 };
 
+// ✅ 근무지 타입
+export type TWorkPlace = {
+  id: string;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+};
+
+// ✅ 회사 정보 타입 (근무지 목록 추가됨)
 export type TCompanyInfo = {
   adminName: string;
   companyLogo: string;
   companyName: string;
+  companyIntro: string;
   holidayPay: number;
   holidayList?: string[];
   isNightPay: number;
-  isdaynight: boolean;
-  isholiday: boolean;
-  // joblist로 변경하기!!!
-  jobName: Record<string, TJob>;
+  isDayNight: boolean;
+  isHoliday: boolean;
+  jobList: Record<string, TJob>;
   nightEnd: number;
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
-  companyIntro?: string;
+  workPlacesList: TWorkPlace[];
 };
 
 // 날짜별 근무 시간 타입
@@ -130,6 +140,7 @@ export type DateMap<T> = {
 //   date?: DateMap<WorkTime>;
 //   workDates?: DateMap<WorkData>;
 // };
+
 export type TUserBase = {
   uid: string;
   name: string;

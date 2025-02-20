@@ -1,12 +1,10 @@
 <div align="center">
 
-<h1>Attandance App 📒</h1>
+<h1>Attendance App 📒</h1>
 
-![header](https://capsule-render.vercel.app/api?type=venom&color=auto&height=500&section=header&text=AttandanceApp&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=venom&color=auto&height=500&section=header&text=Attendance&fontSize=90)
 
 ![Image](https://github.com/user-attachments/assets/d0c97d40-4c22-455f-9588-256d20b6cc68)
-
-
 
 ## <div align="center">직원들의 근태관리를 쉽게 도와주는 서비스</div>
 
@@ -17,7 +15,6 @@
 [✨ Attendance App URL] (https://britec-attd-app.web.app/)
 
 </div>
-
 
 <br />
 
@@ -60,7 +57,7 @@
 
   ![Image](https://github.com/user-attachments/assets/fb4f3617-d029-4294-8ffb-769fe4772548)
 
-  ​	
+  ​
 
   - 어르신 분들이 IT 기기 사용에 익숙치 않아 사용하기 힘들어 하신다는 의견을 받아 상세한 AppGuide 페이지 제공 및 각 페이지 마다 React-Tour 를 이용해서 상세한 사용법 제공해 드려 조금이나마 쉽게 사용하실 수 있도록 도와드리고자 노력했습니다.
 
@@ -72,15 +69,11 @@
 
 ### 2. 사용자가 더욱 편하게 사용할 수 있고 유지보수 하기 쉬운 코드
 
-- 현재까지도 지속적으로 개선하고 있는 프로젝트 이고, 사용자가 더욱 편하게 사용하기 위해서 어떤 기능을 개선할 수 있을지 고민 하고 있는 프로젝트 입니다. 
+- 현재까지도 지속적으로 개선하고 있는 프로젝트 이고, 사용자가 더욱 편하게 사용하기 위해서 어떤 기능을 개선할 수 있을지 고민 하고 있는 프로젝트 입니다.
 - 유지보수를 하기 쉽게 하기 위해서 프로젝트를 Typescript 로 변경중에 있으며, 변경하기 쉬운 클린코드를 작성하기 위해서 지속적으로 리팩토링 하고 있습니다.
 - 이미지, 데이터를 가져오는데 조금 더 자연스럽고 깔끔하게 가져오기 위해서 lazy 로딩 및, tanstack-query 도입 예정에 있습니다.
 
 <br />
-
-
-
-
 
 # 주요 기능 설명
 
@@ -119,8 +112,6 @@
 
   <br/>
 
-  
-
 ### [ 직원 상세 조회 ]
 
 ![Image](https://github.com/user-attachments/assets/ed6d9bb7-4df6-4344-bdb0-fabaeccd1408)
@@ -137,10 +128,6 @@
 - 모달을 통해서 간편하게 기간에 직원이 근무한 시간과 급여를 정산할 수 있습니다.
 
 <br/>
-
-
-
-
 
 ## 직원 기능
 
@@ -205,8 +192,6 @@
 
 # 🏃‍♂️ 팀원 소개
 
-
-
 ## 🐙 권수혁 (FE)
 
 - 블로그: https://velog.io/@tngur0716/posts
@@ -215,7 +200,5 @@
 ## 😊 유제현 (FE)
 
 - 깃허브 : https://github.com/YOOJEHYEON
-
-
 
 <br />

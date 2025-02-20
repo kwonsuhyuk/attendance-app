@@ -85,7 +85,7 @@ export default function EmployeeFirstPage() {
         {/* Title */}
         <div className="mt-4">
           <h2 className="scroll-m-20 text-2xl font-bold tracking-tight text-center">
-            Attandance-App
+            Attendance-App
           </h2>
         </div>
 

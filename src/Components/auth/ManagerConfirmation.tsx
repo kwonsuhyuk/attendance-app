@@ -56,9 +56,7 @@ export const ManagerConfirmation = ({
             </p>
           </DialogDescription>
           <DialogFooter>
-            <Button onClick={() => setDialogOpen(false)} variant="secondary">
-              취소
-            </Button>
+            <Button onClick={() => setDialogOpen(false)}>취소</Button>
             <Button onClick={handleConfirm} className="bg-blue-600 text-white">
               관리자 확인 및 가입
             </Button>

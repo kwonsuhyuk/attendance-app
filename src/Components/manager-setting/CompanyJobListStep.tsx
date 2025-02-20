@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -5,12 +6,23 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
 const CompanyJobListStep = () => {
-  const { control, setValue } = useFormContext();
-
+  const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "companyJobList.companyJobs",
   });
+
+  const [newJob, setNewJob] = useState(""); // ✅ useState로 입력 값 관리
+
+  const handleAddJob = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedJob = newJob.trim();
+
+    if (trimmedJob) {
+      append({ id: String(Date.now()), name: trimmedJob }); // ✅ 명확한 구조
+      setNewJob(""); // 입력 필드 초기화
+    }
+  };
 
   type JobField = {
     id: string;
@@ -18,18 +30,6 @@ const CompanyJobListStep = () => {
   };
 
   const jobFields = fields as JobField[];
-
-  const handleAddJob = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newJobInput = document.querySelector('input[name="newJob"]') as HTMLInputElement;
-    const newJob = newJobInput?.value.trim();
-
-    if (newJob) {
-      append({ id: String(Date.now()), name: newJob }); // ✅ 명확한 구조
-      setValue("newJob", ""); // 입력 필드 초기화
-      newJobInput.value = ""; // 실제 인풋 필드 초기화
-    }
-  };
 
   return (
     <div className="flex flex-col items-center space-y-6 w-full max-w-md">
@@ -47,7 +47,12 @@ const CompanyJobListStep = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-2">
-              <Input name="newJob" placeholder="ex) 과장, 대리" className="h-10 py-2" />
+              <Input
+                value={newJob}
+                onChange={e => setNewJob(e.target.value)}
+                placeholder="ex) 과장, 대리"
+                className="h-10 py-2"
+              />
               <Button type="submit" className="h-10 px-4">
                 추가
               </Button>

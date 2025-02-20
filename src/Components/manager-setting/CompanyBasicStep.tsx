@@ -6,6 +6,7 @@ import ImageModal from "@/components/modal/ImageModal";
 import { Camera, ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { useUserStore } from "@/store/user.store";
+import { Card } from "../ui/card";
 
 const CompanyBasicStep = () => {
   const { control, watch, setValue } = useFormContext();
@@ -14,7 +15,7 @@ const CompanyBasicStep = () => {
   const imageUrl = watch("companyBasic.imageUrl");
 
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <Card className="flex flex-col items-center space-y-6 w-full max-w-md">
       <h2 className="text-xl font-semibold text-gray-800">회사 기본 설정</h2>
       <p className="text-sm text-gray-600">기본 설정은 바꾸기 어려우니 신중히 작성해주세요.</p>
 
@@ -106,7 +107,7 @@ const CompanyBasicStep = () => {
         setImageUrl={url => setValue("companyBasic.imageUrl", url)}
         handleClose={() => setImageOpenModal(false)}
       />
-    </div>
+    </Card>
   );
 };
 

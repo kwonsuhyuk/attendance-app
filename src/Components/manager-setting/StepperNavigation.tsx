@@ -13,7 +13,9 @@ const StepperNavigation = ({ activeStep, steps, onNext, onBack }: StepperNavigat
       <Button onClick={onBack} disabled={activeStep === 0} variant="outline">
         이전
       </Button>
-      <Button onClick={onNext}>{activeStep === steps.length - 1 ? "완료" : "다음"}</Button>
+      <Button onClick={onNext} variant="secondary">
+        {activeStep === steps.length - 1 ? "완료" : "다음"}
+      </Button>
     </div>
   );
 };

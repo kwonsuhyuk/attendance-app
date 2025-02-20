@@ -35,6 +35,7 @@ const CompanyNightHolidayStep = () => {
   const isHoliday = watch("companyNightHoliday.isHoliday");
   const holidayPay = watch("companyNightHoliday.holidayPay");
   const holidays: string[] = watch("companyNightHoliday.holidays") || [];
+  const payCheckDay = watch("companyNightHoliday.payCheckDay");
 
   // ✅ 모달 상태 관리
   const [date, setDate] = useState<Date | undefined>();
@@ -61,10 +62,34 @@ const CompanyNightHolidayStep = () => {
 
   return (
     <div className="flex flex-col items-center space-y-6 w-full max-w-md">
-      <h2 className="text-xl font-semibold text-gray-800">야간/공휴일 설정</h2>
+      <h2 className="text-xl font-semibold text-gray-800">급여 정산일 및 야간/공휴일 설정</h2>
       <p className="text-sm text-gray-600 text-center">
-        야간/공휴일 급여 구분 여부를 설정하세요. 필요 시 이후에도 변경 가능합니다.
+        급여 정산일 및 야간/공휴일 급여 구분 여부를 설정하세요. 필요 시 이후에도 변경 가능합니다.
       </p>
+
+      {/* ✅ 급여 지급일 설정 */}
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-lg">급여 지급일</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Select
+            value={payCheckDay}
+            onValueChange={val => setValue("companyNightHoliday.payCheckDay", val)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="급여 지급일을 선택하세요" />
+            </SelectTrigger>
+            <SelectContent>
+              {[...Array(31)].map((_, i) => (
+                <SelectItem key={i + 1} value={String(i + 1)}>
+                  {i + 1}일
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
 
       {/* ✅ 주간/야간 근무 설정 */}
       <Card className="w-full">
