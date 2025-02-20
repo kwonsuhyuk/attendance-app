@@ -109,3 +109,15 @@ export type UserData = {
   date?: DateMap<WorkTime>;
   workDates?: DateMap<WorkData>;
 };
+
+// 메뉴바 아이템 타입
+export type TMenuItem = {
+  title: string;
+  handle: () => void;
+};
+
+export type TMenuItems = {
+  menuItems: TMenuItem[];
+  middleMenuItems: TMenuItem[];
+  subMenuItems: TMenuItem[];
+};

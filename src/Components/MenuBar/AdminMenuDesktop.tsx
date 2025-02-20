@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useNavigate } from "react-router-dom";
 
 interface AdminMenuProps {
   companyLogo: string;
@@ -10,7 +11,6 @@ interface AdminMenuProps {
     pathname: string;
   };
   toggleTheme: () => void;
-  navigate: (path: string) => void;
   logout: () => void;
 }
 
@@ -21,9 +21,9 @@ export const AdminMenuDesktop = ({
   darkMode,
   location,
   toggleTheme,
-  navigate,
   logout,
 }: AdminMenuProps) => {
+  const navigate = useNavigate();
   return (
     <div className="flex h-28 items-center">
       <img src={companyLogo} alt="회사로고" className="rounded-full w-24 h-24 mr-5" />
