@@ -118,7 +118,7 @@ export type TMenuItem = {
   handle: () => void;
 };
 
-export type TMenuItems = {
+export type TMenuItemGroup = {
   menuItems: TMenuItem[];
   middleMenuItems: TMenuItem[];
   subMenuItems: TMenuItem[];

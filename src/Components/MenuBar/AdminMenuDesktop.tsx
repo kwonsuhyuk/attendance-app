@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
+import { ADMIN_MENU_BUTTONS } from "@/constant/menuConfig";
+import { getButtonVariant } from "@/util/menuUtils";
 
 interface AdminMenuProps {
   companyLogo: string;
@@ -14,12 +16,6 @@ interface AdminMenuProps {
   logout: () => void;
 }
 
-interface MenuButtonConfig {
-  label: string;
-  path: string;
-  tourStep?: string;
-}
-
 export const AdminMenuDesktop = ({
   companyLogo,
   companyName,
@@ -31,23 +27,6 @@ export const AdminMenuDesktop = ({
 }: AdminMenuProps) => {
   const navigate = useNavigate();
 
-  const menuButtons: MenuButtonConfig[] = [
-    { label: "HOME", path: "/companymain" },
-    { label: "PEOPLE", path: "/employeelist", tourStep: "step-3" },
-    { label: "CALENDAR", path: "/datecheck" },
-    { label: "SETTING", path: "/setting", tourStep: "step-18" },
-    { label: "ABOUT", path: "/about" },
-  ];
-
-  const getButtonVariant = (path: string) => {
-    const fullPath = `/${companyCode}${path}`;
-    const isActive =
-      path === "/datecheck" || path === "/setting"
-        ? location.pathname.includes(fullPath)
-        : location.pathname === fullPath;
-
-    return isActive ? "focusMenu" : "menu";
-  };
   return (
     <div className="flex h-28 items-center">
       <img src={companyLogo} alt="회사로고" className="rounded-full w-24 h-24 mr-5" />
@@ -55,10 +34,14 @@ export const AdminMenuDesktop = ({
         <div className="flex justify-between w-full items-end pb-2 border-b border-solid border-black dark:border-gray-300">
           <div className="hidden lg:block font-black text-lg">{companyName}</div>
           <div className="flex gap-3 md:justify-between md:items-end md:w-1/3" data-tour="step-2">
-            {menuButtons.map(button => (
+            {ADMIN_MENU_BUTTONS.map(button => (
               <Button
                 key={button.label}
-                variant={getButtonVariant(button.path)}
+                variant={getButtonVariant({
+                  path: button.path,
+                  companyCode,
+                  currentPath: location.pathname,
+                })}
                 onClick={() => navigate(`/${companyCode}${button.path}`)}
                 data-tour={button.tourStep}
                 className="dark:text-gray-400"

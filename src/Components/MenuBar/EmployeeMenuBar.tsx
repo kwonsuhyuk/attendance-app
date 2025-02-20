@@ -7,30 +7,56 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { TMenuItem, TMenuItemGroup } from "@/model/index";
+import { getPageTitle, mapButtonWithStyle } from "@/util/menuButtonStyle";
 
-interface MenuItem {
-  title: string;
-  handle: () => void;
+interface MenuButtonConfig extends TMenuItem {
+  buttonClassName?: string;
+  textClassName?: string;
+  tourStep?: string;
 }
 
-interface EmployeeMenuProps {
-  darkMode: boolean;
+interface MenuButtonGroupProps {
+  buttons: MenuButtonConfig[];
+  setIsOpen: (open: boolean) => void;
+  showDivider?: boolean;
+}
+
+interface EmployeeMenuProps extends TMenuItemGroup {
   location: {
     pathname: string;
   };
   companyLogo: string;
   userName: string;
   userEmail: string;
-  menuItems: MenuItem[];
-  middleMenuItems: MenuItem[];
-  subMenuItems: MenuItem[];
   refreshPage: () => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
+const MenuButtonGroup = ({ buttons, setIsOpen, showDivider = true }: MenuButtonGroupProps) => (
+  <>
+    <div className="flex flex-col">
+      {buttons.map(button => (
+        <Button
+          key={button.title}
+          variant="menu"
+          className={button.buttonClassName}
+          onClick={() => {
+            button.handle();
+            setIsOpen(false);
+          }}
+          data-tour={button.tourStep}
+        >
+          <span className={button.textClassName}>{button.title}</span>
+        </Button>
+      ))}
+    </div>
+    {showDivider && <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />}
+  </>
+);
+
 export const EmployeeMenuBar = ({
-  // darkMode,
   location,
   companyLogo,
   userName,
@@ -42,22 +68,9 @@ export const EmployeeMenuBar = ({
   isOpen,
   setIsOpen,
 }: EmployeeMenuProps) => {
-  const getPageTitle = (pathname: string): string => {
-    switch (true) {
-      case pathname.includes("companymain"):
-        return "HOME";
-      case pathname.includes("calendar"):
-        return "CALENDAR";
-      case pathname.includes("camera"):
-        return "CAMERA";
-      case pathname.includes("appguide"):
-        return "GUIDE";
-      case pathname.includes("outjobcheck"):
-        return "OUTJOB";
-      default:
-        return "MENU";
-    }
-  };
+  const mainMenuButtons = mapButtonWithStyle(menuItems, "main");
+  const middleMenuButtons = mapButtonWithStyle(middleMenuItems, "middle");
+  const subMenuButtons = mapButtonWithStyle(subMenuItems, "sub");
 
   return (
     <div className="flex pb-3 text-xs justify-between items-center text-white-nav-text dark:text-dark-nav-text border-b border-solid border-black-200 dark:border-gray-300">
@@ -84,7 +97,7 @@ export const EmployeeMenuBar = ({
           </Button>
         </DrawerTrigger>
 
-        <DrawerContent className="bg-white-bg text-black">
+        <DrawerContent className="bg-white-bg dark:bg-dark-bg text-black dark:text-white">
           <DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="flex gap-3 m-3">
@@ -97,57 +110,9 @@ export const EmployeeMenuBar = ({
 
               <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
 
-              <div className="flex flex-col">
-                {menuItems.map(item => (
-                  <Button
-                    key={item.title}
-                    variant="menu"
-                    className="w-full justify-start gap-5 h-12"
-                    onClick={() => {
-                      item.handle();
-                      setIsOpen(false);
-                    }}
-                  >
-                    <span className="font-semibold text-lg">{item.title}</span>
-                  </Button>
-                ))}
-              </div>
-
-              <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
-
-              <div className="flex flex-col">
-                {middleMenuItems.map(item => (
-                  <Button
-                    key={item.title}
-                    variant="menu"
-                    className="w-full justify-start gap-5 h-12"
-                    onClick={() => {
-                      item.handle();
-                      setIsOpen(false);
-                    }}
-                  >
-                    <span>{item.title}</span>
-                  </Button>
-                ))}
-              </div>
-
-              <div className="h-[1px] w-full bg-slate-400 dark:bg-slate-400" />
-
-              <div>
-                {subMenuItems.map(item => (
-                  <Button
-                    key={item.title}
-                    variant="menu"
-                    className="gap-1 h-auto hover:bg-transparent"
-                    onClick={() => {
-                      item.handle();
-                      setIsOpen(false);
-                    }}
-                  >
-                    <span className="text-sm font-noto">{item.title}</span>
-                  </Button>
-                ))}
-              </div>
+              <MenuButtonGroup buttons={mainMenuButtons} setIsOpen={setIsOpen} />
+              <MenuButtonGroup buttons={middleMenuButtons} setIsOpen={setIsOpen} />
+              <MenuButtonGroup buttons={subMenuButtons} setIsOpen={setIsOpen} showDivider={false} />
             </div>
           </DrawerHeader>
         </DrawerContent>
