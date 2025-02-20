@@ -55,10 +55,10 @@ export const signupUserDataSchema = signupUserBaseSchema.extend({
 export type TSignupFormData = z.infer<typeof signupFormSchema>;
 export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 
-export type TLoginResponse = {
+export type TLoginResponse<T extends TJobList = TJobList> = {
   success: boolean;
   data?: {
-    user: TEmpUserData | TCMUserData;
+    user: TEmpUserData<T> | TCMUserData;
     company: TCompanyInfo;
   };
   error?: string;
@@ -74,6 +74,7 @@ export type TSignupResponse = {
 
 // 직원,관리자,default
 export type TPosition = "manager" | "employee";
+export type TEmploymentType = "정규직" | "계약직" | "일용직" | "선택안함";
 
 export type TJob = {
   id: string;
@@ -94,7 +95,6 @@ export type TWorkPlace = {
 
 export type TworkPlacesList = TWorkPlace[];
 
-// 회사 정보 타입 (근무지 목록 추가됨)
 export type TCompanyInfo = {
   adminName: string;
   companyLogo: string;
@@ -147,22 +147,25 @@ export type DateMap<T> = {
 //   workDates?: DateMap<WorkData>;
 // };
 
+export type TSelectableJobName<T extends TJobList> = T[number]["name"] | "선택안함";
+
 export type TUserBase = {
   uid: string;
   name: string;
   email: string;
   companyCode: string;
   phoneNumber: string;
-  userType: "manager" | "employee"; // 기본적으로 userType을 string에서 제한된 타입으로 변경
+  userType: TPosition;
 };
 
-export type TEmpUserData = Omit<TUserBase, "userType"> & {
-  userType: "employee"; // 직원(user)으로 고정
-  jobName: string;
+export type TEmpUserData<T extends TJobList> = Omit<TUserBase, "userType"> & {
+  userType: "employee";
+  jobName: TSelectableJobName<T>;
   salaryAmount?: number;
   salaryType?: string;
   date?: DateMap<WorkTime>;
   workDates?: DateMap<WorkData>;
+  employmentType: TEmploymentType;
 };
 
 export type TCMUserData = Omit<TUserBase, "userType"> & {
