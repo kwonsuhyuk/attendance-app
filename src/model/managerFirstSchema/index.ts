@@ -31,3 +31,9 @@ export const companyNightHolidaySchema = z
     message: "야간 근무 설정 시 시작 및 종료 시간을 입력해야 합니다.",
     path: ["nightStart", "nightEnd"],
   });
+
+export const companyFormSchema = z.object({
+  companyBasic: companyBasicSchema,
+  companyJobList: companyJobListSchema,
+  companyNightHoliday: companyNightHolidaySchema,
+});

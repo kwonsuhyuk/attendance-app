@@ -7,13 +7,19 @@ import { useToast } from "@/hooks/use-toast";
 import NoticeCard from "../common/NoticeCard";
 
 const EmployeeInviteStep = () => {
-  const companyCode = useUserStore(state => state.currentUser?.companyCode) || "1234ABC"; // 더미 데이터
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const { toast } = useToast();
   const handleCopy = () => {
-    navigator.clipboard.writeText(companyCode);
-    toast({
-      description: "복사가 완료되었습니다.",
-    });
+    if (companyCode) {
+      navigator.clipboard.writeText(companyCode);
+      toast({
+        description: "복사가 완료되었습니다.",
+      });
+    } else {
+      toast({
+        description: "오류가 발생했습니다.",
+      });
+    }
   };
 
   return (

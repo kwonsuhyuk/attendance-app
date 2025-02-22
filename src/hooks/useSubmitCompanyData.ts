@@ -4,8 +4,10 @@ import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/hooks/use-toast";
 import { setCompanyAndManagerData } from "@/api";
 import { useShallow } from "zustand/shallow";
+import { z } from "zod";
+import { companyFormSchema } from "@/model/managerFirstSchema";
 
-export const useSubmitCompanyData = (getValues: () => any) => {
+export const useSubmitCompanyData = (getValues: () => z.infer<typeof companyFormSchema>) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

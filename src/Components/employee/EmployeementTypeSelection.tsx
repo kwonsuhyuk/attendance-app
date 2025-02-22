@@ -9,15 +9,19 @@ import { Label } from "@/components/ui/label";
 import TooltipContainer from "@/components/common/TooltipContainer";
 import { Info } from "lucide-react";
 
-interface EmploymentTypeSelectionProps {
-  employmentType: string | undefined;
-  setEmploymentType: (value: string) => void;
+export type TEmploymentType = "정규직" | "계약직" | "일용직" | "선택안함";
+
+interface IEmploymentTypeSelectionProps {
+  employmentType: TEmploymentType | undefined;
+  setEmploymentType: (value: TEmploymentType) => void;
 }
+
+const employmentTypes: TEmploymentType[] = ["선택안함", "정규직", "계약직", "일용직"];
 
 const EmploymentTypeSelection = ({
   employmentType,
   setEmploymentType,
-}: EmploymentTypeSelectionProps) => {
+}: IEmploymentTypeSelectionProps) => {
   return (
     <div>
       <Label className="text-black text-lg mb-3 flex items-center">
@@ -32,10 +36,11 @@ const EmploymentTypeSelection = ({
           <SelectValue placeholder="고용 형태를 선택하세요" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="선택안함">선택 안함</SelectItem>
-          <SelectItem value="정규직">정규직</SelectItem>
-          <SelectItem value="계약직">계약직</SelectItem>
-          <SelectItem value="일용직">일용직</SelectItem>
+          {employmentTypes.map(type => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>

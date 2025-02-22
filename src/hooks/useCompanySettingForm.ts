@@ -1,21 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-  companyBasicSchema,
-  companyJobListSchema,
-  companyNightHolidaySchema,
-} from "@/model/managerFirstSchema";
-
-const formSchema = z.object({
-  companyBasic: companyBasicSchema,
-  companyJobList: companyJobListSchema,
-  companyNightHoliday: companyNightHolidaySchema,
-});
+import { companyFormSchema } from "@/model/managerFirstSchema";
 
 export const useCompanySettingForm = () => {
   return useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(companyFormSchema),
     defaultValues: {
       companyBasic: {
         companyName: "",

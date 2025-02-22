@@ -158,7 +158,7 @@ export type TUserBase = {
   userType: TPosition;
 };
 
-export type TEmpUserData<T extends TJobList> = Omit<TUserBase, "userType"> & {
+export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userType"> & {
   userType: "employee";
   jobName: TSelectableJobName<T>;
   salaryAmount?: number;
