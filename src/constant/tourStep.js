@@ -1,18 +1,19 @@
 export const ADMIN_STEP = [
   {
     selector: '[data-tour="step-1"]',
-    content: `안녕하세요! Attandance App 에
+    content: `안녕하세요! Attendance App 에
 오신 것을 환영합니다.
 사용하시기 전에 간단하게 서비스 이용 가이드를 
 안내해드리도록 하겠습니다.`,
   },
   {
     selector: '[data-tour="step-2"]',
-    content: '회사의 서비스 들을 이용 할 수 있는 메뉴바 입니다.',
+    content: "회사의 서비스 들을 이용 할 수 있는 메뉴바 입니다.",
   },
   {
     selector: '[data-tour="step-3"]',
-    content: '우선 PEOPLE을 클릭하셔서 현재 회사의 직원들을 볼 수 있는 직원테이블 페이지로 이동해주세요',
+    content:
+      "우선 PEOPLE을 클릭하셔서 현재 회사의 직원들을 볼 수 있는 직원테이블 페이지로 이동해주세요",
   },
 ];
 
@@ -154,8 +155,8 @@ export const DATE_CHECK_STEPS2 = [
   {
     selector: '[data-tour="step-12"]',
     content: `다음은 직원의 월 정산을 할 수 있는 버튼 입니다. 아래 버튼을 클릭해 보세요.`,
-    highlightedSelectors: ['.ant-modal'],
-    mutationObservables: ['.ant-modal-root'],
+    highlightedSelectors: [".ant-modal"],
+    mutationObservables: [".ant-modal-root"],
   },
 ];
 
@@ -223,7 +224,7 @@ export const SETTING_STEPS = [
 export const APP_GUIDE_STEPS = [
   {
     selector: '[data-tour="step-30"]',
-    content: `안녕하세요! Attandance App 에
+    content: `안녕하세요! Attendance App 에
 오신 것을 환영합니다. 여기는 App Guide 페이지 입니다. 우선 원활한 앱사용을 위해서 아래 문서를 통해서 바탕화면에 위 앱을 등록해서 사용하세요!`,
   },
   {

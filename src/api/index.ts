@@ -1,5 +1,7 @@
 import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
 import "../firebase";
+import { TCMUserData, TCompanyInfo } from "@/model";
+import { encrypt } from "@/util/encryptDecrypt";
 
 const db = getDatabase();
 
@@ -598,6 +600,81 @@ export async function setEmployeeUser({
       success: true,
     };
   } catch (e) {
+    return {
+      success: false,
+      error: e.message,
+    };
+  }
+}
+
+export async function setCompanyAndManagerData({
+  formData,
+  userId,
+  companyCode,
+  name,
+  email,
+  phoneNumber,
+}) {
+  const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+  const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
+
+  const companyData: TCompanyInfo = {
+    companyName: formData.companyBasic.companyName,
+    adminName: formData.companyBasic.adminName,
+    companyLogo: formData.companyBasic.imageUrl || "",
+    companyIntro: formData.companyBasic.companyIntro,
+    isDayNight: formData.companyNightHoliday.isDayNight,
+    nightStart: Number(formData.companyNightHoliday.nightStart) || 0,
+    nightEnd: Number(formData.companyNightHoliday.nightEnd) || 0,
+    payCheckDay: Number(formData.companyNightHoliday.payCheckDay) || 1,
+    isNightPay: formData.companyNightHoliday.nightPay!,
+    isHoliday: formData.companyNightHoliday.isHoliday,
+    holidayPay: formData.companyNightHoliday.holidayPay!,
+    holidayList: formData.companyNightHoliday.holidays || [],
+    jobList: formData.companyJobList.companyJobs || [],
+    qrValue: encrypt(companyCode),
+    workPlacesList: formData.companyWorkPlacesList.companyWorkPlaces,
+  };
+
+  const userData: TCMUserData = {
+    name: name!,
+    uid: userId,
+    email: email!,
+    phoneNumber: phoneNumber || "",
+    userType: "manager",
+    companyCode,
+  };
+  try {
+    await set(companyRef, companyData);
+    await set(userRef, userData);
+    return {
+      success: true,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      error: e.message,
+    };
+  }
+}
+
+export async function fetchAddressByNaver(address: string) {
+  try {
+    const response = await fetch(`/api/naver-geocode?query=${encodeURIComponent(address)}`, {
+      method: "GET",
+      headers: {
+        "X-NCP-APIGW-API-KEY-ID": import.meta.env.VITE_NAVER_CLIENT_ID,
+        "X-NCP-APIGW-API-KEY": import.meta.env.VITE_NAVER_CLIENT_SECRET,
+        Accept: "application/json",
+      },
+    });
+
+    const data = await response.json();
+    return {
+      success: true,
+      data: { addresses: data.addresses },
+    };
+  } catch (e: any) {
     return {
       success: false,
       error: e.message,
