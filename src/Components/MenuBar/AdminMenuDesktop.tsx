@@ -3,6 +3,8 @@ import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_MENU_BUTTONS } from "@/constant/menuConfig";
 import { getButtonVariant } from "@/util/menuUtils";
+import { Moon, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AdminMenuProps {
   companyLogo: string;
@@ -53,7 +55,17 @@ export const AdminMenuDesktop = ({
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <Switch checked={darkMode} onCheckedChange={toggleTheme} />
+            <Switch checked={darkMode} onCheckedChange={toggleTheme}>
+              <Sun
+                className={cn("absolute text-orange-400 opacity-0", "dark:opacity-0 opacity-100")}
+                size={22}
+              />
+              <Moon
+                className={cn("absolute text-white opacity-0", "dark:opacity-100 opacity-0")}
+                size={22}
+              />
+            </Switch>
+
           </div>
           <Button
             variant="menu"

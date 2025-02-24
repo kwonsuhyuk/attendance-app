@@ -183,3 +183,15 @@ export type TMenuItemGroup = {
   middleMenuItems: TMenuItem[];
   subMenuItems: TMenuItem[];
 };
+
+// 메뉴바 아이템 타입
+export type TMenuItem = {
+  title: string;
+  handle: () => void;
+};
+
+export type TMenuItemGroup = {
+  menuItems: TMenuItem[];
+  middleMenuItems: TMenuItem[];
+  subMenuItems: TMenuItem[];
+};
