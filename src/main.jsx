@@ -7,7 +7,6 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./store/index.js";
 import { Provider } from "react-redux";
 import { TourProvider } from "@reactour/tour";
-import steps from "./constant/steps.js";
 
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -21,7 +20,6 @@ root.render(
       <BrowserRouter>
         <TourProvider
           scrollSmooth
-          steps={steps}
           onClickClose={({ setCurrentStep, setIsOpen }) => {
             setIsOpen(false);
             localStorage.setItem("tourShown", "true");
