@@ -20,6 +20,7 @@ import { useUserStore } from "./store/user.store";
 import { useShallow } from "zustand/shallow";
 import ThemeProvider from "./components/provider/ThemeProvider";
 import { Toaster } from "./components/ui/toaster";
+import { MAIN_ROUTES } from "./constant/routes";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
@@ -60,13 +61,13 @@ const App = () => {
         <Toaster />
         <GuideFab />
         <Routes>
-          <Route path="/" element={<IndexPage />} />
-          <Route path="/:id/*" element={<MainPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/managerfirst" element={<ManagerFirstPage />} />
-          <Route path="/employeefirst" element={<EmployeeFirstPage />} />
+          <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />
+          <Route path={MAIN_ROUTES.MAIN} element={<MainPage />} />
+          <Route path={MAIN_ROUTES.SIGNUP} element={<SignupPage />} />
+          <Route path={MAIN_ROUTES.MANAGER_FIRST} element={<ManagerFirstPage />} />
+          <Route path={MAIN_ROUTES.EMPLOYEE_FIRST} element={<EmployeeFirstPage />} />
           <Route
-            path="/signin"
+            path={MAIN_ROUTES.SIGNIN}
             element={
               currentUser ? (
                 <Navigate to={`/${currentUser?.companyCode}/companymain`} />
@@ -75,7 +76,7 @@ const App = () => {
               )
             }
           />
-          <Route path="/*" element={<Notfound />} />
+          <Route path={MAIN_ROUTES.NOT_FOUND} element={<Notfound />} />
         </Routes>
       </ThemeProvider>
     </>
