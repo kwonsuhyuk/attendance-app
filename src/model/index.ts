@@ -171,3 +171,15 @@ export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userT
 export type TCMUserData = Omit<TUserBase, "userType"> & {
   userType: "manager"; // 관리자(user)로 고정
 };
+
+// 메뉴바 아이템 타입
+export type TMenuItem = {
+  title: string;
+  handle: () => void;
+};
+
+export type TMenuItemGroup = {
+  menuItems: TMenuItem[];
+  middleMenuItems: TMenuItem[];
+  subMenuItems: TMenuItem[];
+};

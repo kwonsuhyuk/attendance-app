@@ -4,15 +4,14 @@ import useDarkMode from "@/store/darkmode.store";
 import { useShallow } from "zustand/shallow";
 
 // ThemeProvider의 props 타입 정의
-interface ThemeProviderProps extends PropsWithChildren {
+interface IThemeProviderProps extends PropsWithChildren {
   excludePaths: string[];
 }
 
-export default function ThemeProvider({ children, excludePaths = [] }: ThemeProviderProps) {
-  const { darkMode, toggleMode, initializeMode } = useDarkMode(
+export default function ThemeProvider({ children, excludePaths = [] }: IThemeProviderProps) {
+  const { darkMode, initializeMode } = useDarkMode(
     useShallow(state => ({
       darkMode: state.darkMode,
-      toggleMode: state.toggleMode,
       initializeMode: state.initializeMode,
     })),
   );
@@ -21,10 +20,8 @@ export default function ThemeProvider({ children, excludePaths = [] }: ThemeProv
   const isExcluded = excludePaths.some((path: string) => location.pathname === path);
 
   useEffect(() => {
-    if (!isExcluded) {
-      initializeMode();
-    }
-  }, [initializeMode, isExcluded]);
+    initializeMode();
+  }, [initializeMode]);
 
   useEffect(() => {
     if (!isExcluded) {

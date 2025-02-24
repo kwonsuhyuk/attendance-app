@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useMatch, useNavigate } from "react-router-dom";
 import { PAYMENT } from "../constant/payment";
 import ShowSalary from "./ShowSalary/ShowSalary";
@@ -7,7 +5,6 @@ import { getUser } from "../api";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 import { useCompanyStore } from "@/store/company.store";
-import { stat } from "fs";
 import CompanyInfoHeader from "./employee/CompanyInfoHeader";
 import useDarkMode from "@/store/darkmode.store";
 
