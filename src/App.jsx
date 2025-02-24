@@ -19,6 +19,7 @@ import { getUser } from "./api";
 import { useUserStore } from "./store/user.store";
 import { useShallow } from "zustand/shallow";
 import ThemeProvider from "./components/provider/ThemeProvider";
+import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
@@ -56,6 +57,7 @@ const App = () => {
     <>
       <ThemeProvider excludePaths={["/signin", "/signup"]}>
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
+        <Toaster />
         <GuideFab />
         <Routes>
           <Route path="/" element={<IndexPage />} />

@@ -23,7 +23,6 @@ export async function signup({
   password,
   name,
   companyCode,
-  phoneNumber,
 }: TSignupFormData): Promise<TSignupResponse> {
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
