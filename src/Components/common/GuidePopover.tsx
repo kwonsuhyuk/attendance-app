@@ -1,12 +1,12 @@
 import React from "react";
 import { IconButton, Popover, Typography } from "@mui/material";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { useTour } from "@reactour/tour";
 
-export default function GuidePopover({ text, show = true }) {
+const GuidePopover = ({ text, show = true }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -25,4 +25,6 @@ export default function GuidePopover({ text, show = true }) {
       </IconButton>
     </div>
   );
-}
+};
+
+export default GuidePopover;

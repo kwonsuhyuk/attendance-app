@@ -6,7 +6,7 @@ import galaxyguide from "@/assets/guideImg/galaxyguide.jpg";
 import galaxyguide2 from "@/assets/guideImg/galaxyguide2.jpg";
 import qrguide from "@/assets/guideImg/qrguide.png";
 import qrguide2 from "@/assets/guideImg/qrguide2.png";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import "./AppGuidePage.css";
 import { useTour } from "@reactour/tour";
 import { APP_GUIDE_STEPS } from "@/constants/tourStep";
@@ -121,7 +121,7 @@ const FAQS = [
 ];
 
 const AppGuidePage = () => {
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const { isOpen, setCurrentStep, setSteps } = useTour();
 
   useEffect(() => {

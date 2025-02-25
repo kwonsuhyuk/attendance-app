@@ -1,7 +1,7 @@
 import DatePicker from "react-datepicker";
 import { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { toast } from "react-toastify";
 import "./MyDatePicker.css";
 import Popover from "@mui/material/Popover";
@@ -22,10 +22,10 @@ const MyDatePicker = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isholiday, setIsHoliday] = useState();
   const [holidayPay, setHolidayPay] = useState(0);
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
   const [isLoading, setIsLoading] = useState(false);
   const [updatedHolidays, setUpdatedHolidays] = useState(selectedHolidays);
   const { isOpen, setCurrentStep, setSteps } = useTour();
+  const darkMode = darkModeStore(state => state.darkMode);
 
   useEffect(() => {
     if (isOpen) {

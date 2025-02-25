@@ -3,12 +3,10 @@ import { Label } from "@/components/ui/label";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
-
 import { TWorkPlace } from "@/model/types/company.type";
-
 import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
-import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
-import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
+import SearchResults from "@/Components/company/company-settings/workplace-setting/SearchResults";
+import WorkPlaceMap from "@/Components/company/company-settings/workplace-setting/map/WorkPlaceMap";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
@@ -44,10 +42,10 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-6 rounded-xl shadow-lg bg-white">
+      <DialogContent className="rounded-xl bg-white p-6 shadow-lg">
         <DialogHeader>
           <DialogTitle className="mb-3">
-            <MapPin className="w-4 h-4 mr-2" />
+            <MapPin className="mr-2 h-4 w-4" />
             근무지 추가
           </DialogTitle>
         </DialogHeader>
@@ -72,7 +70,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
           </div>
           <div className="relative space-y-3">
             <Label>주소</Label>
-            <div className="flex items-center space-x-2 h-12">
+            <div className="flex h-12 items-center space-x-2">
               <Input
                 placeholder="도로명 주소를 입력하세요 (예: 기흥구 기흥로 116번길 10)"
                 className="h-12 placeholder:text-sm"
@@ -80,7 +78,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
                 onChange={e => setAddress(e.target.value)}
               />
               <Button onClick={handleSearchAddress} disabled={isSearching} className="h-12">
-                <Search className="w-5 h-5" />
+                <Search className="h-5 w-5" />
               </Button>
             </div>
             <SearchResults
