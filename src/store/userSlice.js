@@ -1,3 +1,4 @@
+// 제거 예정으로 네이밍 X
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
@@ -8,7 +9,7 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
       state.isLoading = false;
     },
-    clearUser: (state) => {
+    clearUser: state => {
       state.currentUser = null;
       state.userType = null;
       state.isLoading = false;

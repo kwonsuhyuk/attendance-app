@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import SalaryType from "../../util/SalaryType";
+import SalaryType from "@/util/SalaryType.util";
 import { formatMoney } from "../../util/formatMoney.util";
 import convertTime from "../../util/formatTime.util";
 import GuidePopover from "../GuidePopover";

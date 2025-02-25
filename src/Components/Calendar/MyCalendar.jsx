@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import "./MyCalendar.css";
 import CloseIcon from "@mui/icons-material/Close";
-import convertTime from "../../util/formatTime";
+import convertTime from "@/util/formatTime.util";
 import { toast } from "react-toastify";
 import { fetchWorkTimes } from "../../api";
 import { useUserStore } from "@/store/user.store";
