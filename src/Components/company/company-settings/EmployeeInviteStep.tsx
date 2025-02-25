@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Copy } from "lucide-react";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/hooks/use-toast";
-import NoticeCard from "../common/NoticeCard";
+import NoticeCard from "@/components/common/NoticeCard";
 
 const EmployeeInviteStep = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);

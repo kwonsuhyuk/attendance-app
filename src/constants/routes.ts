@@ -11,13 +11,13 @@ export const MAIN_ROUTES = {
 export const EMPLOYEE_ROUTES = {
   COMMUTE: "/camera",
   APP_GUIDE: "/appguide",
-  EMPLOYEE_DATE_CHECK: "/datecheck/:id",
+  EMPLOYEE_DATE_CHECK: "/calendar",
 };
 
 export const MANAGER_ROUTES = {
   SETTING: "/setting/*",
   EMPLOYEE_LIST: "/employeelist",
-  CALENDAR: "/calendar",
+  CALENDAR: "/datecheck/:id",
 };
 
 export const COMMON_ROUTES = {

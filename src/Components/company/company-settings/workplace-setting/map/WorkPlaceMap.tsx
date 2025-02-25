@@ -1,5 +1,5 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { lazy, Suspense } from "react";
-import { Skeleton } from "../ui/skeleton";
 
 const NaverMap = lazy(() => import("./NaverMap"));
 

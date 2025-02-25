@@ -7,7 +7,7 @@ const MenuBar = () => {
   const menuBar = useMenuBar();
   const { userType, isDesktop, ...menuState } = menuBar;
 
-  if (userType === "admin") {
+  if (userType === "manager") {
     if (isDesktop) {
       return <AdminMenuDesktop {...menuState} />;
     }
