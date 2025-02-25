@@ -2,14 +2,9 @@ import { useFormContext, useFieldArray } from "react-hook-form";
 import { useState } from "react";
 import CompanySettingTitle from "../CompanySettingTitle";
 import WorkPlaceList from "./WorkPlaceList";
-<<<<<<< HEAD:src/Components/company-setting/CompanyWorkPlaceStep.tsx
-import { Button } from "../ui/button";
 import { TWorkPlace, TworkPlacesList } from "@/model/types/company.type";
-=======
-import { TWorkPlace, TworkPlacesList } from "@/model";
 import { Button } from "@/components/ui/button";
 import WorkPlaceModal from "@/components/common/modal/WorkPlaceModal";
->>>>>>> b9f1e83e66b1a5b50a8fad2cbef5ffc44eddf976:src/Components/company/company-settings/workplace-setting/CompanyWorkPlaceStep.tsx
 
 const CompanyWorkPlaceStep = () => {
   const { control } = useFormContext();

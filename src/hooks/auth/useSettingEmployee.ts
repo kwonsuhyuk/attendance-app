@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../use-toast";
 import { useShallow } from "zustand/shallow";
 import { useUserStore } from "@/store/user.store";
-import { TEmploymentType } from "@/model";
+import { TEmploymentType } from "@/model/types/position.type";
+
 export const useSettingEmployee = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);

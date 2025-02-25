@@ -8,7 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import TooltipContainer from "@/components/common/TooltipContainer";
 import { Info } from "lucide-react";
-import { TEmploymentType } from "@/model";
+import { TEmploymentType } from "@/model/types/position.type";
 
 interface IEmploymentTypeSelectionProps {
   employmentType: TEmploymentType | undefined;
