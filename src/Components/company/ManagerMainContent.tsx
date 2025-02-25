@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 
-export default function ManagerMainContent() {
+const ManagerMainContent = () => {
   const navigate = useNavigate();
   const { companyCode } = useUserStore(
     useShallow(state => ({
@@ -45,4 +45,6 @@ export default function ManagerMainContent() {
       </div>
     </div>
   );
-}
+};
+
+export default ManagerMainContent;

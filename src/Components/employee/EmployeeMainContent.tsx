@@ -3,9 +3,8 @@ import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 import CompanyInfoHeader from "../employee/CompanyInfoHeader";
 import ShowSalary from "../employee/showSalary/ShowSalary";
-import EmployeePageContainer from "../container/EmployeePageContainer";
 
-export default function EmployeeMainContent() {
+const EmployeeMainContent = () => {
   const navigate = useNavigate();
   const { companyCode, userType } = useUserStore(
     useShallow(state => ({
@@ -47,4 +46,6 @@ export default function EmployeeMainContent() {
       </div>
     </>
   );
-}
+};
+
+export default EmployeeMainContent;
