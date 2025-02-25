@@ -1,5 +1,5 @@
 import { TMenuItem } from "@/model/index";
-import { BUTTON_STYLES, PAGE_TITLE_MAP } from "@/constant/menuButton";
+import { BUTTON_STYLES, PAGE_TITLE_MAP } from "@/constants/menuButton";
 
 export const getPageTitle = (pathname: string): string => {
   const path = Object.keys(PAGE_TITLE_MAP).find(key => pathname.includes(key));

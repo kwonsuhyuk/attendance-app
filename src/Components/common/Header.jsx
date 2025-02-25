@@ -1,4 +1,4 @@
-import MenuBar from "../MenuBar/MenuBar";
+import MenuBar from "./menubar/MenuBar";
 
 export default function Header() {
   return (

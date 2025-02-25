@@ -1,5 +1,5 @@
 import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
-import "../firebase";
+import "@/firebase";
 import { TCMUserData, TCompanyInfo } from "@/model";
 import { encrypt } from "@/util/encryptDecrypt.util";
 
