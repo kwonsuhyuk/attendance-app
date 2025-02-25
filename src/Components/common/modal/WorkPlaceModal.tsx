@@ -4,9 +4,9 @@ import { Search, MapPin } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
 import { TWorkPlace } from "@/model/types/company.type";
+import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
 import WorkPlaceMap from "@/Components/company/company-settings/workplace-setting/map/WorkPlaceMap";
 import SearchResults from "@/Components/company/company-settings/workplace-setting/SearchResults";
-import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
