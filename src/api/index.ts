@@ -1,7 +1,12 @@
 import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
+<<<<<<< HEAD
 import "../firebase";
 import { TCMUserData } from "@/model/types/user.type";
 import { TCompanyInfo } from "@/model/types/company.type";
+=======
+import "@/firebase";
+import { TCMUserData, TCompanyInfo } from "@/model";
+>>>>>>> b9f1e83e66b1a5b50a8fad2cbef5ffc44eddf976
 import { encrypt } from "@/util/encryptDecrypt.util";
 
 const db = getDatabase();

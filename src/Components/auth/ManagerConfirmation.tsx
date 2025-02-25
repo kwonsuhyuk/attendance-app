@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/util/cn.util";
 
 interface IManagerConfirmationProps {
   isManagerCheck: boolean;

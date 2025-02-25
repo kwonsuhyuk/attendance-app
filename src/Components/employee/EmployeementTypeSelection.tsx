@@ -8,8 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import TooltipContainer from "@/components/common/TooltipContainer";
 import { Info } from "lucide-react";
-
-export type TEmploymentType = "정규직" | "계약직" | "일용직" | "선택안함";
+import { TEmploymentType } from "@/model";
 
 interface IEmploymentTypeSelectionProps {
   employmentType: TEmploymentType | undefined;
