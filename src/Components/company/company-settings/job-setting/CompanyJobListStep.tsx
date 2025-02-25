@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { Card } from "@/components/ui/card";
-import CompanySettingTitle from "./CompanySettingTitle";
-import FormInputWithButton from "../form/FormInputWithButton";
+
 import JobListCard from "./JobListCard";
-import NoticeCard from "../common/NoticeCard";
+import CompanySettingTitle from "../CompanySettingTitle";
+import FormInputWithButton from "../../form/FormInputWithButton";
+import NoticeCard from "@/components/common/NoticeCard";
 
 const CompanyJobListStep = () => {
   const { control } = useFormContext();

@@ -1,10 +1,11 @@
+import { TPosition } from "@/model/types/position.type";
 import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
 import { create } from "zustand";
 
 interface IUserState {
   currentUser: TEmpUserData | TCMUserData | null;
   isLoading: boolean;
-  userType: string | null;
+  userType: TPosition | null;
   setUser: (user: TEmpUserData | TCMUserData) => void;
   clearUser: () => void;
 }

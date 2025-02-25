@@ -3,17 +3,12 @@ import { Label } from "@/components/ui/label";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
-<<<<<<< HEAD:src/Components/modal/WorkPlaceModal.tsx
-import { useWorkPlaceModal } from "@/hooks/useWorkPlaceModal";
+
 import { TWorkPlace } from "@/model/types/company.type";
-import WorkPlaceMap from "../company-setting/WorkPlaceMap";
-import SearchResults from "../company-setting/SearchResults";
-=======
+
 import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
-import { TWorkPlace } from "@/model";
-import WorkPlaceMap from "../map/WorkPlaceMap";
-import SearchResults from "../../company/company-settings/workplace-setting/SearchResults";
->>>>>>> b9f1e83e66b1a5b50a8fad2cbef5ffc44eddf976:src/Components/common/modal/WorkPlaceModal.tsx
+import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
+import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;

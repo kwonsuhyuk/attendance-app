@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Input } from "../../ui/input";
+import { Input } from "@/components/ui/input";
 
 const HolidaySettings = () => {
   const { setValue, watch, register } = useFormContext();
