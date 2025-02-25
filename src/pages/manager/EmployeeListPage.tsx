@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { child, get, getDatabase, ref } from "firebase/database";
 import { MenuItem, Select } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -18,7 +18,7 @@ const EmployeeListPage = () => {
   const [searchName, setSearchName] = useState("");
   const [companyData, setCompanyData] = useState([]);
   const [selectedJob, setSelectedJob] = useState("전체");
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const [selectedSalaryType, setSelectedSalaryType] = useState("전체");
   const { isOpen, setCurrentStep, setSteps } = useTour();
   const navigate = useNavigate();

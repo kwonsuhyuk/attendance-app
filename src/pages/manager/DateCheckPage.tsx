@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { get, getDatabase, ref, update } from "firebase/database";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import "./DateCheckPage.css";
 import Calendar from "react-calendar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -53,7 +53,7 @@ const DateCheckPage = () => {
   ]);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const [isLoading, setIsLoading] = useState(false);
   const [workDates, setWorkDates] = useState({});
   const [user, setUser] = useState();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "@/firebase";
 import { get, getDatabase, ref, set } from "firebase/database";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { Box, Checkbox, FormControlLabel, Input, MenuItem, Select } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
@@ -25,7 +25,7 @@ const ManagerSettingBasicPage = () => {
   const [jobNameInput, setJobNameInput] = useState("");
   const [day, setDay] = useState(1);
 
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const handleInfoUpdate = async () => {
     await set(ref(getDatabase(), "companyCode/" + companyCode + "/companyInfo"), {
       ...companyData,

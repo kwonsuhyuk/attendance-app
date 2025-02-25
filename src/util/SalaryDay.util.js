@@ -1,7 +1,6 @@
 import { useUserStore } from "@/store/user.store";
 import { getDatabase, ref, get } from "firebase/database";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 function SalaryDay() {
   const [salaryDay, setSalaryDay] = useState(0);

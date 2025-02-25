@@ -1,7 +1,7 @@
 import { Route, Routes, Link, useLocation } from "react-router-dom";
 import { ListItem, ListItemText } from "@mui/material";
 import ManagerSettingBasicPage from "./ManagerSettingBasicPage";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { useEffect } from "react";
 import { useTour } from "@reactour/tour";
 import { SETTING_STEPS } from "@/constants/tourStep";
@@ -9,7 +9,7 @@ import MyDatePicker from "@/components/common/calendar/MyDatePicker";
 
 const ManagerSettingPage = () => {
   const location = useLocation();
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const isSelected = path => {
     const currentPath = location.pathname;
     const baseName = currentPath.split("/").slice(-1)[0];

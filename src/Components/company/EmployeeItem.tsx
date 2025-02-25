@@ -3,7 +3,7 @@ import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { formatMoney, numToKorean } from "../../util/formatMoney.util";
-import { useSelector } from "react-redux";
+import darkModeStore from "@/store/darkmode.store";
 import { useNavigate } from "react-router-dom";
 
 import { subscribeToJobNames, updateEmployeeSettings } from "../../api";
@@ -24,7 +24,7 @@ const EmployeeItem = ({ user }) => {
   const [selectedJobName, setSelectedJobName] = useState(jobName);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(salaryType);
   const [salary, setSalary] = useState(salaryAmount);
-  const { darkMode } = useSelector(state => state.darkmodeSlice);
+  const darkMode = darkModeStore(state => state.darkMode);
   const navigate = useNavigate();
 
   const handleSalaryChange = event => {
