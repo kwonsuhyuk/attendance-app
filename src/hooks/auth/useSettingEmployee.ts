@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../use-toast";
 import { useShallow } from "zustand/shallow";
 import { useUserStore } from "@/store/user.store";
+import { TEmploymentType } from "@/model";
 export const useSettingEmployee = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [selectJob, setSelectJob] = useState<string | undefined>();
-  const [employmentType, setEmploymentType] = useState<string | undefined>();
+  const [employmentType, setEmploymentType] = useState<TEmploymentType | undefined>();
   const navigate = useNavigate();
   const { companyCode, userId, name, email, phoneNumber } = useUserStore(
     useShallow(state => ({
