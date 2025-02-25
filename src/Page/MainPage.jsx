@@ -16,6 +16,7 @@ import { getCompanyInfo } from "../api";
 import Header from "../components/common/Header";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
+import { COMMON_ROUTES, EMPLOYEE_ROUTES, MANAGER_ROUTES } from "@/constant/routes";
 
 const MainPage = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
@@ -58,14 +59,14 @@ const MainPage = () => {
       <Header />
       <div className="overflow-auto mx-10 md:px-20 flex-grow flex flex-col justify-center h-full lg:h-auto relative">
         <Routes>
-          <Route path="/companymain" element={<CompanyMain />} />
-          <Route path="/camera" element={<AccessCameraPage />} />
-          <Route path="/datecheck/:id?" element={<DateCheckPage />} />
-          <Route path="/setting/*" element={<ManagerSettingPage />} />
-          <Route path="/employeelist" element={<EmployeeListPage />} />
-          <Route path="/calendar" element={<ShowCalendarPage />} />
-          <Route path="/appguide" element={<AppGuidePage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path={COMMON_ROUTES.COMPANY_MAIN} element={<CompanyMain />} />
+          <Route path={EMPLOYEE_ROUTES.COMMUTE} element={<AccessCameraPage />} />
+          <Route path={EMPLOYEE_ROUTES.EMPLOYEE_DATE_CHECK} element={<DateCheckPage />} />
+          <Route path={MANAGER_ROUTES.SETTING} element={<ManagerSettingPage />} />
+          <Route path={MANAGER_ROUTES.EMPLOYEE_LIST} element={<EmployeeListPage />} />
+          <Route path={MANAGER_ROUTES.CALENDAR} element={<ShowCalendarPage />} />
+          <Route path={EMPLOYEE_ROUTES.APP_GUIDE} element={<AppGuidePage />} />
+          <Route path={COMMON_ROUTES.ABOUT} element={<AboutPage />} />
         </Routes>
       </div>
       <Footer />
