@@ -1,4 +1,4 @@
-import { TCompanyInfo } from "@/model";
+import { TCompanyInfo } from "@/model/types/company.type";
 import { create } from "zustand";
 
 interface ICompanyState {

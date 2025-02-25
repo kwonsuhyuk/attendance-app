@@ -4,7 +4,9 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "@/firebase/index"; // 초기화된 auth import
-import { TLoginForm, TSignupFormData, TLoginResponse, TSignupResponse } from "../../model/index";
+import { TLoginResponse, TSignupResponse } from "@/model/types/api.type";
+import { TLoginForm } from "@/model/types/authTypes/login.type";
+import { TSignupFormData } from "@/model/types/authTypes/signup.type";
 
 export async function login({ email, password }: TLoginForm): Promise<TLoginResponse> {
   try {

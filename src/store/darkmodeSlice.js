@@ -1,3 +1,4 @@
+// 제거 예정으로 네이밍 X
 import { createSlice } from "@reduxjs/toolkit";
 
 const darkmodeSlice = createSlice({

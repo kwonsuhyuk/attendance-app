@@ -8,7 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import TooltipContainer from "@/components/common/TooltipContainer";
 import { Info } from "lucide-react";
-import { TJob } from "@/model";
+import { TJob } from "@/model/types/company.type";
 
 interface IEmployeeJobSelectionProps {
   jobList: TJob[];

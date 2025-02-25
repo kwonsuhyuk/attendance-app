@@ -1,8 +1,8 @@
-import { TPosition } from "@/model";
+import { TPosition } from "@/model/types/position.type";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/util/cn.util";
 
 interface IPositionSelectorProps {
   position: TPosition | undefined;
