@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/user.store";
-import { signupFormSchema } from "@/model";
+import { signupFormSchema } from "@/model/schema/authSchema/signup.schema";
 import { getCompanyInfo, validateCompanyCode } from "@/api";
 import { signup } from "@/api/auth";
 import type { TSignupFormData, TPosition, TEmpUserData, TCMUserData } from "@/model";

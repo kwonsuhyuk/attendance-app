@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
 import { login } from "@/api/auth";
 import { z } from "zod";
-import { loginFormSchema } from "@/model";
+import { loginFormSchema } from "@/model/schema/authSchema/login.schema";
 
 export const useLogin = () => {
   const emailRef = useRef<HTMLInputElement>(null);

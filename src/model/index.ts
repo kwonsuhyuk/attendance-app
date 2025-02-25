@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// 로그인 스키마 정의 (유효성 검사)
 export const loginFormSchema = z.object({
   email: z.string().email({ message: "유효한 이메일을 입력하세요." }),
   password: z.string().min(6, { message: "비밀번호는 최소 6자 이상이어야 합니다." }),
@@ -52,7 +51,9 @@ export const signupUserDataSchema = signupUserBaseSchema.extend({
   id: z.string(),
 });
 
+// auth/index.ts / EmployeeCompanyForm.tsx / PersonalInfoForm.tsx / useSignup.ts
 export type TSignupFormData = z.infer<typeof signupFormSchema>;
+//
 export type TSignupUserData = z.infer<typeof signupUserDataSchema>;
 
 export type TLoginResponse<T extends TJobList = TJobList> = {
@@ -73,6 +74,7 @@ export type TSignupResponse = {
 };
 
 // 직원,관리자,default
+// PositionSelector.tsx / useSignup.ts
 export type TPosition = "manager" | "employee";
 export type TEmploymentType = "정규직" | "계약직" | "일용직" | "선택안함";
 
@@ -158,6 +160,7 @@ export type TUserBase = {
   userType: TPosition;
 };
 
+// useSignup.ts / user.store.ts
 export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userType"> & {
   userType: "employee";
   jobName: TSelectableJobName<T>;
@@ -168,6 +171,7 @@ export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userT
   employmentType: TEmploymentType;
 };
 
+// api/index.ts / useSignup.ts / user.store.ts
 export type TCMUserData = Omit<TUserBase, "userType"> & {
   userType: "manager"; // 관리자(user)로 고정
 };
