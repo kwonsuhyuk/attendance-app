@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { formatMoney } from "../../util/formatMoney";
+import { formatMoney } from "../../util/formatMoney.util";
 
 function SalaryInfoCard({ date, workType, amount }) {
   return (

@@ -9,7 +9,7 @@ import { Button, DatePicker, Input, Modal } from "antd";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { formatMoney } from "../util/formatMoney";
+import { formatMoney } from "../util/formatMoney.util";
 import { toast } from "react-toastify";
 import convertTime from "../util/formatTime";
 import { useTour } from "@reactour/tour";

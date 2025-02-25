@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SalaryType from "../../util/SalaryType";
-import { formatMoney } from "../../util/formatMoney";
-import convertTime from "../../util/formatTime";
+import { formatMoney } from "../../util/formatMoney.util";
+import convertTime from "../../util/formatTime.util";
 import GuidePopover from "../GuidePopover";
 import Loading from "../common/Loading";
 import { fetchSalaryInfo } from "../../api";

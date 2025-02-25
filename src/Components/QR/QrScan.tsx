@@ -2,12 +2,11 @@ import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { processQRScan } from "../../api";
-import { decrypt } from "@/util/encryptDecrypt";
+import { decrypt } from "@/util/encryptDecrypt.util";
 import { QRSCAN_FAILED, QRSCAN_NOT_VALID, QRSCAN_PERIOD } from "@/constant/qr";
 import QrScanner from "qr-scanner";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
-
 
 const QrScan = () => {
   const { companyCode, userId } = useUserStore(

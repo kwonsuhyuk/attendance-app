@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_MENU_BUTTONS } from "@/constant/menuConfig";
-import { getButtonVariant } from "@/util/menuUtils";
+import { getButtonVariant } from "@/util/menuBar.util";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -65,7 +65,6 @@ export const AdminMenuDesktop = ({
                 size={22}
               />
             </Switch>
-
           </div>
           <Button
             variant="menu"
