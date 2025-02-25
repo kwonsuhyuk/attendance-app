@@ -1,8 +1,8 @@
-import { Separator } from "../ui/separator";
-import CompanySettingTitle from "./CompanySettingTitle";
 import PayCheckDaySelect from "./PayCheckDaySelect";
 import NightPaySettings from "./NightPaySettings";
 import HolidaySettings from "./HolidaySettings";
+import { Separator } from "@/components/ui/separator";
+import CompanySettingTitle from "../CompanySettingTitle";
 
 const CompanyNightHolidayStep = () => {
   return (

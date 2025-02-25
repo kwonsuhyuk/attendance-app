@@ -150,9 +150,9 @@ const DateCheckPage = () => {
       // 휴가일 경우
       if (isVacation) {
         return (
-          <div className="text-base px-5 py-5 h-full flex items-center justify-center">
+          <div className="flex h-full items-center justify-center px-5 py-5 text-base">
             <span
-              className="bg-red-500 text-white text-xs w-full p-1"
+              className="w-full bg-red-500 p-1 text-xs text-white"
               style={{ borderRadius: "10px" }}
             >
               휴가
@@ -165,9 +165,9 @@ const DateCheckPage = () => {
       if (workTime) {
         if (workTime.startTime == "외근") {
           return (
-            <div className="text-base px-5 py-5 h-full flex items-center justify-center">
+            <div className="flex h-full items-center justify-center px-5 py-5 text-base">
               <span
-                className="bg-blue-300 text-white text-xs w-full p-1"
+                className="w-full bg-blue-300 p-1 text-xs text-white"
                 style={{ borderRadius: "10px" }}
               >
                 외근
@@ -179,9 +179,9 @@ const DateCheckPage = () => {
 
         // 각 날짜에 대한 근무 시간, 시작 시간, 종료 시간을 반환합니다.
         return (
-          <div className="text-base px-5 py-5 h-full flex items-center justify-center">
+          <div className="flex h-full items-center justify-center px-5 py-5 text-base">
             <span
-              className="bg-gray-700 text-white text-xs w-full p-1"
+              className="w-full bg-gray-700 p-1 text-xs text-white"
               style={{ borderRadius: "10px" }}
             >
               {workHours > 9 ? workHours - 1 : workHours}시간 {workMinutes}분
@@ -190,7 +190,7 @@ const DateCheckPage = () => {
         );
       } else {
         // If workTime does not exist for the date
-        return <p className="text-xl px-5 py-7 h-full flex items-center justify-center"></p>;
+        return <p className="flex h-full items-center justify-center px-5 py-7 text-xl"></p>;
       }
     }
   };
@@ -350,7 +350,7 @@ const DateCheckPage = () => {
 
   return (
     <div
-      className="pb-10 px-3"
+      className="px-3 pb-10"
       style={{
         height: "calc(100vh - 10rem)",
         marginBottom: "3rem",
@@ -363,14 +363,14 @@ const DateCheckPage = () => {
     >
       <div
         data-tour="step-9"
-        className="grid h-full gap-7 place-content-start"
+        className="grid h-full place-content-start gap-7"
         style={{ gridTemplateColumns: "80fr 23fr" }}
       >
         <div className="h-full w-full">
-          <div className="flex justify-between items-end font-bold">
+          <div className="flex items-end justify-between font-bold">
             <div
               style={{ borderRadius: "10px" }}
-              className="text-xl flex items-center cursor-pointer p-3 underline"
+              className="flex cursor-pointer items-center p-3 text-xl underline"
               onClick={() => navigate(`/${companyCode}/employeelist`)}
             >
               직원 리스트로 가기
@@ -378,7 +378,7 @@ const DateCheckPage = () => {
             </div>
             <div
               style={{ borderRadius: "10px" }}
-              className="text-xl flex items-center cursor-pointer p-3 underline"
+              className="flex cursor-pointer items-center p-3 text-xl underline"
               onClick={() => setIsVacationModalOpen(true)}
             >
               직원 휴가 등록
@@ -401,8 +401,8 @@ const DateCheckPage = () => {
               onClickDay={handleDateSelect}
               tileClassName={tileClassName}
               tileContent={tileContent}
-              className={`h-full transition-all duration-500 ease-in-out overflow-hidden ${
-                darkMode ? "text-white bg-dark-bg" : "text-black bg-white-bg"
+              className={`h-full overflow-hidden transition-all duration-500 ease-in-out ${
+                darkMode ? "bg-dark-bg text-white" : "bg-white-bg text-black"
               }`}
             />
           </div>
@@ -413,13 +413,13 @@ const DateCheckPage = () => {
             <span className="text-xs">日</span>
           </div>
           <div
-            className="w-full flex flex-col gap-7"
+            className="flex w-full flex-col gap-7"
             style={{
               height: "90%",
             }}
           >
             <div
-              className="w-full h-5/6 flex flex-col gap-12 py-7"
+              className="flex h-5/6 w-full flex-col gap-12 py-7"
               data-tour="step-11"
               style={{
                 backgroundColor: darkMode ? "#363636" : "#D6D6D6",
@@ -427,45 +427,45 @@ const DateCheckPage = () => {
               }}
             >
               {user ? (
-                <div className="flex flex-col px-5 gap-3">
-                  <div className="flex justify-between w-full text-sm items-center">
+                <div className="flex flex-col gap-3 px-5">
+                  <div className="flex w-full items-center justify-between text-sm">
                     <div className="text-xl font-semibold">{user?.name}</div>
                     <div>{user?.jobName}</div>
                   </div>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
+                  <div className="flex w-full justify-between text-sm">
                     <div className="font-semibold">급여 지급/계산 방법</div>
                     <div>{user?.salaryType && paymentMethods[user.salaryType]}</div>
                   </div>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                  <div className="flex justify-between w-full text-sm">
+                  <div className="flex w-full justify-between text-sm">
                     <div className="font-semibold">기본 설정 급여</div>
                     <div>{user?.salaryAmount && user.salaryAmount}</div>
                   </div>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
                 </div>
               ) : (
-                <div className="flex justify-center items-center font-light h-full w-full text-center leading-7">
+                <div className="flex h-full w-full items-center justify-center text-center font-light leading-7">
                   PEOPLE 페이지에서 <br />
                   직원 상세정보&정산 버튼을 통해 직원을 선택하세요.
                 </div>
               )}
 
               {selectedDate && user && (
-                <div className="flex flex-col px-5 gap-3">
+                <div className="flex flex-col gap-3 px-5">
                   <h2 className="text-xl font-bold">
                     {selectedDate.month() + 1}월 {selectedDate.date()}일의 근무기록
                   </h2>
                   <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
                   {vacationDates && vacationDates[dayjs(selectedDate).format("YYYY-MM-DD")] ? (
-                    <div className="flex justify-center items-center h-48 w-full text-lg">
+                    <div className="flex h-48 w-full items-center justify-center text-lg">
                       {vacationDates[dayjs(selectedDate).format("YYYY-MM-DD")]}
                     </div>
                   ) : workTimes[selectedDate.format("YYYY-MM-DD")]?.startTime == "외근" ? (
-                    <div className="flex justify-center items-center h-48 w-full text-lg">외근</div>
+                    <div className="flex h-48 w-full items-center justify-center text-lg">외근</div>
                   ) : (
                     <>
-                      <div className="flex justify-between w-full text-sm">
+                      <div className="flex w-full justify-between text-sm">
                         <div>출근 시간</div>
                         <div>
                           {workTimes[selectedDate.format("YYYY-MM-DD")]
@@ -484,7 +484,7 @@ const DateCheckPage = () => {
                       </div>
 
                       <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                      <div className="flex justify-between w-full text-sm">
+                      <div className="flex w-full justify-between text-sm">
                         <div>퇴근 시간</div>
                         <div>
                           {workTimes[selectedDate.format("YYYY-MM-DD")]
@@ -503,7 +503,7 @@ const DateCheckPage = () => {
                       </div>
 
                       <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
-                      <div className="flex justify-between w-full text-sm">
+                      <div className="flex w-full justify-between text-sm">
                         <div>근무 시간</div>
                         <div>
                           {workTimes[selectedDate.format("YYYY-MM-DD")]?.workHours || 0}
@@ -513,7 +513,7 @@ const DateCheckPage = () => {
                       <div className="h-[1px] w-full bg-white-border dark:bg-dark-border"></div>
                       {user?.salaryType && user.salaryType != "monthlyPay" && (
                         <>
-                          <div className="flex justify-between w-full text-sm">
+                          <div className="flex w-full justify-between text-sm">
                             <div>급여 지급 구분</div>
                             <div>
                               {workDates[selectedDate?.format("YYYY-MM-DD")] &&
@@ -549,7 +549,7 @@ const DateCheckPage = () => {
                         <div></div>
                       ) : (
                         <>
-                          <div className="flex justify-between w-full text-base font-semibold">
+                          <div className="flex w-full justify-between text-base font-semibold">
                             <div>오늘 급여</div>
                             {/* 데이터 불러와지면 여기에 삽입 */}
                             <div>
@@ -579,7 +579,7 @@ const DateCheckPage = () => {
             </div>
             <div
               data-tour="step-12"
-              className="w-full h-1/6 text-xl font-bold flex justify-center items-center text-white dark:text-black bg-black dark:bg-white cursor-pointer"
+              className="flex h-1/6 w-full cursor-pointer items-center justify-center bg-black text-xl font-bold text-white dark:bg-white dark:text-black"
               onClick={handleOpenSettleModal}
             >
               {user ? "이번달 직원 정산하기" : "직원을 선택해 주세요."}
@@ -640,7 +640,7 @@ const DateCheckPage = () => {
                   data-tour="step-15"
                   key="calculate"
                   onClick={calculateSalary}
-                  className="mt-7 mb-7"
+                  className="mb-7 mt-7"
                 >
                   정산하기
                 </Button>
@@ -654,7 +654,7 @@ const DateCheckPage = () => {
                   {salaryInfo && user?.salaryType != "monthlyPay" && (
                     <div className="flex flex-col" style={{ height: "auto" }}>
                       <div
-                        className="flex justify-between items-center py-3"
+                        className="flex items-center justify-between py-3"
                         style={{
                           borderTop: "2px solid black",
                           borderBottom: "2px solid black",
@@ -663,11 +663,11 @@ const DateCheckPage = () => {
                         <div>
                           <strong className="text-xl font-bold">총 급여</strong>
                         </div>
-                        <div className="text-red-500 font-bold text-base">
+                        <div className="text-base font-bold text-red-500">
                           {formatMoney(salaryInfo.totalSalary)} 원
                         </div>
                       </div>
-                      <div className="grid grid-cols-4 my-3">
+                      <div className="my-3 grid grid-cols-4">
                         <div>
                           <strong className="text-xl font-bold">시간 타입</strong>
                         </div>
@@ -681,15 +681,15 @@ const DateCheckPage = () => {
                           <strong className="text-xl font-bold">급여</strong>
                         </div>
                       </div>
-                      <div className="w-full h-[1px] bg-black"></div>
-                      <div className="grid grid-cols-4 my-3">
+                      <div className="h-[1px] w-full bg-black"></div>
+                      <div className="my-3 grid grid-cols-4">
                         <div>주간</div>
                         <div>{salaryInfo.totalDayHours?.toFixed(1)} 시간</div>
                         <div>{formatMoney(user?.salaryAmount)}원</div>
                         <div>{formatMoney(salaryInfo.totalDaySalary)}원</div>
                       </div>
-                      <div className="w-full h-[1px] bg-gray-300"></div>
-                      <div className="grid grid-cols-4 my-3">
+                      <div className="h-[1px] w-full bg-gray-300"></div>
+                      <div className="my-3 grid grid-cols-4">
                         <div>야간</div>
                         <div>{salaryInfo.totalNightHours?.toFixed(1)} 시간</div>
                         <div className="flex flex-col">
@@ -700,8 +700,8 @@ const DateCheckPage = () => {
                         </div>
                         <div>{formatMoney(salaryInfo.totalNightSalary)}원</div>
                       </div>
-                      <div className="w-full h-[1px] bg-gray-300"></div>
-                      <div className="grid grid-cols-4 my-3">
+                      <div className="h-[1px] w-full bg-gray-300"></div>
+                      <div className="my-3 grid grid-cols-4">
                         <div>공휴일</div>
                         <div>{salaryInfo.totalHolidayHours?.toFixed(1)} 시간</div>
                         <div className="flex flex-col">
@@ -712,9 +712,9 @@ const DateCheckPage = () => {
                         </div>
                         <div>{formatMoney(salaryInfo.totalHolidaySalary)}원</div>
                       </div>
-                      <div className="w-full h-[1px] bg-gray-300"></div>
+                      <div className="h-[1px] w-full bg-gray-300"></div>
                       <div
-                        className="flex justify-between items-center py-3"
+                        className="flex items-center justify-between py-3"
                         style={{
                           borderTop: "1px solid black",
                           borderBottom: "2px solid black",
@@ -741,13 +741,13 @@ const DateCheckPage = () => {
                   {salaryInfo && user?.salaryType == "monthlyPay" && (
                     <div className="flex flex-col" style={{ height: "auto" }}>
                       <div
-                        className="flex justify-between items-center py-3 px-3"
+                        className="flex items-center justify-between px-3 py-3"
                         style={{ borderTop: "2px solid black" }}
                       >
                         <div>
                           <strong className="text-xl font-bold">이번 달 급여</strong>
                         </div>
-                        <div className="text-red-500 font-bold text-base">
+                        <div className="text-base font-bold text-red-500">
                           {user?.salaryAmount && formatMoney(user?.salaryAmount)}원
                         </div>
                       </div>
@@ -760,7 +760,7 @@ const DateCheckPage = () => {
                         (월급 직원으로, 설정된 급여로 정산됩니다.)
                       </div>
                       <div
-                        className="flex justify-between items-center py-3 px-3"
+                        className="flex items-center justify-between px-3 py-3"
                         style={{
                           borderBottom: "1px solid black",
                         }}
@@ -771,7 +771,7 @@ const DateCheckPage = () => {
                         <div>{salaryInfo?.totalOutJob}회</div>
                       </div>
                       <div
-                        className="flex justify-between items-center py-3 px-3"
+                        className="flex items-center justify-between px-3 py-3"
                         style={{
                           borderTop: "1px solid black",
                           borderBottom: "2px solid black",

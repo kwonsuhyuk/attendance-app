@@ -1,9 +1,10 @@
 import { useFormContext } from "react-hook-form";
 import { useUserStore } from "@/store/user.store";
 import { Card } from "@/components/ui/card";
-import FormInputField from "../form/FormInputField";
+
 import CompanyLogoUploader from "./CompanyLogoUploader";
-import CompanySettingTitle from "./CompanySettingTitle";
+import FormInputField from "../../form/FormInputField";
+import CompanySettingTitle from "../CompanySettingTitle";
 
 const CompanyBasicStep = () => {
   const { control, watch, setValue } = useFormContext();
