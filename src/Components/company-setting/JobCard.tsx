@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { TJob } from "@/model";
+import { TJob } from "@/model/types/company.type";
 
 interface JobCardProps {
   job: TJob;

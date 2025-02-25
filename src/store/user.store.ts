@@ -1,4 +1,4 @@
-import { TCMUserData, TEmpUserData } from "@/model";
+import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
 import { create } from "zustand";
 
 interface IUserState {

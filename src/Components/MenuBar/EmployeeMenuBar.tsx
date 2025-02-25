@@ -7,7 +7,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { TMenuItem, TMenuItemGroup } from "@/model/index";
+import { TMenuItem, TMenuItemGroup } from "@/model/types/menu.type";
 import { getPageTitle, mapButtonWithStyle } from "@/util/menuButtonStyle.util";
 
 interface MenuButtonConfig extends TMenuItem {

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import Loading from "@/components/common/Loading";
 import { useCompanyStore } from "@/store/company.store";
 import { useShallow } from "zustand/shallow";
-import { TJob } from "@/model";
+import { TJob } from "@/model/types/company.type";
 import { Separator } from "@/components/ui/separator";
 import UserInfoTable from "@/components/auth/UserInfoTable";
 import { useSettingEmployee } from "@/hooks/useSettingEmployee";

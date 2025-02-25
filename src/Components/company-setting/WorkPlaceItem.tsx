@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MapPin, X } from "lucide-react";
-import { TWorkPlace } from "@/model";
+import { TWorkPlace } from "@/model/types/company.type";
 
 interface WorkPlaceItemProps {
   place: TWorkPlace;

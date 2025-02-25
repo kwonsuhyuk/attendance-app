@@ -1,6 +1,7 @@
 import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
 import "../firebase";
-import { TCMUserData, TCompanyInfo } from "@/model";
+import { TCMUserData } from "@/model/types/user.type";
+import { TCompanyInfo } from "@/model/types/company.type";
 import { encrypt } from "@/util/encryptDecrypt.util";
 
 const db = getDatabase();

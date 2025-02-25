@@ -4,7 +4,7 @@ import CompanySettingTitle from "./CompanySettingTitle";
 import WorkPlaceModal from "../modal/WorkPlaceModal";
 import WorkPlaceList from "./WorkPlaceList";
 import { Button } from "../ui/button";
-import { TWorkPlace, TworkPlacesList } from "@/model";
+import { TWorkPlace, TworkPlacesList } from "@/model/types/company.type";
 
 const CompanyWorkPlaceStep = () => {
   const { control } = useFormContext();

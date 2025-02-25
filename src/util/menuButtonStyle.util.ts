@@ -1,4 +1,4 @@
-import { TMenuItem } from "@/model/index";
+import { TMenuItem } from "@/model/types/menu.type";
 import { BUTTON_STYLES, PAGE_TITLE_MAP } from "@/constant/menuButton";
 
 export const getPageTitle = (pathname: string): string => {

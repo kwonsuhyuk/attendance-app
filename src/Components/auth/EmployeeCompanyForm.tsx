@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { TSignupFormData } from "@/model";
+import { TSignupFormData } from "@/model/types/authTypes/signup.type";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

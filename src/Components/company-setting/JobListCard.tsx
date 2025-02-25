@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TJobList } from "@/model";
+import { TJobList } from "@/model/types/company.type";
 import JobCard from "./JobCard";
 
 interface JobListCardProps {

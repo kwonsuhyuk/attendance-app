@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TworkPlacesList } from "@/model";
+import { TworkPlacesList } from "@/model/types/company.type";
 import WorkPlaceItem from "./WorkPlaceItem";
 
 interface WorkPlaceListProps {

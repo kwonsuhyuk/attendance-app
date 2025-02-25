@@ -4,7 +4,7 @@ import { Search, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
 import { useWorkPlaceModal } from "@/hooks/useWorkPlaceModal";
-import { TWorkPlace } from "@/model";
+import { TWorkPlace } from "@/model/types/company.type";
 import WorkPlaceMap from "../company-setting/WorkPlaceMap";
 import SearchResults from "../company-setting/SearchResults";
 
