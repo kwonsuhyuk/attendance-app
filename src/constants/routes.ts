@@ -21,7 +21,7 @@ export const MANAGER_ROUTES = {
 
   TODAY_ATT: "/todayatt",
   PERIROD_ATT: "/perirodatt",
-  EMPLOYEE_MANAGE: "/employemanage",
+  EMPLOYEE_MANAGE: "/employeemanage",
   POSITION_MANAGE: "/positionmanage",
   WORKPLACE_MANAGE: "/workplacemanage",
   VACATION_REGISTER: "/vacationregister",

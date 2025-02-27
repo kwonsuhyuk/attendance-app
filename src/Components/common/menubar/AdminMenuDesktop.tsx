@@ -53,27 +53,28 @@ const MENU_STRUCTURE = [
     label: "출퇴근 및 방문",
     icon: Clock,
     children: [
-      { label: "출퇴근", path: "/attendance/datecheck", dotColor: "#6366f1" },
-      { label: "기간 출퇴근 현황", path: "/attendance/period" },
+      { label: "캘린더", path: "/attendance/datecheck", dotColor: "#6366f1" },
+      { label: "출퇴근", path: "/todayatt"},
+      { label: "기간 출퇴근 현황", path: "/perirodatt" },
     ],
   },
   {
     label: "휴가",
     icon: Calendar,
     children: [
-      { label: "휴가 등록", path: "/vacation/register" },
-      { label: "휴가 요청", path: "/vacation/request" },
-      { label: "휴가 내역", path: "/vacation/history" },
-      { label: "휴가 통계", path: "/vacation/statistics" },
+      { label: "휴가 등록", path: "/vacationregister" },
+      { label: "휴가 요청", path: "/vacationapproved" },
+      { label: "휴가 내역", path: "/vacationlist" },
     ],
   },
   {
     label: "관리",
     icon: Users,
     children: [
-      { label: "직원 관리", path: "/employeelist", dotColor: "#6366f1" },
-      { label: "직무 관리", path: "/manage/positions" },
-      { label: "근무지 관리", path: "/manage/workplaces" },
+      { label: "직원 리스트", path: "/employeelist", dotColor: "#6366f1" },
+      { label: "직원 관리", path: "/employeemanage"},
+      { label: "직무 관리", path: "/positionmanage" },
+      { label: "근무지 관리", path: "/workplacemanage" },
     ],
   },
   {
