@@ -17,16 +17,14 @@ export const EMPLOYEE_ROUTES = {
 export const MANAGER_ROUTES = {
   SETTING: "/setting/*",
   EMPLOYEE_LIST: "/employeelist",
-  CALENDAR: "/datecheck/:id",
-
-  TODAY_ATT: "/todayatt",
-  PERIROD_ATT: "/perirodatt",
-  EMPLOYEE_MANAGE: "/employeemanage",
   POSITION_MANAGE: "/positionmanage",
   WORKPLACE_MANAGE: "/workplacemanage",
-  VACATION_REGISTER: "/vacationregister",
-  VACATION_APPROVED: "/vacationapproved",
-  VACATION_LIST: "/vacationlist",
+  CALENDAR: "/datecheck/:id",
+  TODAY_ATT: "/todayatt",
+  PERIROD_ATT: "/perirodatt",
+  VACATION_STATISTIC: "/vacationstatistic",
+  VACATION_DETAIL: "/vacationdetail",
+  NOTICE: "/notice",
 };
 
 export const COMMON_ROUTES = {

@@ -3,7 +3,7 @@ import React from 'react'
 const VacationListPage = () => {
   return (
     <div>
-      휴가 내역
+      휴가 통계
     </div>
   )
 }
