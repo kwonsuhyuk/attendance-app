@@ -42,7 +42,7 @@ interface AdminMenuProps {
 }
 
 // menuConfig 폴더에 상수화 처리 예정
-const MENU_STRUCTURE = [
+export const MENU_STRUCTURE = [
   {
     label: "홈",
     icon: Home,
@@ -53,7 +53,7 @@ const MENU_STRUCTURE = [
     label: "출퇴근",
     icon: Clock,
     children: [
-      { label: "출퇴근", path: "/todayatt"},
+      { label: "출퇴근", path: "/todayatt" },
       { label: "기간 출퇴근 현황", path: "/datecheck/:id", dotColor: "#6366f1" },
     ],
   },
@@ -93,9 +93,7 @@ export const AdminMenuDesktop = ({
   companyLogo,
   companyName,
   companyCode,
-  darkMode,
   location,
-  toggleTheme,
   logout,
 }: AdminMenuProps) => {
   const navigate = useNavigate();
@@ -116,39 +114,35 @@ export const AdminMenuDesktop = ({
   };
 
   return (
-      <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
-        {/* 사이드바 상단 회사 정보 */}
-        <SidebarHeader className="border-b border-gray-200 p-4 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white dark:bg-gray-700">
-                <img src={companyLogo} alt="회사로고" className="h-full w-full object-cover" />
-              </div>
-              <div>
-                <div className="font-medium text-gray-800 dark:text-gray-200">{companyName}</div>
-              </div>
+    <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
+      {/* 사이드바 상단 회사 정보 */}
+      <SidebarHeader className="border-b border-gray-200 p-4 dark:border-gray-800">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white dark:bg-gray-700">
+              <img src={companyLogo} alt="회사로고" className="h-full w-full object-cover" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-800 dark:text-gray-200">{companyName}</div>
             </div>
           </div>
-        <SidebarContent className="overflow-y-auto">
-          <SidebarMenu>
-            {MENU_STRUCTURE.map(section => (
-              <div key={section.label} className="mb-3">
-                {section.children ? (
-                  // 하위 메뉴가 있는 경우
-                  <>
-                    <div
-                      className="mx-1 flex cursor-pointer items-center justify-between rounded-md px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800"
-                      onClick={() => toggleSection(section.label)}
-                    >
-                      <div className="flex items-center gap-2">
-                        {section.icon && <section.icon className="h-5 w-5" />}
-                        <span className="font-medium">{section.label}</span>
-                      </div>
-                      {expandedSections[section.label] ? (
-                        <ChevronDown className="h-4 w-4" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4" />
-                      )}
+        </div>
+      </SidebarHeader>
+
+      <SidebarContent className="overflow-y-auto">
+        <SidebarMenu>
+          {MENU_STRUCTURE.map(section => (
+            <div key={section.label} className="mb-3">
+              {section.children ? (
+                // 하위 메뉴가 있는 경우
+                <>
+                  <div
+                    className="mx-1 flex cursor-pointer items-center justify-between rounded-md px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800"
+                    onClick={() => toggleSection(section.label)}
+                  >
+                    <div className="flex items-center gap-2">
+                      {section.icon && <section.icon className="h-5 w-5" />}
+                      <span className="font-medium">{section.label}</span>
                     </div>
                     {expandedSections[section.label] ? (
                       <ChevronDown className="h-4 w-4" />
