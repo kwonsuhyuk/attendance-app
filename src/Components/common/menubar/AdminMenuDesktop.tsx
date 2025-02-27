@@ -41,7 +41,6 @@ interface AdminMenuProps {
   logout: () => void;
 }
 
-// menuConfig 폴더에 상수화 처리 예정
 const MENU_STRUCTURE = [
   {
     label: "홈",
@@ -61,8 +60,6 @@ const MENU_STRUCTURE = [
     label: "휴가",
     icon: Calendar,
     children: [
-      // { label: "휴가 승인", path: "/vacationapproved" },
-      // { label: "휴가 등록", path: "/vacationregister" },
       // 휴가 내역 => 휴가 승인,등록 포함
       { label: "휴가 통계", path: "/vacationstatistic" },
       { label: "휴가 내역", path: "/vacationdetail" },
