@@ -24,7 +24,6 @@ const ManagerRoutes = () => {
         <Route path={MANAGER_ROUTES.CALENDAR} element={<DateCheckPage />} />
         <Route path={MANAGER_ROUTES.SETTING} element={<ManagerSettingPage />} />
         <Route path={COMMON_ROUTES.ABOUT} element={<AboutPage />} />
-        {/* 여기서 부턴 임시 */}
         <Route path={MANAGER_ROUTES.TODAY_ATT} element={<TodayAttenancePage />} />
         <Route path={MANAGER_ROUTES.PERIROD_ATT} element={<PeriodAttendancePage />} />
         <Route path={MANAGER_ROUTES.POSITION_MANAGE} element={<PositionManagePage />} />
