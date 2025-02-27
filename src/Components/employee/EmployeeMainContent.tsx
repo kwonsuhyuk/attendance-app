@@ -1,8 +1,8 @@
 import { useNavigate, useMatch } from "react-router-dom";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
-import CompanyInfoHeader from "../employee/CompanyInfoHeader";
-import ShowSalary from "../employee/showSalary/ShowSalary";
+import CompanyInfoHeader from "./CompanyInfoHeader";
+import ShowSalary from "./showSalary/ShowSalary";
 
 const EmployeeMainContent = () => {
   const navigate = useNavigate();

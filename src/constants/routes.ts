@@ -18,6 +18,15 @@ export const MANAGER_ROUTES = {
   SETTING: "/setting/*",
   EMPLOYEE_LIST: "/employeelist",
   CALENDAR: "/datecheck/:id",
+
+  TODAY_ATT: "/todayatt",
+  PERIROD_ATT: "/perirodatt",
+  EMPLOYEE_MANAGE: "/employeemanage",
+  POSITION_MANAGE: "/positionmanage",
+  WORKPLACE_MANAGE: "/workplacemanage",
+  VACATION_REGISTER: "/vacationregister",
+  VACATION_APPROVED: "/vacationapproved",
+  VACATION_LIST: "/vacationlist",
 };
 
 export const COMMON_ROUTES = {
