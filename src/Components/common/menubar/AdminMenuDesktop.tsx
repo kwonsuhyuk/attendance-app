@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
-import { ADMIN_MENU_BUTTONS } from "@/constants/menuConfig";
-import { getButtonVariant } from "@/util/menuBar.util";
 import {
-  Moon,
-  Sun,
   ChevronDown,
   ChevronRight,
   LogOut,
@@ -15,6 +10,7 @@ import {
   Users,
   Settings,
   Bell,
+  Power,
 } from "lucide-react";
 import { cn } from "@/util/cn.util";
 import { useState } from "react";
@@ -26,7 +22,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarProvider,
 } from "@/components/ui/sidebar";
 
 interface AdminMenuProps {
@@ -116,7 +111,11 @@ export const AdminMenuDesktop = ({
   return (
     <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
       {/* 사이드바 상단 회사 정보 */}
-      <SidebarHeader className="border-b border-gray-200 p-4 dark:border-gray-800">
+      <SidebarHeader className="flex h-16 items-center justify-center gap-2 bg-dark-bg p-4 font-bold">
+        <Power className="h-8 w-8 text-white" />
+        <p className="font-baseFont text-2xl text-dark-text">On & Off</p>
+      </SidebarHeader>
+      <SidebarContent className="overflow-y-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white dark:bg-gray-700">
@@ -127,9 +126,6 @@ export const AdminMenuDesktop = ({
             </div>
           </div>
         </div>
-      </SidebarHeader>
-
-      <SidebarContent className="overflow-y-auto">
         <SidebarMenu>
           {MENU_STRUCTURE.map(section => (
             <div key={section.label} className="mb-3">
@@ -205,7 +201,6 @@ export const AdminMenuDesktop = ({
           ))}
         </SidebarMenu>
       </SidebarContent>
-
       {/* 로그아웃 버튼이 있는 푸터 */}
       <SidebarFooter className="mt-auto border-t border-gray-200 p-4 dark:border-gray-800">
         <Button
