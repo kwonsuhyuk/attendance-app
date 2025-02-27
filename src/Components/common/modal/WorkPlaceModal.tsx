@@ -5,8 +5,8 @@ import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
 import { TWorkPlace } from "@/model/types/company.type";
 import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
-import SearchResults from "@/Components/company/company-settings/workplace-setting/SearchResults";
-import WorkPlaceMap from "@/Components/company/company-settings/workplace-setting/map/WorkPlaceMap";
+import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
+import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
