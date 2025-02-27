@@ -258,9 +258,9 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       size="icon"
       className={cn(
-        "h-10 w-10 rounded-lg bg-dark-bg p-2 transition-all duration-200",
-        "dark:hover:bg-bg-dark-bg hover:bg-gray-900",
-        "focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-300",
+        "z-50 h-10 w-10 rounded-lg bg-dark-bg p-2 transition-all duration-200",
+        "hover:bg-gray-700",
+        "focus:ring-2 focus:ring-dark-border",
         "active:scale-95",
         className,
       )}
@@ -270,7 +270,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft className="h-6 w-6 bg-dark-bg text-white transition-transform duration-200 group-hover:rotate-90 dark:text-gray-200" />
+      <PanelLeft className="text-dark-text" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
