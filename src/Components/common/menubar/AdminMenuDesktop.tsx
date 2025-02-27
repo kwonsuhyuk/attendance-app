@@ -128,6 +128,18 @@ export const AdminMenuDesktop = ({
               <div className="font-medium text-gray-800 dark:text-gray-200">{companyName}</div>
             </div>
           </div>
+
+          {/* 다크모드 스위치 */}
+          <Switch checked={darkMode} onCheckedChange={toggleTheme}>
+            <Sun
+              className={cn("absolute text-orange-400 opacity-0", "opacity-100 dark:opacity-0")}
+              size={18}
+            />
+            <Moon
+              className={cn("absolute text-white opacity-0", "opacity-0 dark:opacity-100")}
+              size={18}
+            />
+          </Switch>
         </div>
       </SidebarHeader>
 
@@ -152,6 +164,7 @@ export const AdminMenuDesktop = ({
                       <ChevronRight className="h-4 w-4" />
                     )}
                   </div>
+
                   {expandedSections[section.label] && (
                     <div className="ml-4 mt-1 space-y-1">
                       {section.children.map(item => (
