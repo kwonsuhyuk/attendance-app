@@ -21,6 +21,8 @@ import { Toaster } from "./components/ui/toaster";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import { MAIN_ROUTES } from "./constants/routes";
+import { SidebarProvider } from "./components/ui/sidebar";
+import Layout from "./layout/Layout";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
@@ -60,24 +62,28 @@ const App = () => {
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <Toaster />
         <GuideFab />
-        <Routes>
-          <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />
-          <Route path={MAIN_ROUTES.MAIN} element={<MainPage />} />
-          <Route path={MAIN_ROUTES.SIGNUP} element={<SignupPage />} />
-          <Route path={MAIN_ROUTES.MANAGER_FIRST} element={<ManagerFirstPage />} />
-          <Route path={MAIN_ROUTES.EMPLOYEE_FIRST} element={<EmployeeFirstPage />} />
-          <Route
-            path={MAIN_ROUTES.SIGNIN}
-            element={
-              currentUser ? (
-                <Navigate to={`/${currentUser?.companyCode}/companymain`} />
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-          <Route path={MAIN_ROUTES.NOT_FOUND} element={<Notfound />} />
-        </Routes>
+        <SidebarProvider>
+          <Layout>
+            <Routes>
+              <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />
+              <Route path={MAIN_ROUTES.MAIN} element={<MainPage />} />
+              <Route path={MAIN_ROUTES.SIGNUP} element={<SignupPage />} />
+              <Route path={MAIN_ROUTES.MANAGER_FIRST} element={<ManagerFirstPage />} />
+              <Route path={MAIN_ROUTES.EMPLOYEE_FIRST} element={<EmployeeFirstPage />} />
+              <Route
+                path={MAIN_ROUTES.SIGNIN}
+                element={
+                  currentUser ? (
+                    <Navigate to={`/${currentUser?.companyCode}/companymain`} />
+                  ) : (
+                    <LoginPage />
+                  )
+                }
+              />
+              <Route path={MAIN_ROUTES.NOT_FOUND} element={<Notfound />} />
+            </Routes>
+          </Layout>
+        </SidebarProvider>
       </ThemeProvider>
     </>
   );
