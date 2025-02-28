@@ -11,7 +11,7 @@ const ManagerMainContent = () => {
   );
 
   return (
-    <div data-tour="step-1" className="bg-blue-500">
+    <div data-tour="step-1" className="bg-dark-card-bg">
       <div className="">대시보드</div>
       <div className="mb-48">대시보드</div>
       <div className="mb-48">대시보드</div>
