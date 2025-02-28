@@ -12,16 +12,17 @@ const DarkmodeSwitch = ({ className }: { className?: string }) => {
       darkMode: state.darkMode,
     })),
   );
+  console.log(darkMode);
   return (
     <Switch checked={darkMode} onCheckedChange={toggleMode} className={className}>
-      <Sun
-        className={cn("absolute text-orange-400 opacity-0", "opacity-100 dark:opacity-0")}
-        size={18}
-      />
-      <Moon
-        className={cn("absolute text-white opacity-0", "opacity-0 dark:opacity-100")}
-        size={18}
-      />
+      {darkMode ? (
+        <Moon className={cn("absolute text-yellow-300")} size={18} fill="yellow" />
+      ) : (
+        <Sun
+          className={cn("absolute text-orange-400 opacity-0", "opacity-100 dark:opacity-0")}
+          size={18}
+        />
+      )}
     </Switch>
   );
 };
