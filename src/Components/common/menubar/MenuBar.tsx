@@ -3,11 +3,10 @@ import { EmployeeMenuBar } from "./EmployeeMenuBar";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 
 const MenuBar = () => {
-  const menuBar = useMenuBar();
-  const { userType, ...menuState } = menuBar;
+  const { userType, ...menuState } = useMenuBar();
 
   if (userType === "manager") {
-    return <ManagerMenuBar {...menuState} />;
+    return <ManagerMenuBar />;
   } else {
     return <EmployeeMenuBar {...menuState} />;
   }
