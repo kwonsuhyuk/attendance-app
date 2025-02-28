@@ -5,7 +5,7 @@ import useDarkMode from "@/store/darkmode.store";
 import { useShallow } from "zustand/shallow";
 import { Switch } from "@/components/ui/switch";
 
-const DarkmodeSwitch = () => {
+const DarkmodeSwitch = ({ className }: { className?: string }) => {
   const { toggleMode, darkMode } = useDarkMode(
     useShallow(state => ({
       toggleMode: state.toggleMode,
@@ -13,7 +13,7 @@ const DarkmodeSwitch = () => {
     })),
   );
   return (
-    <Switch checked={darkMode} onCheckedChange={toggleMode}>
+    <Switch checked={darkMode} onCheckedChange={toggleMode} className={className}>
       <Sun
         className={cn("absolute text-orange-400 opacity-0", "opacity-100 dark:opacity-0")}
         size={18}

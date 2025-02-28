@@ -22,7 +22,9 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import AppTitle from "../AppTitle";
 
 interface AdminMenuProps {
   companyLogo: string;
@@ -91,6 +93,7 @@ export const AdminMenuDesktop = ({
   location,
   logout,
 }: AdminMenuProps) => {
+  const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     "출퇴근 및 방문": true, // 기본적으로 열려있는 섹션
@@ -109,11 +112,14 @@ export const AdminMenuDesktop = ({
   };
 
   return (
-    <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
+    <Sidebar
+      side={isMobile ? "right" : "left"}
+      // side="right"
+      className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]"
+    >
       {/* 사이드바 상단 회사 정보 */}
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 bg-dark-bg p-4 font-bold">
-        <Power className="h-8 w-8 text-white" />
-        <p className="font-baseFont text-2xl text-dark-text">On & Off</p>
+        <AppTitle className="text-white" />
       </SidebarHeader>
       <SidebarContent className="overflow-y-auto">
         <div className="flex items-center justify-between">
