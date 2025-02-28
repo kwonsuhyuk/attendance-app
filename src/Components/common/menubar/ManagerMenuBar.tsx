@@ -19,7 +19,7 @@ export const ManagerMenuBar = () => {
     <SidebarProvider>
       <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
         <SidebarHeader className="border-b border-gray-200 p-5 dark:border-gray-800">
-          {/* <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white dark:bg-gray-700">
                 <img src={companyLogo} alt="회사로고" className="h-full w-full object-cover" />
@@ -40,7 +40,7 @@ export const ManagerMenuBar = () => {
                 size={18}
               />
             </Switch>
-          </div> */}
+          </div>
         </SidebarHeader>
 
         <SidebarContent className="overflow-y-auto">
@@ -49,7 +49,7 @@ export const ManagerMenuBar = () => {
 
         <SidebarFooter className="mt-auto border-t border-gray-200 p-4 dark:border-gray-800">
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={logout}
             className="flex w-full items-center justify-center gap-2 border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300"

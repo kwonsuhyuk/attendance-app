@@ -28,12 +28,12 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
       {section.children ? (
         <>
           <div
-            className="flex cursor-pointer items-center justify-between rounded-md px-5 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            className="flex cursor-pointer items-center justify-between rounded-md px-5 py-2 text-gray-700 hover:bg-gray-100 dark:text-dark-text dark:hover:bg-dark-border"
             onClick={() => toggleSection(section.label)}
           >
             <div className="flex items-center gap-2">
               {section.icon && <section.icon className="h-5 w-5" />}
-              <span className="font-medium">{section.label}</span>
+              <span className="text-lg">{section.label}</span>
             </div>
             {expandedSections[section.label] ? (
               <ChevronDown className="h-4 w-4" />
@@ -50,9 +50,9 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
                     isActive={location.pathname === `/${companyCode}${item.path}`}
                     onClick={() => handleNavigation(item.path)}
                     className={cn(
-                      "rounded-md px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800",
+                      "rounded-md px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-200 dark:text-dark-border dark:hover:bg-dark-border",
                       location.pathname === `/${companyCode}${item.path}` &&
-                        "dark:hover:bg-gray-800dark:text-white font-medium text-gray-900 dark:bg-gray-800",
+                        "font-medium text-gray-900",
                     )}
                   >
                     <span>{item.label}</span>
@@ -70,7 +70,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
             // ts에 undefined가 아니라는 것을 보장하는 부분
             onClick={() => handleNavigation(section.path ?? "")}
             className={cn(
-              "rounded-md px-5 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
+              "rounded-md px-5 py-6 text-gray-700 hover:bg-gray-200 dark:text-dark-text dark:hover:bg-dark-border",
               section.label === "홈" && "text-lg",
             )}
           >
