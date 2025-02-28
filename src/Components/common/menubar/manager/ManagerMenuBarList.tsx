@@ -2,7 +2,7 @@ import { SidebarMenu } from "@/components/ui/sidebar";
 import { MENU_STRUCTURE } from "@/constants/menuConfig";
 import ManagerMenuBarItem from "./ManagerMenuBarItem";
 
-const AdminMenuList = () => {
+const ManagerMenuBarList = () => {
   return (
     <SidebarMenu>
       {MENU_STRUCTURE.map(section => (
@@ -12,4 +12,4 @@ const AdminMenuList = () => {
   );
 };
 
-export default AdminMenuList;
+export default ManagerMenuBarList;

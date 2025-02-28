@@ -1,4 +1,4 @@
-import { Bell, Calendar, Clock, Home, Settings, Users } from 'lucide-react';
+import { Bell, Calendar, Clock, Home, Settings, Users } from "lucide-react";
 
 export interface MenuButtonConfig {
   label: string;
@@ -18,7 +18,12 @@ export const MENU_STRUCTURE = [
     icon: Clock,
     children: [
       { label: "출퇴근", path: "/todayatt" },
-      { label: "기간 출퇴근 현황", path: "/datecheck/:id", tourStep: "step-2", dotColor: "#6366f1" },
+      {
+        label: "기간 출퇴근 현황",
+        path: "/datecheck/:id",
+        tourStep: "step-2",
+        dotColor: "#6366f1",
+      },
     ],
   },
   {

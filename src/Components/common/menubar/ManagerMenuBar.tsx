@@ -10,10 +10,9 @@ import {
 import { Moon, Sun, LogOut } from "lucide-react";
 import { cn } from "@/util/cn.util";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
-import ManagerMenuBarList from './manager/ManagerMenuBarList';
+import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 
 export const ManagerMenuBar = () => {
-
   const { companyLogo, companyName, darkMode, toggleTheme, logout } = useMenuBar();
 
   return (

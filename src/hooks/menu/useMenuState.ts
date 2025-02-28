@@ -40,7 +40,7 @@ export const useMenuState = () => {
       ...prev,
       [section]: !prev[section],
     }));
-  }
+  };
 
   return {
     darkMode,
