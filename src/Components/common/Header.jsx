@@ -1,5 +1,9 @@
-import MenuBar from "./menubar/MenuBar";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export default function Header() {
-  return <MenuBar />;
+  return (
+    <div className="flex h-16 w-full items-center bg-dark-bg">
+      <SidebarTrigger />
+    </div>
+  );
 }
