@@ -12,7 +12,7 @@ const DarkmodeSwitch = ({ className }: { className?: string }) => {
       darkMode: state.darkMode,
     })),
   );
-  console.log(darkMode);
+
   return (
     <Switch checked={darkMode} onCheckedChange={toggleMode} className={className}>
       {darkMode ? (
