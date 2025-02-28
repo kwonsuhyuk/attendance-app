@@ -2,11 +2,8 @@ import React from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import MenuBar from "@/components/common/menubar/MenuBar";
 import Header from "@/components/common/Header";
-import useDarkMode from "@/store/darkmode.store";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { darkMode } = useDarkMode();
-  console.log(darkMode);
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-screen bg-white-bg text-white-text dark:bg-dark-bg dark:text-dark-text">
