@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_MENU_BUTTONS } from "@/constants/menuConfig";
-import { getButtonVariant } from "@/util/menuBar.util";
+// import { getButtonVariant } from "@/util/menuBar.util";
 import {
   Moon,
   Sun,
