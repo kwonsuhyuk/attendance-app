@@ -7,6 +7,7 @@ import { useShallow } from "zustand/shallow";
 export const useMenuState = () => {
   const [isDataReady, setIsDataReady] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
   const { darkMode } = useDarkMode(
     useShallow(state => ({
@@ -34,6 +35,13 @@ export const useMenuState = () => {
     setIsDataReady(Boolean(companyCode && userType));
   }, [companyCode, userType]);
 
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  }
+
   return {
     darkMode,
     companyName,
@@ -45,5 +53,8 @@ export const useMenuState = () => {
     isDataReady,
     isOpen,
     setIsOpen,
+    expandedSections,
+    setExpandedSections,
+    toggleSection,
   };
 };
