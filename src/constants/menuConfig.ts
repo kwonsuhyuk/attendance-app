@@ -35,8 +35,8 @@ export const MENU_STRUCTURE = [
     ],
   },
   {
-    label: "관리",
-    icon: Users,
+    label: "관리 및 설정",
+    icon: Settings,
     children: [
       { label: "직원 관리", path: "/employeelist", tourStep: "step-3", dotColor: "#6366f1" },
       { label: "직무 관리", path: "/positionmanage" },
@@ -49,16 +49,16 @@ export const MENU_STRUCTURE = [
     path: "/notice",
     highlight: true,
   },
-  {
-    label: "설정",
-    icon: Settings,
-    path: "/setting",
-    highlight: true,
-    tourStep: "step-18",
-  },
+  // {
+  //   label: "설정",
+  //   icon: Settings,
+  //   path: "/setting",
+  //   highlight: true,
+  //   tourStep: "step-18",
+  // },
   {
     label: "소개",
-    icon: Users, // 적절한 아이콘으로 변경 필요
+    icon: Users,
     highlight: true,
     path: "/about",
   },
