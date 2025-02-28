@@ -61,24 +61,26 @@ const App = () => {
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <Toaster />
         <GuideFab />
-        <Routes>
-          <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />
-          <Route path={MAIN_ROUTES.MAIN} element={<MainPage />} />
-          <Route path={MAIN_ROUTES.SIGNUP} element={<SignupPage />} />
-          <Route path={MAIN_ROUTES.MANAGER_FIRST} element={<ManagerFirstPage />} />
-          <Route path={MAIN_ROUTES.EMPLOYEE_FIRST} element={<EmployeeFirstPage />} />
-          <Route
-            path={MAIN_ROUTES.SIGNIN}
-            element={
-              currentUser ? (
-                <Navigate to={`/${currentUser?.companyCode}/companymain`} />
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-          <Route path={MAIN_ROUTES.NOT_FOUND} element={<Notfound />} />
-        </Routes>
+        <SidebarProvider>
+          <Routes>
+            <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />
+            <Route path={MAIN_ROUTES.MAIN} element={<MainPage />} />
+            <Route path={MAIN_ROUTES.SIGNUP} element={<SignupPage />} />
+            <Route path={MAIN_ROUTES.MANAGER_FIRST} element={<ManagerFirstPage />} />
+            <Route path={MAIN_ROUTES.EMPLOYEE_FIRST} element={<EmployeeFirstPage />} />
+            <Route
+              path={MAIN_ROUTES.SIGNIN}
+              element={
+                currentUser ? (
+                  <Navigate to={`/${currentUser?.companyCode}/companymain`} />
+                ) : (
+                  <LoginPage />
+                )
+              }
+            />
+            <Route path={MAIN_ROUTES.NOT_FOUND} element={<Notfound />} />
+          </Routes>
+        </SidebarProvider>
       </ThemeProvider>
     </>
   );

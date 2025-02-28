@@ -346,6 +346,7 @@ SidebarInput.displayName = "SidebarInput";
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
     return <div ref={ref} data-sidebar="header" className={cn(className)} {...props} />;
+
   },
 );
 SidebarHeader.displayName = "SidebarHeader";
