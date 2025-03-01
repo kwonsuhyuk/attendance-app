@@ -24,7 +24,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
 
   return (
     // 하위 메뉴가 있는 경우
-    <div className="mb-3">
+    <div className="py-2">
       {section.children ? (
         <>
           <div
