@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
+import { Card } from "../ui/card";
 
 const ManagerMainContent = () => {
-  const navigate = useNavigate();
   const { companyCode } = useUserStore(
     useShallow(state => ({
       companyCode: state.currentUser?.companyCode,

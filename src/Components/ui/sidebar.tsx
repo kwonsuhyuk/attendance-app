@@ -258,7 +258,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       size="icon"
       className={cn(
-        "z-50 h-10 w-10 rounded-lg bg-dark-bg p-2 transition-all duration-200",
+        "z-50 h-10 w-10 rounded-lg bg-dark-card-bg p-2 transition-all duration-200 dark:bg-dark-bg",
         "hover:bg-gray-700",
         "focus:ring-2 focus:ring-dark-border",
         "active:scale-95",

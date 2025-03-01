@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        "dark-bg": "#202020",
-        "dark-card-bg": "#2A2A2A",
+        "point-color": "#FFD369",
+        "dark-bg": "#09090B",
+        "dark-card-bg": "#202020",
         "dark-text": "#FFFFFF",
         "dark-border": "#FFFFFF80",
         "dark-border-sub": "#FFFFFF33",
