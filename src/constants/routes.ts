@@ -25,6 +25,8 @@ export const MANAGER_ROUTES = {
   VACATION_STATISTIC: "/vacationstatistic",
   VACATION_DETAIL: "/vacationdetail",
   NOTICE: "/notice",
+  COMPANY_INFO: "/companyinfo",
+  HOLIDAY_MANAGE: "/holidaymanage",
 };
 
 export const COMMON_ROUTES = {

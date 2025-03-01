@@ -72,6 +72,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
             className={cn(
               "rounded-md px-5 py-6 text-gray-700 hover:bg-gray-200 dark:text-dark-text dark:hover:bg-dark-border",
               section.label === "홈" && "text-lg",
+              section.label === "공지사항" && "text-lg",
             )}
           >
             <div className="flex items-center gap-2">

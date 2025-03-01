@@ -14,15 +14,20 @@ export const MENU_STRUCTURE = [
     highlight: true,
   },
   {
+    label: "공지사항",
+    icon: Bell,
+    path: "/notice",
+    highlight: true,
+  },
+  {
     label: "출퇴근",
     icon: Clock,
     children: [
-      { label: "출퇴근", path: "/todayatt" },
+      { label: "금일 출퇴근 현황", path: "/todayatt" },
       {
         label: "기간 출퇴근 현황",
         path: "/datecheck/:id",
         tourStep: "step-2",
-        dotColor: "#6366f1",
       },
     ],
   },
@@ -38,28 +43,17 @@ export const MENU_STRUCTURE = [
     label: "관리 및 설정",
     icon: Settings,
     children: [
-      { label: "직원 관리", path: "/employeelist", tourStep: "step-3", dotColor: "#6366f1" },
+      { label: "회사 기본 정보", path: "/companyinfo" },
+      { label: "직원 관리", path: "/employeelist", tourStep: "step-3" },
       { label: "직무 관리", path: "/positionmanage" },
       { label: "근무지 관리", path: "/workplacemanage" },
+      { label: "야간/공휴일 관리", path: "/holidaymanage" },
     ],
   },
-  {
-    label: "공지사항",
-    icon: Bell,
-    path: "/notice",
-    highlight: true,
-  },
   // {
-  //   label: "설정",
-  //   icon: Settings,
-  //   path: "/setting",
+  //   label: "소개",
+  //   icon: Users,
   //   highlight: true,
-  //   tourStep: "step-18",
+  //   path: "/about",
   // },
-  {
-    label: "소개",
-    icon: Users,
-    highlight: true,
-    path: "/about",
-  },
 ];

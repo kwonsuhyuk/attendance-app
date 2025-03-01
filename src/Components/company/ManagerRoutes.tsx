@@ -13,6 +13,8 @@ import VacationStatisticPage from "@/pages/manager/VacationStatisticPage";
 import VacationDetailPage from "@/pages/manager/VacationDetailPage";
 import NoticePage from "@/pages/manager/NoticePage";
 import Layout from "@/layout/ManagerLayout";
+import CompanyInfoPage from "@/pages/manager/CompanyInfoPage";
+import HolidayManagePage from "@/pages/manager/HolidayManagePage";
 
 const ManagerRoutes = () => {
   return (
@@ -30,6 +32,8 @@ const ManagerRoutes = () => {
         <Route path={MANAGER_ROUTES.VACATION_STATISTIC} element={<VacationStatisticPage />} />
         <Route path={MANAGER_ROUTES.VACATION_DETAIL} element={<VacationDetailPage />} />
         <Route path={MANAGER_ROUTES.NOTICE} element={<NoticePage />} />
+        <Route path={MANAGER_ROUTES.COMPANY_INFO} element={<CompanyInfoPage />} />
+        <Route path={MANAGER_ROUTES.HOLIDAY_MANAGE} element={<HolidayManagePage />} />
       </Routes>
     </Layout>
   );
