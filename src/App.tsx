@@ -60,7 +60,7 @@ const App = () => {
       <ThemeProvider excludePaths={["/signin", "/signup"]}>
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <Toaster />
-        <GuideFab />
+        {/* <GuideFab /> */}
         <SidebarProvider>
           <Routes>
             <Route path={MAIN_ROUTES.INDEX} element={<IndexPage />} />

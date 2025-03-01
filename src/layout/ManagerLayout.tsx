@@ -2,7 +2,6 @@ import React from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import MenuBar from "@/components/common/menubar/MenuBar";
 import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -11,10 +10,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <MenuBar />
         <div className="flex w-full flex-col">
           <Header />
-          <main className="relative flex h-full flex-grow justify-center overflow-auto px-10 lg:h-auto">
-            {children}
+          <main className="relative mx-auto mt-16 flex h-full w-full flex-1 justify-center overflow-auto px-5 pb-12 pt-8 md:px-10">
+            <div className="w-full overflow-auto">{children}</div>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </div>
     </SidebarProvider>

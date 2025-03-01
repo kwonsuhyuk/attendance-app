@@ -11,11 +11,15 @@ const ManagerMainContent = () => {
   );
 
   return (
-    <div
-      data-tour="step-1"
-      className="flex items-center justify-center border-b border-white-border bg-white-bg text-white-text dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
-    >
-      대시보드
+    <div data-tour="step-1" className="bg-dark-card-bg">
+      <div className="">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="mb-48">대시보드</div>
+      <div className="">대시보드</div>
     </div>
   );
 };
