@@ -8,12 +8,14 @@ export default {
     extend: {
       colors: {
         "dark-bg": "#202020",
+        "dark-card-bg": "#2A2A2A",
         "dark-text": "#FFFFFF",
         "dark-border": "#FFFFFF80",
         "dark-border-sub": "#FFFFFF33",
         "dark-nav-text": "#909090",
         "dark-nav-selected": "#FFFFFF",
         "white-bg": "#EEEEEE",
+        "white-card-bg": "#FFFFFF",
         "white-text": "#000000",
         "white-border": "#00000080",
         "white-border-sub": "#00000033",

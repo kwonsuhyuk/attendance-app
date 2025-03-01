@@ -4,11 +4,7 @@ const Footer = () => {
   const darkMode = darkModeStore(state => state.darkMode);
 
   return (
-    <div
-      className={`lg:hidden mx-10 mb-10 border-t ${
-        darkMode ? "border-white/50" : "border-black/50"
-      }`}
-    ></div>
+    <div className={`mb-10 h-[1px] w-full ${darkMode ? "bg-dark-text" : "bg-white-text"}`}></div>
   );
 };
 

@@ -16,7 +16,7 @@ import QrGenerator from "@/components/employee/qr/QrGenerator";
 const ManagerSettingBasicPage = () => {
   const [companyData, setCompanyData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const companyCode = useUserStore(state => state.currentUser.companyCode);
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [jobName, setJobTags] = useState([]);
   const [isdaynight, setIsdaynight] = useState();
   const [isNightPay, setIsNightPay] = useState(0);
@@ -128,15 +128,15 @@ const ManagerSettingBasicPage = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col gap-36">
+      <div className="flex w-full flex-col gap-36">
         <div className="flex flex-col gap-7" data-tour="step-20">
           <div>
             <div className="font-black">회사 QR , ID코드</div>
             <div className="grid grid-cols-2">
               <QrGenerator />
-              <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-col items-center justify-center">
                 <div
-                  className="bg-gray-500 w-4/5 h-10 flex justify-center items-center text-white relative"
+                  className="relative flex h-10 w-4/5 items-center justify-center bg-gray-500 text-white"
                   style={{ borderRadius: "20px" }}
                 >
                   {companyCode}
@@ -149,9 +149,9 @@ const ManagerSettingBasicPage = () => {
           </div>
           <div className="font-black">직종 수정</div>
           <div>
-            <div className="h-64 grid grid-cols-5 grid-flow-col gap-4">
+            <div className="grid h-64 grid-flow-col grid-cols-5 gap-4">
               <Box
-                className="col-span-2 h-10 flex justify-start items-center"
+                className="col-span-2 flex h-10 items-center justify-start"
                 component="form"
                 onSubmit={handleTagSubmit}
               >
@@ -160,7 +160,7 @@ const ManagerSettingBasicPage = () => {
                   id="jobName"
                   value={jobNameInput}
                   placeholder="직종을 추가하세요"
-                  className="bg-transparent focus:outline-none h-full text-base"
+                  className="h-full bg-transparent text-base focus:outline-none"
                   onChange={e => setJobNameInput(e.target.value)}
                   style={{
                     width: "90%",
@@ -181,10 +181,10 @@ const ManagerSettingBasicPage = () => {
                   borderLeft: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
                 }}
               >
-                {Object.entries(jobName).map(([tagKey, tag], index) => (
+                {jobName.map(([tagKey, tag], index) => (
                   <li key={index}>
                     <div
-                      className="flex justify-between items-center gap-3 p-3 mb-5"
+                      className="mb-5 flex items-center justify-between gap-3 p-3"
                       style={{
                         borderBottom: !darkMode ? "1px solid #00000033" : "1px solid #FFFFFF33",
                       }}
@@ -210,7 +210,7 @@ const ManagerSettingBasicPage = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={day}
-              className="h-10 ml-5"
+              className="ml-5 h-10"
               sx={{
                 color: !darkMode ? "black" : "white",
                 border: !darkMode ? "1px solid #00000080" : "1px solid #FFFFFF80",
@@ -224,7 +224,7 @@ const ManagerSettingBasicPage = () => {
               ))}
             </Select>
             일
-            <div className="text-xs mt-3">
+            <div className="mt-3 text-xs">
               (급여 정산 기능 이용 시,전 달 <span className="text-red-500">{day}</span>일 부터{" "}
               {day != 1 ? "이번 달 " : "전 달 "}
               <span className="text-red-500">{day === 1 ? 31 : day - 1}</span>일 까지 급여를
@@ -235,7 +235,7 @@ const ManagerSettingBasicPage = () => {
         <div className="flex flex-col gap-7" data-tour="step-22">
           <div className="mb-3 font-black">주간 야간 설정</div>
           <div className="text-xs">(주간, 야간을 구분해서 급여를 지급할지 설정합니다.)</div>
-          <div className="grid grid-cols-2 grid-flow-col gap-4">
+          <div className="grid grid-flow-col grid-cols-2 gap-4">
             <div>
               <FormControlLabel
                 control={
@@ -302,7 +302,7 @@ const ManagerSettingBasicPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center">
+        <div className="flex w-full justify-center">
           <Button onClick={handleInfoUpdate} data-tour="step-23">
             변경 사항 저장
           </Button>

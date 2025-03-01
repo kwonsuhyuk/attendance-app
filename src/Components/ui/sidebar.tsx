@@ -2,7 +2,6 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
-
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/util/cn.util";
 import { Button } from "@/components/ui/button";
@@ -257,21 +256,29 @@ const SidebarTrigger = React.forwardRef<
     <Button
       ref={ref}
       data-sidebar="trigger"
-      variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className={cn(
+        "z-50 h-10 w-10 rounded-lg bg-dark-bg p-2 transition-all duration-200",
+        "hover:bg-gray-700",
+        "focus:ring-2 focus:ring-dark-border",
+        "active:scale-95",
+        className,
+      )}
       onClick={event => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <PanelLeft />
+      <PanelLeft className="text-dark-text" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
 });
+
 SidebarTrigger.displayName = "SidebarTrigger";
+
+export default SidebarTrigger;
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
   ({ className, ...props }, ref) => {
@@ -338,14 +345,7 @@ SidebarInput.displayName = "SidebarInput";
 
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        data-sidebar="header"
-        className={cn("flex flex-col gap-2 p-2", className)}
-        {...props}
-      />
-    );
+    return <div ref={ref} data-sidebar="header" className={cn(className)} {...props} />;
   },
 );
 SidebarHeader.displayName = "SidebarHeader";
