@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
-import { ADMIN_MENU_BUTTONS } from "@/constants/menuConfig";
-import { getButtonVariant } from "@/util/menuBar.util";
 import {
-  Moon,
-  Sun,
   ChevronDown,
   ChevronRight,
   LogOut,
@@ -15,6 +10,7 @@ import {
   Users,
   Settings,
   Bell,
+  Power,
 } from "lucide-react";
 import { cn } from "@/util/cn.util";
 import { useState } from "react";
@@ -26,8 +22,9 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarProvider,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import AppTitle from "../AppTitle";
 
 interface AdminMenuProps {
   companyLogo: string;
@@ -42,7 +39,7 @@ interface AdminMenuProps {
 }
 
 // menuConfig 폴더에 상수화 처리 예정
-const MENU_STRUCTURE = [
+export const MENU_STRUCTURE = [
   {
     label: "홈",
     icon: Home,
@@ -93,11 +90,10 @@ export const AdminMenuDesktop = ({
   companyLogo,
   companyName,
   companyCode,
-  darkMode,
   location,
-  toggleTheme,
   logout,
 }: AdminMenuProps) => {
+  const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     "출퇴근 및 방문": true, // 기본적으로 열려있는 섹션
@@ -116,9 +112,16 @@ export const AdminMenuDesktop = ({
   };
 
   return (
-    <Sidebar className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]">
+    <Sidebar
+      side={isMobile ? "right" : "left"}
+      // side="right"
+      className="h-screen w-64 border-r border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-[#1E1E1E]"
+    >
       {/* 사이드바 상단 회사 정보 */}
-      <SidebarHeader className="border-b border-gray-200 p-4 dark:border-gray-800">
+      <SidebarHeader className="flex h-16 items-center justify-center gap-2 bg-dark-bg p-4 font-bold">
+        <AppTitle className="text-white" />
+      </SidebarHeader>
+      <SidebarContent className="overflow-y-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white dark:bg-gray-700">
@@ -128,22 +131,7 @@ export const AdminMenuDesktop = ({
               <div className="font-medium text-gray-800 dark:text-gray-200">{companyName}</div>
             </div>
           </div>
-
-          {/* 다크모드 스위치 */}
-          <Switch checked={darkMode} onCheckedChange={toggleTheme}>
-            <Sun
-              className={cn("absolute text-orange-400 opacity-0", "opacity-100 dark:opacity-0")}
-              size={18}
-            />
-            <Moon
-              className={cn("absolute text-white opacity-0", "opacity-0 dark:opacity-100")}
-              size={18}
-            />
-          </Switch>
         </div>
-      </SidebarHeader>
-
-      <SidebarContent className="overflow-y-auto">
         <SidebarMenu>
           {MENU_STRUCTURE.map(section => (
             <div key={section.label} className="mb-3">
@@ -219,7 +207,6 @@ export const AdminMenuDesktop = ({
           ))}
         </SidebarMenu>
       </SidebarContent>
-
       {/* 로그아웃 버튼이 있는 푸터 */}
       <SidebarFooter className="mt-auto border-t border-gray-200 p-4 dark:border-gray-800">
         <Button
