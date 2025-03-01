@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { Menu, PanelLeft } from "lucide-react";
+import { PanelLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/util/cn.util";
 import { Button } from "@/components/ui/button";
@@ -346,7 +346,6 @@ SidebarInput.displayName = "SidebarInput";
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
   ({ className, ...props }, ref) => {
     return <div ref={ref} data-sidebar="header" className={cn(className)} {...props} />;
-
   },
 );
 SidebarHeader.displayName = "SidebarHeader";
@@ -496,9 +495,8 @@ const sidebarMenuButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+        default: "bg-transparent text-inherit",
+        outline: "bg-transparent shadow-none text-inherit",
       },
       size: {
         default: "h-8 text-sm",
@@ -542,7 +540,11 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        className={cn(
+          sidebarMenuButtonVariants({ variant, size }),
+          "border-none shadow-none",
+          className,
+        )}
         {...props}
       />
     );

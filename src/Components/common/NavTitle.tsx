@@ -1,7 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { MENU_STRUCTURE } from "./menubar/AdminMenuDesktop";
+
 import { LucideProps } from "lucide-react";
+import { MENU_STRUCTURE } from "@/constants/menuConfig";
 
 interface MenuItem {
   label: string;

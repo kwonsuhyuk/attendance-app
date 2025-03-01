@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const TodayAttenancePage = () => {
-  return (
-    <div>
-      금일 출퇴근
-    </div>
-  )
-}
+  return <div>금일 출퇴근 현황</div>;
+};
 
-export default TodayAttenancePage
+export default TodayAttenancePage;
