@@ -682,3 +682,13 @@ export async function fetchAddressByNaver(address: string) {
     };
   }
 }
+
+// 직원 관리 페이지
+// 특정 회사 직책 목록
+export const fetchCompanyData = (companyCode: string) => {
+  return fetchData(`companyCode/${companyCode}/companyInfo/jobName`);
+};
+
+export const fetchEmployeeList = (companyCode: string) => {
+  return fetchData(`companyCode/${companyCode}/users`);
+};
