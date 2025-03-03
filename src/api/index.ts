@@ -690,8 +690,6 @@ export const updateCompanyBasicInfo = async (companyCode: string, data: any) => 
     if (!companyCode) {
       throw new Error("회사 코드가 없습니다.");
     }
-
-    // ✅ Firebase Realtime Database에서 회사 정보 업데이트
     const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
     await update(companyRef, {
@@ -702,6 +700,25 @@ export const updateCompanyBasicInfo = async (companyCode: string, data: any) => 
     });
 
     return { success: true, message: "회사 정보 변경이 완료되었습니다" };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const updateCompanyJobList = async (companyCode: string, jobList: any) => {
+  try {
+    if (!companyCode) {
+      throw new Error("회사 코드가 없습니다.");
+    }
+
+    const db = getDatabase();
+    const jobListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+
+    await update(jobListRef, {
+      jobList: jobList,
+    });
+
+    return { success: true, message: "직무 목록이 성공적으로 업데이트되었습니다." };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

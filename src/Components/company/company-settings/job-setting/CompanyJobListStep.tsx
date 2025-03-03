@@ -7,26 +7,34 @@ import CompanySettingTitle from "../CompanySettingTitle";
 import FormInputWithButton from "../../form/FormInputWithButton";
 import NoticeCard from "@/components/common/NoticeCard";
 
-const CompanyJobListStep = () => {
+interface CompanyJobListStepProps {
+  type?: "setting" | "firstpage";
+}
+
+const CompanyJobListStep = ({ type = "firstpage" }: CompanyJobListStepProps) => {
   const { control } = useFormContext();
+
+  const prefix = type === "firstpage" ? "companyJobList." : "";
+
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "companyJobList.companyJobs",
+    name: `${prefix}companyJobs`,
   });
 
   const [newJob, setNewJob] = useState("");
 
-  const handleAddJob = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedJob = newJob.trim();
-    if (trimmedJob) {
-      append({ id: String(Date.now()), name: trimmedJob });
-      setNewJob("");
-    }
-  };
+  const handleAddJob = (e?: React.FormEvent | React.KeyboardEvent) => {
+    e?.preventDefault();
 
+    // ✅ 값이 없거나 공백이면 실행 안 함
+    const trimmedJob = newJob.trim();
+    if (!trimmedJob) return;
+
+    append({ id: String(Date.now()), name: trimmedJob });
+    setNewJob("");
+  };
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <div className="flex w-full max-w-md flex-col items-center space-y-6">
       <CompanySettingTitle
         title="직무 추가"
         description={
@@ -41,6 +49,7 @@ const CompanyJobListStep = () => {
           value={newJob}
           onChange={e => setNewJob(e.target.value)}
           onSubmit={handleAddJob}
+          onKeyUp={e => e.key === "Enter" && handleAddJob(e)}
           placeholder="ex) 과장, 대리"
           buttonText="추가"
         />
@@ -50,7 +59,7 @@ const CompanyJobListStep = () => {
         title="직원 고용 형태"
         description={
           <>
-            직원들은 가입 시 <strong>정규직, 계약직, 일용직</strong> 중 선택할 수 있습니다. <br />{" "}
+            직원들은 가입 시 <strong>정규직, 계약직, 일용직</strong> 중 선택할 수 있습니다. <br />
             관리자는 이후 고용 형태를 변경할 수 있습니다.
           </>
         }

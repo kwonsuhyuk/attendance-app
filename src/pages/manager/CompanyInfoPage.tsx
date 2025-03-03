@@ -12,9 +12,6 @@ const CompanyInfoPage = () => {
   const companyBasicForm = useCompanyBasicForm();
   const { handleSubmit } = companyBasicForm;
   const { toast } = useToast();
-  const currentCompany = useCompanyStore(state => state.currentCompany);
-
-  console.log(currentCompany?.companyLogo);
 
   const onInvalid = () => {
     toast({
@@ -31,7 +28,7 @@ const CompanyInfoPage = () => {
           title: response.message,
         });
       } else {
-        console.log(response.error);
+        console.error(response.error);
         toast({
           title: response.error,
           variant: "destructive",
