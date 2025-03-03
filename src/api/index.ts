@@ -684,11 +684,22 @@ export async function fetchAddressByNaver(address: string) {
 }
 
 // 직원 관리 페이지
-// 특정 회사 직책 목록
-export const fetchCompanyData = (companyCode: string) => {
-  return fetchData(`companyCode/${companyCode}/companyInfo/jobName`);
+// 직원 목록
+export const fetchEmployees = async (companyCode: string) => {
+  const data = await fetchData(`companyCode/${companyCode}/users`);
+  return data ? Object.values(data) : []; // ✅ 데이터가 객체라면 배열로 변환
 };
-
-export const fetchEmployeeList = (companyCode: string) => {
-  return fetchData(`companyCode/${companyCode}/users`);
+// 직종 목록
+export const fetchJobNames = async (companyCode: string) => {
+  return (await fetchData(`companyCode/${companyCode}/companyInfo/jobName`)) || [];
+};
+// 직원 정보 업데이트
+export const updateEmployee = async (companyCode: string, uid: string, data: any) => {
+  try {
+    await update(ref(db, `companyCode/${companyCode}/users/${uid}`), data);
+    return { success: true };
+  } catch (error) {
+    console.error("직원 정보 업데이트 실패:", error);
+    return { success: false, error };
+  }
 };
