@@ -6,41 +6,45 @@ import CompanyLogoUploader from "./CompanyLogoUploader";
 import FormInputField from "../../form/FormInputField";
 import CompanySettingTitle from "../CompanySettingTitle";
 
-const CompanyBasicStep = () => {
+interface CompanyBasicStepProps {
+  type?: "setting" | "firstpage";
+}
+
+const CompanyBasicStep = ({ type = "firstpage" }: CompanyBasicStepProps) => {
   const { control, watch, setValue } = useFormContext();
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
-  const imageUrl = watch("companyBasic.imageUrl");
+
+  const prefix = type === "firstpage" ? "companyBasic." : "";
 
   return (
-    <Card className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <Card className="flex w-full max-w-md flex-col items-center space-y-6">
       <CompanySettingTitle
         title="회사 기본 설정"
-        description="기본 설정은 바꾸기 어려우니 신중히 작성해주세요."
+        description="회사의 기본 정보에 관한 설정 입니다."
       />
       <FormInputField
         control={control}
-        name="companyBasic.companyName"
+        name={`${prefix}companyName`}
         label="회사 이름"
         placeholder="회사 이름을 입력하세요"
       />
       <FormInputField
         control={control}
-        name="companyBasic.adminName"
+        name={`${prefix}adminName`}
         label="대표자 이름"
         placeholder="대표자 이름을 입력하세요"
       />
       <FormInputField
         control={control}
-        name="companyBasic.companyIntro"
+        name={`${prefix}companyIntro`}
         label="회사 한줄 소개"
         placeholder="회사에 대한 간단한 설명을 입력하세요"
       />
 
-      {/*  로고 업로더 컴포넌트 활용 */}
       <CompanyLogoUploader
-        imageUrl={imageUrl}
+        imageUrl={watch(`${prefix}imageUrl`) || ""}
         companyCode={companyCode!}
-        setImageUrl={url => setValue("companyBasic.imageUrl", url)}
+        setImageUrl={url => setValue(`${prefix}imageUrl`, url)}
       />
     </Card>
   );

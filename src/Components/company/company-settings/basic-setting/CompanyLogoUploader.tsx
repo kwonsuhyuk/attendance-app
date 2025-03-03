@@ -13,31 +13,33 @@ const CompanyLogoUploader = ({ imageUrl, companyCode, setImageUrl }: CompanyLogo
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-gray-600 text-sm mb-1 font-medium">회사 로고</p>
-      <p className="text-xs text-gray-500 mb-3">(JPEG, JPG, PNG 형식만 지원됩니다.)</p>
+      <p className="mb-1 text-sm font-medium text-gray-600 dark:text-dark-text">회사 로고</p>
+      <p className="mb-3 text-xs text-gray-500 dark:text-dark-nav-text">
+        (JPEG, JPG, PNG 형식만 지원됩니다.)
+      </p>
 
       <div
         onClick={() => setImageOpenModal(true)}
-        className="relative cursor-pointer w-28 h-28 border-4 border-gray-300 bg-gray-100 flex justify-center items-center rounded-full shadow-md transition-all hover:shadow-lg hover:bg-gray-200"
+        className="relative flex h-28 w-28 cursor-pointer items-center justify-center rounded-full border-4 border-gray-300 bg-gray-100 shadow-md transition-all hover:bg-gray-200 hover:shadow-lg"
         role="button"
         aria-label="회사 로고 업로드"
       >
         {!imageUrl ? (
           <div className="flex flex-col items-center text-gray-500">
-            <Camera className="w-8 h-8 mb-1" />
+            <Camera className="mb-1 h-8 w-8" />
             <span className="text-sm">로고 업로드</span>
           </div>
         ) : (
           <img
             src={imageUrl}
             alt="로고 이미지"
-            className="w-full h-full rounded-full object-cover"
+            className="h-full w-full rounded-full object-cover"
           />
         )}
 
         {imageUrl && (
-          <div className="absolute inset-0 flex justify-center items-center bg-black/40 rounded-full opacity-0 hover:opacity-100 transition-opacity">
-            <ImageIcon className="w-8 h-8 text-white" />
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+            <ImageIcon className="h-8 w-8 text-white" />
           </div>
         )}
       </div>

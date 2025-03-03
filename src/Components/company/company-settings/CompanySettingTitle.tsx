@@ -8,8 +8,8 @@ interface ICompanySettingTitleProps {
 const CompanySettingTitle = ({ title, description }: ICompanySettingTitleProps) => {
   return (
     <>
-      <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-      <p className="text-sm text-gray-600 text-center">{description}</p>
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-dark-text">{title}</h2>
+      <p className="text-center text-sm text-gray-600 dark:text-dark-nav-text">{description}</p>
     </>
   );
 };

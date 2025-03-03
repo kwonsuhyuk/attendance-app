@@ -34,6 +34,7 @@ export type TCompanyInfo = {
   nightStart: number;
   payCheckDay: number;
   qrValue: string;
+  companyCode: string;
   workPlacesList: TworkPlacesList;
 };
 

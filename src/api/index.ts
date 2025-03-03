@@ -3,6 +3,7 @@ import "@/firebase";
 import { encrypt } from "@/util/encryptDecrypt.util";
 import { TCMUserData } from "@/model/types/user.type";
 import { TCompanyInfo } from "@/model/types/company.type";
+import { useCompanyStore } from "@/store/company.store";
 
 const db = getDatabase();
 
@@ -633,6 +634,7 @@ export async function setCompanyAndManagerData({
     holidayPay: formData.companyNightHoliday.holidayPay!,
     holidayList: formData.companyNightHoliday.holidays || [],
     jobList: formData.companyJobList.companyJobs || [],
+    companyCode: companyCode,
     qrValue: encrypt(companyCode),
     workPlacesList: formData.companyWorkPlacesList.companyWorkPlaces,
   };
@@ -682,3 +684,25 @@ export async function fetchAddressByNaver(address: string) {
     };
   }
 }
+
+export const updateCompanyBasicInfo = async (companyCode: string, data: any) => {
+  try {
+    if (!companyCode) {
+      throw new Error("회사 코드가 없습니다.");
+    }
+
+    // ✅ Firebase Realtime Database에서 회사 정보 업데이트
+    const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+
+    await update(companyRef, {
+      companyName: data.companyName,
+      adminName: data.adminName,
+      companyIntro: data.companyIntro,
+      imageUrl: data.imageUrl,
+    });
+
+    return { success: true, message: "회사 정보 변경이 완료되었습니다" };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};

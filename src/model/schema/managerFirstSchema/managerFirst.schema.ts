@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // 유효성 검사 스키마 (Zod)
 export const companyBasicSchema = z.object({
-  companyName: z.string().min(2, "회사 이름을 입력하세요."),
+  companyName: z.string().min(1, "회사 이름을 입력하세요."),
   adminName: z.string().min(2, "대표자 이름을 입력하세요."),
   companyIntro: z.string().min(5, "회사 소개를 5자 이상 입력하세요."),
   imageUrl: z

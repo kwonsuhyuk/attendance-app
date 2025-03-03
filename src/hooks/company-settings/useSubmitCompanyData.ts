@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { setCompanyAndManagerData } from "@/api";
 import { useShallow } from "zustand/shallow";
 import { z } from "zod";
-import { companyFormSchema } from "@/model/managerFirstSchema";
+import { companyFormSchema } from "@/model/schema/managerFirstSchema/managerFirst.schema";
 
 export const useSubmitCompanyData = (getValues: () => z.infer<typeof companyFormSchema>) => {
   const { toast } = useToast();
