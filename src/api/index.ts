@@ -731,7 +731,6 @@ export const updateCompanyNightHolidayInfo = async (
     if (!companyCode) {
       throw new Error("회사 코드가 없습니다.");
     }
-    console.log(nightHolidayData);
 
     const nightHolidayRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 

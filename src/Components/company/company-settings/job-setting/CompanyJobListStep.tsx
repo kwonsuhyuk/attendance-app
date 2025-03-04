@@ -26,7 +26,6 @@ const CompanyJobListStep = ({ type = "firstpage" }: CompanyJobListStepProps) => 
   const handleAddJob = (e?: React.FormEvent | React.KeyboardEvent) => {
     e?.preventDefault();
 
-    // ✅ 값이 없거나 공백이면 실행 안 함
     const trimmedJob = newJob.trim();
     if (!trimmedJob) return;
 

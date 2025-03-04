@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import TooltipContainer from "@/components/common/TooltipContainer";
 
 interface HolidaySettingsProps {
   type?: "setting" | "firstpage";
@@ -18,28 +19,24 @@ interface HolidaySettingsProps {
 const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
   const { setValue, watch, register } = useFormContext();
 
-  // ✅ `type`에 따라 prefix 설정
   const prefix = type === "firstpage" ? "companyNightHoliday." : "";
 
   const isHoliday = watch(`${prefix}isHoliday`);
   const holidayPay = watch(`${prefix}holidayPay`);
   const holidays: string[] = watch(`${prefix}holidayList`) || [];
 
-  // ✅ 모달 상태 관리
   const [date, setDate] = useState<Date | undefined>();
 
-  // ✅ 날짜 추가 핸들러
   const handleAddHoliday = () => {
     if (date) {
       const formattedDate = format(date, "yyyy-MM-dd");
       if (!holidays.includes(formattedDate)) {
         setValue(`${prefix}holidayList`, [...holidays, formattedDate]);
       }
-      setDate(undefined); // ✅ 날짜 초기화
+      setDate(undefined);
     }
   };
 
-  // ✅ 선택한 공휴일 삭제 핸들러
   const handleRemoveHoliday = (holiday: string) => {
     setValue(
       `${prefix}holidayList`,
@@ -47,13 +44,17 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
     );
   };
 
-  console.log(holidays);
-
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-col items-start space-y-2">
         <div className="flex w-full items-center justify-between">
-          <CardTitle className="text-lg">공휴일/주말 추가 급여 적용</CardTitle>
+          <CardTitle className="flex items-center gap-1 text-lg">
+            공휴일/주말 추가 급여 적용
+            <TooltipContainer
+              icon={<HelpCircle size={16} />}
+              contentText="토, 일 및 국가 지정 공휴일에 적용됩니다."
+            />
+          </CardTitle>
           <Switch
             {...register(`${prefix}isHoliday`)}
             checked={isHoliday}
@@ -84,8 +85,6 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
               className="w-16 text-center"
             />
           </div>
-
-          {/* ✅ 회사 지정 공휴일 추가 기능 */}
           <div className="space-y-3">
             <div className="text-sm text-gray-500">회사 지정 공휴일 추가</div>
             <Popover>
@@ -99,8 +98,6 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
                 </Button>
               </PopoverContent>
             </Popover>
-
-            {/* ✅ 선택된 공휴일 리스트 (깔끔한 UI 적용) */}
             <div className="flex flex-wrap gap-2">
               {holidays.map((holiday: string, index: number) => (
                 <Badge key={index} className="flex items-center space-x-2 px-3 py-1">
