@@ -55,7 +55,7 @@ const EmployeeListPage = () => {
       header: "상세보기 & 정산",
       cell: ({ row }) => (
         <Button
-          variant="link"
+          variant="default"
           size="sm"
           onClick={() => navigate(`/${row.original.companyCode}/datecheck/${row.original.uid}`)}
         >
@@ -66,23 +66,25 @@ const EmployeeListPage = () => {
   ];
 
   return (
-    <div>
+    <div className="flex w-full min-w-full flex-col">
       {/* 직원 수 표시 & 필터 초기화 버튼 */}
       <div className="mb-4 flex items-center justify-between">
         <div className="text-lg font-bold">직원 수: {employeeList.length}명</div>
-        <Button variant="outline" size="sm" onClick={handleFilterReset}>
+        <Button variant="outline" size="sm" onClick={handleFilterReset} className="mr-1">
           필터 초기화
         </Button>
       </div>
-      {/* 검색 바 & 카테고리 필터 */}
-      <div className="mb-4 flex gap-4">
+
+      {/* 검색 바 & 필터 */}
+      <div className="mb-4 flex w-full flex-wrap items-center justify-start gap-4">
         <Input
+          className="min-w-[280px] flex-1 px-3"
           placeholder="이름 검색"
           value={searchName}
           onChange={e => setSearchName(e.target.value)}
         />
-        <Select onValueChange={setSelectedJob} defaultValue="전체">
-          <SelectTrigger className="w-[180px]">
+        <Select onValueChange={setSelectedJob}>
+          <SelectTrigger className="mr-1 w-[240px]">
             <SelectValue placeholder="직종 선택" />
           </SelectTrigger>
           <SelectContent>
@@ -94,8 +96,8 @@ const EmployeeListPage = () => {
             ))}
           </SelectContent>
         </Select>
-        <Select onValueChange={setSelectedSalaryType} defaultValue="전체">
-          <SelectTrigger className="w-[180px]">
+        <Select onValueChange={setSelectedSalaryType}>
+          <SelectTrigger className="mr-1 w-[240px]">
             <SelectValue placeholder="급여 지급 방식" />
           </SelectTrigger>
           <SelectContent>
@@ -108,8 +110,13 @@ const EmployeeListPage = () => {
           </SelectContent>
         </Select>
       </div>
-      {/* 직원 리스트 */}
-      <DataTable columns={columns} data={filteredEmployees} />
+
+      {/* 직원 리스트(데이터) */}
+      <div className="w-full min-w-full overflow-x-auto">
+        <DataTable columns={columns} data={filteredEmployees} />
+      </div>
+
+      {/* 수정 버튼 클릭 시 모달 */}
       {selectedEmployee && (
         <EmployeeModifyModal user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
       )}

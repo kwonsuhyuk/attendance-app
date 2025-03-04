@@ -46,7 +46,7 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
           <DialogTitle>직원 정보 수정</DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-8 py-8">
           {[
             { label: "이름", value: name },
             { label: "이메일", value: email },
@@ -75,7 +75,7 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
               })),
             },
           ].map(({ label, value, onChange, options }) => (
-            <div key={label} className="flex flex-col">
+            <div key={label} className="flex flex-col gap-3">
               <span className="font-medium">{label}</span>
               <Select defaultValue={value} onValueChange={onChange}>
                 <SelectTrigger>
@@ -92,7 +92,7 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
             </div>
           ))}
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-3">
             <span className="font-medium">급여</span>
             <Input type="number" value={salary} onChange={handleSalaryChange} />
             <span className="text-xs text-gray-500">= {numToKorean(salary)} 원</span>
