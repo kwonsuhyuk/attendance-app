@@ -632,7 +632,7 @@ export async function setCompanyAndManagerData({
     isNightPay: formData.companyNightHoliday.nightPay!,
     isHoliday: formData.companyNightHoliday.isHoliday,
     holidayPay: formData.companyNightHoliday.holidayPay!,
-    holidayList: formData.companyNightHoliday.holidays || [],
+    holidayList: formData.companyNightHoliday.holidayList || [],
     jobList: formData.companyJobList.companyJobs || [],
     companyCode: companyCode,
     qrValue: encrypt(companyCode),
@@ -711,7 +711,6 @@ export const updateCompanyJobList = async (companyCode: string, jobList: any) =>
       throw new Error("회사 코드가 없습니다.");
     }
 
-    const db = getDatabase();
     const jobListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
     await update(jobListRef, {
@@ -719,6 +718,33 @@ export const updateCompanyJobList = async (companyCode: string, jobList: any) =>
     });
 
     return { success: true, message: "직무 목록이 성공적으로 업데이트되었습니다." };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const updateCompanyNightHolidayInfo = async (
+  companyCode: string,
+  nightHolidayData: Partial<TCompanyInfo>,
+) => {
+  try {
+    if (!companyCode) {
+      throw new Error("회사 코드가 없습니다.");
+    }
+    console.log(nightHolidayData);
+
+    const nightHolidayRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+
+    const formattedData: Partial<TCompanyInfo> = {
+      ...nightHolidayData,
+      nightEnd: Number(nightHolidayData.nightEnd),
+      nightStart: Number(nightHolidayData.nightStart),
+      payCheckDay: Number(nightHolidayData.payCheckDay),
+    };
+
+    await update(nightHolidayRef, formattedData);
+
+    return { success: true, message: "야간 및 공휴일 설정이 성공적으로 업데이트되었습니다." };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

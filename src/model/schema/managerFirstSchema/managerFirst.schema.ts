@@ -25,7 +25,7 @@ export const companyNightHolidaySchema = z
     nightPay: z.number().min(1, "최소 1 이상의 값을 입력하세요.").optional(),
     isHoliday: z.boolean(),
     holidayPay: z.number().min(1, "최소 1 이상의 값을 입력하세요."),
-    holidays: z.array(z.string()).optional(),
+    holidayList: z.array(z.string()).optional(),
   })
   .refine(data => (data.isDayNight ? data.nightStart && data.nightEnd : true), {
     message: "야간 근무 설정 시 시작 및 종료 시간을 입력해야 합니다.",

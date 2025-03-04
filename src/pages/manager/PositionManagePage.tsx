@@ -8,7 +8,6 @@ import { useCompanyJobListForm } from "@/hooks/company-settings/useCompanyJobLis
 import { updateCompanyJobList } from "@/api";
 
 const PositionManagePage = () => {
-  const currentCompany = useCompanyStore(state => state.currentCompany);
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   const companyJobListForm = useCompanyJobListForm();
   const { handleSubmit } = companyJobListForm;

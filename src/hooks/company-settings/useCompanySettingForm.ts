@@ -23,7 +23,7 @@ export const useCompanySettingForm = () => {
         nightPay: 1,
         isHoliday: false,
         holidayPay: 1,
-        holidays: [],
+        holidayList: [],
       },
       companyWorkPlacesList: {
         companyWorkPlaces: [],

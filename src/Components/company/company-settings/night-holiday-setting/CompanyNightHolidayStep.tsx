@@ -4,9 +4,15 @@ import HolidaySettings from "./HolidaySettings";
 import { Separator } from "@/components/ui/separator";
 import CompanySettingTitle from "../CompanySettingTitle";
 
-const CompanyNightHolidayStep = () => {
+interface CompanyNightHolidayStepProps {
+  type?: "setting" | "firstpage";
+}
+
+const CompanyNightHolidayStep = ({ type = "firstpage" }: CompanyNightHolidayStepProps) => {
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <div
+      className={`flex w-full ${type === "setting" ? "max-w-xl" : "max-w-md"} flex-col items-center space-y-6`}
+    >
       <CompanySettingTitle
         title="급여 정산일 및 야간/공휴일 설정"
         description={
@@ -16,10 +22,11 @@ const CompanyNightHolidayStep = () => {
           </>
         }
       />
-      <PayCheckDaySelect />
-      <NightPaySettings />
+
+      <PayCheckDaySelect type={type} />
+      <NightPaySettings type={type} />
       <Separator />
-      <HolidaySettings />
+      <HolidaySettings type={type} />
     </div>
   );
 };

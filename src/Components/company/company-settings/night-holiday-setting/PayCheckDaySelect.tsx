@@ -8,22 +8,24 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useFormContext } from "react-hook-form";
 
-const PayCheckDaySelect = () => {
+interface PayCheckDaySelectProps {
+  type?: "setting" | "firstpage";
+}
+
+const PayCheckDaySelect = ({ type = "firstpage" }: PayCheckDaySelectProps) => {
   const { setValue, watch } = useFormContext();
-  const payCheckDay = watch("companyNightHoliday.payCheckDay");
+  const prefix = type === "firstpage" ? "companyNightHoliday." : "";
+  const payCheckDay = watch(`${prefix}payCheckDay`, "1");
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-lg">급여 지급일</CardTitle>
+        <CardTitle className="text-lg">급여 정산일</CardTitle>
       </CardHeader>
       <CardContent>
-        <Select
-          value={payCheckDay}
-          onValueChange={val => setValue("companyNightHoliday.payCheckDay", val)}
-        >
+        <Select value={payCheckDay} onValueChange={val => setValue(`${prefix}payCheckDay`, val)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="급여 지급일을 선택하세요" />
+            <SelectValue placeholder="급여 지급일을 선택하세요" defaultValue={payCheckDay} />
           </SelectTrigger>
           <SelectContent>
             {[...Array(31)].map((_, i) => (
