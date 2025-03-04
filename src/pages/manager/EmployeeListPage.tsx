@@ -1,8 +1,4 @@
-import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
-import { useUserStore } from "@/store/user.store";
-import { fetchEmployees } from "@/api";
-import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,49 +9,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
-import EmployeeItem from "@/components/company/EmployeeItem";
-
-interface Employee {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  jobName: string;
-  salaryType: string;
-  salaryAmount: number;
-}
+import EmployeeModifyModal from "@/components/company/EmployeeModifyModal";
+import { ColumnDef } from "@tanstack/react-table";
+import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 
 const EmployeeListPage = () => {
-  const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const navigate = useNavigate();
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
-  const [searchName, setSearchName] = useState<string>("");
-  const [selectedJob, setSelectedJob] = useState("전체");
-  const [selectedSalaryType, setSelectedSalaryType] = useState("전체");
-
-  // ✅ 모달 상태를 중앙에서 관리
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-
-  useEffect(() => {
-    if (!companyCode) return;
-    async function loadEmployees() {
-      const employees = await fetchEmployees(companyCode); // ✅ API 호출
-      setEmployeeList(employees);
-    }
-    loadEmployees();
-  }, [companyCode]);
-
-  const handleFilterReset = () => {
-    setSearchName("");
-    setSelectedJob("전체");
-    setSelectedSalaryType("전체");
-  };
-
-  const filteredEmployees = employeeList.filter(
-    user =>
-      user.name.includes(searchName) &&
-      (selectedJob === "전체" || user?.jobName === selectedJob) &&
-      (selectedSalaryType === "전체" || user?.salaryType === selectedSalaryType),
-  );
+  const {
+    employeeList,
+    searchName,
+    setSearchName,
+    selectedJob,
+    setSelectedJob,
+    selectedSalaryType,
+    setSelectedSalaryType,
+    selectedEmployee,
+    setSelectedEmployee,
+    handleFilterReset,
+    filteredEmployees,
+  } = useEmployeeList();
 
   const columns: ColumnDef<any>[] = [
     { accessorKey: "name", header: "이름" },
@@ -63,7 +35,11 @@ const EmployeeListPage = () => {
     { accessorKey: "phoneNumber", header: "전화번호" },
     { accessorKey: "jobName", header: "직종" },
     { accessorKey: "salaryType", header: "급여 지급 방식" },
-    { accessorKey: "salaryAmount", header: "급여", cell: ({ getValue }) => `${getValue()} 원` },
+    {
+      accessorKey: "salaryAmount",
+      header: "급여",
+      cell: ({ getValue }) => `${getValue() ?? 0} 원`,
+    },
     {
       accessorKey: "edit",
       header: "수정",
@@ -80,7 +56,7 @@ const EmployeeListPage = () => {
         <Button
           variant="link"
           size="sm"
-          onClick={() => navigate(`/${companyCode}/datecheck/${row.original.uid}`)}
+          onClick={() => navigate(`/${row.original.companyCode}/datecheck/${row.original.uid}`)}
         >
           상세보기 & 정산 {">"}
         </Button>
@@ -89,7 +65,7 @@ const EmployeeListPage = () => {
   ];
 
   return (
-    <div className="p-5">
+    <div>
       {/* 직원 수 표시 & 필터 초기화 버튼 */}
       <div className="mb-4 flex items-center justify-between">
         <div className="text-lg font-bold">직원 수: {employeeList.length}명</div>
@@ -132,7 +108,7 @@ const EmployeeListPage = () => {
       {/* 직원 리스트 */}
       <DataTable columns={columns} data={filteredEmployees} />
       {selectedEmployee && (
-        <EmployeeItem user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
+        <EmployeeModifyModal user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
       )}
     </div>
   );

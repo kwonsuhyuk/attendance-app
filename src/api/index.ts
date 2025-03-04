@@ -3,6 +3,7 @@ import "@/firebase";
 import { encrypt } from "@/util/encryptDecrypt.util";
 import { TCMUserData } from "@/model/types/user.type";
 import { TCompanyInfo } from "@/model/types/company.type";
+import { EmployeeInfo } from "@/model/types/employeeInfo.type";
 
 const db = getDatabase();
 
@@ -685,21 +686,11 @@ export async function fetchAddressByNaver(address: string) {
 
 // 직원 관리 페이지
 // 직원 목록
-export const fetchEmployees = async (companyCode: string) => {
+export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[]> => {
   const data = await fetchData(`companyCode/${companyCode}/users`);
-  return data ? Object.values(data) : []; // ✅ 데이터가 객체라면 배열로 변환
+  return data ? (Object.values(data) as EmployeeInfo[]) : [];
 };
 // 직종 목록
 export const fetchJobNames = async (companyCode: string) => {
   return (await fetchData(`companyCode/${companyCode}/companyInfo/jobName`)) || [];
-};
-// 직원 정보 업데이트
-export const updateEmployee = async (companyCode: string, uid: string, data: any) => {
-  try {
-    await update(ref(db, `companyCode/${companyCode}/users/${uid}`), data);
-    return { success: true };
-  } catch (error) {
-    console.error("직원 정보 업데이트 실패:", error);
-    return { success: false, error };
-  }
 };
