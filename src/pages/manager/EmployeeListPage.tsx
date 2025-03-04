@@ -18,14 +18,10 @@ const EmployeeListPage = () => {
   const navigate = useNavigate();
   const {
     employeeList,
-    searchName,
-    setSearchName,
-    selectedJob,
-    setSelectedJob,
-    selectedSalaryType,
-    setSelectedSalaryType,
     selectedEmployee,
     setSelectedEmployee,
+    register,
+    setValue,
     handleFilterReset,
     filteredEmployees,
   } = useEmployeeList();
@@ -80,10 +76,9 @@ const EmployeeListPage = () => {
         <Input
           className="min-w-[280px] flex-1 px-3"
           placeholder="이름 검색"
-          value={searchName}
-          onChange={e => setSearchName(e.target.value)}
+          {...register("searchName")}
         />
-        <Select onValueChange={setSelectedJob}>
+        <Select onValueChange={value => setValue("selectedJob", value)}>
           <SelectTrigger className="mr-1 w-[240px]">
             <SelectValue placeholder="직종 선택" />
           </SelectTrigger>
@@ -96,7 +91,7 @@ const EmployeeListPage = () => {
             ))}
           </SelectContent>
         </Select>
-        <Select onValueChange={setSelectedSalaryType}>
+        <Select onValueChange={value => setValue("selectedSalaryType", value)}>
           <SelectTrigger className="mr-1 w-[240px]">
             <SelectValue placeholder="급여 지급 방식" />
           </SelectTrigger>

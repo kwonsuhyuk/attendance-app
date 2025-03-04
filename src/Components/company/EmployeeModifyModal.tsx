@@ -24,19 +24,19 @@ interface EmployeeInfoProps {
   onClose: () => void;
 }
 
-const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
+const EmployeeModifyModal = ({ user, onClose }: EmployeeInfoProps) => {
   const {
     name,
     email,
     phoneNumber,
-    selectedJobName,
-    setSelectedJobName,
-    selectedPaymentMethod,
-    setSelectedPaymentMethod,
+    register,
+    setValue,
     salary,
+    selectedJob,
+    selectedSalaryType,
     handleSalaryChange,
-    handleSettingSubmit,
-    jobNames,
+    handleSubmit,
+    onSubmit,
   } = useEmployeeModify(user, onClose);
 
   return (
@@ -61,14 +61,14 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
           {[
             {
               label: "직종",
-              value: selectedJobName,
-              onChange: setSelectedJobName,
+              value: selectedJob,
+              onChange: (value: string) => setValue("selectedJob", value),
               options: ["과장", "대리", "직원"].map(job => ({ value: job, label: job })),
             },
             {
               label: "급여 지급 방식",
-              value: selectedPaymentMethod,
-              onChange: setSelectedPaymentMethod,
+              value: selectedSalaryType,
+              onChange: (value: string) => setValue("selectedPaymentMethod", value),
               options: Object.entries(PAYMENT_METHODS).map(([key, label]) => ({
                 value: key,
                 label,
@@ -100,7 +100,7 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSettingSubmit}>저장</Button>
+          <Button type="submit">저장</Button>
           <Button variant="outline" onClick={onClose}>
             취소
           </Button>
@@ -110,4 +110,4 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
   );
 };
 
-export default EmployeeItem;
+export default EmployeeModifyModal;

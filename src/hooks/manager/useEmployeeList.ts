@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { fetchEmployees } from "@/api";
 import { useUserStore } from "@/store/user.store";
-import { EmployeeInfo } from "@/model/types/employeeInfo.type";
+import { EmployeeInfo, FilterForm } from "@/model/types/employeeInfo.type";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [employeeList, setEmployeeList] = useState<EmployeeInfo[]>([]);
-  const [searchName, setSearchName] = useState<string>("");
-  const [selectedJob, setSelectedJob] = useState("전체");
-  const [selectedSalaryType, setSelectedSalaryType] = useState("전체");
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
+
+  const { register, watch, setValue, reset } = useForm<FilterForm>({
+    defaultValues: {
+      searchName: "",
+      selectedJob: "전체",
+      selectedSalaryType: "전체",
+    },
+  });
 
   useEffect(() => {
     if (!companyCode) return;
@@ -20,10 +26,12 @@ export const useEmployeeList = () => {
     loadEmployees();
   }, [companyCode]);
 
+  const searchName = watch("searchName");
+  const selectedJob = watch("selectedJob");
+  const selectedSalaryType = watch("selectedSalaryType");
+
   const handleFilterReset = () => {
-    setSearchName("");
-    setSelectedJob("전체");
-    setSelectedSalaryType("전체");
+    reset();
   };
 
   const filteredEmployees = employeeList.filter(
@@ -35,14 +43,10 @@ export const useEmployeeList = () => {
 
   return {
     employeeList,
-    searchName,
-    setSearchName,
-    selectedJob,
-    setSelectedJob,
-    selectedSalaryType,
-    setSelectedSalaryType,
     selectedEmployee,
     setSelectedEmployee,
+    register,
+    setValue,
     handleFilterReset,
     filteredEmployees,
   };

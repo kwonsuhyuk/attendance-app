@@ -1,34 +1,42 @@
 import { useState, useEffect } from "react";
 import { fetchJobNames, updateEmployeeSettings } from "@/api";
 import { toast } from "react-toastify";
-import { EmployeeInfo } from "@/model/types/employeeInfo.type";
+import { EmployeeInfo, EmployeeForm } from "@/model/types/employeeInfo.type";
+import { useForm } from "react-hook-form";
 
 export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   const { name, email, jobName, uid, salaryAmount, companyCode, salaryType, phoneNumber } = user;
 
-  const [selectedJobName, setSelectedJobName] = useState(jobName);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(salaryType);
-  const [salary, setSalary] = useState<number>(salaryAmount);
-  const [jobNames, setJobNames] = useState<string[]>([]);
+  const { register, handleSubmit, setValue, watch } = useForm<EmployeeForm>({
+    defaultValues: {
+      selectedJob: jobName,
+      selectedSalaryType: salaryType,
+      salary: salaryAmount,
+    },
+  });
+
+  const salary = watch("salary");
+  const selectedJob = watch("selectedJob");
+  const selectedPaymentMethod = watch("selectedSalaryType");
 
   useEffect(() => {
     async function loadJobNames() {
       const jobs = await fetchJobNames(companyCode);
-      setJobNames(jobs || []);
+      setValue("selectedJob", jobName);
     }
     loadJobNames();
-  }, [companyCode]);
+  }, [companyCode, jobName, setValue]);
 
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/\D/g, ""); // 숫자만 입력 가능
-    setSalary(parseInt(value, 10) || 0);
+    setValue("salary", parseInt(value, 10) || 0);
   };
 
-  const handleSettingSubmit = async () => {
+  const onSubmit = async (data: EmployeeForm) => {
     const result = await updateEmployeeSettings(companyCode, uid, {
-      jobName: selectedJobName,
-      salaryType: selectedPaymentMethod,
-      salary,
+      jobName: data.selectedJob,
+      salaryType: data.selectedSalaryType,
+      salary: data.salary,
     });
 
     if (result.success) {
@@ -44,13 +52,13 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
     name,
     email,
     phoneNumber,
-    selectedJobName,
-    setSelectedJobName,
-    selectedPaymentMethod,
-    setSelectedPaymentMethod,
+    register,
+    setValue,
     salary,
+    selectedJob,
+    selectedPaymentMethod,
     handleSalaryChange,
-    handleSettingSubmit,
-    jobNames,
+    handleSubmit,
+    onSubmit,
   };
 };
