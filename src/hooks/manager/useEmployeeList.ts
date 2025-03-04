@@ -45,6 +45,7 @@ export const useEmployeeList = () => {
     employeeList,
     selectedEmployee,
     setSelectedEmployee,
+    selectedSalaryType,
     register,
     setValue,
     handleFilterReset,

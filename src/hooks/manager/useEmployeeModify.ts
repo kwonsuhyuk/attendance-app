@@ -17,7 +17,7 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
 
   const salary = watch("salary");
   const selectedJob = watch("selectedJob");
-  const selectedPaymentMethod = watch("selectedSalaryType");
+  const selectedSalaryType = watch("selectedSalaryType");
 
   useEffect(() => {
     async function loadJobNames() {
@@ -56,7 +56,7 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
     setValue,
     salary,
     selectedJob,
-    selectedPaymentMethod,
+    selectedSalaryType,
     handleSalaryChange,
     handleSubmit,
     onSubmit,

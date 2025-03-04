@@ -17,7 +17,7 @@ import {
 import { formatMoney, numToKorean } from "../../util/formatMoney.util";
 import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
 import { PAYMENT_METHODS } from "@/constants/paymentMethods";
-import { EmployeeInfo } from "@/model/types/employeeInfo.type";
+import { EmployeeInfo, EmployeeForm } from "@/model/types/employeeInfo.type";
 
 interface EmployeeInfoProps {
   user: EmployeeInfo;
@@ -68,7 +68,7 @@ const EmployeeModifyModal = ({ user, onClose }: EmployeeInfoProps) => {
             {
               label: "급여 지급 방식",
               value: selectedSalaryType,
-              onChange: (value: string) => setValue("selectedPaymentMethod", value),
+              onChange: (value: string) => setValue("selectedSalaryType", value),
               options: Object.entries(PAYMENT_METHODS).map(([key, label]) => ({
                 value: key,
                 label,
