@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,52 +45,52 @@ const EmployeeItem = ({ user, onClose }: EmployeeInfoProps) => {
         <DialogHeader>
           <DialogTitle>직원 정보 수정</DialogTitle>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
-          <div className="flex items-center justify-between">
-            <span className="font-medium">이름</span>
-            <span>{name}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium">이메일</span>
-            <span>{email}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium">휴대전화</span>
-            <span>{phoneNumber}</span>
-          </div>
+          {[
+            { label: "이름", value: name },
+            { label: "이메일", value: email },
+            { label: "휴대전화", value: phoneNumber },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex items-center justify-between">
+              <span className="font-medium">{label}</span>
+              <span>{value}</span>
+            </div>
+          ))}
 
-          <div className="flex flex-col">
-            <span className="font-medium">직종</span>
-            <Select defaultValue={selectedJobName} onValueChange={setSelectedJobName}>
-              <SelectTrigger>
-                <SelectValue placeholder="직종 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                {/* 여기에 직종 데이터를 동적으로 추가 가능 */}
-                {["과장", "대리", "직원"].map(job => (
-                  <SelectItem key={job} value={job}>
-                    {job}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex flex-col">
-            <span className="font-medium">급여 지급 방식</span>
-            <Select defaultValue={selectedPaymentMethod} onValueChange={setSelectedPaymentMethod}>
-              <SelectTrigger>
-                <SelectValue placeholder="급여 지급 방식 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(PAYMENT_METHODS).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {[
+            {
+              label: "직종",
+              value: selectedJobName,
+              onChange: setSelectedJobName,
+              options: ["과장", "대리", "직원"].map(job => ({ value: job, label: job })),
+            },
+            {
+              label: "급여 지급 방식",
+              value: selectedPaymentMethod,
+              onChange: setSelectedPaymentMethod,
+              options: Object.entries(PAYMENT_METHODS).map(([key, label]) => ({
+                value: key,
+                label,
+              })),
+            },
+          ].map(({ label, value, onChange, options }) => (
+            <div key={label} className="flex flex-col">
+              <span className="font-medium">{label}</span>
+              <Select defaultValue={value} onValueChange={onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={`${label} 선택`} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ))}
 
           <div className="flex flex-col">
             <span className="font-medium">급여</span>

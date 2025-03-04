@@ -8,10 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import EmployeeModifyModal from "@/components/company/EmployeeModifyModal";
-import { ColumnDef } from "@tanstack/react-table";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
+import { PAYMENT_METHODS } from "@/constants/paymentMethods";
 
 const EmployeeListPage = () => {
   const navigate = useNavigate();
@@ -99,9 +100,11 @@ const EmployeeListPage = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="전체">전체</SelectItem>
-            <SelectItem value="monthlyPay">월급 지급</SelectItem>
-            <SelectItem value="dailyPay">일급 지급</SelectItem>
-            <SelectItem value="hourPay">시급 지급</SelectItem>
+            {Object.entries(PAYMENT_METHODS).map(([key, label]) => (
+              <SelectItem key={key} value={key}>
+                {label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
