@@ -30,12 +30,12 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
 
   return (
     <div className="w-full min-w-full overflow-x-auto rounded-md border">
-      <Table className="w-full table-fixed">
+      <Table className="mb-4 w-full table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <TableHead key={header.id} className="p-3 text-center">
+                <TableHead key={header.id} className="p-2 text-center">
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -49,7 +49,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             table.getRowModel().rows.map(row => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id} className="p-3 text-center">
+                  <TableCell key={cell.id} className="p-2 text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -65,12 +65,13 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         </TableBody>
       </Table>
       {/* 페이지네이션 UI */}
-      <div className="mt-6 flex items-center justify-center gap-5 py-4">
+      <div className="mt-2 flex items-center justify-center gap-5 py-4">
         <Button
           variant="default"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="dark:bg-dark-border dark:text-dark-bg"
         >
           이전
         </Button>
@@ -82,6 +83,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="dark:bg-dark-border dark:text-dark-bg"
         >
           다음
         </Button>

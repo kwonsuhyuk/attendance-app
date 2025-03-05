@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { fetchEmployees } from "@/api";
 import { useUserStore } from "@/store/user.store";
 import { EmployeeInfo, FilterForm } from "@/model/types/employeeInfo.type";
+import { PAYMENT_METHODS } from "@/constants/paymentMethods";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
@@ -21,7 +22,7 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      setEmployeeList(employees);
+      setEmployeeList(employees ?? []);
     }
     loadEmployees();
   }, [companyCode]);

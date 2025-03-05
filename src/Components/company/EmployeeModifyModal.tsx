@@ -29,14 +29,11 @@ const EmployeeModifyModal = ({ user, onClose }: EmployeeInfoProps) => {
     name,
     email,
     phoneNumber,
-    register,
     setValue,
     salary,
     selectedJob,
     selectedSalaryType,
     handleSalaryChange,
-    handleSubmit,
-    onSubmit,
   } = useEmployeeModify(user, onClose);
 
   return (
