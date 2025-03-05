@@ -1,0 +1,37 @@
+name: "Chromatic"
+
+on: push
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Chromatic
+        id: chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitZeroOnChanges: true
+          onlyChanged: true
+
+      - name: Add PR Comment with Chromatic URL
+        if: github.event_name == 'pull_request'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            🚀 **Chromatic Storybook 배포 완료!**  
+            UI 변경 사항을 확인하세요: [Chromatic 배포 링크](${{ steps.chromatic.outputs.storybookUrl }})
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
