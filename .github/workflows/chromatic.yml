@@ -34,13 +34,18 @@ jobs:
 
       - name: Debug Chromatic Output
         run: echo "Chromatic URL: ${{ steps.chromatic.outputs.storybookUrl }}"
+
+  # 🔹 Chromatic Job과 Comment Job 사이에 빈 줄 추가 (중요!)
+  
   comment:
     name: Add Comment
     runs-on: ubuntu-latest
-    needs:
-      - chromatic # Chromatic 작업이 완료된 후 실행되도록 설정
+    needs: chromatic # Chromatic 작업이 완료된 후 실행되도록 설정
     if: github.event_name == 'pull_request'
     steps:
+      - name: Checkout code (필요한 경우)
+        uses: actions/checkout@v4
+
       - name: Add PR Comment with Chromatic URL
         uses: mshick/add-pr-comment@v2
         with:
