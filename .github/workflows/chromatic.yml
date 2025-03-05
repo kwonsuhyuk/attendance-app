@@ -1,37 +1,97 @@
-name: "Chromatic"
+name: Preview
 
-on: push
+on:
+  pull_request:
+    branches: ["main", "develop"]
+
+permissions:
+  contents: write
+
+  pages: write
+
+  deployments: write
+
+  id-token: write
+
+  issues: write
+
+  pull-requests: write
 
 jobs:
-  chromatic:
-    name: Run Chromatic
-    runs-on: ubuntu-latest
+  storybook-preview:
+    runs-on: ubuntu-20.04
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: 저장소 체크아웃
+
+        uses: actions/checkout@v3
+
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: 캐시 종속성
+
+        id: cache
+
+        uses: actions/cache@v3
+
         with:
-          node-version: 22.12.0
+          path: "**/node_modules"
 
-      - name: Install dependencies
-        run: npm ci
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}-storybook
 
-      - name: Run Chromatic
+      - name: 종속성 설치
+
+        if: steps.cache.outputs.cache-hit != 'true'
+
+        run: yarn install
+
+      - name: Chromatic에 게시
+
         id: chromatic
-        uses: chromaui/action@latest
+
+        uses: chromaui/action@v1
+
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true
+
+          token: ${{ secrets.GITHUB_TOKEN }}
+
           onlyChanged: true
 
-      - name: Add PR Comment with Chromatic URL
-        if: github.event_name == 'pull_request'
-        uses: mshick/add-pr-comment@v2
+          autoAcceptChanges: true
+
+      - name: 현재 시간 가져오기
+
+        uses: josStorer/get-current-time@v2
+
+        id: current-time
+
         with:
+          format: "YYYY년 MM월 DD일 HH시 mm분 ss초"
+
+          utcOffset: "+09:00"
+
+    outputs:
+      storybook_url: ${{ steps.chromatic.outputs.storybookUrl }}
+
+      currnent_time: ${{ steps.current-time.outputs.formattedTime }}
+
+  github-bot-storybook:
+    runs-on: ubuntu-latest
+
+    needs: [storybook-preview]
+
+    steps:
+      - name: PR 코멘트 남기기
+
+        uses: thollander/actions-comment-pull-request@v2
+
+        with:
+          comment_tag: ${{github.event.number}}-storybook
+
           message: |
-            🚀 **Chromatic Storybook 배포 완료!**  
-            UI 변경 사항을 확인하세요: [Chromatic 배포 링크](${{ steps.chromatic.outputs.storybookUrl }})
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            💄 Storybook: ${{ needs.storybook-preview.outputs.storybook_url }}
+
+            🕖 Update: ${{ needs.storybook-preview.outputs.currnent_time }}
