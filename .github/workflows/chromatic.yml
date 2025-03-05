@@ -34,7 +34,6 @@ jobs:
 
       - name: Debug Chromatic Output
         run: echo "Chromatic URL: ${{ steps.chromatic.outputs.storybookUrl }}"
-
   comment:
     name: Add Comment
     runs-on: ubuntu-latest
