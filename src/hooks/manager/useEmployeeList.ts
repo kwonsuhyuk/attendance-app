@@ -9,12 +9,6 @@ export const useEmployeeList = () => {
   const [employeeList, setEmployeeList] = useState<EmployeeInfo[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
 
-  const formattedEmployeeList: EmployeeInfo[] = employeeList.map(emp => ({
-    ...emp,
-    salaryAmount: emp.salaryAmount ?? 0,
-    salaryType: emp.salaryType ?? "",
-  })) as EmployeeInfo[];
-
   const { register, watch, setValue } = useForm<FilterForm>({
     defaultValues: {
       searchName: "",
