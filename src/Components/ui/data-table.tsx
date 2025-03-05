@@ -65,7 +65,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         </TableBody>
       </Table>
       {/* 페이지네이션 UI */}
-      <div className="mt-2 flex items-center justify-center gap-5 py-4">
+      <div className="flex items-center justify-center gap-5 py-4">
         <Button
           variant="default"
           size="sm"

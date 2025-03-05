@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatMoney, numToKorean } from "../../util/formatMoney.util";
+import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
 import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
 import { PAYMENT_METHODS } from "@/constants/paymentMethods";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/employeeInfo.type";

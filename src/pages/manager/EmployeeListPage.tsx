@@ -1,19 +1,12 @@
 import { DataTable } from "@/components/ui/data-table";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
-import EmployeeModifyModal from "@/components/company/EmployeeModifyModal";
+import EmployeeModifyModal from "@/components/company/table/EmployeeModifyModal";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { PAYMENT_METHODS } from "@/constants/paymentMethods";
+import { EmployeeInfo } from "@/model/types/employeeInfo.type";
+import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 
 const EmployeeListPage = () => {
   const navigate = useNavigate();
@@ -23,11 +16,10 @@ const EmployeeListPage = () => {
     setSelectedEmployee,
     register,
     setValue,
-    handleFilterReset,
     filteredEmployees,
   } = useEmployeeList();
 
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnDef<EmployeeInfo>[] = [
     { accessorKey: "name", header: "이름" },
     {
       accessorKey: "email",
@@ -77,60 +69,14 @@ const EmployeeListPage = () => {
   return (
     <Card className="flex w-full max-w-6xl flex-col items-center space-y-6 p-6 shadow-lg">
       <div className="flex w-full flex-col">
-        {/* 직원 수 표시 & 필터 초기화 버튼 */}
+        {/* 직원 수 표시 ->  employeeList로 변경 */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="text-lg font-bold">직원 수: {employeeList.length}명</div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleFilterReset}
-            className="w-auto self-start dark:bg-dark-border sm:self-auto"
-          >
-            필터 초기화
-          </Button>
         </div>
 
-        {/* 검색 바 & 필터 */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Input
-            className="h-[48px] w-full px-3 dark:bg-dark-border-sub dark:text-white-bg dark:placeholder-dark-border"
-            placeholder="이름 검색"
-            {...register("searchName")}
-          />
-          <Select onValueChange={value => setValue("selectedJob", value)}>
-            <SelectTrigger className="h-[48px] w-full dark:bg-dark-border-sub dark:text-white-bg">
-              <SelectValue placeholder="직종 선택" />
-            </SelectTrigger>
-            <SelectContent className="dark:hover:dark-border-sub dark:border-dark-border dark:bg-dark-bg">
-              <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
-                전체
-              </SelectItem>
-              {["과장", "대리", "직원"].map(job => (
-                <SelectItem key={job} value={job} className="dark:hover:bg-dark-border">
-                  {job}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <EmployeeFilter register={register} setValue={setValue} />
 
-          <Select onValueChange={value => setValue("selectedSalaryType", value)}>
-            <SelectTrigger className="h-[48px] w-full dark:bg-dark-border-sub dark:text-white-bg">
-              <SelectValue placeholder="급여 지급 방식" />
-            </SelectTrigger>
-            <SelectContent className="dark:hover:dark-border-sub dark:border-dark-border dark:bg-dark-bg">
-              <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
-                전체
-              </SelectItem>
-              {Object.entries(PAYMENT_METHODS).map(([key, label]) => (
-                <SelectItem key={key} value={key} className="dark:hover:bg-dark-border">
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* 직원 리스트(데이터) */}
+        {/* 직원 리스트(데이터) & 페이지네이션 */}
         <div className="mt-4 w-full overflow-x-auto">
           <DataTable columns={columns} data={filteredEmployees} />
         </div>

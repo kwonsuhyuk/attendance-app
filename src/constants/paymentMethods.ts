@@ -1,5 +1,5 @@
 export const PAYMENT_METHODS = {
-  monthlyPay: "월급 지급",
-  dailyPay: "일급 지급",
-  hourPay: "시급 지급",
+  월급: "월급 지급",
+  주급: "일급 지급",
+  일급: "시급 지급",
 } as const;
