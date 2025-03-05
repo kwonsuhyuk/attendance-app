@@ -7,6 +7,7 @@ import EmployeeModifyModal from "@/components/company/table/EmployeeModifyModal"
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { EmployeeInfo } from "@/model/types/user.type";
 import EmployeeFilter from "@/components/company/table/EmployeeFilter";
+import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 
 const EmployeeListPage = () => {
   const navigate = useNavigate();
@@ -67,8 +68,8 @@ const EmployeeListPage = () => {
   ];
 
   return (
-    <Card className="flex w-full max-w-6xl flex-col items-center space-y-6 p-6 shadow-lg">
-      <div className="flex w-full flex-col">
+    <EmployeeListPageContainer>
+      <div className="flex w-full flex-col p-6">
         {/* 직원 수 표시 ->  employeeList로 변경 */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="text-lg font-bold">직원 수: {employeeList.length}명</div>
@@ -86,7 +87,7 @@ const EmployeeListPage = () => {
           <EmployeeModifyModal user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
         )}
       </div>
-    </Card>
+    </EmployeeListPageContainer>
   );
 };
 
