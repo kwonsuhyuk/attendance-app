@@ -32,11 +32,8 @@ jobs:
           exitZeroOnChanges: true
           onlyChanged: true
 
-      - name: Debug Chromatic Output
-        run: echo "Chromatic URL: ${{ steps.chromatic.outputs.storybookUrl }}"
-
   # 🔹 Chromatic Job과 Comment Job 사이에 빈 줄 추가 (중요!)
-  
+
   comment:
     name: Add Comment
     runs-on: ubuntu-latest
