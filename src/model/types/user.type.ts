@@ -45,3 +45,19 @@ export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userT
 export type TCMUserData = Omit<TUserBase, "userType"> & {
   userType: "manager"; // 관리자(user)로 고정
 };
+
+export type EmployeeInfo = Omit<TEmpUserData, "userType" | "employmentType"> & {
+  uid?: string;
+};
+
+export type BaseEmployeeForm = {
+  selectedJob: string;
+  selectedSalaryType: string;
+  salary: number;
+};
+
+export type FilterForm = BaseEmployeeForm & {
+  searchName: string;
+};
+
+export type EmployeeForm = BaseEmployeeForm;

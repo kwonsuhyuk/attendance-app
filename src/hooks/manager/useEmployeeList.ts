@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { fetchEmployees } from "@/api";
 import { useUserStore } from "@/store/user.store";
-import { EmployeeInfo, FilterForm } from "@/model/types/employeeInfo.type";
+import { EmployeeInfo, FilterForm } from "@/model/types/user.type";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);

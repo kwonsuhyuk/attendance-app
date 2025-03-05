@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { PAYMENT_METHODS } from "@/constants/paymentMethods";
 import { UseFormRegister } from "react-hook-form";
-import { FilterForm } from "@/model/types/employeeInfo.type";
+import { FilterForm } from "@/model/types/user.type";
 
 interface IEmployeeFilterProps {
   register: UseFormRegister<FilterForm>;

@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import EmployeeModifyModal from "@/components/company/table/EmployeeModifyModal";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { EmployeeInfo } from "@/model/types/employeeInfo.type";
+import { EmployeeInfo } from "@/model/types/user.type";
 import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 
 const EmployeeListPage = () => {
