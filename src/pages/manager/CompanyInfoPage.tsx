@@ -50,9 +50,7 @@ const CompanyInfoPage = () => {
           className="flex h-full flex-col items-center justify-center space-y-12 px-4"
         >
           <CompanyBasicStep type="setting" />
-          <Button type="submit" variant="focusMenu">
-            저장
-          </Button>
+          <Button type="submit">저장</Button>
         </form>
       </FormProvider>
     </CompanySettingPageContainer>

@@ -3,7 +3,7 @@ import { Moon, Sun } from "lucide-react";
 import { cn } from "@/util/cn.util";
 import useDarkMode from "@/store/darkmode.store";
 import { useShallow } from "zustand/shallow";
-import { Switch } from "@/components/ui/switch";
+import { DarkModeSwitch } from "@/components/ui/switch";
 
 const DarkmodeSwitch = ({ className }: { className?: string }) => {
   const { toggleMode, darkMode } = useDarkMode(
@@ -14,7 +14,7 @@ const DarkmodeSwitch = ({ className }: { className?: string }) => {
   );
 
   return (
-    <Switch checked={darkMode} onCheckedChange={toggleMode} className={className}>
+    <DarkModeSwitch checked={darkMode} onCheckedChange={toggleMode} className={className}>
       {darkMode ? (
         <Moon className={cn("absolute text-yellow-300")} size={18} fill="yellow" />
       ) : (
@@ -23,7 +23,7 @@ const DarkmodeSwitch = ({ className }: { className?: string }) => {
           size={18}
         />
       )}
-    </Switch>
+    </DarkModeSwitch>
   );
 };
 

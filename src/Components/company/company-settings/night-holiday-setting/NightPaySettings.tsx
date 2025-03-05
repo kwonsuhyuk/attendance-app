@@ -44,7 +44,7 @@ const NightPaySettings = ({ type = "firstpage" }: NightPaySettingsProps) => {
       </CardHeader>
       {isDayNight && (
         <CardContent className="space-y-4">
-          <div className="text-sm text-gray-500">야간 급여 배율</div>
+          <div className="text-sm text-white-text dark:text-dark-nav-text">야간 급여 배율</div>
           <div className="flex items-center space-x-4">
             <Slider
               defaultValue={[1]}
@@ -64,7 +64,7 @@ const NightPaySettings = ({ type = "firstpage" }: NightPaySettingsProps) => {
               className="w-16 text-center"
             />
           </div>
-          <div className="text-sm text-gray-500">야간 시간 설정</div>
+          <div className="text-sm text-white-text dark:text-dark-nav-text">야간 시간 설정</div>
           <div className="flex items-center space-x-3">
             <FormField
               name={`${prefix}nightStart`}
@@ -91,7 +91,7 @@ const NightPaySettings = ({ type = "firstpage" }: NightPaySettingsProps) => {
                 </FormItem>
               )}
             />
-            <span className="text-gray-500">~</span>
+            <span className="text-white-text dark:text-dark-text">~</span>
             <FormField
               name={`${prefix}nightEnd`}
               control={control}

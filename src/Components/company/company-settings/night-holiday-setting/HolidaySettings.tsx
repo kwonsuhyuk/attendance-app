@@ -64,7 +64,7 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
       </CardHeader>
       {isHoliday && (
         <CardContent className="space-y-4">
-          <div className="text-sm text-gray-500">공휴일 급여 배율</div>
+          <div className="text-sm text-white-text dark:text-dark-nav-text">공휴일 급여 배율</div>
           <div className="flex items-center space-x-4">
             <Slider
               defaultValue={[1]}
@@ -86,10 +86,14 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
             />
           </div>
           <div className="space-y-3">
-            <div className="text-sm text-gray-500">회사 지정 공휴일 추가</div>
+            <div className="text-sm text-white-text dark:text-dark-nav-text">
+              회사 지정 공휴일 추가
+            </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline">날짜 선택</Button>
+                <Button className="bg-point-color text-black hover:bg-point-color hover:bg-opacity-80">
+                  날짜 선택
+                </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-3">
                 <Calendar mode="single" selected={date} onSelect={setDate} />
@@ -105,9 +109,9 @@ const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
                   <Button
                     type="button"
                     onClick={() => handleRemoveHoliday(holiday)}
-                    className="h-auto bg-transparent p-0 hover:border-none hover:bg-transparent"
+                    className="h-auto border-none bg-transparent p-0"
                   >
-                    <X className="h-4 w-4 text-white hover:text-red-300" />
+                    <X className="h-4 w-4 text-white outline-none hover:text-red-300 dark:text-dark-bg" />
                   </Button>
                 </Badge>
               ))}
