@@ -12,11 +12,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 
-interface NightPaySettingsProps {
+interface INightPaySettingsProps {
   type?: "setting" | "firstpage";
 }
 
-const NightPaySettings = ({ type = "firstpage" }: NightPaySettingsProps) => {
+const NightPaySettings = ({ type = "firstpage" }: INightPaySettingsProps) => {
   const {
     control,
     register,

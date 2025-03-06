@@ -623,7 +623,7 @@ export async function setCompanyAndManagerData({
   const companyData: TCompanyInfo = {
     companyName: formData.companyBasic.companyName,
     adminName: formData.companyBasic.adminName,
-    companyLogo: formData.companyBasic.imageUrl || "",
+    companyLogo: formData.companyBasic.companyLogo || "",
     companyIntro: formData.companyBasic.companyIntro,
     isDayNight: formData.companyNightHoliday.isDayNight,
     nightStart: Number(formData.companyNightHoliday.nightStart) || 0,
@@ -685,7 +685,7 @@ export async function fetchAddressByNaver(address: string) {
   }
 }
 
-export const updateCompanyBasicInfo = async (companyCode: string, data: any) => {
+export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<TCompanyInfo>) => {
   try {
     if (!companyCode) {
       throw new Error("회사 코드가 없습니다.");
@@ -696,7 +696,7 @@ export const updateCompanyBasicInfo = async (companyCode: string, data: any) => 
       companyName: data.companyName,
       adminName: data.adminName,
       companyIntro: data.companyIntro,
-      imageUrl: data.imageUrl,
+      companyLogo: data.companyLogo,
     });
 
     return { success: true, message: "회사 정보 변경이 완료되었습니다" };

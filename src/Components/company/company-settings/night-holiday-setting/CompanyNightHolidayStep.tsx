@@ -4,11 +4,11 @@ import HolidaySettings from "./HolidaySettings";
 import { Separator } from "@/components/ui/separator";
 import CompanySettingTitle from "../CompanySettingTitle";
 
-interface CompanyNightHolidayStepProps {
+interface ICompanyNightHolidayStepProps {
   type?: "setting" | "firstpage";
 }
 
-const CompanyNightHolidayStep = ({ type = "firstpage" }: CompanyNightHolidayStepProps) => {
+const CompanyNightHolidayStep = ({ type = "firstpage" }: ICompanyNightHolidayStepProps) => {
   return (
     <div
       className={`flex w-full ${type === "setting" ? "max-w-xl" : "max-w-md"} flex-col items-center space-y-6`}

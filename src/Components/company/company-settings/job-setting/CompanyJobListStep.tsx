@@ -7,11 +7,11 @@ import CompanySettingTitle from "../CompanySettingTitle";
 import FormInputWithButton from "../../form/FormInputWithButton";
 import NoticeCard from "@/components/common/NoticeCard";
 
-interface CompanyJobListStepProps {
+interface ICompanyJobListStepProps {
   type?: "setting" | "firstpage";
 }
 
-const CompanyJobListStep = ({ type = "firstpage" }: CompanyJobListStepProps) => {
+const CompanyJobListStep = ({ type = "firstpage" }: ICompanyJobListStepProps) => {
   const { control } = useFormContext();
 
   const prefix = type === "firstpage" ? "companyJobList." : "";

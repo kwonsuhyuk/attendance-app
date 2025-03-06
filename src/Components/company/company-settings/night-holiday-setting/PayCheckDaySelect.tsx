@@ -8,11 +8,11 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useFormContext } from "react-hook-form";
 
-interface PayCheckDaySelectProps {
+interface IPayCheckDaySelectProps {
   type?: "setting" | "firstpage";
 }
 
-const PayCheckDaySelect = ({ type = "firstpage" }: PayCheckDaySelectProps) => {
+const PayCheckDaySelect = ({ type = "firstpage" }: IPayCheckDaySelectProps) => {
   const { setValue, watch } = useFormContext();
   const prefix = type === "firstpage" ? "companyNightHoliday." : "";
   const payCheckDay = watch(`${prefix}payCheckDay`, "1");

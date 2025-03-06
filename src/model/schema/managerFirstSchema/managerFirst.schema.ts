@@ -5,7 +5,7 @@ export const companyBasicSchema = z.object({
   companyName: z.string().min(1, "회사 이름을 입력하세요."),
   adminName: z.string().min(2, "대표자 이름을 입력하세요."),
   companyIntro: z.string().min(5, "회사 소개를 5자 이상 입력하세요."),
-  imageUrl: z
+  companyLogo: z
     .union([z.string().url("올바른 이미지 URL을 입력하세요."), z.string().max(0)])
     .optional(),
 });

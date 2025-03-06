@@ -12,11 +12,11 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import TooltipContainer from "@/components/common/TooltipContainer";
 
-interface HolidaySettingsProps {
+interface IHolidaySettingsProps {
   type?: "setting" | "firstpage";
 }
 
-const HolidaySettings = ({ type = "firstpage" }: HolidaySettingsProps) => {
+const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
   const { setValue, watch, register } = useFormContext();
 
   const prefix = type === "firstpage" ? "companyNightHoliday." : "";

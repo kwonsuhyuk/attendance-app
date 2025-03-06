@@ -6,11 +6,11 @@ import CompanyLogoUploader from "./CompanyLogoUploader";
 import FormInputField from "../../form/FormInputField";
 import CompanySettingTitle from "../CompanySettingTitle";
 
-interface CompanyBasicStepProps {
+interface ICompanyBasicStepProps {
   type?: "setting" | "firstpage";
 }
 
-const CompanyBasicStep = ({ type = "firstpage" }: CompanyBasicStepProps) => {
+const CompanyBasicStep = ({ type = "firstpage" }: ICompanyBasicStepProps) => {
   const { control, watch, setValue } = useFormContext();
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
 
@@ -42,9 +42,9 @@ const CompanyBasicStep = ({ type = "firstpage" }: CompanyBasicStepProps) => {
       />
 
       <CompanyLogoUploader
-        imageUrl={watch(`${prefix}imageUrl`) || ""}
+        imageUrl={watch(`${prefix}companyLogo`) || ""}
         companyCode={companyCode!}
-        setImageUrl={url => setValue(`${prefix}imageUrl`, url)}
+        setImageUrl={url => setValue(`${prefix}companyLogo`, url)}
       />
     </Card>
   );

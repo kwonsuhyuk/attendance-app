@@ -21,7 +21,7 @@ export const useCompanyBasicForm = () => {
       companyName: initialValues.companyName,
       adminName: initialValues.adminName,
       companyIntro: initialValues.companyIntro,
-      imageUrl: initialValues.companyLogo,
+      companyLogo: initialValues.companyLogo,
     },
   });
 

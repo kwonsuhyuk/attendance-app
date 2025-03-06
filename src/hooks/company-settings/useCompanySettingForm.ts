@@ -10,7 +10,7 @@ export const useCompanySettingForm = () => {
         companyName: "",
         adminName: "",
         companyIntro: "",
-        imageUrl: "",
+        companyLogo: "",
       },
       companyJobList: {
         companyJobs: [],
