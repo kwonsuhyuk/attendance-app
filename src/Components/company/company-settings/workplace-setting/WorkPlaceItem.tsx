@@ -12,7 +12,7 @@ const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
   return (
     <Card className="flex items-center justify-between p-3">
       <div className="flex items-center space-x-3">
-        <MapPin className="w-5 h-5 text-gray-500" />
+        <MapPin className="h-5 w-5 text-gray-500" />
         <div>
           <p className="text-sm font-medium">{place.name}</p>
           <p className="text-xs text-gray-500">{place.address}</p>
@@ -24,10 +24,11 @@ const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
 
       <Button
         type="button"
+        variant="outline"
         onClick={onRemove}
-        className="h-auto p-0 bg-transparent hover:bg-transparent hover:text-red-500"
+        className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
       >
-        <X className="w-5 h-5" />
+        <X className="h-5 w-5" />
       </Button>
     </Card>
   );

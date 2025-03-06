@@ -12,6 +12,7 @@ interface WorkPlaceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (workPlace: Omit<TWorkPlace, "id">) => void;
+  place?: TWorkPlace;
 }
 
 const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
@@ -46,7 +47,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
         <DialogHeader>
           <DialogTitle className="mb-3">
             <MapPin className="mr-2 h-4 w-4" />
-            근무지 추가
+            근무지 설정
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
@@ -76,6 +77,12 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
                 className="h-12 placeholder:text-sm"
                 value={address}
                 onChange={e => setAddress(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearchAddress();
+                  }
+                }}
               />
               <Button onClick={handleSearchAddress} disabled={isSearching} className="h-12">
                 <Search className="h-5 w-5" />
@@ -94,7 +101,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
             onLocationSelect={() => {}}
           />
           <Button onClick={handleAddPlace} disabled={!name || !address} className="w-full">
-            추가하기
+            저장
           </Button>
         </div>
       </DialogContent>

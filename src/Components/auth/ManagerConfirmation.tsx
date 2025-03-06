@@ -29,7 +29,7 @@ export const ManagerConfirmation = ({
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-lg border border-gray-300 space-y-3">
+    <div className="space-y-3 rounded-lg border border-gray-300 bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <Label className="text-lg font-semibold text-gray-700">관리자 가입 확인</Label>
         <Checkbox id="manager-confirm" disabled checked={isManagerCheck} className="scale-125" />
@@ -37,7 +37,7 @@ export const ManagerConfirmation = ({
 
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="w-full text-blue-600 font-medium">
+          <Button variant="outline" className="w-full font-medium text-blue-600">
             관리자 권한 설명 보기
           </Button>
         </DialogTrigger>
@@ -51,12 +51,14 @@ export const ManagerConfirmation = ({
               <li>급여 및 근무 시간 조정</li>
               <li>회사 설정 변경 가능</li>
             </ul>
-            <p className="mt-4 text-red-500 font-medium">
+            <p className="mt-4 font-medium text-red-500">
               관리자로 등록한 후에는 변경이 불가능하니 신중히 선택해주세요.
             </p>
           </DialogDescription>
           <DialogFooter>
-            <Button onClick={() => setDialogOpen(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              취소
+            </Button>
             <Button onClick={handleConfirm} className="bg-blue-600 text-white">
               관리자 확인 및 가입
             </Button>
