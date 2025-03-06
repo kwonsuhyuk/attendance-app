@@ -62,7 +62,8 @@ const EmployeeListPage = () => {
       cell: ({ row }) => (
         <Link to={`/${row.original.companyCode}/datecheck/${row.original.uid}`}>
           <Button variant="default" size="sm" className="dark:bg-dark-border">
-            상세보기 & 정산 {">"}
+            <span className="inline sm:hidden">상세보기</span>
+            <span className="hidden sm:inline">상세보기 & 정산 {">"}</span>
           </Button>
         </Link>
       ),
