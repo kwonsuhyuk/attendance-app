@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/select";
 import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
 import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
-import { PAYMENT_METHODS } from "@/constants/paymentMethods";
-import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
+import { EmployeeInfo } from "@/model/types/user.type";
+import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -44,14 +45,10 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
         </DialogHeader>
 
         <div className="grid gap-8 py-8">
-          {[
-            { label: "이름", value: name },
-            { label: "이메일", value: email },
-            { label: "휴대전화", value: phoneNumber },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex items-center justify-between">
+          {EMPLOYEE_FIELDS.map(({ key, label }) => (
+            <div key={key} className="flex items-center justify-between">
               <span className="font-medium">{label}</span>
-              <span>{value}</span>
+              <span>{String((user as EmployeeInfo)[key] ?? "")}</span>
             </div>
           ))}
 
@@ -66,7 +63,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               label: "급여 지급 방식",
               value: selectedSalaryType,
               onChange: (value: string) => setValue("selectedSalaryType", value),
-              options: Object.entries(PAYMENT_METHODS).map(([key, label]) => ({
+              options: Object.entries(EMPLOYMENT_TYPE).map(([key, label]) => ({
                 value: key,
                 label,
               })),

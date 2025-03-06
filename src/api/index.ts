@@ -690,7 +690,3 @@ export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[
   const data = await fetchData(`companyCode/${companyCode}/users`);
   return data ? (Object.values(data) as EmployeeInfo[]) : [];
 };
-// 직종 목록
-export const fetchJobNames = async (companyCode: string) => {
-  return (await fetchData(`companyCode/${companyCode}/companyInfo/jobName`)) || [];
-};

@@ -1,22 +1,26 @@
 import { DataTable } from "@/components/ui/data-table";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EmployeeModifyModal from "@/components/company/table/EmployeeModifyModal";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { EmployeeInfo } from "@/model/types/user.type";
 import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
+import Pagination from "@/components/ui/pagination";
 
 const EmployeeListPage = () => {
-  const navigate = useNavigate();
   const {
     employeeList,
     selectedEmployee,
     setSelectedEmployee,
     register,
     setValue,
+    paginatedEmployees,
+    page,
+    totalPageCount,
+    handleNextPage,
+    handlePreviousPage,
     filteredEmployees,
   } = useEmployeeList();
 
@@ -31,7 +35,8 @@ const EmployeeListPage = () => {
     },
     { accessorKey: "phoneNumber", header: "전화번호" },
     { accessorKey: "jobName", header: "직종" },
-    { accessorKey: "salaryType", header: "급여 지급 방식" },
+    // { accessorKey: "salaryType", header: "급여 지급 방식" },
+    { accessorKey: "employmentType", header: "고용 형태" },
     {
       accessorKey: "salaryAmount",
       header: "급여",
@@ -55,14 +60,11 @@ const EmployeeListPage = () => {
       accessorKey: "details",
       header: "상세보기 & 정산",
       cell: ({ row }) => (
-        <Button
-          variant="default"
-          size="sm"
-          onClick={() => navigate(`/${row.original.companyCode}/datecheck/${row.original.uid}`)}
-          className="dark:bg-dark-border"
-        >
-          상세보기 & 정산 {">"}
-        </Button>
+        <Link to={`/${row.original.companyCode}/datecheck/${row.original.uid}`}>
+          <Button variant="default" size="sm" className="dark:bg-dark-border">
+            상세보기 & 정산 {">"}
+          </Button>
+        </Link>
       ),
     },
   ];
@@ -72,15 +74,23 @@ const EmployeeListPage = () => {
       <div className="flex w-full flex-col p-6">
         {/* 직원 수 표시 ->  employeeList로 변경 */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-lg font-bold">직원 수: {employeeList.length}명</div>
+          <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
         </div>
 
         <EmployeeFilter register={register} setValue={setValue} />
 
-        {/* 직원 리스트(데이터) & 페이지네이션 */}
+        {/* 직원 리스트(데이터) */}
         <div className="mt-4 w-full overflow-x-auto">
-          <DataTable columns={columns} data={filteredEmployees} />
+          <DataTable columns={columns} data={paginatedEmployees} />
         </div>
+
+        {/* 🔹 페이지네이션 컴포넌트 적용 */}
+        <Pagination
+          page={page}
+          totalPageCount={totalPageCount}
+          onNext={handleNextPage}
+          onPrevious={handlePreviousPage}
+        />
 
         {/* 수정 버튼 클릭 시 모달 */}
         {selectedEmployee && (

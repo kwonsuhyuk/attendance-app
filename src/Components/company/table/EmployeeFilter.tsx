@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PAYMENT_METHODS } from "@/constants/paymentMethods";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { UseFormRegister } from "react-hook-form";
 import { FilterForm } from "@/model/types/user.type";
 
@@ -34,7 +34,8 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
           <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
             전체
           </SelectItem>
-          {["과장", "대리", "사원", "신입"].map(job => (
+          {/* company.store의 jobList 가져와서 매핑 */}
+          {["과장", "대리", "사원", "신입", "일용직"].map(job => (
             <SelectItem key={job} value={job} className="dark:hover:bg-dark-border">
               {job}
             </SelectItem>
@@ -51,7 +52,7 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
           <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
             전체
           </SelectItem>
-          {Object.entries(PAYMENT_METHODS).map(([key, label]) => (
+          {Object.entries(EMPLOYMENT_TYPE).map(([key, label]) => (
             <SelectItem key={key} value={key} className="dark:hover:bg-dark-border">
               {label}
             </SelectItem>

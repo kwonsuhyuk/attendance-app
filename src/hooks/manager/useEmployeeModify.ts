@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { fetchJobNames, updateEmployeeSettings } from "@/api";
+import { updateEmployeeSettings } from "@/api";
 import { toast } from "react-toastify";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
@@ -18,14 +17,6 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   const salary = watch("salary");
   const selectedJob = watch("selectedJob");
   const selectedSalaryType = watch("selectedSalaryType");
-
-  useEffect(() => {
-    async function loadJobNames() {
-      const jobs = await fetchJobNames(companyCode);
-      setValue("selectedJob", jobName);
-    }
-    loadJobNames();
-  }, [companyCode, jobName, setValue]);
 
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/\D/g, ""); // 숫자만 입력 가능

@@ -46,7 +46,7 @@ export type TCMUserData = Omit<TUserBase, "userType"> & {
   userType: "manager"; // 관리자(user)로 고정
 };
 
-export type EmployeeInfo = Omit<TEmpUserData, "userType" | "employmentType"> & {
+export type EmployeeInfo = Omit<TEmpUserData, "userType" | "salaryType"> & {
   uid?: string;
 };
 

@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS } from "@/constants/paymentMethods";
+import { PAYMENT_METHODS } from "@/constants/employmentType";
 
 export type TSalaryType = keyof typeof PAYMENT_METHODS;
 

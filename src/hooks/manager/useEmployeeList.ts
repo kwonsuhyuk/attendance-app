@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { fetchEmployees } from "@/api";
 import { useUserStore } from "@/store/user.store";
 import { EmployeeInfo, FilterForm } from "@/model/types/user.type";
+import { DUMMY_EMPLOYEES } from "@/constants/dummyEmployees";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const [employeeList, setEmployeeList] = useState<EmployeeInfo[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 10;
 
   const { register, watch, setValue } = useForm<FilterForm>({
     defaultValues: {
@@ -21,7 +24,8 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      setEmployeeList(employees ?? []);
+      // setEmployeeList(employees ?? []);
+      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);
@@ -36,8 +40,24 @@ export const useEmployeeList = () => {
     user =>
       user.name.includes(searchName) &&
       (selectedJob === "전체" || user?.jobName === selectedJob) &&
-      (selectedSalaryType === "전체" || user?.salaryType === normalizedSalaryType),
+      (selectedSalaryType === "전체" || user?.employmentType === normalizedSalaryType),
   );
+
+  const paginatedEmployees = filteredEmployees.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+
+  const totalPageCount = Math.ceil(filteredEmployees.length / rowsPerPage);
+
+  const handleNextPage = () => {
+    if (page < totalPageCount - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
 
   return {
     employeeList,
@@ -47,5 +67,10 @@ export const useEmployeeList = () => {
     register,
     setValue,
     filteredEmployees,
+    paginatedEmployees,
+    page,
+    totalPageCount,
+    handleNextPage,
+    handlePreviousPage,
   };
 };
