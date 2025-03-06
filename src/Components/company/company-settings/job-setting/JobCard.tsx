@@ -10,14 +10,15 @@ interface JobCardProps {
 
 const JobCard = ({ job, onRemove }: JobCardProps) => {
   return (
-    <Card className="flex justify-between items-center p-3">
+    <Card className="flex items-center justify-between p-3">
       <span className="text-sm font-medium">{job.name}</span>
       <Button
         type="button"
+        variant="outline"
         onClick={onRemove}
-        className="h-auto p-0 bg-transparent hover:bg-transparent hover:text-red-500"
+        className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
       >
-        <X className="w-5 h-5" />
+        <X className="h-5 w-5" />
       </Button>
     </Card>
   );

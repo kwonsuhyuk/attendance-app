@@ -7,33 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import TooltipContainer from "@/components/common/TooltipContainer";
 
-const HolidaySettings = () => {
+interface IHolidaySettingsProps {
+  type?: "setting" | "firstpage";
+}
+
+const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
   const { setValue, watch, register } = useFormContext();
-  const isHoliday = watch("companyNightHoliday.isHoliday");
-  const holidayPay = watch("companyNightHoliday.holidayPay");
-  const holidays: string[] = watch("companyNightHoliday.holidays") || [];
-  //  모달 상태 관리
+
+  const prefix = type === "firstpage" ? "companyNightHoliday." : "";
+
+  const isHoliday = watch(`${prefix}isHoliday`);
+  const holidayPay = watch(`${prefix}holidayPay`);
+  const holidays: string[] = watch(`${prefix}holidayList`) || [];
+
   const [date, setDate] = useState<Date | undefined>();
 
-  //  날짜 추가 핸들러
   const handleAddHoliday = () => {
     if (date) {
       const formattedDate = format(date, "yyyy-MM-dd");
       if (!holidays.includes(formattedDate)) {
-        setValue("companyNightHoliday.holidays", [...holidays, formattedDate]);
+        setValue(`${prefix}holidayList`, [...holidays, formattedDate]);
       }
-      setDate(undefined); // 날짜 초기화
+      setDate(undefined);
     }
   };
 
-  //  선택한 공휴일 삭제 핸들러
   const handleRemoveHoliday = (holiday: string) => {
     setValue(
-      "companyNightHoliday.holidays",
+      `${prefix}holidayList`,
       holidays.filter(h => h !== holiday),
     );
   };
@@ -41,18 +47,24 @@ const HolidaySettings = () => {
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-col items-start space-y-2">
-        <div className="flex justify-between items-center w-full">
-          <CardTitle className="text-lg">공휴일/주말 추가 급여 적용</CardTitle>
+        <div className="flex w-full items-center justify-between">
+          <CardTitle className="flex items-center gap-1 text-lg">
+            공휴일/주말 추가 급여 적용
+            <TooltipContainer
+              icon={<HelpCircle size={16} />}
+              contentText="토, 일 및 국가 지정 공휴일에 적용됩니다."
+            />
+          </CardTitle>
           <Switch
-            {...register("companyNightHoliday.isHoliday")}
+            {...register(`${prefix}isHoliday`)}
             checked={isHoliday}
-            onCheckedChange={value => setValue("companyNightHoliday.isHoliday", value)}
+            onCheckedChange={value => setValue(`${prefix}isHoliday`, value)}
           />
         </div>
       </CardHeader>
       {isHoliday && (
         <CardContent className="space-y-4">
-          <div className="text-sm text-gray-500">공휴일 급여 배율</div>
+          <div className="text-sm text-white-text dark:text-dark-nav-text">공휴일 급여 배율</div>
           <div className="flex items-center space-x-4">
             <Slider
               defaultValue={[1]}
@@ -60,26 +72,28 @@ const HolidaySettings = () => {
               max={3}
               step={0.1}
               value={[holidayPay]}
-              onValueChange={val => setValue("companyNightHoliday.holidayPay", val[0])}
+              onValueChange={val => setValue(`${prefix}holidayPay`, val[0])}
               className="flex"
             />
             <Input
               type="number"
               value={holidayPay?.toFixed(1)}
-              onChange={e => setValue("companyNightHoliday.holidayPay", Number(e.target.value))}
+              onChange={e => setValue(`${prefix}holidayPay`, Number(e.target.value))}
               min={1}
               max={3}
               step={0.1}
               className="w-16 text-center"
             />
           </div>
-
-          {/*  회사 지정 공휴일 추가 기능 */}
           <div className="space-y-3">
-            <div className="text-sm text-gray-500">회사 지정 공휴일 추가</div>
+            <div className="text-sm text-white-text dark:text-dark-nav-text">
+              회사 지정 공휴일 추가
+            </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline">날짜 선택</Button>
+                <Button className="bg-point-color text-black hover:bg-point-color hover:bg-opacity-80">
+                  날짜 선택
+                </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-3">
                 <Calendar mode="single" selected={date} onSelect={setDate} />
@@ -88,17 +102,16 @@ const HolidaySettings = () => {
                 </Button>
               </PopoverContent>
             </Popover>
-
-            {/*  선택된 공휴일 리스트 (깔끔한 UI 적용) */}
             <div className="flex flex-wrap gap-2">
               {holidays.map((holiday: string, index: number) => (
                 <Badge key={index} className="flex items-center space-x-2 px-3 py-1">
                   <span>{holiday}</span>
                   <Button
+                    type="button"
                     onClick={() => handleRemoveHoliday(holiday)}
-                    className="h-auto p-0 bg-transparent hover:bg-transparent hover:border-none"
+                    className="h-auto border-none bg-transparent p-0"
                   >
-                    <X className="w-4 h-4 text-white hover:text-red-300" />
+                    <X className="h-4 w-4 text-white outline-none hover:text-red-300 dark:text-dark-bg" />
                   </Button>
                 </Badge>
               ))}
