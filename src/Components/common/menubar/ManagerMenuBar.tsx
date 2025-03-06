@@ -31,7 +31,7 @@ export const ManagerMenuBar = () => {
 
       <SidebarFooter className="mt-auto border-t border-gray-200 p-4 dark:border-gray-800 dark:bg-dark-bg">
         <Button
-          variant="default"
+          variant="outline"
           size="sm"
           onClick={logout}
           className="flex w-full items-center justify-center gap-2 border-gray-300 text-gray-700 dark:border dark:border-solid dark:border-dark-border-sub dark:bg-dark-bg dark:text-dark-text hover:dark:bg-dark-card-bg"

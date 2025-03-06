@@ -33,7 +33,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
           >
             <div className="flex items-center gap-2">
               {section.icon && <section.icon className="h-5 w-5" />}
-              <span className="text-lg">{section.label}</span>
+              <span className="text-base">{section.label}</span>
             </div>
             {expandedSections[section.label] ? (
               <ChevronDown className="h-4 w-4" />
@@ -72,7 +72,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
             className={cn(
               "rounded-md px-5 py-6 text-gray-700 hover:bg-gray-200 dark:text-dark-text dark:hover:bg-dark-border",
               section.label === "홈" && "text-lg",
-              section.label === "공지사항" && "text-lg",
+              section.label === "공지사항" && "text-base",
             )}
           >
             <div className="flex items-center gap-2">
