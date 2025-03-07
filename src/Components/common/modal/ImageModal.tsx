@@ -53,33 +53,33 @@ const ImageModal = ({ open, handleClose, companyCode, setImageUrl }: IImageModal
 
   return (
     <Dialog open={open} onOpenChange={closeModal}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg space-y-6">
         <DialogHeader>
           <DialogTitle>회사 로고 사진 업로드</DialogTitle>
         </DialogHeader>
 
         {/* 파일 업로드 입력 */}
-        <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col items-center gap-12">
           <Input type="file" accept="image/jpeg, image/jpg, image/png" onChange={handleChange} />
 
           {/*  ShadCN Avatar 적용 */}
           <div className="relative">
-            <Avatar className="w-32 h-32 border border-gray-300 shadow-md">
+            <Avatar className="h-32 w-32 border border-gray-300 shadow-md">
               <AvatarImage src={previewImage} alt="회사 로고" />
               <AvatarFallback>
-                <Camera className="w-10 h-10 text-gray-500" />
+                <Camera className="h-10 w-10 text-gray-500" />
               </AvatarFallback>
             </Avatar>
             {previewImage && (
-              <div className="absolute inset-0 flex justify-center items-center bg-black/40 rounded-full opacity-0 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-8 h-8 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+                <ImageIcon className="h-8 w-8 text-white" />
               </div>
             )}
           </div>
         </div>
 
         <DialogFooter className="flex justify-end gap-2">
-          <Button variant="outline" onClick={handleClose}>
+          <Button variant="focusMenu" onClick={handleClose}>
             취소
           </Button>
           {previewImage && <Button onClick={uploadImage}>로고 저장</Button>}

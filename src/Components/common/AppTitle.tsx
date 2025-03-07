@@ -14,7 +14,7 @@ const AppTitle = ({ className }: AppTitleProps) => {
       )}
     >
       <Power className="h-8 w-8" />
-      <span className="font-baseFont text-2xl">On & Off</span>
+      <span className="font-sans">On & Off</span>
     </h2>
   );
 };

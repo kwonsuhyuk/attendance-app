@@ -39,8 +39,8 @@ const ManagerFirstPage = () => {
 
   return (
     <FormProvider {...companySettingForm}>
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 space-y-10">
-        <AppTitle />
+      <div className="flex min-h-screen flex-col items-center justify-center space-y-10 p-4">
+        <AppTitle className="text-3xl" />
         <div className="w-full max-w-md">
           <Progress value={(activeStep / (COMPANY_SETTING_STEPS.length - 1)) * 100} />
         </div>
