@@ -24,8 +24,9 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      // setEmployeeList(employees ?? []);
-      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
+      setEmployeeList(employees ?? []);
+      // 이 주석 코드는 더미데이터를 포함한 리스트 입니다.
+      // setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);
