@@ -35,7 +35,7 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
             전체
           </SelectItem>
           {/* company.store의 jobList 가져와서 매핑 */}
-          {["과장", "대리", "사원", "신입", "일용직"].map(job => (
+          {["과장", "대리", "사원", "신입"].map(job => (
             <SelectItem key={job} value={job} className="dark:hover:bg-dark-border">
               {job}
             </SelectItem>

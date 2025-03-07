@@ -24,8 +24,8 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      // setEmployeeList(employees ?? []);
-      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
+      setEmployeeList(employees ?? []);
+      // setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);
