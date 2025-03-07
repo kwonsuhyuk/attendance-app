@@ -16,7 +16,7 @@ export const useEmployeeList = () => {
     defaultValues: {
       searchName: "",
       selectedJob: "전체",
-      selectedSalaryType: "전체",
+      selectedEmploymentType: "전체",
     },
   });
 
@@ -24,23 +24,23 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      setEmployeeList(employees ?? []);
-      // setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
+      // setEmployeeList(employees ?? []);
+      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);
 
   const searchName = watch("searchName");
   const selectedJob = watch("selectedJob");
-  const selectedSalaryType = watch("selectedSalaryType");
+  const selectedEmploymentType = watch("selectedEmploymentType");
 
-  const normalizedSalaryType = selectedSalaryType.replace(" 지급", "");
+  const normalizedSalaryType = selectedEmploymentType.replace(" 지급", "");
 
   const filteredEmployees = employeeList.filter(
     user =>
       user.name.includes(searchName) &&
       (selectedJob === "전체" || user?.jobName === selectedJob) &&
-      (selectedSalaryType === "전체" || user?.employmentType === normalizedSalaryType),
+      (selectedEmploymentType === "전체" || user?.employmentType === normalizedSalaryType),
   );
 
   const paginatedEmployees = filteredEmployees.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
@@ -63,7 +63,7 @@ export const useEmployeeList = () => {
     employeeList,
     selectedEmployee,
     setSelectedEmployee,
-    selectedSalaryType,
+    selectedEmploymentType,
     register,
     setValue,
     filteredEmployees,

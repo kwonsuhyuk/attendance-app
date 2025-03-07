@@ -40,7 +40,7 @@ const EmployeeListPage = () => {
     {
       accessorKey: "salaryAmount",
       header: "급여",
-      cell: ({ getValue }) => `${String(getValue() ?? 0)} 원`,
+      cell: ({ getValue }) => `${String(getValue() ?? 0).toLocaleString()} 원`,
     },
     {
       accessorKey: "edit",

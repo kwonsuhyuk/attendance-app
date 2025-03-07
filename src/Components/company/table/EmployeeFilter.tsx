@@ -44,7 +44,7 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
       </Select>
 
       {/* 급여 지급 방식 선택 */}
-      <Select onValueChange={value => setValue("selectedSalaryType", value)}>
+      <Select onValueChange={value => setValue("selectedEmploymentType", value)}>
         <SelectTrigger className="h-[40px] w-full dark:bg-dark-border-sub dark:text-white-bg">
           <SelectValue placeholder="고용 형태" />
         </SelectTrigger>

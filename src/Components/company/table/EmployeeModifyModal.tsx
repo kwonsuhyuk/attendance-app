@@ -33,7 +33,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     setValue,
     salary,
     selectedJob,
-    selectedSalaryType,
+    selectedEmploymentType,
     handleSalaryChange,
   } = useEmployeeModify(user, onClose);
 
@@ -60,9 +60,9 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               options: ["과장", "대리", "직원"].map(job => ({ value: job, label: job })),
             },
             {
-              label: "급여 지급 방식",
-              value: selectedSalaryType,
-              onChange: (value: string) => setValue("selectedSalaryType", value),
+              label: "고용 형태",
+              value: selectedEmploymentType,
+              onChange: (value: string) => setValue("selectedEmploymentType", value),
               options: Object.entries(EMPLOYMENT_TYPE).map(([key, label]) => ({
                 value: key,
                 label,
@@ -93,8 +93,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
           <div className="flex flex-col gap-3">
             <span className="font-medium">급여</span>
             <Input
-              type="number"
-              value={salary}
+              type="text"
+              value={salary ? salary.toLocaleString() : ""}
               onChange={handleSalaryChange}
               className="dark:bg-white-bg"
             />

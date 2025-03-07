@@ -52,7 +52,7 @@ export type EmployeeInfo = Omit<TEmpUserData, "userType" | "salaryType"> & {
 
 export type BaseEmployeeForm = {
   selectedJob: string;
-  selectedSalaryType: string;
+  selectedEmploymentType: string;
   salary: number;
 };
 

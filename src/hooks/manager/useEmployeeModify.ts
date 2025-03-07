@@ -2,31 +2,34 @@ import { updateEmployeeSettings } from "@/api";
 import { toast } from "react-toastify";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
+import { formatMoney } from "@/util/formatMoney.util";
 
 export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
-  const { name, email, jobName, uid, salaryAmount, companyCode, salaryType, phoneNumber } = user;
+  const { name, email, jobName, uid, salaryAmount, companyCode, employmentType, phoneNumber } =
+    user;
 
   const { register, handleSubmit, setValue, watch } = useForm<EmployeeForm>({
     defaultValues: {
       selectedJob: jobName,
-      selectedSalaryType: salaryType,
+      selectedEmploymentType: employmentType,
       salary: salaryAmount,
     },
   });
 
   const salary = watch("salary");
   const selectedJob = watch("selectedJob");
-  const selectedSalaryType = watch("selectedSalaryType");
+  const selectedEmploymentType = watch("selectedEmploymentType");
 
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value = event.target.value.replace(/\D/g, ""); // 숫자만 입력 가능
-    setValue("salary", parseInt(value, 10) || 0);
+    let rawValue = event.target.value.replace(/,/g, ""); // 기존 쉼표 제거
+    if (!/^\d*$/.test(rawValue)) return; // 숫자만 입력 허용
+    setValue("salary", Number(rawValue));
   };
 
   const onSubmit = async (data: EmployeeForm) => {
     const result = await updateEmployeeSettings(companyCode, uid, {
       jobName: data.selectedJob,
-      salaryType: data.selectedSalaryType,
+      salaryType: data.selectedEmploymentType,
       salary: data.salary,
     });
 
@@ -47,7 +50,7 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
     setValue,
     salary,
     selectedJob,
-    selectedSalaryType,
+    selectedEmploymentType,
     handleSalaryChange,
     handleSubmit,
     onSubmit,
