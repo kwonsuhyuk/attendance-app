@@ -3,6 +3,7 @@ import "@/firebase";
 import { encrypt } from "@/util/encryptDecrypt.util";
 import { TCMUserData } from "@/model/types/user.type";
 import { TCompanyInfo } from "@/model/types/company.type";
+import { EmployeeInfo } from "@/model/types/employeeInfo.type";
 import { useCompanyStore } from "@/store/company.store";
 
 const db = getDatabase();
@@ -685,6 +686,14 @@ export async function fetchAddressByNaver(address: string) {
   }
 }
 
+
+// 직원 관리 페이지
+// 직원 목록
+export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[]> => {
+  const data = await fetchData(`companyCode/${companyCode}/users`);
+  return data ? (Object.values(data) as EmployeeInfo[]) : [];
+}
+  
 export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<TCompanyInfo>) => {
   try {
     if (!companyCode) {
