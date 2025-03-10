@@ -19,6 +19,7 @@ import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
 import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
+import { useJobList } from "@/hooks/manager/useJobList";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -36,6 +37,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     selectedEmploymentType,
     handleSalaryChange,
   } = useEmployeeModify(user, onClose);
+
+  const jobList = useJobList();
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
@@ -57,7 +60,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               label: "직종",
               value: selectedJob,
               onChange: (value: string) => setValue("selectedJob", value),
-              options: ["과장", "대리", "직원"].map(job => ({ value: job, label: job })),
+              options: jobList.map(job => ({ value: job.name, label: job.name })),
             },
             {
               label: "고용 형태",
