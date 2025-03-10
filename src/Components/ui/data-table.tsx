@@ -27,6 +27,16 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const getColumnKey = (col: ColumnDef<TData>) =>
+    (col as { accessorKey?: string }).accessorKey || "";
+
+  const visibleColumnsCount = columns.filter(
+    col =>
+      !["email", "phoneNumber", "jobName", "employmentType", "salaryAmount"].includes(
+        getColumnKey(col),
+      ),
+  ).length;
+
   return (
     <div className="w-full overflow-x-auto rounded-md border">
       <Table className="mb-4 w-full max-w-screen-sm table-fixed sm:max-w-full sm:table-auto">
@@ -81,8 +91,11 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="text-center">
-                데이터 없음
+              <TableCell
+                colSpan={window.innerWidth < 640 ? visibleColumnsCount : columns.length} // 🔥 PC & 모바일 맞춤 colSpan
+                className="w-full p-4 text-center text-gray-500"
+              >
+                결과 없음
               </TableCell>
             </TableRow>
           )}
