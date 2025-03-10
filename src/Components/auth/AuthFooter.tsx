@@ -12,7 +12,7 @@ interface TAuthFooterProps {
 const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps) => {
   return (
     <div className="space-y-4">
-      <Button type="submit" className="w-full" disabled={loading} variant="secondary">
+      <Button type="submit" className="w-full" disabled={loading} variant="default">
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -23,10 +23,10 @@ const AuthFooter = ({ buttonText, linkText, linkTo, loading }: TAuthFooterProps)
         )}
       </Button>
 
-      <div className="flex justify-end mb-8">
+      <div className="mb-8 flex justify-end">
         <Link
           to={linkTo}
-          className="mb-8 text-muted-foreground hover:text-primary transition-colors"
+          className="mb-8 text-muted-foreground transition-colors hover:text-primary"
         >
           {linkText}
         </Link>

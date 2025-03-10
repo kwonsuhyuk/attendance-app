@@ -2,7 +2,7 @@ import { get, set, getDatabase, ref, onValue, off, update } from "firebase/datab
 import "@/firebase";
 import { encrypt } from "@/util/encryptDecrypt.util";
 import { TCMUserData } from "@/model/types/user.type";
-import { TCompanyInfo } from "@/model/types/company.type";
+import { TCompanyInfo, TworkPlacesList } from "@/model/types/company.type";
 import { EmployeeInfo } from "@/model/types/employeeInfo.type";
 import { useCompanyStore } from "@/store/company.store";
 
@@ -753,6 +753,27 @@ export const updateCompanyNightHolidayInfo = async (
     await update(nightHolidayRef, formattedData);
 
     return { success: true, message: "야간 및 공휴일 설정이 성공적으로 업데이트되었습니다." };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const updateCompanyWorkPlacesList = async (
+  companyCode: string,
+  workPlacesList: TworkPlacesList,
+) => {
+  try {
+    if (!companyCode) {
+      throw new Error("회사 코드가 없습니다.");
+    }
+
+    const workPlacesListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+
+    await update(workPlacesListRef, {
+      workPlacesList: workPlacesList,
+    });
+
+    return { success: true, message: "근무지 목록이 성공적으로 업데이트되었습니다." };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

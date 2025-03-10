@@ -6,11 +6,16 @@ import { TWorkPlace, TworkPlacesList } from "@/model/types/company.type";
 import { Button } from "@/components/ui/button";
 import WorkPlaceModal from "@/components/common/modal/WorkPlaceModal";
 
-const CompanyWorkPlaceStep = () => {
+interface ICompanyWorkPlaceStepProps {
+  type?: "setting" | "firstpage";
+}
+
+const CompanyWorkPlaceStep = ({ type = "firstpage" }: ICompanyWorkPlaceStepProps) => {
   const { control } = useFormContext();
+  const prefix = type === "firstpage" ? "companyWorkPlacesList." : "";
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "companyWorkPlacesList.companyWorkPlaces",
+    name: `${prefix}companyWorkPlaces`,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,12 +28,12 @@ const CompanyWorkPlaceStep = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <div className="flex w-full max-w-md flex-col items-center space-y-6">
       <CompanySettingTitle
         title="근무지 추가"
         description="회사에 소속되어 있는 근무지를 추가하세요."
       />
-      <Button onClick={() => setIsModalOpen(true)} className="w-full">
+      <Button type="button" onClick={() => setIsModalOpen(true)}>
         근무지 추가
       </Button>
       <WorkPlaceList workPlaces={fields as TworkPlacesList} onRemove={remove} />
