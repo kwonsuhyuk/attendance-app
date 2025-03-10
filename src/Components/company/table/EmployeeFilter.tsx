@@ -9,6 +9,7 @@ import {
 import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { UseFormRegister } from "react-hook-form";
 import { FilterForm } from "@/model/types/user.type";
+import { useCompanyStore } from "@/store/company.store";
 
 interface IEmployeeFilterProps {
   register: UseFormRegister<FilterForm>;
@@ -16,6 +17,8 @@ interface IEmployeeFilterProps {
 }
 
 const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
+  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
+
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
       {/* 검색 입력 필드 */}
@@ -35,9 +38,9 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
             전체
           </SelectItem>
           {/* company.store의 jobList 가져와서 매핑 */}
-          {["과장", "대리", "사원", "신입"].map(job => (
-            <SelectItem key={job} value={job} className="dark:hover:bg-dark-border">
-              {job}
+          {(jobList || []).map(job => (
+            <SelectItem key={job.id} value={job.name} className="dark:hover:bg-dark-border">
+              {job.name}
             </SelectItem>
           ))}
         </SelectContent>

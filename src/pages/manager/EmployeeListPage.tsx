@@ -11,7 +11,6 @@ import Pagination from "@/components/ui/pagination";
 
 const EmployeeListPage = () => {
   const {
-    employeeList,
     selectedEmployee,
     setSelectedEmployee,
     register,
@@ -73,7 +72,6 @@ const EmployeeListPage = () => {
   return (
     <EmployeeListPageContainer>
       <div className="flex w-full flex-col p-6">
-        {/* 직원 수 표시 ->  employeeList로 변경 */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
         </div>
