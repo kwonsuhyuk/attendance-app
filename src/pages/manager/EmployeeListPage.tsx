@@ -85,12 +85,10 @@ const EmployeeListPage = () => {
           onSubmit={onSubmit}
         />
 
-        {/* 직원 리스트(데이터) */}
         <div className="mt-4 w-full overflow-x-auto">
           <DataTable columns={columns} data={paginatedEmployees} />
         </div>
 
-        {/* 🔹 페이지네이션 컴포넌트 적용 */}
         <Pagination
           page={page}
           totalPageCount={totalPageCount}
