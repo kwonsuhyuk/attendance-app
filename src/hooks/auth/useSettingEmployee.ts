@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { setEmployeeUser } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../use-toast";
 import { useShallow } from "zustand/shallow";
 import { useUserStore } from "@/store/user.store";
 import { TEmploymentType } from "@/model/types/position.type";
+import { setEmployeeUser } from "@/api/auth.api";
 
 export const useSettingEmployee = () => {
   const { toast } = useToast();

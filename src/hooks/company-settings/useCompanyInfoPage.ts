@@ -1,9 +1,9 @@
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useCompanyStore } from "@/store/company.store";
-import { updateCompanyBasicInfo } from "@/api";
 import { TCompanyInfo } from "@/model/types/company.type";
 import { useCompanyBasicForm } from "@/hooks/company-settings/useCompanyBasicForm";
+import { updateCompanyBasicInfo } from "@/api/company.api";
 
 export const useCompanyInfoPage = () => {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);

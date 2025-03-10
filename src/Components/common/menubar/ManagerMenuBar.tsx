@@ -11,11 +11,13 @@ import { LogOut } from "lucide-react";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
+import { useCompanyStore } from "@/store/company.store";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
   const { isMobile } = useSidebar();
-
+  const currentCompany = useCompanyStore(state => state.currentCompany);
+  console.log(currentCompany);
   return (
     <Sidebar
       side={isMobile ? "right" : "left"}

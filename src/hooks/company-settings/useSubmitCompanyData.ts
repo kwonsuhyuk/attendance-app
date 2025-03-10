@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/user.store";
 import { useToast } from "@/hooks/use-toast";
-import { setCompanyAndManagerData } from "@/api";
+
 import { useShallow } from "zustand/shallow";
 import { z } from "zod";
 import { companyFormSchema } from "@/model/schema/managerFirstSchema/managerFirst.schema";
+import { setCompanyAndManagerData } from "@/api/auth.api";
 
 export const useSubmitCompanyData = (getValues: () => z.infer<typeof companyFormSchema>) => {
   const { toast } = useToast();
