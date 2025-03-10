@@ -21,6 +21,8 @@ const EmployeeListPage = () => {
     handleNextPage,
     handlePreviousPage,
     filteredEmployees,
+    handleSubmit,
+    onSubmit,
   } = useEmployeeList();
 
   const columns: ColumnDef<EmployeeInfo>[] = [
@@ -76,7 +78,12 @@ const EmployeeListPage = () => {
           <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
         </div>
 
-        <EmployeeFilter register={register} setValue={setValue} />
+        <EmployeeFilter
+          register={register}
+          setValue={setValue}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+        />
 
         {/* 직원 리스트(데이터) */}
         <div className="mt-4 w-full overflow-x-auto">
