@@ -17,7 +17,7 @@ interface IEmployeeFilterProps {
 }
 
 const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
-  const jobList = useCompanyStore.getState().currentCompany?.jobList ?? [];
+  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
@@ -38,7 +38,7 @@ const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
             전체
           </SelectItem>
           {/* company.store의 jobList 가져와서 매핑 */}
-          {jobList.map(job => (
+          {(jobList || []).map(job => (
             <SelectItem key={job.id} value={job.name} className="dark:hover:bg-dark-border">
               {job.name}
             </SelectItem>

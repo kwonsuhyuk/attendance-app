@@ -38,7 +38,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     handleSalaryChange,
   } = useEmployeeModify(user, onClose);
 
-  const jobList = useCompanyStore.getState().currentCompany?.jobList ?? [];
+  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
@@ -60,7 +60,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               label: "직종",
               value: selectedJob,
               onChange: (value: string) => setValue("selectedJob", value),
-              options: jobList.map(job => ({ value: job.name, label: job.name })),
+              options: (jobList || []).map(job => ({ value: job.name, label: job.name })),
             },
             {
               label: "고용 형태",
