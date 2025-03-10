@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface DarkModeStore {
+interface IDarkModeStore {
   darkMode: boolean;
   toggleMode: () => void;
   initializeMode: () => void;
@@ -14,7 +14,7 @@ const getInitialMode = (): boolean => {
   return JSON.parse(savedMode);
 };
 
-const useDarkMode = create<DarkModeStore>(set => ({
+const useDarkMode = create<IDarkModeStore>(set => ({
   darkMode: getInitialMode(),
 
   toggleMode: () =>

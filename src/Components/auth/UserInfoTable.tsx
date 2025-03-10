@@ -14,7 +14,7 @@ const UserInfoTable = ({ rows, className }: IUserInfoTableProps) => {
           {rows.map((row, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium text-black">{row.label}</TableCell>
-              <TableCell className="text-gray-700 truncate max-w-[200px] whitespace-nowrap overflow-hidden">
+              <TableCell className="max-w-[200px] overflow-hidden truncate whitespace-nowrap text-gray-700">
                 {row.value}
               </TableCell>
             </TableRow>
