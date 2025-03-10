@@ -19,7 +19,7 @@ import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
 import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
-import { useJobList } from "@/hooks/manager/useJobList";
+import { useCompanyStore } from "@/store/company.store";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -38,7 +38,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     handleSalaryChange,
   } = useEmployeeModify(user, onClose);
 
-  const jobList = useJobList();
+  const jobList = useCompanyStore.getState().currentCompany?.jobList ?? [];
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>

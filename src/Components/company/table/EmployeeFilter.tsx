@@ -9,7 +9,7 @@ import {
 import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { UseFormRegister } from "react-hook-form";
 import { FilterForm } from "@/model/types/user.type";
-import { useJobList } from "@/hooks/manager/useJobList";
+import { useCompanyStore } from "@/store/company.store";
 
 interface IEmployeeFilterProps {
   register: UseFormRegister<FilterForm>;
@@ -17,7 +17,7 @@ interface IEmployeeFilterProps {
 }
 
 const EmployeeFilter = ({ register, setValue }: IEmployeeFilterProps) => {
-  const jobList = useJobList();
+  const jobList = useCompanyStore.getState().currentCompany?.jobList ?? [];
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
