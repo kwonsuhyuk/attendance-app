@@ -51,8 +51,6 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
     const path = `companyCode/${companyCode}/users/${uid}`;
     const userRef = ref(db, path);
 
-    console.log("📌 업데이트 요청 데이터:", settings);
-
     await update(userRef, {
       jobName: settings.jobName,
       employmentType: settings.employmentType,
