@@ -1,4 +1,4 @@
-import { TCompanyInfo, TworkPlacesList } from "@/model/types/company.type";
+import { TCompanyInfo, TJobList, TworkPlacesList } from "@/model/types/company.type";
 import { updateData } from ".";
 import { getCompanyInfoPath } from "@/constants/api.path";
 
@@ -17,7 +17,7 @@ export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<
   );
 };
 
-export const updateCompanyJobList = async (companyCode: string, jobList: any) => {
+export const updateCompanyJobList = async (companyCode: string, jobList: TJobList) => {
   if (!companyCode) return { success: false, error: "회사 코드가 없습니다." };
 
   return await updateData(

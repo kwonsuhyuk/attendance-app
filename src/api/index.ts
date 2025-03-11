@@ -5,11 +5,10 @@ import { TCompanyInfo } from "@/model/types/company.type";
 
 const db = getDatabase();
 
-// 공통 데이터 조회 함수
-export async function getData(path: string) {
+export async function getData<T>(path: string): Promise<T | null> {
   try {
     const snapshot = await get(ref(db, path));
-    return snapshot.exists() ? snapshot.val() : null;
+    return snapshot.exists() ? (snapshot.val() as T) : null;
   } catch (error: any) {
     console.error(`Error fetching data from ${path}:`, error);
     return null;
@@ -19,11 +18,15 @@ export async function getData(path: string) {
 /**
  * Firebase 데이터 저장 함수
  * @param path 저장할 Firebase 경로
- * @param data 저장할 데이터
+ * @param data 저장할 데이터 (유형을 제네릭으로 설정)
  * @param message 성공 시 반환할 메시지 (선택 사항)
  * @returns 성공 또는 실패 응답 객체
  */
-export async function setData(path: string, data: any, message?: string) {
+export async function setData<T>(
+  path: string,
+  data: T,
+  message?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     await set(ref(db, path), data);
     return { success: true, message: message || "데이터가 성공적으로 저장되었습니다." };
@@ -36,11 +39,15 @@ export async function setData(path: string, data: any, message?: string) {
 /**
  * Firebase 데이터 업데이트 함수
  * @param path 업데이트할 Firebase 경로
- * @param data 업데이트할 데이터
+ * @param data 업데이트할 데이터 (유형을 제네릭으로 설정)
  * @param message 성공 시 반환할 메시지 (선택 사항)
  * @returns 성공 또는 실패 응답 객체
  */
-export async function updateData(path: string, data: any, message?: string) {
+export async function updateData<T>(
+  path: string,
+  data: Partial<T>,
+  message?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     await update(ref(db, path), data);
     return { success: true, message: message || "데이터가 성공적으로 업데이트되었습니다." };

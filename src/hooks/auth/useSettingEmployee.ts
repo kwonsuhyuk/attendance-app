@@ -37,16 +37,27 @@ export const useSettingEmployee = () => {
       });
       return;
     }
+
+    if (!name || !userId || !email || !phoneNumber || !companyCode) {
+      toast({
+        description: "고용 형태를 선택해주세요.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
+
     try {
       await setEmployeeUser({
         name,
-        userId,
+        uid: userId,
         email,
         phoneNumber,
         companyCode,
-        selectJob,
+        jobName: selectJob,
         employmentType,
+        userType: "employee",
       });
       setLoading(false);
       navigate(`/${companyCode}/appguide`);

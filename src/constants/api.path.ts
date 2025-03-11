@@ -7,5 +7,6 @@ export const getCompanyInfoPath = (companyCode: string) => `companyCode/${compan
 
 export const getUserDatePath = (companyCode: string, userId: string, date: string) =>
   `${getUserPath(companyCode, userId)}/date/${date}`;
+
 export const getUserWorkDatePath = (companyCode: string, userId: string, date: string) =>
   `${getUserPath(companyCode, userId)}/workDates/${date}`;

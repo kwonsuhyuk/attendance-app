@@ -10,8 +10,10 @@ import { TSignupFormData } from "@/model/types/authTypes/signup.type";
 import { getData, setData } from ".";
 import { TCompanyInfo } from "@/model/types/company.type";
 import { encrypt } from "@/util/encryptDecrypt.util";
-import { TCMUserData } from "@/model/types/user.type";
+import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
 import { getCompanyPath, getUserPath } from "@/constants/api.path";
+import { companyFormSchema } from "@/model/schema/managerFirstSchema/managerFirst.schema";
+import { z } from "zod";
 
 export async function login({ email, password }: TLoginForm): Promise<TLoginResponse> {
   try {
@@ -65,30 +67,26 @@ export async function validateCompanyCode(code: string) {
 
 export async function setEmployeeUser({
   name,
-  userId,
+  uid,
   email,
   phoneNumber,
   companyCode,
-  selectJob,
+  jobName,
   employmentType,
-}) {
-  if (!companyCode || !userId) {
-    return { success: false, error: "회사 코드 또는 사용자 ID가 없습니다." };
-  }
-
+}: TEmpUserData) {
   const userData = {
     name,
-    uid: userId,
+    uid,
     email,
     phoneNumber,
     companyCode,
-    jobName: selectJob,
+    jobName,
     employmentType,
     userType: "employee",
   };
 
   return await setData(
-    getUserPath(companyCode, userId),
+    getUserPath(companyCode, uid),
     userData,
     "직원이 성공적으로 등록되었습니다.",
   );
@@ -101,6 +99,13 @@ export async function setCompanyAndManagerData({
   name,
   email,
   phoneNumber,
+}: {
+  formData: z.infer<typeof companyFormSchema>;
+  userId: string;
+  companyCode: string;
+  name: string;
+  email: string;
+  phoneNumber?: string;
 }) {
   if (!companyCode || !userId) {
     return { success: false, error: "회사 코드 또는 사용자 ID가 없습니다." };
