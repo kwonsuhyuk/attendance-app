@@ -39,7 +39,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
 
   return (
     <div className="w-full overflow-x-auto rounded-md border">
-      <Table className="mb-4 w-full table-auto">
+      <Table className="mb-4 w-full table-auto md:table-auto">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
@@ -55,7 +55,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
                 return (
                   <TableHead
                     key={header.id}
-                    className={`p-1 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`p-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null
@@ -92,7 +92,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
           ) : (
             <TableRow>
               <TableCell
-                colSpan={window.innerWidth < 640 ? visibleColumnsCount : columns.length} // 🔥 PC & 모바일 맞춤 colSpan
+                colSpan={window.innerWidth < 640 ? visibleColumnsCount : columns.length}
                 className="w-full p-4 text-center text-gray-500"
               >
                 결과 없음
