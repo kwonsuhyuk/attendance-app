@@ -12,6 +12,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Remove node_modules and package-lock.json
+        run: |
+          rm -rf node_modules package-lock.json
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
