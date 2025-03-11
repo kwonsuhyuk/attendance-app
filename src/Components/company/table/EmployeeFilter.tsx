@@ -44,7 +44,7 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
         {searchText && (
           <button
             type="button"
-            className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-gray-200 transition hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+            className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border-none bg-gray-200 transition hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
             onClick={handleClearInput}
           >
             <X size={18} strokeWidth={3} className="text-gray-700 dark:text-gray-300" />
