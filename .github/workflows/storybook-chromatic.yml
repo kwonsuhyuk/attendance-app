@@ -1,0 +1,46 @@
+name: "Chromatic Deployment & UI Testing"
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-storybook:
+    name: "Build & Test Storybook"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+  deploy-to-chromatic:
+    needs: test-storybook
+    name: "Deploy Storybook to Chromatic & UI Tests"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Publish to Chromatic
+        run: |
+          npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --exit-zero-on-changes --only-changed
+
+      - name: Add PR Comment with Chromatic URL
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            🚀 **Chromatic Storybook 빌드 완료!**  
+            UI 변경 사항을 확인하세요: [Chromatic 링크](https://www.chromatic.com/builds)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
