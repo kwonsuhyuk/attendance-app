@@ -12,10 +12,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
+      # ✅ node_modules 및 캐시 삭제
+      - name: Clean cache and install dependencies
         run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
           npm install
 
+      # ✅ Storybook 빌드가 정상적으로 실행되는지 확인
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      # ✅ Chromatic 실행
       - name: Run Chromatic
         id: chromatic
         uses: chromaui/action@latest
