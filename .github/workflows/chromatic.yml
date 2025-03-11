@@ -12,13 +12,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clear cache
-        run: |
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-
       - name: Install dependencies
-        run: npm i # ✅ `npm ci` 대신 `npm i` 사용
+        run: |
+          npm install
 
       - name: Run Chromatic
         id: chromatic
