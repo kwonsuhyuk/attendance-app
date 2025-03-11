@@ -39,7 +39,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
 
   return (
     <div className="w-full overflow-x-auto rounded-md border">
-      <Table className="mb-4 w-full max-w-screen-sm table-fixed sm:max-w-full sm:table-auto">
+      <Table className="mb-4 w-full table-auto">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>

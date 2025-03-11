@@ -51,9 +51,11 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
     const path = `companyCode/${companyCode}/users/${uid}`;
     const userRef = ref(db, path);
 
+    console.log("📌 업데이트 요청 데이터:", settings);
+
     await update(userRef, {
       jobName: settings.jobName,
-      salaryType: settings.salaryType,
+      employmentType: settings.employmentType,
       salaryAmount: parseInt(settings.salary),
     });
 
@@ -686,14 +688,13 @@ export async function fetchAddressByNaver(address: string) {
   }
 }
 
-
 // 직원 관리 페이지
 // 직원 목록
 export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[]> => {
   const data = await fetchData(`companyCode/${companyCode}/users`);
   return data ? (Object.values(data) as EmployeeInfo[]) : [];
-}
-  
+};
+
 export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<TCompanyInfo>) => {
   try {
     if (!companyCode) {

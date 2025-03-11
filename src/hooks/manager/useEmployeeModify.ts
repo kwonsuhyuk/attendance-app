@@ -29,7 +29,7 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   const onSubmit = async (data: EmployeeForm) => {
     const result = await updateEmployeeSettings(companyCode, uid, {
       jobName: data.selectedJob,
-      salaryType: data.selectedEmploymentType,
+      employmentType: data.selectedEmploymentType,
       salary: data.salary,
     });
 
