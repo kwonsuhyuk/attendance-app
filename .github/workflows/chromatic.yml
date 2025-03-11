@@ -1,7 +1,3 @@
-name: "Chromatic"
-
-on: push
-
 jobs:
   chromatic:
     name: Run Chromatic
@@ -12,22 +8,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Remove node_modules and package-lock.json
+      - name: Clear cache
         run: |
           rm -rf node_modules package-lock.json
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Clean npm cache and install dependencies
-        run: |
           npm cache clean --force
-          npm ci
+
+      - name: Install dependencies
+        run: npm i # ✅ `npm ci` 대신 `npm i` 사용
 
       - name: Run Chromatic
         id: chromatic
