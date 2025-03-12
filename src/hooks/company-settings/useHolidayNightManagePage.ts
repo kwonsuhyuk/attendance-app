@@ -24,8 +24,6 @@ export const useHolidayNightManagePage = () => {
       const response = await updateCompanyNightHolidayInfo(companyCode, data);
 
       if (response.success) {
-        const data = await getCompanyInfo(companyCode);
-        setCompany(data as TCompanyInfo);
         toast({
           title: response.message,
         });

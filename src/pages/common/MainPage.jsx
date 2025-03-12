@@ -6,31 +6,51 @@ import { useCompanyStore } from "@/store/company.store";
 import Loading from "@/components/common/Loading";
 import ManagerRoutes from "@/components/company/\bManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
-import { getCompanyInfo } from "@/api";
+import { getDatabase, off, onValue, ref } from "firebase/database";
+import { useParams } from "react-router-dom";
 
 const MainPage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);
-  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const { companyCode } = useParams();
   const setCompany = useCompanyStore(state => state.setCompany);
   const [isLoading, setIsLoading] = useState(false);
   const { setIsOpen } = useTour();
 
+  // useEffect(() => {
+  //   async function getCompany() {
+  //     if (companyCode) {
+  //       setIsLoading(true);
+  //       try {
+  //         const data = await getCompanyInfo(companyCode);
+  //         setCompany(data);
+  //       } catch (error) {
+  //         console.error("Error fetching company info:", error);
+  //       } finally {
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //   }
+  //   getCompany();
+  // }, [setCompany, companyCode]);
+
   useEffect(() => {
-    async function getCompany() {
-      if (companyCode) {
-        setIsLoading(true);
-        try {
-          const data = await getCompanyInfo(companyCode);
-          setCompany(data);
-        } catch (error) {
-          console.error("Error fetching company info:", error);
-        } finally {
-          setIsLoading(false);
-        }
+    if (!companyCode) return;
+
+    setIsLoading(true);
+    const db = getDatabase();
+    const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+
+    const unsubscribe = onValue(companyRef, snapshot => {
+      if (snapshot.exists()) {
+        const updatedCompanyData = snapshot.val();
+        console.log("변경된 회사 정보:", updatedCompanyData);
+        setCompany(updatedCompanyData);
       }
-    }
-    getCompany();
-  }, [setCompany, companyCode]);
+      setIsLoading(false);
+    });
+
+    return () => off(companyRef, "value", unsubscribe);
+  }, [companyCode, setCompany]);
 
   useEffect(() => {
     const tourShown = localStorage.getItem("tourShown");
