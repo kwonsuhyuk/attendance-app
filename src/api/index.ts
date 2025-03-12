@@ -1,70 +1,90 @@
-import { get, set, getDatabase, ref, onValue, off, update } from "firebase/database";
+import { get, set, getDatabase, ref, update } from "firebase/database";
 import "@/firebase";
-import { encrypt } from "@/util/encryptDecrypt.util";
-import { TCMUserData } from "@/model/types/user.type";
-import { TCompanyInfo, TworkPlacesList } from "@/model/types/company.type";
-import { EmployeeInfo } from "@/model/types/employeeInfo.type";
-import { useCompanyStore } from "@/store/company.store";
+import { getCompanyInfoPath } from "@/constants/api.path";
+import { TCompanyInfo } from "@/model/types/company.type";
 
 const db = getDatabase();
 
-// 단순 데이터 조회용 유틸리티 함수
-export async function fetchData(path) {
+export async function getData<T>(path: string): Promise<T | null> {
   try {
     const snapshot = await get(ref(db, path));
-    return snapshot.val() || null;
-  } catch (error) {
-    console.error("Error fetching data:", error);
+    return snapshot.exists() ? (snapshot.val() as T) : null;
+  } catch (error: any) {
+    console.error(`Error fetching data from ${path}:`, error);
     return null;
   }
 }
 
-export async function getUser(currentUser) {
-  if (!currentUser) return null;
-  const path = `companyCode/${currentUser.photoURL}/users/${currentUser.uid}`;
-  return await fetchData(path);
-}
-
-export async function getCompanyInfo(companyCode) {
-  if (!companyCode) return null;
-  const path = `companyCode/${companyCode}/companyInfo`;
-
-  return await fetchData(path);
-}
-
-// 실시간 데이터 구독용 함수
-// jobName
-export function subscribeToJobNames(companyCode, callback) {
-  const jobRef = ref(db, `companyCode/${companyCode}/companyInfo/jobName`);
-  // 데이터 구독 시작
-  onValue(jobRef, snapshot => {
-    const data = snapshot.val();
-    callback(Object.values(data));
-  });
-  // 구독 해제 함수 반환
-  return () => off(jobRef);
-}
-
-// 복잡한 비즈니스 로직이 포함된 특수 함수
-export async function updateEmployeeSettings(companyCode, uid, settings) {
+/**
+ * Firebase 데이터 저장 함수
+ * @param path 저장할 Firebase 경로
+ * @param data 저장할 데이터 (유형을 제네릭으로 설정)
+ * @param message 성공 시 반환할 메시지 (선택 사항)
+ * @returns 성공 또는 실패 응답 객체
+ */
+export async function setData<T>(
+  path: string,
+  data: T,
+  message?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
-    const path = `companyCode/${companyCode}/users/${uid}`;
-    const userRef = ref(db, path);
-
-    await update(userRef, {
-      jobName: settings.jobName,
-      salaryType: settings.salaryType,
-      salaryAmount: parseInt(settings.salary),
-    });
-
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating employee settings:", error);
-    return { success: false, error };
+    await set(ref(db, path), data);
+    return { success: true, message: message || "데이터가 성공적으로 저장되었습니다." };
+  } catch (error: any) {
+    console.error(`Error setting data to ${path}:`, error);
+    return { success: false, error: error.message };
   }
 }
 
-// 이부분은 api호출과 관련 없으므로 추후에 컴포넌트로 제자리
+/**
+ * Firebase 데이터 업데이트 함수
+ * @param path 업데이트할 Firebase 경로
+ * @param data 업데이트할 데이터 (유형을 제네릭으로 설정)
+ * @param message 성공 시 반환할 메시지 (선택 사항)
+ * @returns 성공 또는 실패 응답 객체
+ */
+export async function updateData<T>(
+  path: string,
+  data: Partial<T>,
+  message?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    await update(ref(db, path), data);
+    return { success: true, message: message || "데이터가 성공적으로 업데이트되었습니다." };
+  } catch (error: any) {
+    console.error(`Error updating data at ${path}:`, error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * 현재 로그인한 사용자의 정보를 가져오는 함수
+ * @param currentUser - Firebase 인증된 현재 사용자 객체
+ * @returns 사용자 데이터 또는 null
+ */
+export async function getUser(currentUser: any) {
+  // firebase 유저타입, 일회성 함수,타입이라 그냥 any 로 정의함
+  if (!currentUser) return null;
+  const path = `companyCode/${currentUser.photoURL}/users/${currentUser.uid}`;
+  return await getData(path);
+}
+
+/**
+ * 특정 회사의 정보를 가져오는 함수
+ * @param companyCode - 조회할 회사의 고유 코드
+ * @returns 회사 정보 데이터 또는 null
+ */
+export async function getCompanyInfo(companyCode: string) {
+  if (!companyCode) return null;
+  return await getData(getCompanyInfoPath(companyCode));
+}
+//
+//
+//
+//
+//
+// 🔥 이전 버전에서 사용하던 함수들. 필요없을시 삭제
+
 function getNextDate(dateStr) {
   const date = new Date(dateStr);
   date.setDate(date.getDate() + 1);
@@ -80,7 +100,7 @@ function getPrevDate(dateStr) {
 export async function fetchWorkTimes(companyCode, userId) {
   try {
     const path = `companyCode/${companyCode}/users/${userId}/date`;
-    const dateRef = await fetchData(path);
+    const dateRef = await getData(path);
 
     if (!dateRef) {
       return { success: true, workTimes: {}, datesList: null };
@@ -105,7 +125,7 @@ export async function fetchWorkTimes(companyCode, userId) {
       } else {
         const path = `companyCode/${companyCode}/users/${userId}/date/${prevDay}`;
         const prevDay = getPrevDate(date);
-        const prevDayRef = await fetchData(path);
+        const prevDayRef = await getData(path);
         if (prevDayRef && prevDayRef.startTime) {
           start = new Date(prevDayRef.startTime);
         } else {
@@ -119,7 +139,7 @@ export async function fetchWorkTimes(companyCode, userId) {
       } else {
         const path = `companyCode/${companyCode}/users/${userId}/date/${nextDay}`;
         const nextDay = getNextDate(date);
-        const nextDayRef = await fetchData(path);
+        const nextDayRef = await getData(path);
 
         if (nextDayRef && nextDayRef.endTime) {
           end = new Date(nextDayRef.endTime);
@@ -146,7 +166,7 @@ export async function fetchWorkTimes(companyCode, userId) {
           db,
           `companyCode/${companyCode}/users/${userId}/workDates/${workDate}`,
         );
-        const workDateSnapshot = await fetchData(workDateRef);
+        const workDateSnapshot = await getData(workDateRef);
         if (workDateSnapshot) {
           await update(workDateRef, { workHour: workHours });
         }
@@ -167,215 +187,6 @@ export async function fetchWorkTimes(companyCode, userId) {
       error: error.message,
       workTimes: {},
       datesList: null,
-    };
-  }
-}
-
-export async function fetchHolidaySettings(companyCode) {
-  try {
-    const path = `companyCode/${companyCode}/companyInfo`;
-    const data = await fetchData(path);
-
-    return {
-      success: true,
-      data: {
-        isHoliday: data?.isholiday,
-        holidayPay: data?.holidayPay,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching holiday settings:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
-
-export async function fetchHolidayList(companyCode) {
-  try {
-    const path = `companyCode/${companyCode}/companyInfo/holidayList`;
-    const holidays = await fetchData(path);
-
-    if (holidays) {
-      const dates = Object.keys(holidays).map(dateStr => new Date(dateStr));
-      return {
-        success: true,
-        dates: dates,
-      };
-    }
-
-    return {
-      success: true,
-      dates: [],
-    };
-  } catch (error) {
-    console.error("Error fetching holiday list:", error);
-    return {
-      success: false,
-      error: error.message,
-      dates: [],
-    };
-  }
-}
-
-export async function saveHolidaySettings(companyCode, { holidays, isHoliday, holidayPay }) {
-  try {
-    const holidayList = holidays.reduce((obj, date) => {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const dateStr = `${year}-${month}-${day}`;
-      obj[dateStr] = true;
-      return obj;
-    }, {});
-
-    const updates = {
-      [`companyCode/${companyCode}/companyInfo/holidayList`]: holidayList,
-      [`companyCode/${companyCode}/companyInfo/isholiday`]: isHoliday,
-      [`companyCode/${companyCode}/companyInfo/holidayPay`]: parseFloat(holidayPay),
-    };
-
-    await update(ref(db), updates);
-    return { success: true };
-  } catch (error) {
-    console.error("Error saving holiday settings:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
-
-export async function fetchCompanyAndJobInfo(companyCode, userId) {
-  try {
-    const com_path = `companyCode/${companyCode}/companyInfo`;
-    const job_path = `companyCode/${companyCode}/users/${userId}/jobName`;
-    const companySnapshot = await fetchData(com_path);
-    const jobSnapshot = await fetchData(job_path);
-
-    if (companySnapshot && jobSnapshot) {
-      return {
-        success: true,
-        data: {
-          companyInfo: companySnapshot,
-          jobName: jobSnapshot,
-        },
-      };
-    }
-    return {
-      success: false,
-      error: "회사 정보를 찾을 수 없습니다.",
-    };
-  } catch (error) {
-    console.error("Error fetching company info:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
-
-export async function processQRScan(companyCode, userId, scanTime) {
-  try {
-    const date = new Date(scanTime);
-    const offset = date.getTimezoneOffset() * 60000;
-    const now = new Date(Date.now() - offset);
-
-    const nowStr = now.toISOString().slice(0, 10);
-    const yesterdayForNow = new Date(Date.now() - offset);
-    yesterdayForNow.setDate(yesterdayForNow.getDate() - 1);
-    const yesterdayStr = yesterdayForNow.toISOString().slice(0, 10);
-
-    // 현재 날짜와 이전 날짜의 데이터 참조
-    const todayPath = `companyCode/${companyCode}/users/${userId}/date/${nowStr}`;
-    const todayPathRef = ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`);
-    const todayWorkRef = ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`);
-
-    const yesterdayPath = `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`;
-    const yesterdayPathRef = ref(
-      db,
-      `companyCode/${companyCode}/users/${userId}/date/${yesterdayStr}`,
-    );
-    const yesterdayWorkRef = ref(
-      db,
-      `companyCode/${companyCode}/users/${userId}/workDates/${yesterdayStr}`,
-    );
-
-    const todaySnapshot = await fetchData(todayPath);
-    const yesterdaySnapshot = await fetchData(yesterdayPath);
-
-    // 다양한 출퇴근 상황 처리
-    if (yesterdaySnapshot || todaySnapshot) {
-      // 어제 출근, 퇴근 미처리
-      if (
-        !todaySnapshot &&
-        yesterdaySnapshot &&
-        yesterdaySnapshot.startTime &&
-        !yesterdaySnapshot.endTime
-      ) {
-        await update(yesterdayPathRef, { endTime: scanTime });
-        return { success: true, message: "다음 날 퇴근 인증이 완료되었습니다" };
-      }
-
-      // 오늘 출근, 퇴근 처리
-      if (todaySnapshot && todaySnapshot.startTime && !todaySnapshot.endTime) {
-        await update(todayPathRef, { endTime: scanTime });
-        return { success: true, message: "퇴근 인증이 완료되었습니다" };
-      }
-
-      // 오늘 퇴근만 있고 출근 기록이 없는 경우
-      if (todaySnapshot && todaySnapshot.endTime && !todaySnapshot.startTime) {
-        const startTime = yesterdaySnapshot.startTime;
-        const endTime = todaySnapshot.endTime;
-        const start = new Date(startTime);
-        const end = new Date(endTime);
-        const workHours = Number((24 - start.getHours() + end.getHours()).toFixed(1));
-
-        await set(todayPathRef, { startTime: scanTime });
-        await update(yesterdayPathRef, { endTime: endTime });
-        await update(yesterdayWorkRef, { workHour: workHours });
-        await set(todayWorkRef, {
-          workHour: 0,
-          daySalary: 0,
-          nightSalary: 0,
-          holidayAndWeekendSalary: 0,
-        });
-
-        return { success: true, message: "출근 인증이 완료되었습니다" };
-      }
-
-      // 새로운 날 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
-      if (!todaySnapshot && yesterdaySnapshot.startTime && yesterdaySnapshot.endTime) {
-        await set(todayPathRef, { startTime: scanTime });
-        await set(todayWorkRef, {
-          workHour: 0,
-          daySalary: 0,
-          nightSalary: 0,
-          holidayAndWeekendSalary: 0,
-        });
-
-        return { success: true, message: "출근 인증이 완료되었습니다" };
-      }
-    } else {
-      // 최초 출근 (보류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ)
-      await set(todayPathRef, { startTime: scanTime });
-      await set(todayWorkRef, {
-        workHour: 0,
-        daySalary: 0,
-        nightSalary: 0,
-        holidayAndWeekendSalary: 0,
-      });
-
-      return { success: true, message: "출근 인증이 완료되었습니다" };
-    }
-
-    return { success: false, error: "금일 출근, 퇴근을 이미 완료했습니다" };
-  } catch (error) {
-    console.error("Error processing QR scan:", error);
-    return {
-      success: false,
-      error: error.message,
     };
   }
 }
@@ -410,8 +221,8 @@ export async function fetchSalaryInfo(companyCode, userId) {
   try {
     const workDate_path = `companyCode/${companyCode}/users/${userId}/workDates`;
     const salaryDay_path = `companyCode/${companyCode}/companyInfo/payCheckDay`;
-    const workDateData = await fetchData(workDate_path);
-    const salaryDayData = await fetchData(salaryDay_path);
+    const workDateData = await getData(workDate_path);
+    const salaryDayData = await getData(salaryDay_path);
 
     const salaryDay = salaryDayData ? salaryDayData : 0;
     const workDates = workDateData ? workDateData : {};
@@ -517,264 +328,236 @@ export async function fetchSalaryInfo(companyCode, userId) {
   }
 }
 
-export async function fetchCurrentDayWork(companyCode, userId) {
-  try {
-    const date_path = `companyCode/${companyCode}/users/${userId}/date`;
-    const nightStart_path = `companyCode/${companyCode}/companyInfo/nightStart`;
-    const nightEnd_path = `companyCode/${companyCode}/companyInfo/nightEnd`;
-    const holidayList_path = `companyCode/${companyCode}/companyInfo/holidayList`;
-    const holidayPay_path = `companyCode/${companyCode}/companyInfo/holidayPay`;
-    const isNightPay_path = `companyCode/${companyCode}/companyInfo/isNightPay`;
+// 🔥 이동한 함수 -> 테스트 통과지 제거
+// export async function fetchCurrentDayWork(companyCode, userId) {
+//   try {
+//     const date_path = `companyCode/${companyCode}/users/${userId}/date`;
+//     const nightStart_path = `companyCode/${companyCode}/companyInfo/nightStart`;
+//     const nightEnd_path = `companyCode/${companyCode}/companyInfo/nightEnd`;
+//     const holidayList_path = `companyCode/${companyCode}/companyInfo/holidayList`;
+//     const holidayPay_path = `companyCode/${companyCode}/companyInfo/holidayPay`;
+//     const isNightPay_path = `companyCode/${companyCode}/companyInfo/isNightPay`;
 
-    const dateData = await fetchData(date_path);
-    const nightStartData = await fetchData(nightStart_path);
-    const nightEndData = await fetchData(nightEnd_path);
-    const holidayListData = await fetchData(holidayList_path);
-    const holidayPayData = await fetchData(holidayPay_path);
-    const isNightPayData = await fetchData(isNightPay_path);
+//     const dateData = await getData(date_path);
+//     const nightStartData = await getData(nightStart_path);
+//     const nightEndData = await getData(nightEnd_path);
+//     const holidayListData = await getData(holidayList_path);
+//     const holidayPayData = await getData(holidayPay_path);
+//     const isNightPayData = await getData(isNightPay_path);
 
-    return {
-      success: true,
-      data: {
-        dates: dateData || {},
-        nightStart: nightStartData,
-        nightEnd: nightEndData,
-        holidayList: holidayListData || {},
-        holidayPay: holidayPayData,
-        isNightPay: isNightPayData,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching current day work:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
+//     return {
+//       success: true,
+//       data: {
+//         dates: dateData || {},
+//         nightStart: nightStartData,
+//         nightEnd: nightEndData,
+//         holidayList: holidayListData || {},
+//         holidayPay: holidayPayData,
+//         isNightPay: isNightPayData,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error fetching current day work:", error);
+//     return {
+//       success: false,
+//       error: error.message,
+//     };
+//   }
+// }
 
 // signupPage
-export async function validateCompanyCode(code) {
-  try {
-    const companyCodeData = await fetchData(`companyCode/${code}`);
+// export async function validateCompanyCode(code) {
+//   try {
+//     const companyCodeData = await getData(`companyCode/${code}`);
 
-    if (companyCodeData && companyCodeData.companyInfo && companyCodeData.companyInfo.companyName) {
-      return {
-        isValid: true,
-        companyName: companyCodeData.companyInfo.companyName,
-      };
-    }
+//     if (companyCodeData && companyCodeData.companyInfo && companyCodeData.companyInfo.companyName) {
+//       return {
+//         isValid: true,
+//         companyName: companyCodeData.companyInfo.companyName,
+//       };
+//     }
 
-    return {
-      isValid: false,
-      error: "일치하는 회사가 없습니다.",
-    };
-  } catch (error) {
-    return {
-      isValid: false,
-      error: error.message,
-    };
-  }
-}
+//     return {
+//       isValid: false,
+//       error: "일치하는 회사가 없습니다.",
+//     };
+//   } catch (error) {
+//     return {
+//       isValid: false,
+//       error: error.message,
+//     };
+//   }
+// }
 
-export async function setEmployeeUser({
-  name,
-  userId,
-  email,
-  phoneNumber,
-  companyCode,
-  selectJob,
-  employmentType,
-}) {
-  const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
-  const userData = {
-    name: name,
-    uid: userId,
-    email: email,
-    phoneNumber: phoneNumber,
-    companyCode: companyCode,
-    jobName: selectJob,
-    employmentType: employmentType,
-    userType: "employee",
-  };
-  try {
-    await set(userRef, userData);
-    return {
-      success: true,
-    };
-  } catch (e) {
-    return {
-      success: false,
-      error: e.message,
-    };
-  }
-}
+// export async function setEmployeeUser({
+//   name,
+//   userId,
+//   email,
+//   phoneNumber,
+//   companyCode,
+//   selectJob,
+//   employmentType,
+// }) {
+//   const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
+//   const userData = {
+//     name: name,
+//     uid: userId,
+//     email: email,
+//     phoneNumber: phoneNumber,
+//     companyCode: companyCode,
+//     jobName: selectJob,
+//     employmentType: employmentType,
+//     userType: "employee",
+//   };
+//   try {
+//     await set(userRef, userData);
+//     return {
+//       success: true,
+//     };
+//   } catch (e) {
+//     return {
+//       success: false,
+//       error: e.message,
+//     };
+//   }
+// }
 
-export async function setCompanyAndManagerData({
-  formData,
-  userId,
-  companyCode,
-  name,
-  email,
-  phoneNumber,
-}) {
-  const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
-  const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
+// export async function setCompanyAndManagerData({
+//   formData,
+//   userId,
+//   companyCode,
+//   name,
+//   email,
+//   phoneNumber,
+// }) {
+//   const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+//   const userRef = ref(db, `companyCode/${companyCode}/users/${userId}`);
 
-  const companyData: TCompanyInfo = {
-    companyName: formData.companyBasic.companyName,
-    adminName: formData.companyBasic.adminName,
-    companyLogo: formData.companyBasic.companyLogo || "",
-    companyIntro: formData.companyBasic.companyIntro,
-    isDayNight: formData.companyNightHoliday.isDayNight,
-    nightStart: Number(formData.companyNightHoliday.nightStart) || 0,
-    nightEnd: Number(formData.companyNightHoliday.nightEnd) || 0,
-    payCheckDay: Number(formData.companyNightHoliday.payCheckDay) || 1,
-    isNightPay: formData.companyNightHoliday.nightPay!,
-    isHoliday: formData.companyNightHoliday.isHoliday,
-    holidayPay: formData.companyNightHoliday.holidayPay!,
-    holidayList: formData.companyNightHoliday.holidayList || [],
-    jobList: formData.companyJobList.companyJobs || [],
-    companyCode: companyCode,
-    qrValue: encrypt(companyCode),
-    workPlacesList: formData.companyWorkPlacesList.companyWorkPlaces,
-  };
+//   const companyData: TCompanyInfo = {
+//     companyName: formData.companyBasic.companyName,
+//     adminName: formData.companyBasic.adminName,
+//     companyLogo: formData.companyBasic.companyLogo || "",
+//     companyIntro: formData.companyBasic.companyIntro,
+//     isDayNight: formData.companyNightHoliday.isDayNight,
+//     nightStart: Number(formData.companyNightHoliday.nightStart) || 0,
+//     nightEnd: Number(formData.companyNightHoliday.nightEnd) || 0,
+//     payCheckDay: Number(formData.companyNightHoliday.payCheckDay) || 1,
+//     isNightPay: formData.companyNightHoliday.nightPay!,
+//     isHoliday: formData.companyNightHoliday.isHoliday,
+//     holidayPay: formData.companyNightHoliday.holidayPay!,
+//     holidayList: formData.companyNightHoliday.holidayList || [],
+//     jobList: formData.companyJobList.companyJobs || [],
+//     companyCode: companyCode,
+//     qrValue: encrypt(companyCode),
+//     workPlacesList: formData.companyWorkPlacesList.companyWorkPlaces,
+//   };
 
-  const userData: TCMUserData = {
-    name: name!,
-    uid: userId,
-    email: email!,
-    phoneNumber: phoneNumber || "",
-    userType: "manager",
-    companyCode,
-  };
-  try {
-    await set(companyRef, companyData);
-    await set(userRef, userData);
-    return {
-      success: true,
-    };
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e.message,
-    };
-  }
-}
-
-export async function fetchAddressByNaver(address: string) {
-  try {
-    const response = await fetch(`/api/naver-geocode?query=${encodeURIComponent(address)}`, {
-      method: "GET",
-      headers: {
-        "X-NCP-APIGW-API-KEY-ID": import.meta.env.VITE_NAVER_CLIENT_ID,
-        "X-NCP-APIGW-API-KEY": import.meta.env.VITE_NAVER_CLIENT_SECRET,
-        Accept: "application/json",
-      },
-    });
-
-    const data = await response.json();
-    return {
-      success: true,
-      data: { addresses: data.addresses },
-    };
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e.message,
-    };
-  }
-}
-
+//   const userData: TCMUserData = {
+//     name: name!,
+//     uid: userId,
+//     email: email!,
+//     phoneNumber: phoneNumber || "",
+//     userType: "manager",
+//     companyCode,
+//   };
+//   try {
+//     await set(companyRef, companyData);
+//     await set(userRef, userData);
+//     return {
+//       success: true,
+//     };
+//   } catch (e: any) {
+//     return {
+//       success: false,
+//       error: e.message,
+//     };
+//   }
+// }
 
 // 직원 관리 페이지
 // 직원 목록
-export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[]> => {
-  const data = await fetchData(`companyCode/${companyCode}/users`);
-  return data ? (Object.values(data) as EmployeeInfo[]) : [];
-}
-  
-export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<TCompanyInfo>) => {
-  try {
-    if (!companyCode) {
-      throw new Error("회사 코드가 없습니다.");
-    }
-    const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
-    await update(companyRef, {
-      companyName: data.companyName,
-      adminName: data.adminName,
-      companyIntro: data.companyIntro,
-      companyLogo: data.companyLogo,
-    });
+// export const updateCompanyBasicInfo = async (companyCode: string, data: Partial<TCompanyInfo>) => {
+//   try {
+//     if (!companyCode) {
+//       throw new Error("회사 코드가 없습니다.");
+//     }
+//     const companyRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
-    return { success: true, message: "회사 정보 변경이 완료되었습니다" };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-};
+//     await update(companyRef, {
+//       companyName: data.companyName,
+//       adminName: data.adminName,
+//       companyIntro: data.companyIntro,
+//       companyLogo: data.companyLogo,
+//     });
 
-export const updateCompanyJobList = async (companyCode: string, jobList: any) => {
-  try {
-    if (!companyCode) {
-      throw new Error("회사 코드가 없습니다.");
-    }
+//     return { success: true, message: "회사 정보 변경이 완료되었습니다" };
+//   } catch (error: any) {
+//     return { success: false, error: error.message };
+//   }
+// };
 
-    const jobListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+// export const updateCompanyJobList = async (companyCode: string, jobList: any) => {
+//   try {
+//     if (!companyCode) {
+//       throw new Error("회사 코드가 없습니다.");
+//     }
 
-    await update(jobListRef, {
-      jobList: jobList,
-    });
+//     const jobListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
-    return { success: true, message: "직무 목록이 성공적으로 업데이트되었습니다." };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-};
+//     await update(jobListRef, {
+//       jobList: jobList,
+//     });
 
-export const updateCompanyNightHolidayInfo = async (
-  companyCode: string,
-  nightHolidayData: Partial<TCompanyInfo>,
-) => {
-  try {
-    if (!companyCode) {
-      throw new Error("회사 코드가 없습니다.");
-    }
+//     return { success: true, message: "직무 목록이 성공적으로 업데이트되었습니다." };
+//   } catch (error: any) {
+//     return { success: false, error: error.message };
+//   }
+// };
 
-    const nightHolidayRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+// export const updateCompanyNightHolidayInfo = async (
+//   companyCode: string,
+//   nightHolidayData: Partial<TCompanyInfo>,
+// ) => {
+//   try {
+//     if (!companyCode) {
+//       throw new Error("회사 코드가 없습니다.");
+//     }
 
-    const formattedData: Partial<TCompanyInfo> = {
-      ...nightHolidayData,
-      nightEnd: Number(nightHolidayData.nightEnd),
-      nightStart: Number(nightHolidayData.nightStart),
-      payCheckDay: Number(nightHolidayData.payCheckDay),
-    };
+//     const nightHolidayRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
-    await update(nightHolidayRef, formattedData);
+//     const formattedData: Partial<TCompanyInfo> = {
+//       ...nightHolidayData,
+//       nightEnd: Number(nightHolidayData.nightEnd),
+//       nightStart: Number(nightHolidayData.nightStart),
+//       payCheckDay: Number(nightHolidayData.payCheckDay),
+//     };
 
-    return { success: true, message: "야간 및 공휴일 설정이 성공적으로 업데이트되었습니다." };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-};
+//     await update(nightHolidayRef, formattedData);
 
-export const updateCompanyWorkPlacesList = async (
-  companyCode: string,
-  workPlacesList: TworkPlacesList,
-) => {
-  try {
-    if (!companyCode) {
-      throw new Error("회사 코드가 없습니다.");
-    }
+//     return { success: true, message: "야간 및 공휴일 설정이 성공적으로 업데이트되었습니다." };
+//   } catch (error: any) {
+//     return { success: false, error: error.message };
+//   }
+// };
 
-    const workPlacesListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
+// export const updateCompanyWorkPlacesList = async (
+//   companyCode: string,
+//   workPlacesList: TworkPlacesList,
+// ) => {
+//   try {
+//     if (!companyCode) {
+//       throw new Error("회사 코드가 없습니다.");
+//     }
 
-    await update(workPlacesListRef, {
-      workPlacesList: workPlacesList,
-    });
+//     const workPlacesListRef = ref(db, `companyCode/${companyCode}/companyInfo`);
 
-    return { success: true, message: "근무지 목록이 성공적으로 업데이트되었습니다." };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-};
+//     await update(workPlacesListRef, {
+//       workPlacesList: workPlacesList,
+//     });
+
+//     return { success: true, message: "근무지 목록이 성공적으로 업데이트되었습니다." };
+//   } catch (error: any) {
+//     return { success: false, error: error.message };
+//   }
+// };

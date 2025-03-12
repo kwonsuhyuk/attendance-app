@@ -1,8 +1,7 @@
-import React from "react";
 import { useCompanyJobListForm } from "@/hooks/company-settings/useCompanyJobListForm";
-import { updateCompanyJobList } from "@/api";
 import { useToast } from "@/hooks/use-toast";
 import { useCompanyStore } from "@/store/company.store";
+import { updateCompanyJobList } from "@/api/company.api";
 
 export const usePositionManagePage = () => {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);

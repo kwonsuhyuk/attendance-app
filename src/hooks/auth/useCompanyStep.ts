@@ -13,10 +13,10 @@ export const useCompanyStep = ({ submitCompanyData, companySettingForm }: IuseCo
       activeStep === 0
         ? "companyBasic"
         : activeStep === 1
-        ? "companyJobList"
-        : activeStep === 2
-        ? "companyNightHoliday"
-        : null;
+          ? "companyJobList"
+          : activeStep === 2
+            ? "companyNightHoliday"
+            : null;
 
     if (stepValidation) {
       const isValid = await companySettingForm.trigger(stepValidation, { shouldFocus: true });

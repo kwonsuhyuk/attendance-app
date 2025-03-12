@@ -6,7 +6,7 @@ import { QRSCAN_FAILED, QRSCAN_NOT_VALID, QRSCAN_PERIOD } from "@/constants/qr";
 import QrScanner from "qr-scanner";
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
-import { processQRScan } from "@/api";
+import { processQRScan } from "@/api/commute.api";
 
 const QrScan = () => {
   const { companyCode, userId } = useUserStore(
@@ -70,7 +70,7 @@ const QrScan = () => {
 
   return (
     <div className="h-full w-full" data-tour="step-36">
-      <video ref={videoRef} className="w-full h-[250px] object-cover" />
+      <video ref={videoRef} className="h-[250px] w-full object-cover" />
     </div>
   );
 };

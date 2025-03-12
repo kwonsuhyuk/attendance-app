@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import { MANAGER_ROUTES, COMMON_ROUTES } from "@/constants/routes";
 import ManagerMainContent from "./ManagerMainContent";
 import EmployeeListPage from "@/pages/manager/EmployeeListPage";
-import ManagerSettingPage from "@/pages/manager/ManagerSettingPage";
 import AboutPage from "@/pages/common/AboutPage";
 import DateCheckPage from "@/pages/manager/DateCheckPage";
 import TodayAttenancePage from "@/pages/manager/TodayAttenancePage";
@@ -23,7 +22,6 @@ const ManagerRoutes = () => {
         <Route path={COMMON_ROUTES.COMPANY_MAIN} element={<ManagerMainContent />} />
         <Route path={MANAGER_ROUTES.EMPLOYEE_LIST} element={<EmployeeListPage />} />
         <Route path={MANAGER_ROUTES.CALENDAR} element={<DateCheckPage />} />
-        <Route path={MANAGER_ROUTES.SETTING} element={<ManagerSettingPage />} />
         <Route path={COMMON_ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={MANAGER_ROUTES.TODAY_ATT} element={<TodayAttenancePage />} />
         <Route path={MANAGER_ROUTES.PERIROD_ATT} element={<PeriodAttendancePage />} />

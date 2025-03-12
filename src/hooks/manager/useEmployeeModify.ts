@@ -1,8 +1,8 @@
-import { updateEmployeeSettings } from "@/api";
 import { toast } from "react-toastify";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
 import { formatMoney } from "@/util/formatMoney.util";
+import { updateEmployeeSettings } from "@/api/employee.api";
 
 export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   const { name, email, jobName, uid, salaryAmount, companyCode, employmentType, phoneNumber } =

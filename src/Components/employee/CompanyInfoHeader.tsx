@@ -13,7 +13,7 @@ const CompanyInfoHeader = () => {
       <img
         src={companyLogo || "/placeholder.svg"}
         alt="회사로고"
-        className="rounded-full w-[130px] h-[130px]"
+        className="h-[130px] w-[130px] rounded-full"
       />
       <div className="font-black">{companyName}</div>
       <div className="flex items-center">

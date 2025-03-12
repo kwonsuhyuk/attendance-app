@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
-import { login } from "@/api/auth";
+import { login } from "@/api/auth.api";
 import { z } from "zod";
 import { loginFormSchema } from "@/model/schema/authSchema/login.schema";
 

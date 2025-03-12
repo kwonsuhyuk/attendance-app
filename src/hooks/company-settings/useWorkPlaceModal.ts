@@ -1,4 +1,4 @@
-import { fetchAddressByNaver } from "@/api";
+import { fetchAddressByNaver } from "@/api/map.api";
 import { useState, useEffect } from "react";
 
 export interface IWorkPlace {

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { setEmployeeUser } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../use-toast";
 import { useShallow } from "zustand/shallow";
 import { useUserStore } from "@/store/user.store";
 import { TEmploymentType } from "@/model/types/position.type";
+import { setEmployeeUser } from "@/api/auth.api";
 
 export const useSettingEmployee = () => {
   const { toast } = useToast();
@@ -37,16 +37,27 @@ export const useSettingEmployee = () => {
       });
       return;
     }
+
+    if (!name || !userId || !email || !phoneNumber || !companyCode) {
+      toast({
+        description: "고용 형태를 선택해주세요.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
+
     try {
       await setEmployeeUser({
         name,
-        userId,
+        uid: userId,
         email,
         phoneNumber,
         companyCode,
-        selectJob,
+        jobName: selectJob,
         employmentType,
+        userType: "employee",
       });
       setLoading(false);
       navigate(`/${companyCode}/appguide`);
