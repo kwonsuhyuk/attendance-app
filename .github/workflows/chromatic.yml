@@ -19,24 +19,23 @@ jobs:
           npm cache clean --force
           npm install
 
+      # ✅ ShadCN 컴포넌트가 필요하면 설치
+      - name: Ensure ShadCN Components Exist
+        run: npx shadcn-ui@latest init
+
       # ✅ Storybook 빌드가 정상적으로 실행되는지 확인
       - name: Build Storybook
         run: npm run build-storybook
 
-      # ✅ Chromatic 실행
-      - name: Run Chromatic
-        id: chromatic
-        uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true
-          onlyChanged: true
+      # ✅ Chromatic 실행 (npx chromatic 사용)
+      - name: Deploy to Chromatic
+        run: npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --exit-zero-on-changes --only-changed
 
       - name: Add PR Comment with Chromatic URL
         if: github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            🚀 **Chromatic Storybook 배포 완료!**  
-            UI 변경 사항을 확인하세요: [Chromatic 배포 링크](${{ steps.chromatic.outputs.storybookUrl }})
+            🚀 **Chromatic Storybook 배포 완료!**
+            UI 변경 사항을 확인하세요: [Chromatic 배포 링크](https://www.chromatic.com/)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
