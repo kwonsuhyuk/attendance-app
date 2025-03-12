@@ -1,4 +1,4 @@
-import { get, set, getDatabase, ref, update } from "firebase/database";
+import { get, set, getDatabase, ref, update, onValue, off } from "firebase/database";
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
 import { TCompanyInfo } from "@/model/types/company.type";
@@ -58,6 +58,22 @@ export async function updateData<T>(
 }
 
 /**
+ * 회사의 정보를 구독하는 함수
+ * @param path - 구독할 db 경로
+ * @param callback - 구독할 함수 등록
+ * @returns 데이터 누수 방지 cleanup 함수
+ */
+export function subscribeToData<T>(path: string, callback: (data: T | null) => void) {
+  const dataRef = ref(db, path);
+
+  const unsubscribe = onValue(dataRef, snapshot => {
+    callback(snapshot.exists() ? (snapshot.val() as T) : null);
+  });
+
+  return () => off(dataRef, "value", unsubscribe);
+}
+
+/**
  * 현재 로그인한 사용자의 정보를 가져오는 함수
  * @param currentUser - Firebase 인증된 현재 사용자 객체
  * @returns 사용자 데이터 또는 null
@@ -68,7 +84,23 @@ export async function getUser(currentUser: any) {
   const path = `companyCode/${currentUser.photoURL}/users/${currentUser.uid}`;
   return await getData(path);
 }
+// 복잡한 비즈니스 로직이 포함된 특수 함수
+export async function updateEmployeeSettings(companyCode, uid, settings) {
+  try {
+    const path = `companyCode/${companyCode}/users/${uid}`;
+    const userRef = ref(db, path);
 
+    await update(userRef, {
+      jobName: settings.jobName,
+      employmentType: settings.employmentType,
+      salaryAmount: parseInt(settings.salary),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating employee settings:", error);
+    return { success: false, error };
+  }
 /**
  * 특정 회사의 정보를 가져오는 함수
  * @param companyCode - 조회할 회사의 고유 코드

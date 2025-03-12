@@ -15,7 +15,7 @@ interface IPayCheckDaySelectProps {
 const PayCheckDaySelect = ({ type = "firstpage" }: IPayCheckDaySelectProps) => {
   const { setValue, watch } = useFormContext();
   const prefix = type === "firstpage" ? "companyNightHoliday." : "";
-  const payCheckDay = watch(`${prefix}payCheckDay`, "1");
+  const payCheckDay = watch(`${prefix}payCheckDay`);
 
   return (
     <Card className="w-full">
@@ -23,9 +23,15 @@ const PayCheckDaySelect = ({ type = "firstpage" }: IPayCheckDaySelectProps) => {
         <CardTitle className="text-lg">급여 정산일</CardTitle>
       </CardHeader>
       <CardContent>
-        <Select value={payCheckDay} onValueChange={val => setValue(`${prefix}payCheckDay`, val)}>
+        <Select
+          value={payCheckDay?.toString()}
+          onValueChange={val => setValue(`${prefix}payCheckDay`, val.toString())}
+        >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="급여 지급일을 선택하세요" defaultValue={payCheckDay} />
+            <SelectValue
+              placeholder="급여 지급일을 선택하세요"
+              defaultValue={payCheckDay?.toString()}
+            />
           </SelectTrigger>
           <SelectContent>
             {[...Array(31)].map((_, i) => (

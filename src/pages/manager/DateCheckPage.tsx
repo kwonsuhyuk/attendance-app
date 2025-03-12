@@ -42,7 +42,7 @@ const DateCheckPage = () => {
   const { nightPay, holidayPay, holidayList, paycheckDay } = useCompanyStore(
     useShallow(state => ({
       paycheckDay: state.currentCompany?.payCheckDay,
-      nightPay: state.currentCompany?.isNightPay,
+      nightPay: state.currentCompany?.nightPay,
       holidayPay: state.currentCompany?.holidayPay,
       holidayList: state.currentCompany?.holidayList,
     })),

@@ -51,7 +51,6 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
           </button>
         )}
       </div>
-
       <div className="grid grid-cols-2 gap-3 sm:col-span-2 sm:flex sm:gap-3">
         <Select onValueChange={value => setValue("selectedJob", value)}>
           <SelectTrigger className="h-[40px] w-full dark:bg-dark-border-sub dark:text-white-bg">

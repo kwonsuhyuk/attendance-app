@@ -21,6 +21,7 @@ import { Toaster } from "./components/ui/toaster";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import { MAIN_ROUTES } from "./constants/routes";
+import { TCMUserData, TEmpUserData } from "./model/types/user.type";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
@@ -37,7 +38,7 @@ const App = () => {
       if (user) {
         try {
           const data = await getUser(user);
-          setUser(data);
+          setUser(data as TEmpUserData | TCMUserData);
         } catch (error) {
           console.error("Error fetching user data:", error);
           clearUser();

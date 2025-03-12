@@ -3,12 +3,15 @@ import { useCompanyStore } from "@/store/company.store";
 import { TCompanyInfo } from "@/model/types/company.type";
 import { useCompanyNightHolidayForm } from "@/hooks/company-settings/useCompanyNightHolidayForm";
 import { updateCompanyNightHolidayInfo } from "@/api/company.api";
+import { useState } from "react";
+import { getCompanyInfo } from "@/api";
 
 export const useHolidayNightManagePage = () => {
   const { toast } = useToast();
   const { formMethods: companyNightHolidayForm, loading } = useCompanyNightHolidayForm();
   const { handleSubmit } = companyNightHolidayForm;
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
+  const setCompany = useCompanyStore(state => state.setCompany);
   const onInvalid = () => {
     toast({
       title: "회사 기본 정보에 실패 했습니다.",
