@@ -8,6 +8,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import Pagination from "@/components/ui/pagination";
+import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
 
 const EmployeeListPage = () => {
   const {
@@ -21,53 +22,11 @@ const EmployeeListPage = () => {
     handleNextPage,
     handlePreviousPage,
     filteredEmployees,
+    handleSubmit,
+    onSubmit,
   } = useEmployeeList();
 
-  const columns: ColumnDef<EmployeeInfo>[] = [
-    { accessorKey: "name", header: "이름" },
-    {
-      accessorKey: "email",
-      header: "이메일",
-      cell: ({ getValue }) => (
-        <div className="whitespace-normal break-words">{String(getValue())}</div>
-      ),
-    },
-    { accessorKey: "phoneNumber", header: "전화번호" },
-    { accessorKey: "jobName", header: "직종" },
-    // { accessorKey: "salaryType", header: "급여 지급 방식" },
-    { accessorKey: "employmentType", header: "고용 형태" },
-    {
-      accessorKey: "salaryAmount",
-      header: "급여",
-      cell: ({ getValue }) => `${String(getValue() ?? 0).toLocaleString()} 원`,
-    },
-    {
-      accessorKey: "edit",
-      header: "수정",
-      cell: ({ row }) => (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setSelectedEmployee(row.original)}
-          className="dark:bg-dark-border"
-        >
-          수정
-        </Button>
-      ),
-    },
-    {
-      accessorKey: "details",
-      header: "상세보기 & 정산",
-      cell: ({ row }) => (
-        <Link to={`/${row.original.companyCode}/datecheck/${row.original.uid}`}>
-          <Button variant="default" size="sm" className="dark:bg-dark-border">
-            <span className="inline sm:hidden">상세보기</span>
-            <span className="hidden sm:inline">상세보기 & 정산 {">"}</span>
-          </Button>
-        </Link>
-      ),
-    },
-  ];
+  const columns = getEmployeeColumns(setSelectedEmployee);
 
   return (
     <EmployeeListPageContainer>
@@ -76,14 +35,17 @@ const EmployeeListPage = () => {
           <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
         </div>
 
-        <EmployeeFilter register={register} setValue={setValue} />
+        <EmployeeFilter
+          register={register}
+          setValue={setValue}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+        />
 
-        {/* 직원 리스트(데이터) */}
         <div className="mt-4 w-full overflow-x-auto">
           <DataTable columns={columns} data={paginatedEmployees} />
         </div>
 
-        {/* 🔹 페이지네이션 컴포넌트 적용 */}
         <Pagination
           page={page}
           totalPageCount={totalPageCount}

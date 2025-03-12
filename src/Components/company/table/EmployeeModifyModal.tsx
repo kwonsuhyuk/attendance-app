@@ -20,6 +20,7 @@ import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
 import { useCompanyStore } from "@/store/company.store";
+import { X } from "lucide-react";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -36,6 +37,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     selectedJob,
     selectedEmploymentType,
     handleSalaryChange,
+    handleSubmit,
+    onSubmit,
   } = useEmployeeModify(user, onClose);
 
   const jobList = useCompanyStore(state => state.currentCompany?.jobList);
@@ -45,6 +48,12 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
       <DialogContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text dark:shadow-lg sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
+          >
+            <X size={20} strokeWidth={3} /> {/* ✅ X 아이콘 추가 */}
+          </button>
         </DialogHeader>
 
         <div className="grid gap-8 py-8">
@@ -99,18 +108,20 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               type="text"
               value={salary ? salary.toLocaleString() : ""}
               onChange={handleSalaryChange}
-              className="dark:bg-white-bg"
+              placeholder="급여를 미입력 시 0원 처리됩니다."
+              className="h-10 placeholder:text-sm dark:bg-white-bg"
             />
             <span className="text-xs text-gray-500">= {numToKorean(salary)} 원</span>
           </div>
         </div>
 
         <DialogFooter>
-          <Button type="submit" className="dark:bg-white-bg dark:hover:text-white-text">
+          <Button
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            className="dark:bg-white-bg dark:hover:text-white-text"
+          >
             저장
-          </Button>
-          <Button onClick={onClose} className="dark:bg-white-bg dark:hover:text-white-text">
-            취소
           </Button>
         </DialogFooter>
       </DialogContent>

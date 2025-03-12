@@ -21,15 +21,15 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   const selectedEmploymentType = watch("selectedEmploymentType");
 
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let rawValue = event.target.value.replace(/,/g, ""); // 기존 쉼표 제거
-    if (!/^\d*$/.test(rawValue)) return; // 숫자만 입력 허용
-    setValue("salary", Number(rawValue));
+    let rawValue = event.target.value.replace(/,/g, "");
+    if (!/^\d*$/.test(rawValue)) return;
+    setValue("salary", rawValue === "" ? 0 : Number(rawValue)); // 급여를 입력하지 않으면 0원으로 저장
   };
 
   const onSubmit = async (data: EmployeeForm) => {
     const result = await updateEmployeeSettings(companyCode, uid, {
       jobName: data.selectedJob,
-      salaryType: data.selectedEmploymentType,
+      employmentType: data.selectedEmploymentType,
       salary: data.salary,
     });
 

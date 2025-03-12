@@ -84,7 +84,23 @@ export async function getUser(currentUser: any) {
   const path = `companyCode/${currentUser.photoURL}/users/${currentUser.uid}`;
   return await getData(path);
 }
+// 복잡한 비즈니스 로직이 포함된 특수 함수
+export async function updateEmployeeSettings(companyCode, uid, settings) {
+  try {
+    const path = `companyCode/${companyCode}/users/${uid}`;
+    const userRef = ref(db, path);
 
+    await update(userRef, {
+      jobName: settings.jobName,
+      employmentType: settings.employmentType,
+      salaryAmount: parseInt(settings.salary),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating employee settings:", error);
+    return { success: false, error };
+  }
 /**
  * 특정 회사의 정보를 가져오는 함수
  * @param companyCode - 조회할 회사의 고유 코드
