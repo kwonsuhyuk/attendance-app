@@ -11,11 +11,29 @@ export const useEmployeeList = () => {
   const [page, setPage] = useState(0);
   const rowsPerPage = 10;
 
-  const { register, watch, setValue } = useForm<FilterForm>({
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [searchValues, setSearchValues] = useState<FilterForm>({
+    searchName: "",
+    selectedJob: "전체",
+    selectedEmploymentType: "전체",
+    salary: 0,
+  });
+
+  const { register, setValue, getValues, handleSubmit, watch } = useForm<FilterForm>({
     defaultValues: {
       searchName: "",
       selectedJob: "전체",
       selectedEmploymentType: "전체",
+      salary: 0,
     },
   });
 
@@ -30,21 +48,21 @@ export const useEmployeeList = () => {
     loadEmployees();
   }, [companyCode]);
 
-  const searchName = watch("searchName");
-  const selectedJob = watch("selectedJob");
-  const selectedEmploymentType = watch("selectedEmploymentType");
+  const filteredEmployees = employeeList.filter(user => {
+    const search = isMobile ? searchValues.searchName : watch("searchName");
+    const job = isMobile ? searchValues.selectedJob : watch("selectedJob");
+    const employment = isMobile
+      ? searchValues.selectedEmploymentType
+      : watch("selectedEmploymentType");
 
-  const normalizedSalaryType = selectedEmploymentType.replace(" 지급", "");
-
-  const filteredEmployees = employeeList.filter(
-    user =>
-      user.name.includes(searchName) &&
-      (selectedJob === "전체" || user?.jobName === selectedJob) &&
-      (selectedEmploymentType === "전체" || user?.employmentType === normalizedSalaryType),
-  );
+    return (
+      user.name.includes(search) &&
+      (job === "전체" || user?.jobName === job) &&
+      (employment === "전체" || user?.employmentType === employment.replace(" 지급", ""))
+    );
+  });
 
   const paginatedEmployees = filteredEmployees.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
-
   const totalPageCount = Math.ceil(filteredEmployees.length / rowsPerPage);
 
   const handleNextPage = () => {
@@ -59,11 +77,15 @@ export const useEmployeeList = () => {
     }
   };
 
+  const onSubmit = () => {
+    setSearchValues(getValues());
+    setPage(0);
+  };
+
   return {
     employeeList,
     selectedEmployee,
     setSelectedEmployee,
-    selectedEmploymentType,
     register,
     setValue,
     filteredEmployees,
@@ -72,5 +94,7 @@ export const useEmployeeList = () => {
     totalPageCount,
     handleNextPage,
     handlePreviousPage,
+    handleSubmit,
+    onSubmit,
   };
 };
