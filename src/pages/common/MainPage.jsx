@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useTour } from "@reactour/tour";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
-import { getCompanyInfo } from "@/api";
 import Loading from "@/components/common/Loading";
 import ManagerRoutes from "@/components/company/\bManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
+import { getCompanyInfo } from "@/api";
 
 const MainPage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);

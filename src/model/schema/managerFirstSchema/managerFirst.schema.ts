@@ -36,4 +36,5 @@ export const companyFormSchema = z.object({
   companyBasic: companyBasicSchema,
   companyJobList: companyJobListSchema,
   companyNightHoliday: companyNightHolidaySchema,
+  companyWorkPlacesList: z.any().optional(),
 });

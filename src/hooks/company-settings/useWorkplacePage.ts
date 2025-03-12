@@ -1,7 +1,7 @@
-import { updateCompanyWorkPlacesList } from "@/api";
 import { useToast } from "@/hooks/use-toast";
 import { useCompanyStore } from "@/store/company.store";
 import { useCompanyWorkPlacesListForm } from "./useCompanyWorkPlacesListForm";
+import { updateCompanyWorkPlacesList } from "@/api/company.api";
 
 export const useWorkplacePage = () => {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);

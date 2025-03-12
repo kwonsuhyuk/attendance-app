@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { fetchEmployees } from "@/api";
 import { useUserStore } from "@/store/user.store";
 import { EmployeeInfo, FilterForm } from "@/model/types/user.type";
-import { DUMMY_EMPLOYEES } from "@/constants/dummyEmployees";
+import { fetchEmployees } from "@/api/employee.api";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);

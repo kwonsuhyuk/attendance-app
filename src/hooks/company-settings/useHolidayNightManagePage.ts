@@ -1,8 +1,8 @@
 import { useToast } from "@/hooks/use-toast";
 import { useCompanyStore } from "@/store/company.store";
-import { updateCompanyNightHolidayInfo } from "@/api";
 import { TCompanyInfo } from "@/model/types/company.type";
 import { useCompanyNightHolidayForm } from "@/hooks/company-settings/useCompanyNightHolidayForm";
+import { updateCompanyNightHolidayInfo } from "@/api/company.api";
 
 export const useHolidayNightManagePage = () => {
   const { toast } = useToast();

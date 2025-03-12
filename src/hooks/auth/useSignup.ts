@@ -4,14 +4,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/store/user.store";
 import { signupFormSchema } from "@/model/schema/authSchema/signup.schema";
-import { getCompanyInfo, validateCompanyCode } from "@/api";
-import { signup } from "@/api/auth";
+import { signup, validateCompanyCode } from "@/api/auth.api";
 import { TSignupFormData } from "@/model/types/authTypes/signup.type";
 import { TPosition } from "@/model/types/position.type";
 import { TEmpUserData, TCMUserData } from "@/model/types/user.type";
 import { z } from "zod";
 import { useCompanyStore } from "@/store/company.store";
 import { nanoid } from "nanoid";
+import { getCompanyInfo } from "@/api";
 
 export const useSignup = () => {
   const navigate = useNavigate();
@@ -139,7 +139,7 @@ export const useSignup = () => {
         } as TEmpUserData;
       }
 
-      const companyData = await getCompanyInfo(signupData.companyCode);
+      const companyData = await getCompanyInfo(signupData.companyCode!);
 
       await Promise.all([setUser(userData), setCompany(companyData)]);
 
