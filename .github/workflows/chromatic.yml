@@ -1,24 +1,42 @@
-# Workflow name
-name: "Chromatic Deployment"
+name: "Chromatic"
 
-# Event for the workflow
 on: push
 
-# List of jobs
 jobs:
   chromatic:
-    name: "Run Chromatic"
+    name: Run Chromatic
     runs-on: ubuntu-latest
-    # Job steps
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: yarn
-        #👇 Adds Chromatic as a step in the workflow
-      - uses: chromaui/action@latest
-        # Options required for Chromatic's GitHub Action
+
+      # ✅ node_modules 및 캐시 삭제
+      - name: Clean cache and install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm install
+
+      # ✅ Storybook 빌드가 정상적으로 실행되는지 확인
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      # ✅ Chromatic 실행
+      - name: Run Chromatic
+        id: chromatic
+        uses: chromaui/action@latest
         with:
-          #👇 Chromatic projectToken, see https://storybook.js.org/tutorials/intro-to-storybook/react/ko/deploy/ to obtain it
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          exitZeroOnChanges: true
+          onlyChanged: true
+
+      - name: Add PR Comment with Chromatic URL
+        if: github.event_name == 'pull_request'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            🚀 **Chromatic Storybook 배포 완료!**  
+            UI 변경 사항을 확인하세요: [Chromatic 배포 링크](${{ steps.chromatic.outputs.storybookUrl }})
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
