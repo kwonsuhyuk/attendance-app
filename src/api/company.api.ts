@@ -35,9 +35,6 @@ export const updateCompanyNightHolidayInfo = async (
 
   const formattedData: Partial<TCompanyInfo> = {
     ...nightHolidayData,
-    nightEnd: Number(nightHolidayData.nightEnd),
-    nightStart: Number(nightHolidayData.nightStart),
-    payCheckDay: Number(nightHolidayData.payCheckDay),
   };
 
   return await updateData(

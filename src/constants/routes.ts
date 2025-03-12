@@ -1,6 +1,6 @@
 export const MAIN_ROUTES = {
   INDEX: "/",
-  MAIN: "/:id/*",
+  MAIN: "/:companyCode/*",
   SIGNUP: "/signup",
   MANAGER_FIRST: "/managerfirst",
   EMPLOYEE_FIRST: "/employeefirst",

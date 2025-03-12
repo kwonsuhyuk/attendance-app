@@ -1,4 +1,4 @@
-import { get, set, getDatabase, ref, update } from "firebase/database";
+import { get, set, getDatabase, ref, update, onValue, off } from "firebase/database";
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
 import { TCompanyInfo } from "@/model/types/company.type";
@@ -55,6 +55,22 @@ export async function updateData<T>(
     console.error(`Error updating data at ${path}:`, error);
     return { success: false, error: error.message };
   }
+}
+
+/**
+ * 회사의 정보를 구독하는 함수
+ * @param path - 구독할 db 경로
+ * @param callback - 구독할 함수 등록
+ * @returns 데이터 누수 방지 cleanup 함수
+ */
+export function subscribeToData<T>(path: string, callback: (data: T | null) => void) {
+  const dataRef = ref(db, path);
+
+  const unsubscribe = onValue(dataRef, snapshot => {
+    callback(snapshot.exists() ? (snapshot.val() as T) : null);
+  });
+
+  return () => off(dataRef, "value", unsubscribe);
 }
 
 /**

@@ -26,13 +26,13 @@ export type TCompanyInfo = {
   companyIntro: string;
   holidayPay: number;
   holidayList?: string[];
-  isNightPay: number;
+  nightPay: number;
   isDayNight: boolean;
   isHoliday: boolean;
   jobList: TJobList;
-  nightEnd: number;
-  nightStart: number;
-  payCheckDay: number;
+  nightEnd: string;
+  nightStart: string;
+  payCheckDay: string;
   qrValue: string;
   companyCode: string;
   workPlacesList: TworkPlacesList;

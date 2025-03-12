@@ -3,17 +3,19 @@ import { useEffect, useState } from "react";
 import { useTour } from "@reactour/tour";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
-import Loading from "@/components/common/Loading";
 import ManagerRoutes from "@/components/company/\bManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
-import { getCompanyInfo } from "@/api";
+import { useParams } from "react-router-dom";
+import { getCompanyInfo, subscribeToData } from "@/api";
+import { getCompanyInfoPath } from "@/constants/api.path";
+import Loading from "@/components/common/Loading";
 
 const MainPage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);
-  const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const { companyCode } = useParams();
   const setCompany = useCompanyStore(state => state.setCompany);
-  const [isLoading, setIsLoading] = useState(false);
   const { setIsOpen } = useTour();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getCompany() {
@@ -33,6 +35,18 @@ const MainPage = () => {
   }, [setCompany, companyCode]);
 
   useEffect(() => {
+    if (!companyCode) return;
+
+    const unsubscribe = subscribeToData(getCompanyInfoPath(companyCode), updatedCompanyData => {
+      if (updatedCompanyData) {
+        setCompany(updatedCompanyData);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [companyCode, setCompany]);
+
+  useEffect(() => {
     const tourShown = localStorage.getItem("tourShown");
     if (!tourShown || tourShown === "false") {
       setTimeout(() => {
@@ -41,9 +55,7 @@ const MainPage = () => {
     }
   }, [setIsOpen]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   return <>{userType === "manager" ? <ManagerRoutes /> : <EmployeeRoutes />}</>;
 };
