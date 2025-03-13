@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useUserStore } from "@/store/user.store";
 import { EmployeeInfo, FilterForm } from "@/model/types/user.type";
 import { fetchEmployees } from "@/api/employee.api";
+import { DUMMY_EMPLOYEES } from "@/constants/dummyEmployees";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
@@ -44,9 +45,9 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      setEmployeeList(employees ?? []);
+      // setEmployeeList(employees ?? []);
       // 이 주석 코드는 더미데이터를 포함한 리스트 입니다.
-      // setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
+      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);

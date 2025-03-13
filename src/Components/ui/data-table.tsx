@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -21,37 +22,40 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<TData>) {
+  const [pageSize, setPageSize] = useState(window.innerWidth < 640 ? 8 : 10);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: { pagination: { pageSize } },
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newPageSize = window.innerWidth < 640 ? 8 : 10;
+      setPageSize(newPageSize);
+      table.setPageSize(newPageSize); // 📌 여기서 pageSize 업데이트 적용
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [table]);
 
   const getColumnKey = (col: ColumnDef<TData>) =>
     (col as { accessorKey?: string }).accessorKey || "";
 
-  const visibleColumnsCount = columns.filter(
-    col =>
-      !["email", "phoneNumber", "jobName", "employmentType", "salaryAmount"].includes(
-        getColumnKey(col),
-      ),
-  ).length;
-
   return (
     <div className="w-full overflow-x-auto rounded-md border">
-      <Table className="mb-4 w-full table-auto md:table-auto">
+      <Table className="mb-5 w-full table-auto md:table-auto">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => {
-                const isHiddenOnMobile = [
-                  "email",
-                  "phoneNumber",
-                  "jobName",
-                  "employmentType",
-                  "salaryAmount",
-                ].includes(header.column.id);
+                const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
+                  header.column.id,
+                );
 
                 return (
                   <TableHead
@@ -76,17 +80,13 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {
-                  const isHiddenOnMobile = [
-                    "email",
-                    "phoneNumber",
-                    "jobName",
-                    "employmentType",
-                    "salaryAmount",
-                  ].includes(cell.column.id);
+                  const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
+                    cell.column.id,
+                  );
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`p-2 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                      className={`p-3 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
@@ -96,10 +96,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
             ))
           ) : (
             <TableRow>
-              <TableCell
-                colSpan={window.innerWidth < 640 ? visibleColumnsCount : columns.length}
-                className="w-full p-4 text-center text-gray-500"
-              >
+              <TableCell colSpan={columns.length} className="w-full p-5 text-center text-gray-500">
                 결과 없음
               </TableCell>
             </TableRow>

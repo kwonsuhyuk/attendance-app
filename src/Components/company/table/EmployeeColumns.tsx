@@ -17,7 +17,7 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
     accessorKey: column.key,
     header: column.header,
     cell: ({ row }) => (
-      <div>
+      <div className={column.key === "email" ? "break-all" : ""}>
         {column.key === "salaryAmount"
           ? `${formatMoney(row.getValue(column.key))} 원`
           : row.getValue(column.key)}
