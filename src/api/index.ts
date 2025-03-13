@@ -101,6 +101,7 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
     console.error("Error updating employee settings:", error);
     return { success: false, error };
   }
+}
 /**
  * 특정 회사의 정보를 가져오는 함수
  * @param companyCode - 조회할 회사의 고유 코드

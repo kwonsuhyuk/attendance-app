@@ -17,9 +17,10 @@ import {
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
+  onRowClick?: (row: TData) => void;
 }
 
-export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
+export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<TData>) {
   const table = useReactTable({
     data,
     columns,
@@ -69,7 +70,11 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         <TableBody>
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map(row => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id}
+                className="cursor-pointer hover:bg-gray-100"
+                onClick={() => onRowClick?.(row.original)}
+              >
                 {row.getVisibleCells().map(cell => {
                   const isHiddenOnMobile = [
                     "email",

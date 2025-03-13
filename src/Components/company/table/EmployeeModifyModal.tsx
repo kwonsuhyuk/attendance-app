@@ -21,6 +21,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
 import { useCompanyStore } from "@/store/company.store";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -42,6 +43,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
   } = useEmployeeModify(user, onClose);
 
   const jobList = useCompanyStore(state => state.currentCompany?.jobList);
+  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
@@ -52,7 +54,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
             onClick={onClose}
             className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
           >
-            <X size={20} strokeWidth={3} /> {/* ✅ X 아이콘 추가 */}
+            <X size={20} strokeWidth={3} />
           </button>
         </DialogHeader>
 
@@ -116,6 +118,11 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
         </div>
 
         <DialogFooter>
+          <Link to={`/${companyCode}/datecheck/${user.uid}`}>
+            <Button variant="outline" className="dark:bg-white-bg dark:text-white-text">
+              상세보기 & 정산
+            </Button>
+          </Link>
           <Button
             type="submit"
             onClick={handleSubmit(onSubmit)}
