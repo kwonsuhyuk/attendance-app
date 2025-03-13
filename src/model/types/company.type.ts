@@ -1,3 +1,5 @@
+import { EmployeeInfo } from "./user.type";
+
 // 직무 타입
 export type TJob = {
   id: string;
@@ -36,6 +38,7 @@ export type TCompanyInfo = {
   qrValue: string;
   companyCode: string;
   workPlacesList: TworkPlacesList;
+  employees?: EmployeeInfo[];
 };
 
 // 직무 이름 선택 타입

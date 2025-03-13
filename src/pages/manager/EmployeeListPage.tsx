@@ -5,6 +5,7 @@ import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import Pagination from "@/components/ui/pagination";
 import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
+import { useState } from "react";
 
 const EmployeeListPage = () => {
   const {
@@ -23,6 +24,14 @@ const EmployeeListPage = () => {
   } = useEmployeeList();
 
   const columns = getEmployeeColumns();
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  const handleClose = () => {
+    setSelectedEmployee(null);
+    if (isUpdated) {
+      window.location.reload();
+    }
+  };
 
   return (
     <EmployeeListPageContainer>
@@ -49,9 +58,12 @@ const EmployeeListPage = () => {
           onPrevious={handlePreviousPage}
         />
 
-        {/* 수정 버튼 클릭 시 모달 */}
         {selectedEmployee && (
-          <EmployeeModifyModal user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
+          <EmployeeModifyModal
+            user={selectedEmployee}
+            onClose={handleClose}
+            setIsUpdated={setIsUpdated}
+          />
         )}
       </div>
     </EmployeeListPageContainer>

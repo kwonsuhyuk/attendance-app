@@ -22,17 +22,21 @@ import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
 import { useCompanyStore } from "@/store/company.store";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
   onClose: () => void;
+  setIsUpdated: (value: boolean) => void;
 }
 
-const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
+const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps) => {
+  const [isEditing, setIsEditing] = useState(false);
   const {
     name,
     email,
     phoneNumber,
+    register,
     setValue,
     salary,
     selectedJob,
@@ -40,7 +44,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     handleSalaryChange,
     handleSubmit,
     onSubmit,
-  } = useEmployeeModify(user, onClose);
+  } = useEmployeeModify(user, setIsUpdated);
 
   const jobList = useCompanyStore(state => state.currentCompany?.jobList);
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
@@ -85,8 +89,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
           ].map(({ label, value, onChange, options }) => (
             <div key={label} className="flex flex-col gap-3">
               <span className="font-medium">{label}</span>
-              <Select defaultValue={value} onValueChange={onChange}>
-                <SelectTrigger className="dark:bg-white-bg">
+              <Select defaultValue={value} onValueChange={onChange} disabled={!isEditing}>
+                <SelectTrigger className="disabled:text-gray-600 dark:bg-white-bg">
                   <SelectValue placeholder={`${label} 선택`} />
                 </SelectTrigger>
                 <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -111,7 +115,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
               value={salary ? salary.toLocaleString() : ""}
               onChange={handleSalaryChange}
               placeholder="급여를 미입력 시 0원 처리됩니다."
-              className="h-10 placeholder:text-sm dark:bg-white-bg"
+              className="h-10 placeholder:text-sm disabled:text-gray-600 dark:bg-white-bg"
+              disabled={!isEditing}
             />
             <span className="text-xs text-gray-500">= {numToKorean(salary)} 원</span>
           </div>
@@ -124,11 +129,15 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
             </Button>
           </Link>
           <Button
-            type="submit"
-            onClick={handleSubmit(onSubmit)}
+            onClick={() => {
+              if (isEditing) {
+                handleSubmit(onSubmit)();
+              }
+              setIsEditing(!isEditing);
+            }}
             className="dark:bg-white-bg dark:hover:text-white-text"
           >
-            저장
+            {isEditing ? "완료" : "수정"}
           </Button>
         </DialogFooter>
       </DialogContent>

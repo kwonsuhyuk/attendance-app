@@ -11,8 +11,6 @@ export const employeeColumnsConfig = [
   { key: "jobName", header: "직종" },
   { key: "employmentType", header: "고용 형태" },
   { key: "salaryAmount", header: "급여" },
-  // { key: "edit", header: "수정" },
-  // { key: "details", header: "상세보기 & 정산" },
 ];
 
 export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {

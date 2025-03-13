@@ -3,8 +3,9 @@ import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
 import { formatMoney } from "@/util/formatMoney.util";
 import { updateEmployeeSettings } from "@/api/employee.api";
+import { useState } from "react";
 
-export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
+export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: boolean) => void) => {
   const { name, email, jobName, uid, salaryAmount, companyCode, employmentType, phoneNumber } =
     user;
 
@@ -27,6 +28,15 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
   };
 
   const onSubmit = async (data: EmployeeForm) => {
+    if (
+      user.jobName === data.selectedJob &&
+      user.employmentType === data.selectedEmploymentType &&
+      user.salaryAmount === data.salary
+    ) {
+      toast.info("변경된 내용이 없습니다.");
+      return;
+    }
+
     const result = await updateEmployeeSettings(companyCode, uid, {
       jobName: data.selectedJob,
       employmentType: data.selectedEmploymentType,
@@ -34,9 +44,8 @@ export const useEmployeeModify = (user: EmployeeInfo, onClose: () => void) => {
     });
 
     if (result.success) {
-      window.location.reload();
       toast.success("정보 수정이 완료되었습니다.");
-      onClose();
+      setIsUpdated(true);
     } else {
       toast.error("오류가 발생하였습니다. 다시 시도해주세요.");
     }
