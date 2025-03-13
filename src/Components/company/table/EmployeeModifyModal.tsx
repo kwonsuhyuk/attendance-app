@@ -33,10 +33,6 @@ interface IEmployeeInfoProps {
 const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const {
-    name,
-    email,
-    phoneNumber,
-    register,
     setValue,
     salary,
     selectedJob,
@@ -112,9 +108,9 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             <span className="font-medium">급여</span>
             <Input
               type="text"
-              value={salary ? salary.toLocaleString() : ""}
+              value={salary ? formatMoney(salary) : ""}
               onChange={handleSalaryChange}
-              placeholder="급여를 미입력 시 0원 처리됩니다."
+              placeholder="급여 미입력 시 0원 처리됩니다."
               className="h-10 placeholder:text-sm disabled:text-gray-600 dark:bg-white-bg"
               disabled={!isEditing}
             />

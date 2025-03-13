@@ -1,7 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { EmployeeInfo } from "@/model/types/user.type";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { formatMoney } from "@/util/formatMoney.util";
 
 // columns 객체를 JSON처럼 관리하고 동적으로 렌더링
 export const employeeColumnsConfig = [
@@ -20,7 +19,7 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
     cell: ({ row }) => (
       <div>
         {column.key === "salaryAmount"
-          ? `${row.getValue(column.key)?.toLocaleString()} 원`
+          ? `${formatMoney(row.getValue(column.key))} 원`
           : row.getValue(column.key)}
       </div>
     ),

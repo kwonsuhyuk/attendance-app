@@ -38,7 +38,6 @@ export type TCompanyInfo = {
   qrValue: string;
   companyCode: string;
   workPlacesList: TworkPlacesList;
-  employees?: EmployeeInfo[];
 };
 
 // 직무 이름 선택 타입

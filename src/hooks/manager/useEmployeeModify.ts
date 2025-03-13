@@ -3,7 +3,6 @@ import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
 import { formatMoney } from "@/util/formatMoney.util";
 import { updateEmployeeSettings } from "@/api/employee.api";
-import { useState } from "react";
 
 export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: boolean) => void) => {
   const { name, email, jobName, uid, salaryAmount, companyCode, employmentType, phoneNumber } =
@@ -24,7 +23,9 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let rawValue = event.target.value.replace(/,/g, "");
     if (!/^\d*$/.test(rawValue)) return;
-    setValue("salary", rawValue === "" ? 0 : Number(rawValue)); // 급여를 입력하지 않으면 0원으로 저장
+
+    const numericValue = rawValue === "" ? 0 : Number(rawValue);
+    setValue("salary", numericValue);
   };
 
   const onSubmit = async (data: EmployeeForm) => {
