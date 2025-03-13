@@ -21,17 +21,12 @@ const EmployeeListPage = () => {
     filteredEmployees,
     handleSubmit,
     onSubmit,
+    isUpdated,
+    setIsUpdated,
+    handleClose,
   } = useEmployeeList();
 
   const columns = getEmployeeColumns();
-  const [isUpdated, setIsUpdated] = useState(false);
-
-  const handleClose = () => {
-    setSelectedEmployee(null);
-    if (isUpdated) {
-      window.location.reload();
-    }
-  };
 
   return (
     <EmployeeListPageContainer>

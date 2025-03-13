@@ -1,8 +1,9 @@
 import { toast } from "react-toastify";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
-import { formatMoney } from "@/util/formatMoney.util";
 import { updateEmployeeSettings } from "@/api/employee.api";
+import { useState } from "react";
+import { useCompanyStore } from "@/store/company.store";
 
 export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: boolean) => void) => {
   const { name, email, jobName, uid, salaryAmount, companyCode, employmentType, phoneNumber } =
@@ -19,6 +20,10 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
   const salary = watch("salary");
   const selectedJob = watch("selectedJob");
   const selectedEmploymentType = watch("selectedEmploymentType");
+
+  const [isEditing, setIsEditing] = useState(false);
+  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
+  const companyCodeStore = useCompanyStore(state => state.currentCompany?.companyCode);
 
   const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let rawValue = event.target.value.replace(/,/g, "");
@@ -64,5 +69,9 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
     handleSalaryChange,
     handleSubmit,
     onSubmit,
+    isEditing,
+    setIsEditing,
+    jobList,
+    companyCode: companyCodeStore || companyCode,
   };
 };

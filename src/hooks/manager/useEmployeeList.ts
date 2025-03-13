@@ -6,9 +6,12 @@ import { fetchEmployees } from "@/api/employee.api";
 
 export const useEmployeeList = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
+
   const [employeeList, setEmployeeList] = useState<EmployeeInfo[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
+  const [isUpdated, setIsUpdated] = useState(false);
   const [page, setPage] = useState(0);
+
   const rowsPerPage = 10;
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
@@ -82,6 +85,13 @@ export const useEmployeeList = () => {
     setPage(0);
   };
 
+  const handleClose = () => {
+    setSelectedEmployee(null);
+    if (isUpdated) {
+      window.location.reload();
+    }
+  };
+
   return {
     employeeList,
     selectedEmployee,
@@ -96,5 +106,8 @@ export const useEmployeeList = () => {
     handlePreviousPage,
     handleSubmit,
     onSubmit,
+    isUpdated,
+    setIsUpdated,
+    handleClose,
   };
 };

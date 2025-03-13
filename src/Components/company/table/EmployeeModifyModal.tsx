@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,13 +17,10 @@ import {
 } from "@/components/ui/select";
 import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
 import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
-import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EmployeeInfo } from "@/model/types/user.type";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
-import { useCompanyStore } from "@/store/company.store";
 import { X } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -31,7 +29,6 @@ interface IEmployeeInfoProps {
 }
 
 const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps) => {
-  const [isEditing, setIsEditing] = useState(false);
   const {
     setValue,
     salary,
@@ -40,10 +37,11 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
     handleSalaryChange,
     handleSubmit,
     onSubmit,
+    isEditing,
+    setIsEditing,
+    jobList,
+    companyCode,
   } = useEmployeeModify(user, setIsUpdated);
-
-  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
-  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
