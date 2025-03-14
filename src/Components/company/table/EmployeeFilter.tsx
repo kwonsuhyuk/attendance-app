@@ -57,7 +57,7 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
             <SelectValue placeholder="직종 선택" />
           </SelectTrigger>
           <SelectContent className="dark:border-dark-border dark:bg-dark-bg">
-            <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
+            <SelectItem value="전체" className="dark:bg-dark-bg dark:hover:bg-dark-border">
               전체
             </SelectItem>
             {(jobList || []).map(job => (

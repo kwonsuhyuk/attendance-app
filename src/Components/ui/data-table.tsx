@@ -31,7 +31,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
 
   return (
     <div className="h-[550px] min-h-[550px] w-full overflow-x-auto rounded-md border">
-      <Table className="h-full w-full table-auto md:table-auto">
+      <Table className="h-full w-full table-auto">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
@@ -43,7 +43,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
                 return (
                   <TableHead
                     key={header.id}
-                    className={`pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`whitespace-nowrap pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null
@@ -59,7 +59,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
             table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
-                className="cursor-pointer hover:bg-gray-600"
+                className="cursor-pointer hover:bg-white-bg dark:hover:bg-dark-border-sub"
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {
@@ -69,7 +69,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`p-3 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                      className={`break-words p-3 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
