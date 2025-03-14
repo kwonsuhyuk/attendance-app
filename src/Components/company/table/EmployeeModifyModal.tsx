@@ -52,7 +52,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             <Link to={`/${companyCode}/datecheck/${user.uid}`}>
               <Button
                 variant="outline"
-                className="h-[30px] text-xs dark:bg-white-bg dark:text-white"
+                className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
               >
                 상세보기 & 정산 {">"}
               </Button>
@@ -94,7 +94,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             <div key={label} className="flex flex-col gap-3">
               <span className="font-medium">{label}</span>
               <Select defaultValue={value} onValueChange={onChange} disabled={!isEditing}>
-                <SelectTrigger className="disabled:text-dark-bg dark:bg-white-bg">
+                <SelectTrigger className="disabled:text-dark-bg dark:text-white-text dark:disabled:text-dark-bg">
                   <SelectValue placeholder={`${label} 선택`} />
                 </SelectTrigger>
                 <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -102,7 +102,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
                     <SelectItem
                       key={value}
                       value={value}
-                      className="dark:text-white-text dark:hover:bg-dark-border"
+                      className="dark:text-white-text dark:hover:bg-white-bg"
                     >
                       {label}
                     </SelectItem>
@@ -119,7 +119,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
               value={salary ? formatMoney(salary) : ""}
               onChange={handleSalaryChange}
               placeholder="급여 미입력 시 0원 처리됩니다."
-              className="h-10 placeholder:text-sm disabled:text-dark-bg dark:bg-white-bg"
+              className="h-10 placeholder:text-sm disabled:text-dark-bg dark:bg-white-bg dark:text-white-text dark:disabled:text-dark-bg"
               disabled={!isEditing}
             />
             <span className="text-xs text-white-nav-text">= {numToKorean(salary)} 원</span>
@@ -134,7 +134,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
               }
               setIsEditing(!isEditing);
             }}
-            className="w-full dark:bg-white-bg dark:hover:text-white-text"
+            className="w-full dark:bg-dark-bg dark:text-dark-text dark:hover:bg-dark-card-bg"
           >
             {isEditing ? "완료" : "수정"}
           </Button>

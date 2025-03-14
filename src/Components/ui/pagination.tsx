@@ -18,7 +18,7 @@ const Pagination = ({ page, totalPageCount, onNext, onPrevious }: PaginationProp
         className={`px-4 py-2 ${
           page === 0
             ? "cursor-not-allowed bg-white-border-sub text-white-nav-text opacity-50 dark:bg-dark-border-sub dark:text-dark-nav-text"
-            : "bg-white-text text-white-bg hover:bg-white-border-sub dark:bg-dark-text dark:text-dark-bg dark:hover:bg-dark-border-sub"
+            : "bg-white-text text-white-bg hover:bg-white-border dark:bg-dark-text dark:text-dark-bg dark:hover:bg-dark-nav-text"
         }`}
       >
         이전
@@ -36,7 +36,7 @@ const Pagination = ({ page, totalPageCount, onNext, onPrevious }: PaginationProp
         className={`px-4 py-2 ${
           page >= totalPageCount - 1
             ? "cursor-not-allowed bg-white-border-sub text-white-nav-text opacity-50 dark:bg-dark-border-sub dark:text-dark-nav-text"
-            : "bg-white-text text-white-bg hover:bg-white-border-sub dark:bg-dark-text dark:text-dark-bg dark:hover:bg-dark-border-sub"
+            : "bg-white-text text-white-bg hover:bg-white-border dark:bg-dark-text dark:text-dark-bg dark:hover:bg-dark-nav-text"
         }`}
       >
         다음

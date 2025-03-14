@@ -31,6 +31,22 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
     setSearchText("");
   };
 
+  const selectFields = [
+    {
+      label: "직종",
+      valueKey: "selectedJob",
+      options: (jobList || []).map(job => ({ value: job.name, label: job.name })),
+    },
+    {
+      label: "고용 형태",
+      valueKey: "selectedEmploymentType",
+      options: Object.entries(EMPLOYMENT_TYPE).map(([key, label]) => ({
+        value: key,
+        label,
+      })),
+    },
+  ];
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <div className="relative w-full sm:col-span-1">
@@ -52,37 +68,26 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
         )}
       </div>
       <div className="grid grid-cols-2 gap-3 sm:col-span-2 sm:flex sm:gap-3">
-        <Select onValueChange={value => setValue("selectedJob", value)}>
-          <SelectTrigger className="h-[40px] w-full dark:bg-dark-border-sub dark:text-white-bg">
-            <SelectValue placeholder="직종 선택" />
-          </SelectTrigger>
-          <SelectContent className="dark:border-dark-border dark:bg-dark-bg">
-            <SelectItem value="전체" className="dark:bg-dark-bg dark:hover:bg-dark-border">
-              전체
-            </SelectItem>
-            {(jobList || []).map(job => (
-              <SelectItem key={job.id} value={job.name} className="dark:hover:bg-dark-border">
-                {job.name}
+        {selectFields.map(({ label, valueKey, options }) => (
+          <Select
+            key={valueKey}
+            onValueChange={value => setValue(valueKey as keyof FilterForm, value)}
+          >
+            <SelectTrigger className="h-[40px] w-full text-sidebar-foreground">
+              <SelectValue placeholder={`${label} 선택`} />
+            </SelectTrigger>
+            <SelectContent className="dark:dark-card-bg bg-white-card-bg">
+              <SelectItem value="전체" className="dark:hover:bg-dark-bg">
+                전체
               </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select onValueChange={value => setValue("selectedEmploymentType", value)}>
-          <SelectTrigger className="h-[40px] w-full dark:bg-dark-border-sub dark:text-white-bg">
-            <SelectValue placeholder="고용 형태" />
-          </SelectTrigger>
-          <SelectContent className="dark:border-dark-border dark:bg-dark-bg">
-            <SelectItem value="전체" className="dark:bg-dark-b dark:hover:bg-dark-border">
-              전체
-            </SelectItem>
-            {Object.entries(EMPLOYMENT_TYPE).map(([key, label]) => (
-              <SelectItem key={key} value={key} className="dark:hover:bg-dark-border">
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              {options.map(({ value, label }) => (
+                <SelectItem key={value} value={value} className="dark:hover:bg-dark-bg">
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ))}
       </div>
 
       <Button type="submit" className="h-[40px] w-full sm:hidden">
