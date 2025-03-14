@@ -45,9 +45,9 @@ export const useEmployeeList = () => {
     if (!companyCode) return;
     async function loadEmployees() {
       const employees = await fetchEmployees(companyCode as string);
-      // setEmployeeList(employees ?? []);
+      setEmployeeList(employees ?? []);
       // 이 주석 코드는 더미데이터를 포함한 리스트 입니다.
-      setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
+      // setEmployeeList([...employees, ...DUMMY_EMPLOYEES]);
     }
     loadEmployees();
   }, [companyCode]);
@@ -68,6 +68,12 @@ export const useEmployeeList = () => {
 
   const paginatedEmployees = filteredEmployees.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
   const totalPageCount = Math.ceil(filteredEmployees.length / rowsPerPage);
+
+  useEffect(() => {
+    if (page >= totalPageCount) {
+      setPage(totalPageCount > 0 ? totalPageCount - 1 : 0);
+    }
+  }, [filteredEmployees.length]);
 
   const handleNextPage = () => {
     if (page < totalPageCount - 1) {
