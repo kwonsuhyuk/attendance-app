@@ -60,7 +60,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
           </div>
           <button
             onClick={onClose}
-            className="absolute right-1 top-3 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
+            className="absolute right-1 top-3 rounded-md border-none bg-transparent text-muted-foreground hover:text-dark-card-bg"
           >
             <X size={20} strokeWidth={3} />
           </button>
@@ -94,7 +94,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             <div key={label} className="flex flex-col gap-3">
               <span className="font-medium">{label}</span>
               <Select defaultValue={value} onValueChange={onChange} disabled={!isEditing}>
-                <SelectTrigger className="disabled:text-gray-600 dark:bg-white-bg">
+                <SelectTrigger className="disabled:text-dark-bg dark:bg-white-bg">
                   <SelectValue placeholder={`${label} 선택`} />
                 </SelectTrigger>
                 <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -119,10 +119,10 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
               value={salary ? formatMoney(salary) : ""}
               onChange={handleSalaryChange}
               placeholder="급여 미입력 시 0원 처리됩니다."
-              className="h-10 placeholder:text-sm disabled:text-gray-600 dark:bg-white-bg"
+              className="h-10 placeholder:text-sm disabled:text-dark-bg dark:bg-white-bg"
               disabled={!isEditing}
             />
-            <span className="text-xs text-gray-500">= {numToKorean(salary)} 원</span>
+            <span className="text-xs text-white-nav-text">= {numToKorean(salary)} 원</span>
           </div>
         </div>
 
