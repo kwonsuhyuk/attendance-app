@@ -22,33 +22,16 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<TData>) {
-  const [pageSize, setPageSize] = useState(window.innerWidth < 640 ? 8 : 10);
-
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize } },
   });
 
-  useEffect(() => {
-    const handleResize = () => {
-      const newPageSize = window.innerWidth < 640 ? 8 : 10;
-      setPageSize(newPageSize);
-      table.setPageSize(newPageSize); // 📌 여기서 pageSize 업데이트 적용
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [table]);
-
-  const getColumnKey = (col: ColumnDef<TData>) =>
-    (col as { accessorKey?: string }).accessorKey || "";
-
   return (
-    <div className="w-full overflow-x-auto rounded-md border">
-      <Table className="mb-5 w-full table-auto md:table-auto">
+    <div className="h-[550px] min-h-[550px] w-full overflow-x-auto rounded-md border">
+      <Table className="h-full w-full table-auto md:table-auto">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
@@ -60,7 +43,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
                 return (
                   <TableHead
                     key={header.id}
-                    className={`p-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null
@@ -76,7 +59,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
             table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
-                className="cursor-pointer hover:bg-gray-100"
+                className="cursor-pointer hover:bg-gray-600"
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {

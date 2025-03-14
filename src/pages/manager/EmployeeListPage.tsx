@@ -5,7 +5,6 @@ import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import Pagination from "@/components/ui/pagination";
 import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
-import { useState } from "react";
 
 const EmployeeListPage = () => {
   const {
@@ -30,37 +29,41 @@ const EmployeeListPage = () => {
 
   return (
     <EmployeeListPageContainer>
-      <div className="flex w-full flex-col p-6">
-        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+      <div className="flex flex-col">
+        <div className="p-6">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+          </div>
+          <EmployeeFilter
+            register={register}
+            setValue={setValue}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+          />
         </div>
 
-        <EmployeeFilter
-          register={register}
-          setValue={setValue}
-          handleSubmit={handleSubmit}
-          onSubmit={onSubmit}
-        />
-
-        <div className="mt-4 w-full overflow-x-auto">
+        <div className="flex-1 px-6">
           <DataTable columns={columns} data={paginatedEmployees} onRowClick={setSelectedEmployee} />
         </div>
 
-        <Pagination
-          page={page}
-          totalPageCount={totalPageCount}
-          onNext={handleNextPage}
-          onPrevious={handlePreviousPage}
-        />
-
-        {selectedEmployee && (
-          <EmployeeModifyModal
-            user={selectedEmployee}
-            onClose={handleClose}
-            setIsUpdated={setIsUpdated}
+        <div className="w-full py-3">
+          <Pagination
+            page={page}
+            totalPageCount={totalPageCount}
+            onNext={handleNextPage}
+            onPrevious={handlePreviousPage}
           />
-        )}
+        </div>
       </div>
+
+      {/* ✅ 직원 정보 수정 모달 */}
+      {selectedEmployee && (
+        <EmployeeModifyModal
+          user={selectedEmployee}
+          onClose={handleClose}
+          setIsUpdated={setIsUpdated}
+        />
+      )}
     </EmployeeListPageContainer>
   );
 };

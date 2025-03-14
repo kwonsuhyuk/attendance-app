@@ -46,11 +46,21 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
       <DialogContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text dark:shadow-lg sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
+        <DialogHeader className="relative flex justify-between">
+          <div className="flex items-center gap-4">
+            <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
+            <Link to={`/${companyCode}/datecheck/${user.uid}`}>
+              <Button
+                variant="outline"
+                className="h-[30px] text-xs dark:bg-white-bg dark:text-white"
+              >
+                상세보기 & 정산 {">"}
+              </Button>
+            </Link>
+          </div>
           <button
             onClick={onClose}
-            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
+            className="absolute right-1 top-3 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
           >
             <X size={20} strokeWidth={3} />
           </button>
@@ -117,11 +127,6 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
         </div>
 
         <DialogFooter>
-          <Link to={`/${companyCode}/datecheck/${user.uid}`}>
-            <Button variant="outline" className="dark:bg-white-bg dark:text-white-text">
-              상세보기 & 정산
-            </Button>
-          </Link>
           <Button
             onClick={() => {
               if (isEditing) {
@@ -129,7 +134,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
               }
               setIsEditing(!isEditing);
             }}
-            className="dark:bg-white-bg dark:hover:text-white-text"
+            className="w-full dark:bg-white-bg dark:hover:text-white-text"
           >
             {isEditing ? "완료" : "수정"}
           </Button>

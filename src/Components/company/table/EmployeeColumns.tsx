@@ -16,12 +16,33 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
   return employeeColumnsConfig.map(column => ({
     accessorKey: column.key,
     header: column.header,
-    cell: ({ row }) => (
-      <div className={column.key === "email" ? "break-all" : ""}>
-        {column.key === "salaryAmount"
-          ? `${formatMoney(row.getValue(column.key))} 원`
-          : row.getValue(column.key)}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const rawValue = row.getValue(column.key);
+      const value = String(rawValue ?? ""); // 🔥 undefined/null 방지
+
+      // 컬럼별 최대 길이 설정
+      const maxLengths: Record<string, number> = {
+        name: 5,
+        email: 12,
+        phoneNumber: 13,
+        employmentType: 10,
+        salaryAmount: 10,
+      };
+
+      // 특정 컬럼에 대해 글자수 제한 적용
+      const displayValue =
+        column.key in maxLengths && value.length > maxLengths[column.key]
+          ? `${value.slice(0, maxLengths[column.key])}...`
+          : value;
+
+      return (
+        <div
+          className={` ${column.key === "email" ? "break-all" : ""} ${column.key in maxLengths ? "inline-block max-w-[120px] truncate" : ""} `}
+          title={value} // 툴팁으로 전체 값 표시
+        >
+          {column.key === "salaryAmount" ? `${formatMoney(Number(value))} 원` : displayValue}
+        </div>
+      );
+    },
   }));
 };
