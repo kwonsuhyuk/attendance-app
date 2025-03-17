@@ -1,11 +1,10 @@
-import React from 'react'
+import { useState } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import VacationFilter from "@/components/company/vacation/VacationFilter";
+import { Card } from "@/components/ui/card";
 
-const VacationListPage = () => {
-  return (
-    <div>
-      휴가 통계
-    </div>
-  )
-}
+const VacationStatisticPage = () => {
+  return <>qwe</>;
+};
 
-export default VacationListPage
+export default VacationStatisticPage;
