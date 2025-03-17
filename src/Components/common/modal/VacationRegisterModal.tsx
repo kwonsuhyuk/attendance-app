@@ -35,7 +35,7 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
 
   // 숫자만 입력 가능하게 처리
   const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자 이외 문자 제거
+    const value = e.target.value.replace(/[^0-9]/g, "");
     setVacationDays(value);
   };
 
@@ -53,7 +53,6 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
         </DialogHeader>
 
         <div className="grid gap-8 py-8">
-          {/* 휴가 유형 선택 */}
           <div className="flex flex-col gap-3">
             <span className="font-medium">휴가 유형</span>
             <Select defaultValue={vacationType} onValueChange={setVacationType}>
@@ -74,7 +73,6 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
             </Select>
           </div>
 
-          {/* 휴가 일수 입력 */}
           <div className="flex flex-col gap-3">
             <span className="font-medium">휴가 일수</span>
             <Input
@@ -86,11 +84,9 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
             />
           </div>
 
-          {/* 사용 기간 선택 */}
           <div className="flex flex-col gap-3">
             <span className="font-medium">사용 기간</span>
             <div className="flex items-center gap-4">
-              {/* 시작 날짜 선택 */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -112,7 +108,6 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
 
               <span>~</span>
 
-              {/* 종료 날짜 선택 */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
