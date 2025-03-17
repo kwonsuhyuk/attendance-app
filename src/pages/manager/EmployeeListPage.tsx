@@ -1,10 +1,6 @@
 import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { Link } from "react-router-dom";
 import EmployeeModifyModal from "@/components/company/table/EmployeeModifyModal";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { EmployeeInfo } from "@/model/types/user.type";
 import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import Pagination from "@/components/ui/pagination";
@@ -24,40 +20,49 @@ const EmployeeListPage = () => {
     filteredEmployees,
     handleSubmit,
     onSubmit,
+    isUpdated,
+    setIsUpdated,
+    handleClose,
   } = useEmployeeList();
 
-  const columns = getEmployeeColumns(setSelectedEmployee);
+  const columns = getEmployeeColumns();
 
   return (
     <EmployeeListPageContainer>
-      <div className="flex w-full flex-col p-6">
-        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+      <div className="flex flex-col">
+        <div className="p-6">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+          </div>
+          <EmployeeFilter
+            register={register}
+            setValue={setValue}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+          />
         </div>
 
-        <EmployeeFilter
-          register={register}
-          setValue={setValue}
-          handleSubmit={handleSubmit}
-          onSubmit={onSubmit}
-        />
-
-        <div className="mt-4 w-full overflow-x-auto">
-          <DataTable columns={columns} data={paginatedEmployees} />
+        <div className="flex-1 px-6">
+          <DataTable columns={columns} data={paginatedEmployees} onRowClick={setSelectedEmployee} />
         </div>
 
-        <Pagination
-          page={page}
-          totalPageCount={totalPageCount}
-          onNext={handleNextPage}
-          onPrevious={handlePreviousPage}
-        />
-
-        {/* 수정 버튼 클릭 시 모달 */}
-        {selectedEmployee && (
-          <EmployeeModifyModal user={selectedEmployee} onClose={() => setSelectedEmployee(null)} />
-        )}
+        <div className="w-full py-3">
+          <Pagination
+            page={page}
+            totalPageCount={totalPageCount}
+            onNext={handleNextPage}
+            onPrevious={handlePreviousPage}
+          />
+        </div>
       </div>
+
+      {selectedEmployee && (
+        <EmployeeModifyModal
+          user={selectedEmployee}
+          onClose={handleClose}
+          setIsUpdated={setIsUpdated}
+        />
+      )}
     </EmployeeListPageContainer>
   );
 };

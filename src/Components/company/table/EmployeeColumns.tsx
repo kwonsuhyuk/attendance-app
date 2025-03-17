@@ -1,10 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { EmployeeInfo } from "@/model/types/user.type";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { formatMoney } from "@/util/formatMoney.util";
 
 // columns 객체를 JSON처럼 관리하고 동적으로 렌더링
-
 export const employeeColumnsConfig = [
   { key: "name", header: "이름" },
   { key: "email", header: "이메일" },
@@ -12,49 +10,39 @@ export const employeeColumnsConfig = [
   { key: "jobName", header: "직종" },
   { key: "employmentType", header: "고용 형태" },
   { key: "salaryAmount", header: "급여" },
-  { key: "edit", header: "수정" },
-  { key: "details", header: "상세보기 & 정산" },
 ];
 
-export const getEmployeeColumns = (setSelectedEmployee: Function): ColumnDef<EmployeeInfo>[] => {
-  return employeeColumnsConfig.map(column => {
-    switch (column.key) {
-      case "name":
-      case "email":
-      case "phoneNumber":
-      case "jobName":
-      case "employmentType":
-        return { accessorKey: column.key, header: column.header };
-      case "salaryAmount":
-        return {
-          accessorKey: column.key,
-          header: column.header,
-          cell: ({ getValue }) => `${getValue()?.toLocaleString()} 원`,
-        };
-      case "edit":
-        return {
-          accessorKey: column.key,
-          header: column.header,
-          cell: ({ row }) => (
-            <Button variant="outline" size="sm" onClick={() => setSelectedEmployee(row.original)}>
-              수정
-            </Button>
-          ),
-        };
-      case "details":
-        return {
-          accessorKey: column.key,
-          header: column.header,
-          cell: ({ row }) => (
-            <Link to={`/${row.original.companyCode}/datecheck/${row.original.uid}`}>
-              <Button variant="default" size="sm">
-                상세보기 & 정산
-              </Button>
-            </Link>
-          ),
-        };
-      default:
-        return { accessorKey: column.key, header: column.header };
-    }
-  });
+export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
+  return employeeColumnsConfig.map(column => ({
+    accessorKey: column.key,
+    header: column.header,
+    cell: ({ row }) => {
+      const rawValue = row.getValue(column.key);
+      const value = String(rawValue ?? "");
+
+      // 컬럼별 최대 길이 설정
+      const maxLengths: Record<string, number> = {
+        name: 5,
+        email: 12,
+        phoneNumber: 13,
+        employmentType: 10,
+        salaryAmount: 10,
+      };
+
+      // 특정 컬럼에 대해 글자수 제한 적용
+      const displayValue =
+        column.key in maxLengths && value.length > maxLengths[column.key]
+          ? `${value.slice(0, maxLengths[column.key])}...`
+          : value;
+
+      return (
+        <div
+          className={` ${column.key === "email" ? "whitespace-normal break-all" : ""} ${column.key === "salaryAmount" ? "max-x-[80px] whitespace-normal break-words" : ""} ${["name"].includes(column.key) ? "inline-block max-w-[120px] truncate" : ""} `}
+          title={value} // 툴팁으로 전체 값 표시
+        >
+          {column.key === "salaryAmount" ? `${formatMoney(Number(value))} 원` : displayValue}
+        </div>
+      );
+    },
+  }));
 };

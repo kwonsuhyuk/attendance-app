@@ -10,7 +10,7 @@ export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[
 export async function updateEmployeeSettings(
   companyCode: string,
   userId: string,
-  settings: { jobName: string; salaryType: string; salary: number },
+  settings: { jobName: string; employmentType: string; salary: number },
 ) {
   if (!companyCode || !userId) {
     return { success: false, error: "회사 코드 또는 사용자 ID가 없습니다." };
@@ -18,7 +18,7 @@ export async function updateEmployeeSettings(
 
   const updatedData = {
     jobName: settings.jobName,
-    salaryType: settings.salaryType,
+    employmentType: settings.employmentType,
     salaryAmount: settings.salary,
   };
 
