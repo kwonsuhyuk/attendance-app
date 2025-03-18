@@ -23,7 +23,6 @@ export const MANAGER_ROUTES = {
   TODAY_ATT: "/todayatt",
   PERIROD_ATT: "/perirodatt",
   VACATION_STATISTIC: "/vacationstatistic",
-  VACATION_STATISTIC_DETAIL: "/vacationstatistic/detail",
   VACATION_DETAIL: "/vacationdetail",
   NOTICE: "/notice",
   COMPANY_INFO: "/companyinfo",
