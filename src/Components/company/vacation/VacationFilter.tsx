@@ -1,9 +1,9 @@
 import { useCompanyStore } from "@/store/company.store";
 import { SlidersHorizontalIcon } from "lucide-react";
-import { DatePickerWithRange } from "@/components/common/calendar/DataRangePicker";
+import { DateRangePicker } from "@/components/ui/DataRangePicker";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { addDays } from "date-fns";
+import { addDays, endOfMonth, startOfMonth } from "date-fns";
 import FilterModal from "@/components/common/modal/FilterModal";
 import {
   Select,
@@ -16,17 +16,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const VacationFilter = () => {
+  const today = new Date();
+  const firstDay = startOfMonth(today);
+  const lastDay = endOfMonth(today);
+
   const [filterDate, setFilterDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: firstDay,
+    to: lastDay,
   });
 
   const jobList = useCompanyStore(state => state.currentCompany?.jobList || []);
 
   return (
     <div className="flex w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit">
-      <SlidersHorizontalIcon className="hidden text-white-nav-text sm:block" />
-      <DatePickerWithRange setFilterDate={setFilterDate} />
+      <SlidersHorizontalIcon className="hidden w-10 text-white-nav-text sm:block" />
+      <DateRangePicker date={filterDate} setDate={setFilterDate} className="w-full" />
       <FilterModal jobList={jobList} />
       <div className="hidden w-full gap-3 sm:flex sm:w-fit">
         {/* 직무 선택 */}
@@ -46,7 +50,7 @@ const VacationFilter = () => {
           </SelectContent>
         </Select>
         {/* 이름 검색 */}
-        <Input className="h-10 min-w-24 rounded-md placeholder:text-sm" placeholder="이름 검색" />
+        <Input className="h-10 min-w-36 rounded-md placeholder:text-sm" placeholder="이름 검색" />
         {/* 검색 버튼 */}
         <Button className="h-10 w-full sm:w-fit">검색</Button>
       </div>
