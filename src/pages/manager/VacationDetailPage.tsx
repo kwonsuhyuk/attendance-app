@@ -3,7 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { getVacationColumns, VacationRequest } from "@/components/company/table/VacationColumns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import VacationModal from "@/components/common/modal/VacationRegisterModal";
+import VacationRegisterModal from "@/components/common/modal/VacationRegisterModal";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 
 const dummyRequests: VacationRequest[] = [
@@ -36,8 +36,13 @@ const dummyRequests: VacationRequest[] = [
 const VacationDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requests, setRequests] = useState<VacationRequest[]>(dummyRequests);
+  const [registeredRequests, setRegisteredRequests] = useState<VacationRequest[]>([]);
 
   const toggleModal = () => setIsModalOpen(prev => !prev);
+
+  const handleRegister = (newRequest: VacationRequest) => {
+    setRegisteredRequests(prev => [...prev, newRequest]); // "등록 내역"에만 추가
+  };
 
   const handleApprove = (id: number) => {
     setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "승인됨" } : req)));
@@ -75,7 +80,9 @@ const VacationDetailPage = () => {
             <Button className="mb-4" onClick={toggleModal}>
               요청 등록 +
             </Button>
-            {isModalOpen && <VacationModal onClose={toggleModal} />}
+            {isModalOpen && (
+              <VacationRegisterModal onClose={toggleModal} onRegister={handleRegister} />
+            )}
           </div>
           <TabsContent value="pending">
             <DataTable
@@ -90,7 +97,10 @@ const VacationDetailPage = () => {
             />
           </TabsContent>
           <TabsContent value="registered">
-            <p className="py-6 text-center text-gray-500">등록된 요청이 없습니다.</p>
+            <DataTable
+              columns={getVacationColumns(undefined, undefined, false, true)}
+              data={registeredRequests}
+            />
           </TabsContent>
         </Tabs>
       </div>

@@ -19,19 +19,39 @@ import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 import { differenceInDays } from "date-fns";
 import { Input } from "antd";
+import { VacationRequest } from "@/components/company/table/VacationColumns";
 
 interface IVacationModalProps {
   onClose: () => void;
+  onRegister: (newRequest: VacationRequest) => void;
 }
 
-const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
+const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegister }) => {
   const [vacationType, setVacationType] = useState("");
-
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // 날짜 차이를 계산하여 휴가 일수 자동 계산
   const vacationDays =
     dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) + 1 : 0;
+
+  const handleRegister = () => {
+    if (!vacationType || !dateRange?.from || !dateRange?.to) {
+      alert("휴가 유형과 사용 기간을 선택해주세요.");
+      return;
+    }
+
+    const newRequest: VacationRequest = {
+      id: Date.now(),
+      requestType: vacationType,
+      requester: "현재 사용자",
+      requestDate: new Date().toISOString().split("T")[0],
+      reason: "사유 없음",
+      status: "대기중",
+    };
+
+    onRegister(newRequest); // "등록 내역"에만 추가
+    onClose();
+  };
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -89,7 +109,11 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
         </div>
 
         <DialogFooter>
-          <Button type="submit" className="dark:bg-white-bg dark:hover:text-white-text">
+          <Button
+            type="submit"
+            className="dark:bg-white-bg dark:hover:text-white-text"
+            onClick={handleRegister}
+          >
             등록
           </Button>
         </DialogFooter>
@@ -98,4 +122,4 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
   );
 };
 
-export default VacationModifyModal;
+export default VacationRegisterModal;

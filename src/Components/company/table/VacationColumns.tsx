@@ -7,19 +7,20 @@ export type VacationRequest = {
   requester: string;
   requestDate: string;
   reason: string;
-  status: "대기중" | "승인됨" | "거절됨";
+  status: "대기중" | "승인됨" | "거절됨" | "자동 승인됨";
 };
 
 // 상태 배지 컴포넌트
-const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절됨" }) => {
+const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절됨" | "자동 승인됨" }) => {
   const statusColors = {
     대기중: "bg-yellow-500",
     승인됨: "bg-green-500",
     거절됨: "bg-red-500",
+    "자동 승인됨": "bg-blue-500",
   };
 
   return (
-    <span className={`rounded-full px-3 py-1 text-sm text-white ${statusColors[status]}`}>
+    <span className={`rounded-full px-3 py-1 text-sm text-white ${statusColors[status] || ""}`}>
       {status}
     </span>
   );
@@ -54,9 +55,10 @@ const ActionButtons = ({
 
 // 컬럼 정의 (관리 컬럼 포함 여부 옵션 추가)
 export const getVacationColumns = (
-  handleApprove: (id: number) => void,
-  handleReject: (id: number) => void,
-  includeActions: boolean,
+  handleApprove?: (id: number) => void,
+  handleReject?: (id: number) => void,
+  includeActions: boolean = true,
+  isRegistered: boolean = false,
 ): ColumnDef<VacationRequest>[] => {
   const columns: ColumnDef<VacationRequest>[] = [
     {
@@ -82,22 +84,26 @@ export const getVacationColumns = (
     {
       accessorKey: "status",
       header: "상태",
-      cell: ({ getValue }) => <StatusBadge status={getValue() as "대기중" | "승인됨" | "거절됨"} />,
+      cell: ({ row }) => (
+        <StatusBadge
+          status={isRegistered ? "자동 승인됨" : (row.original.status as VacationRequest["status"])}
+        />
+      ),
     },
   ];
 
   // "관리" 컬럼을 포함할 경우만 추가
   if (includeActions) {
     columns.push({
-      accessorKey: "actions",
       header: "관리",
-      cell: ({ row }) => (
-        <ActionButtons
-          id={row.original.id}
-          handleApprove={handleApprove}
-          handleReject={handleReject}
-        />
-      ),
+      cell: ({ row }) =>
+        handleApprove && handleReject ? (
+          <ActionButtons
+            id={row.original.id}
+            handleApprove={handleApprove}
+            handleReject={handleReject}
+          />
+        ) : null,
     });
   }
 
