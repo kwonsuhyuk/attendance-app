@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -15,29 +14,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { X, CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { X } from "lucide-react";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { DateRange } from "react-day-picker";
+import { differenceInDays } from "date-fns";
+import { Input } from "antd";
 
-interface VacationModifyModalProps {
+interface IVacationModalProps {
   onClose: () => void;
 }
 
-const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) => {
+const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
   const [vacationType, setVacationType] = useState("");
-  const [vacationDays, setVacationDays] = useState("");
 
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
-    from: undefined,
-    to: undefined,
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
-  // 숫자만 입력 가능하게 처리
-  const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    setVacationDays(value);
-  };
+  // 날짜 차이를 계산하여 휴가 일수 자동 계산
+  const vacationDays =
+    dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) + 1 : 0;
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -53,6 +47,14 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
         </DialogHeader>
 
         <div className="grid gap-8 py-8">
+          <div className="flex flex-col gap-3">
+            <span className="font-medium">휴가 대상</span>
+            <Input
+              type="text"
+              placeholder="추후 기능 추가 예정"
+              className="h-10 placeholder:text-sm dark:bg-white-bg"
+            />
+          </div>
           <div className="flex flex-col gap-3">
             <span className="font-medium">휴가 유형</span>
             <Select defaultValue={vacationType} onValueChange={setVacationType}>
@@ -74,58 +76,14 @@ const VacationModifyModal: React.FC<VacationModifyModalProps> = ({ onClose }) =>
           </div>
 
           <div className="flex flex-col gap-3">
-            <span className="font-medium">휴가 일수</span>
-            <Input
-              type="text"
-              value={vacationDays}
-              onChange={handleVacationDaysChange}
-              placeholder="휴가 일수를 입력하세요."
-              className="h-10 placeholder:text-sm dark:bg-white-bg"
-            />
+            <span className="font-medium">사용 기간</span>
+            <DateRangePicker date={dateRange} setDate={setDateRange} />
           </div>
 
-          <div className="flex flex-col gap-3">
-            <span className="font-medium">사용 기간</span>
-            <div className="flex items-center gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex w-[180px] items-center justify-start gap-2"
-                  >
-                    <CalendarIcon size={16} />
-                    {dateRange.from ? format(dateRange.from, "yyyy-MM-dd") : "시작"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="p-2">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.from}
-                    onSelect={date => setDateRange(prev => ({ ...prev, from: date }))}
-                  />
-                </PopoverContent>
-              </Popover>
-
-              <span>~</span>
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex w-[180px] items-center justify-start gap-2"
-                  >
-                    <CalendarIcon size={16} />
-                    {dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : "종료"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="p-2">
-                  <Calendar
-                    mode="single"
-                    selected={dateRange.to}
-                    onSelect={date => setDateRange(prev => ({ ...prev, to: date }))}
-                  />
-                </PopoverContent>
-              </Popover>
+          <div className="flex gap-3">
+            <span className="font-medium">휴가 일수 :</span>
+            <div className="rounded-md border dark:border-dark-border dark:bg-white-bg">
+              {vacationDays > 0 ? `${vacationDays}일` : "날짜를 선택하세요"}
             </div>
           </div>
         </div>
