@@ -1,7 +1,7 @@
 import { TCompanyInfo } from "@/model/types/company.type";
 import { create } from "zustand";
 
-interface ICompanyState {
+export interface ICompanyState {
   currentCompany: TCompanyInfo | null;
   isLoading: boolean;
   setCompany: (company: TCompanyInfo) => void;
