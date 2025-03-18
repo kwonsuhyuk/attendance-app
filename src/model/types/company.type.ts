@@ -1,3 +1,5 @@
+import { EmployeeInfo } from "./user.type";
+
 // 직무 타입
 export type TJob = {
   id: string;
