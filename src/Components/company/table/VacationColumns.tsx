@@ -10,8 +10,9 @@ export type VacationRequest = {
   status: "대기중" | "승인됨" | "거절됨";
 };
 
+// 상태 배지 컴포넌트
 const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절됨" }) => {
-  const statusColors: Record<"대기중" | "승인됨" | "거절됨", string> = {
+  const statusColors = {
     대기중: "bg-yellow-500",
     승인됨: "bg-green-500",
     거절됨: "bg-red-500",
@@ -27,17 +28,15 @@ const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절�
 // 승인/거절 버튼 컴포넌트
 const ActionButtons = ({
   id,
-  status,
   handleApprove,
   handleReject,
 }: {
   id: number;
-  status: "대기중" | "승인됨" | "거절됨";
   handleApprove: (id: number) => void;
   handleReject: (id: number) => void;
 }) => {
-  return status === "대기중" ? (
-    <div className="flex space-x-2">
+  return (
+    <div className="flex justify-center space-x-2">
       <Button
         variant="default"
         size="sm"
@@ -50,51 +49,57 @@ const ActionButtons = ({
         거절
       </Button>
     </div>
-  ) : (
-    <span className="text-gray-500">처리 완료</span>
   );
 };
 
-// 컬럼 정의 (TSX 형식)
+// 컬럼 정의 (관리 컬럼 포함 여부 옵션 추가)
 export const getVacationColumns = (
   handleApprove: (id: number) => void,
   handleReject: (id: number) => void,
-): ColumnDef<VacationRequest>[] => [
-  {
-    accessorKey: "requestType",
-    header: "요청 유형",
-    cell: ({ getValue }) => <span>{getValue() as string}</span>,
-  },
-  {
-    accessorKey: "requester",
-    header: "요청자",
-    cell: ({ getValue }) => <span>{getValue() as string}</span>,
-  },
-  {
-    accessorKey: "requestDate",
-    header: "요청 일자",
-    cell: ({ getValue }) => <span>{getValue() as string}</span>,
-  },
-  {
-    accessorKey: "reason",
-    header: "사유",
-    cell: ({ getValue }) => <span>{getValue() as string}</span>,
-  },
-  {
-    accessorKey: "status",
-    header: "상태",
-    cell: ({ getValue }) => <StatusBadge status={getValue() as "대기중" | "승인됨" | "거절됨"} />,
-  },
-  {
-    accessorKey: "actions",
-    header: "관리",
-    cell: ({ row }) => (
-      <ActionButtons
-        id={row.original.id}
-        status={row.original.status}
-        handleApprove={handleApprove}
-        handleReject={handleReject}
-      />
-    ),
-  },
-];
+  includeActions: boolean,
+): ColumnDef<VacationRequest>[] => {
+  const columns: ColumnDef<VacationRequest>[] = [
+    {
+      accessorKey: "requestType",
+      header: "요청 유형",
+      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+    },
+    {
+      accessorKey: "requester",
+      header: "요청자",
+      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+    },
+    {
+      accessorKey: "requestDate",
+      header: "요청 일자",
+      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+    },
+    {
+      accessorKey: "reason",
+      header: "사유",
+      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: "상태",
+      cell: ({ getValue }) => <StatusBadge status={getValue() as "대기중" | "승인됨" | "거절됨"} />,
+    },
+  ];
+
+  // "관리" 컬럼을 포함할 경우만 추가
+  if (includeActions) {
+    columns.push({
+      accessorKey: "actions",
+      header: "관리",
+      cell: ({ row }) => (
+        <ActionButtons
+          id={row.original.id}
+          handleApprove={handleApprove}
+          handleReject={handleReject}
+        />
+      ),
+    });
+  }
+
+  return columns;
+};
