@@ -35,8 +35,8 @@ export const MENU_STRUCTURE = [
     label: "휴가",
     icon: Calendar,
     children: [
-      { label: "휴가 통계", path: "/vacationstatistic" },
-      { label: "휴가 내역", path: "/vacationdetail" },
+      { label: "휴가 통계 내역", path: "/vacationstatistic" },
+      { label: "휴가 등록/요청", path: "/vacationdetail" },
     ],
   },
   {
