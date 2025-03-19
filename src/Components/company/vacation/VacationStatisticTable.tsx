@@ -12,6 +12,7 @@ export const columns: ColumnDef<EmployeeInfo>[] = [
     accessorKey: "name",
     header: "이름",
   },
+
   {
     accessorKey: "annualLeaveCount",
     header: "연차",
@@ -51,7 +52,7 @@ const VacationStatisticTable = () => {
     loadEmployees();
   }, [companyCode]);
   return (
-    <Card className="relative p-4">
+    <Card className="relative p-4 md:w-2/3">
       <p className="absolute right-2 top-2 text-xs text-gray-500">(사용횟수 : 일)</p>
       <div className="mt-4 w-full overflow-x-auto">
         <div className="min-w-[600px]">
