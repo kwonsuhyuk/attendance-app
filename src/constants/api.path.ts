@@ -1,3 +1,5 @@
+import { TVacationStatus } from "@/model/types/vacation.type";
+
 export const getCompanyPath = (companyCode: string) => `companyCode/${companyCode}`;
 
 export const getUserPath = (companyCode: string, userId: string) =>
