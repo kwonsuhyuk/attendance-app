@@ -6,6 +6,7 @@ import VacationRegisterModal from "@/components/common/modal/VacationRegisterMod
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 import { TAB_CONTENTS, TAB_ITEMS } from "@/constants/vacationTabs";
+import { Badge } from "@/components/ui/badge";
 
 const VacationDetailPage = () => {
   const {
@@ -16,6 +17,7 @@ const VacationDetailPage = () => {
     handleRegister,
     handleApprove,
     handleReject,
+    pendingCount,
   } = useVacationRequests();
 
   return (
@@ -28,9 +30,14 @@ const VacationDetailPage = () => {
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
+                  className="relative min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
                 >
                   {tab.label}
+                  {tab.value === "pending" && pendingCount > 0 && (
+                    <Badge className="absolute right-6 top-2.5 bg-red-500 pl-2 pr-2 pt-1 text-xs text-white">
+                      {pendingCount}
+                    </Badge>
+                  )}
                 </TabsTrigger>
               ))}
             </TabsList>

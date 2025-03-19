@@ -80,6 +80,8 @@ export const useVacationRequests = () => {
   const [requests, setRequests] = useState<IVacationRequest[]>(dummyRequests);
   const [registeredRequests, setRegisteredRequests] = useState<IVacationRequest[]>([]);
 
+  const pendingCount = requests.filter(req => req.status === "대기중").length;
+
   const toggleModal = () => setIsModalOpen(prev => !prev);
 
   const handleRegister = (newRequest: IVacationRequest) => {
@@ -102,5 +104,6 @@ export const useVacationRequests = () => {
     handleRegister,
     handleApprove,
     handleReject,
+    pendingCount,
   };
 };
