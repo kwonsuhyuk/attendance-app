@@ -1,14 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 
-export type VacationRequest = {
+export interface IVacationRequest {
   id: number;
   requestType: string;
   requester: string;
   requestDate: string;
   reason: string;
   status: "대기중" | "승인됨" | "거절됨" | "자동 승인됨";
-};
+}
 
 // 상태 배지 컴포넌트
 const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절됨" | "자동 승인됨" }) => {
@@ -64,8 +64,8 @@ export const getVacationColumns = (
   handleReject?: (id: number) => void,
   includeActions: boolean = true,
   isRegistered: boolean = false,
-): ColumnDef<VacationRequest>[] => {
-  const columns: ColumnDef<VacationRequest>[] = [
+): ColumnDef<IVacationRequest>[] => {
+  const columns: ColumnDef<IVacationRequest>[] = [
     {
       accessorKey: "requestType",
       header: "요청 유형",
@@ -91,7 +91,9 @@ export const getVacationColumns = (
       header: "상태",
       cell: ({ row }) => (
         <StatusBadge
-          status={isRegistered ? "자동 승인됨" : (row.original.status as VacationRequest["status"])}
+          status={
+            isRegistered ? "자동 승인됨" : (row.original.status as IVacationRequest["status"])
+          }
         />
       ),
     },

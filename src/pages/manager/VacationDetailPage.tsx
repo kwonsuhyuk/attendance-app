@@ -1,56 +1,22 @@
-import { useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
-import { getVacationColumns, VacationRequest } from "@/components/company/table/VacationColumns";
+import { getVacationColumns } from "@/components/company/table/VacationColumns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VacationRegisterModal from "@/components/common/modal/VacationRegisterModal";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
-
-const dummyRequests: VacationRequest[] = [
-  {
-    id: 1,
-    requestType: "연차",
-    requester: "김철수",
-    requestDate: "2025-04-01",
-    reason: "가족 행사",
-    status: "대기중",
-  },
-  {
-    id: 2,
-    requestType: "반차",
-    requester: "이영희",
-    requestDate: "2025-04-05",
-    reason: "감기",
-    status: "승인됨",
-  },
-  {
-    id: 3,
-    requestType: "특별",
-    requester: "박민수",
-    requestDate: "2025-04-07",
-    reason: "개인 사정",
-    status: "거절됨",
-  },
-];
+import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
+import { TAB_CONTENTS, TAB_ITEMS } from "@/constants/vacationTabs";
 
 const VacationDetailPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [requests, setRequests] = useState<VacationRequest[]>(dummyRequests);
-  const [registeredRequests, setRegisteredRequests] = useState<VacationRequest[]>([]);
-
-  const toggleModal = () => setIsModalOpen(prev => !prev);
-
-  const handleRegister = (newRequest: VacationRequest) => {
-    setRegisteredRequests(prev => [...prev, newRequest]); // "등록 내역"에만 추가
-  };
-
-  const handleApprove = (id: number) => {
-    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "승인됨" } : req)));
-  };
-
-  const handleReject = (id: number) => {
-    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "거절됨" } : req)));
-  };
+  const {
+    isModalOpen,
+    toggleModal,
+    requests,
+    registeredRequests,
+    handleRegister,
+    handleApprove,
+    handleReject,
+  } = useVacationRequests();
 
   return (
     <EmployeeListPageContainer>
@@ -58,24 +24,15 @@ const VacationDetailPage = () => {
         <Tabs defaultValue="pending" className="w-full">
           <div className="flex justify-between">
             <TabsList className="bg-white-card-bg dark:bg-dark-card-bg">
-              <TabsTrigger
-                value="pending"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
-              >
-                대기중
-              </TabsTrigger>
-              <TabsTrigger
-                value="processed"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
-              >
-                처리 내역
-              </TabsTrigger>
-              <TabsTrigger
-                value="registered"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
-              >
-                등록 내역
-              </TabsTrigger>
+              {TAB_ITEMS.map(tab => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
             <Button className="mb-4" onClick={toggleModal}>
               요청 등록 +
@@ -84,24 +41,20 @@ const VacationDetailPage = () => {
               <VacationRegisterModal onClose={toggleModal} onRegister={handleRegister} />
             )}
           </div>
-          <TabsContent value="pending">
-            <DataTable
-              columns={getVacationColumns(handleApprove, handleReject, true)}
-              data={requests.filter(req => req.status === "대기중")}
-            />
-          </TabsContent>
-          <TabsContent value="processed">
-            <DataTable
-              columns={getVacationColumns(handleApprove, handleReject, false)}
-              data={requests.filter(req => req.status === "승인됨" || req.status === "거절됨")}
-            />
-          </TabsContent>
-          <TabsContent value="registered">
-            <DataTable
-              columns={getVacationColumns(undefined, undefined, false, true)}
-              data={registeredRequests}
-            />
-          </TabsContent>
+
+          {TAB_CONTENTS.map(tab => (
+            <TabsContent key={tab.value} value={tab.value}>
+              <DataTable
+                columns={getVacationColumns(
+                  tab.value === "registered" ? undefined : handleApprove,
+                  tab.value === "registered" ? undefined : handleReject,
+                  tab.includeActions,
+                  tab.isRegistered ?? false,
+                )}
+                data={tab.value === "registered" ? registeredRequests : requests.filter(tab.filter)}
+              />
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </EmployeeListPageContainer>
