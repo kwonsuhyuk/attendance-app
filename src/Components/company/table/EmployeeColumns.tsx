@@ -3,7 +3,8 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { formatMoney } from "@/util/formatMoney.util";
 
 // columns 객체를 JSON처럼 관리하고 동적으로 렌더링
-export const employeeColumnsConfig = [
+
+const employeeColumnsConfig = [
   { key: "name", header: "이름" },
   { key: "email", header: "이메일" },
   { key: "phoneNumber", header: "전화번호" },

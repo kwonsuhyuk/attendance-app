@@ -1,4 +1,4 @@
-import CompanySettingPageContainer from "@/components/container/manager/CompanyInfoPageContainer";
+import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import { FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import CompanyJobListStep from "@/components/company/company-settings/job-setting/CompanyJobListStep";

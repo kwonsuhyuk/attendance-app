@@ -1,6 +1,6 @@
 import { FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import CompanySettingPageContainer from "@/components/container/manager/CompanyInfoPageContainer";
+import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import CompanyNightHolidayStep from "@/components/company/company-settings/night-holiday-setting/CompanyNightHolidayStep";
 import { useHolidayNightManagePage } from "@/hooks/company-settings/useHolidayNightManagePage";
 

@@ -1,7 +1,7 @@
 import { FormProvider } from "react-hook-form";
 import CompanyBasicStep from "@/components/company/company-settings/basic-setting/CompanyBasicStep";
 import { Button } from "@/components/ui/button";
-import CompanySettingPageContainer from "@/components/container/manager/CompanyInfoPageContainer";
+import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import { useCompanyInfoPage } from "@/hooks/company-settings/useCompanyInfoPage";
 
 const CompanyInfoPage = () => {

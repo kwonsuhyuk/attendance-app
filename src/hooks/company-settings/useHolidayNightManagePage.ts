@@ -12,6 +12,7 @@ export const useHolidayNightManagePage = () => {
   const { handleSubmit } = companyNightHolidayForm;
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   const setCompany = useCompanyStore(state => state.setCompany);
+
   const onInvalid = () => {
     toast({
       title: "회사 기본 정보에 실패 했습니다.",
