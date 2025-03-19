@@ -20,7 +20,9 @@ const StatusBadge = ({ status }: { status: "대기중" | "승인됨" | "거절�
   };
 
   return (
-    <span className={`rounded-full px-3 py-1 text-sm text-white ${statusColors[status] || ""}`}>
+    <span
+      className={`inline-flex items-center justify-center rounded-full px-1 py-1 text-sm font-semibold text-white ${statusColors[status] || ""} // ✅ 줄바꿈 방지 및 크기 조정 h-[28px] min-w-[70px] whitespace-nowrap`}
+    >
       {status}
     </span>
   );
@@ -37,11 +39,11 @@ const ActionButtons = ({
   handleReject: (id: number) => void;
 }) => {
   return (
-    <div className="flex justify-center space-x-2">
+    <div className="flex min-w-[100px] justify-center space-x-2 sm:min-w-[60px] sm:flex-col sm:space-x-0 sm:space-y-1 md:min-w-[100px] md:flex-row md:space-x-2 md:space-y-0">
       <Button
         variant="default"
         size="sm"
-        className="bg-green-500 hover:bg-green-600"
+        className="w-full bg-green-500 hover:bg-green-600 sm:w-auto"
         onClick={() => handleApprove(id)}
       >
         승인
@@ -49,7 +51,7 @@ const ActionButtons = ({
       <Button
         variant="default"
         size="sm"
-        className="bg-red-500 hover:bg-red-600"
+        className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
         onClick={() => handleReject(id)}
       >
         거절
