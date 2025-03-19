@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,22 +17,19 @@ import {
 } from "@/components/ui/select";
 import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
 import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
-import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EmployeeInfo } from "@/model/types/user.type";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
-import { useCompanyStore } from "@/store/company.store";
 import { X } from "lucide-react";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
   onClose: () => void;
+  setIsUpdated: (value: boolean) => void;
 }
 
-const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
+const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps) => {
   const {
-    name,
-    email,
-    phoneNumber,
     setValue,
     salary,
     selectedJob,
@@ -39,20 +37,32 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
     handleSalaryChange,
     handleSubmit,
     onSubmit,
-  } = useEmployeeModify(user, onClose);
-
-  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
+    isEditing,
+    setIsEditing,
+    jobList,
+    companyCode,
+  } = useEmployeeModify(user, setIsUpdated);
 
   return (
     <Dialog open={!!user} onOpenChange={onClose}>
       <DialogContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text dark:shadow-lg sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
+        <DialogHeader className="relative flex justify-between">
+          <div className="flex items-center gap-4">
+            <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
+            <Link to={`/${companyCode}/datecheck/${user.uid}`}>
+              <Button
+                variant="outline"
+                className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
+              >
+                상세보기 & 정산 {">"}
+              </Button>
+            </Link>
+          </div>
           <button
             onClick={onClose}
-            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
+            className="absolute right-1 top-3 rounded-md border-none bg-transparent text-muted-foreground hover:text-dark-card-bg"
           >
-            <X size={20} strokeWidth={3} /> {/* ✅ X 아이콘 추가 */}
+            <X size={20} strokeWidth={3} />
           </button>
         </DialogHeader>
 
@@ -83,8 +93,8 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
           ].map(({ label, value, onChange, options }) => (
             <div key={label} className="flex flex-col gap-3">
               <span className="font-medium">{label}</span>
-              <Select defaultValue={value} onValueChange={onChange}>
-                <SelectTrigger className="dark:bg-white-bg">
+              <Select defaultValue={value} onValueChange={onChange} disabled={!isEditing}>
+                <SelectTrigger className="disabled:text-dark-bg dark:text-white-text dark:disabled:text-dark-bg">
                   <SelectValue placeholder={`${label} 선택`} />
                 </SelectTrigger>
                 <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -92,7 +102,7 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
                     <SelectItem
                       key={value}
                       value={value}
-                      className="dark:text-white-text dark:hover:bg-dark-border"
+                      className="dark:text-white-text dark:hover:bg-white-bg"
                     >
                       {label}
                     </SelectItem>
@@ -106,22 +116,27 @@ const EmployeeModifyModal = ({ user, onClose }: IEmployeeInfoProps) => {
             <span className="font-medium">급여</span>
             <Input
               type="text"
-              value={salary ? salary.toLocaleString() : ""}
+              value={salary ? formatMoney(salary) : ""}
               onChange={handleSalaryChange}
-              placeholder="급여를 미입력 시 0원 처리됩니다."
-              className="h-10 placeholder:text-sm dark:bg-white-bg"
+              placeholder="급여 미입력 시 0원 처리됩니다."
+              className="h-10 placeholder:text-sm disabled:text-dark-bg dark:bg-white-bg dark:text-white-text dark:disabled:text-dark-bg"
+              disabled={!isEditing}
             />
-            <span className="text-xs text-gray-500">= {numToKorean(salary)} 원</span>
+            <span className="text-xs text-white-nav-text">= {numToKorean(salary)} 원</span>
           </div>
         </div>
 
         <DialogFooter>
           <Button
-            type="submit"
-            onClick={handleSubmit(onSubmit)}
-            className="dark:bg-white-bg dark:hover:text-white-text"
+            onClick={() => {
+              if (isEditing) {
+                handleSubmit(onSubmit)();
+              }
+              setIsEditing(!isEditing);
+            }}
+            className="w-full dark:bg-dark-bg dark:text-dark-text dark:hover:bg-dark-card-bg"
           >
-            저장
+            {isEditing ? "완료" : "수정"}
           </Button>
         </DialogFooter>
       </DialogContent>

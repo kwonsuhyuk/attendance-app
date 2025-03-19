@@ -2,7 +2,7 @@ import "@/firebase";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
-import ManagerRoutes from "@/components/company/\bManagerRoutes";
+import ManagerRoutes from "@/components/company/ManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
 import { useParams } from "react-router-dom";
 import { getCompanyInfo, subscribeToData } from "@/api";
