@@ -46,7 +46,12 @@ const ActionButtons = ({
       >
         승인
       </Button>
-      <Button variant="destructive" size="sm" onClick={() => handleReject(id)}>
+      <Button
+        variant="default"
+        size="sm"
+        className="bg-red-500 hover:bg-red-600"
+        onClick={() => handleReject(id)}
+      >
         거절
       </Button>
     </div>

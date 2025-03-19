@@ -57,22 +57,22 @@ const VacationDetailPage = () => {
       <div className="p-5">
         <Tabs defaultValue="pending" className="w-full">
           <div className="flex justify-between">
-            <TabsList className="bg-white-card-bg">
+            <TabsList className="bg-white-card-bg dark:bg-dark-card-bg">
               <TabsTrigger
                 value="pending"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:text-black sm:min-w-[150px]"
+                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
               >
                 대기중
               </TabsTrigger>
               <TabsTrigger
                 value="processed"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:text-black sm:min-w-[150px]"
+                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
               >
                 처리 내역
               </TabsTrigger>
               <TabsTrigger
                 value="registered"
-                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:text-black sm:min-w-[150px]"
+                className="min-w-[120px] flex-1 border-b-2 border-transparent px-6 py-3 text-center font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:min-w-[150px]"
               >
                 등록 내역
               </TabsTrigger>
