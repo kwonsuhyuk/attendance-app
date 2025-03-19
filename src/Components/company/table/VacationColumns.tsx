@@ -86,7 +86,21 @@ export const getVacationColumns = (
     {
       accessorKey: "reason",
       header: "사유",
-      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+      cell: ({ getValue }) => {
+        const value = getValue() as string;
+        const maxLength = 10;
+        const displayText = value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
+
+        return (
+          <span
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
+            style={{ display: "inline-block", maxWidth: "180px" }}
+            title={value} // 마우스를 올리면 전체 텍스트 표시
+          >
+            {displayText}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "status",
@@ -100,21 +114,5 @@ export const getVacationColumns = (
       ),
     },
   ];
-
-  // "관리" 컬럼을 포함할 경우만 추가
-  if (includeActions) {
-    columns.push({
-      header: "관리",
-      cell: ({ row }) =>
-        handleApprove && handleReject ? (
-          <ActionButtons
-            id={row.original.id}
-            handleApprove={handleApprove}
-            handleReject={handleReject}
-          />
-        ) : null,
-    });
-  }
-
   return columns;
 };

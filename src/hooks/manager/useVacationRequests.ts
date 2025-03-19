@@ -63,7 +63,7 @@ const dummyRequests: IVacationRequest[] = [
     requestType: "특별",
     requester: "송지현",
     requestDate: "2025.04.25 ~ 2025.04.26",
-    reason: "해외 출장",
+    reason: "남아프리카 공화국 해외 출장 / 부산 출장",
     status: "거절됨",
   },
   {
@@ -79,6 +79,7 @@ export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requests, setRequests] = useState<IVacationRequest[]>(dummyRequests);
   const [registeredRequests, setRegisteredRequests] = useState<IVacationRequest[]>([]);
+  const [selectedRequest, setSelectedRequest] = useState<IVacationRequest | null>(null);
 
   const pendingCount = requests.filter(req => req.status === "대기중").length;
 
@@ -96,6 +97,10 @@ export const useVacationRequests = () => {
     setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "거절됨" } : req)));
   };
 
+  const handleRowClick = (request: IVacationRequest | null) => {
+    setSelectedRequest(request);
+  };
+
   return {
     isModalOpen,
     toggleModal,
@@ -105,5 +110,7 @@ export const useVacationRequests = () => {
     handleApprove,
     handleReject,
     pendingCount,
+    handleRowClick,
+    selectedRequest,
   };
 };
