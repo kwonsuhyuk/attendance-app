@@ -46,7 +46,7 @@ const EmployeeListPage = () => {
           <DataTable columns={columns} data={paginatedEmployees} onRowClick={setSelectedEmployee} />
         </div>
 
-        <div className="w-full py-3">
+        <div className="w-full py-1">
           <Pagination
             page={page}
             totalPageCount={totalPageCount}
