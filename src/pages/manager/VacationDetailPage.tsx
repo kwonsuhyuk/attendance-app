@@ -93,16 +93,14 @@ const VacationDetailPage = () => {
                 />
               </div>
 
-              <div className="mt-10">
-                {filteredData.length > 0 && (
-                  <Pagination
-                    page={page[tab.value]}
-                    totalPageCount={getTotalPages(filteredData)}
-                    onNext={() => onNext(tab.value, getTotalPages(filteredData))}
-                    onPrevious={() => onPrevious(tab.value)}
-                  />
-                )}
-              </div>
+              {filteredData.length > 0 && (
+                <Pagination
+                  page={page[tab.value]}
+                  totalPageCount={getTotalPages(filteredData)}
+                  onNext={() => onNext(tab.value, getTotalPages(filteredData))}
+                  onPrevious={() => onPrevious(tab.value)}
+                />
+              )}
             </TabsContent>
           );
         })}
