@@ -23,6 +23,7 @@ const VacationDetailPage = () => {
     handleRowClick,
     selectedRequest,
     page,
+    setPage,
     getTotalPages,
     getCurrentPageData,
     onNext,
@@ -31,7 +32,11 @@ const VacationDetailPage = () => {
 
   return (
     <VacationRequestPageContainer>
-      <Tabs defaultValue="pending" className="w-full">
+      <Tabs
+        defaultValue="pending"
+        className="w-full"
+        onValueChange={tab => setPage(prev => ({ ...prev, [tab]: 0 }))}
+      >
         <div className="flex justify-between bg-white-bg">
           <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-card-bg">
             {TAB_ITEMS.map(tab => (
@@ -83,7 +88,7 @@ const VacationDetailPage = () => {
                     tab.includeActions,
                     tab.isRegistered ?? false,
                   )}
-                  data={getCurrentPageData(filteredData)}
+                  data={getCurrentPageData(filteredData, tab.value)}
                   onRowClick={handleRowClick}
                 />
               </div>
@@ -91,10 +96,10 @@ const VacationDetailPage = () => {
               <div className="mt-10">
                 {filteredData.length > 0 && (
                   <Pagination
-                    page={page}
+                    page={page[tab.value]}
                     totalPageCount={getTotalPages(filteredData)}
-                    onNext={() => onNext(getTotalPages(filteredData))}
-                    onPrevious={onPrevious}
+                    onNext={() => onNext(tab.value, getTotalPages(filteredData))}
+                    onPrevious={() => onPrevious(tab.value)}
                   />
                 )}
               </div>

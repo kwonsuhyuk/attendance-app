@@ -128,9 +128,12 @@ export const useVacationRequests = () => {
   const [requests, setRequests] = useState<IVacationRequest[]>(dummyRequests);
   const [registeredRequests, setRegisteredRequests] = useState<IVacationRequest[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<IVacationRequest | null>(null);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<Record<string, number>>({
+    pending: 0,
+    processed: 0,
+    registered: 0,
+  });
   const itemsPerPage = 10;
-
   const pendingCount = requests.filter(req => req.status === "대기중").length;
 
   const toggleModal = () => setIsModalOpen(prev => !prev);
@@ -138,14 +141,18 @@ export const useVacationRequests = () => {
   const getTotalPages = (filteredRequests: IVacationRequest[]) =>
     Math.ceil(filteredRequests.length / itemsPerPage);
 
-  const getCurrentPageData = (filteredRequests: IVacationRequest[]) =>
-    filteredRequests.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  const getCurrentPageData = (filteredRequests: IVacationRequest[], tab: string) =>
+    filteredRequests.slice(page[tab] * itemsPerPage, (page[tab] + 1) * itemsPerPage);
 
-  const onNext = (totalPageCount: number) => {
-    if (page < totalPageCount - 1) setPage(prev => prev + 1);
+  const onNext = (tab: string, totalPageCount: number) => {
+    if (page[tab] < totalPageCount - 1) {
+      setPage(prev => ({ ...prev, [tab]: prev[tab] + 1 }));
+    }
   };
-  const onPrevious = () => {
-    if (page > 0) setPage(prev => prev - 1);
+  const onPrevious = (tab: string) => {
+    if (page[tab] > 0) {
+      setPage(prev => ({ ...prev, [tab]: prev[tab] - 1 }));
+    }
   };
 
   const handleRegister = (newRequest: IVacationRequest) => {
