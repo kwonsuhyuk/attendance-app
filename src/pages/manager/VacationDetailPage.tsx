@@ -37,13 +37,13 @@ const VacationDetailPage = () => {
         className="w-full"
         onValueChange={tab => setPage(prev => ({ ...prev, [tab]: 0 }))}
       >
-        <div className="flex justify-between bg-white-bg">
-          <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-card-bg">
+        <div className="flex justify-between bg-white-bg dark:bg-dark-bg">
+          <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
             {TAB_ITEMS.map(tab => (
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="h-13 relative mt-2 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:data-[state=active]:bg-white-border-sub dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
+                className="h-13 relative mt-2 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
               >
                 <span className="flex items-center justify-center gap-1 pt-2">
                   {tab.label}

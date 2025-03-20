@@ -29,9 +29,9 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
   const isPending = request.status === "대기중";
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="dark:bg-white-bg dark:text-white-text sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>요청 상세 정보</DialogTitle>
+          <DialogTitle className="dark:text-white-text">요청 상세 정보</DialogTitle>
           <button
             onClick={onClose}
             className="absolute right-5 top-7 rounded-md border-none bg-transparent text-muted-foreground hover:text-dark-card-bg"
@@ -84,8 +84,9 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
               승인
             </Button>
             <Button
-              variant="destructive"
+              variant="default"
               size="sm"
+              className="bg-red-500 hover:bg-red-600"
               onClick={() => {
                 onReject(request.id);
                 toast.error("거절 처리되었습니다.");

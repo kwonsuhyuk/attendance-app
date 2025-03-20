@@ -56,7 +56,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-3">
             <span className="font-medium">휴가 유형</span>
             <Select defaultValue={vacationType} onValueChange={setVacationType}>
-              <SelectTrigger className="dark:bg-white-bg">
+              <SelectTrigger className="dark:bg-white-bg dark:text-white-text">
                 <SelectValue placeholder="휴가 유형 선택" />
               </SelectTrigger>
               <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -64,7 +64,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                   <SelectItem
                     key={type}
                     value={type}
-                    className="dark:text-white-text dark:hover:bg-dark-border"
+                    className="dark:text-white-text dark:hover:bg-white-bg"
                   >
                     {type}
                   </SelectItem>
@@ -89,7 +89,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
         <DialogFooter>
           <Button
             type="submit"
-            className="dark:bg-white-bg dark:hover:text-white-text"
+            className="dark:bg-dark-bg dark:text-dark-text"
             onClick={handleRegister}
           >
             등록
