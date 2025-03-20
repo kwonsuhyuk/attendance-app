@@ -8,6 +8,7 @@ import { TAB_CONTENTS, TAB_ITEMS } from "@/constants/vacationTabs";
 import { Badge } from "@/components/ui/badge";
 import VacationRequestPageContainer from "@/components/container/manager/VacationRequestPageConatiner";
 import VacationDetailModal from "@/components/common/modal/VacationDetailModal";
+import Pagination from "@/components/ui/pagination";
 
 const VacationDetailPage = () => {
   const {
@@ -21,6 +22,11 @@ const VacationDetailPage = () => {
     pendingCount,
     handleRowClick,
     selectedRequest,
+    page,
+    getTotalPages,
+    getCurrentPageData,
+    onNext,
+    onPrevious,
   } = useVacationRequests();
 
   return (
@@ -53,34 +59,48 @@ const VacationDetailPage = () => {
 
         {isModalOpen && <VacationRegisterModal onClose={toggleModal} onRegister={handleRegister} />}
 
-        {TAB_CONTENTS.map(tab => (
-          <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
-            <div className="w-full overflow-x-auto">
-              <DataTable
-                columns={getVacationColumns(
-                  tab.value === "registered" ? undefined : handleApprove,
-                  tab.value === "registered" ? undefined : handleReject,
-                  tab.includeActions,
-                  tab.isRegistered ?? false,
+        {TAB_CONTENTS.map(tab => {
+          const filteredData =
+            tab.value === "registered"
+              ? registeredRequests
+              : tab.value === "processed"
+                ? requests
+                    .filter(tab.filter)
+                    .sort(
+                      (a, b) =>
+                        new Date(b.requestDate.split(" ~ ")[0]).getTime() -
+                        new Date(a.requestDate.split(" ~ ")[0]).getTime(),
+                    )
+                : requests.filter(tab.filter);
+
+          return (
+            <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
+              <div className="w-full overflow-x-auto">
+                <DataTable
+                  columns={getVacationColumns(
+                    tab.value === "registered" ? undefined : handleApprove,
+                    tab.value === "registered" ? undefined : handleReject,
+                    tab.includeActions,
+                    tab.isRegistered ?? false,
+                  )}
+                  data={getCurrentPageData(filteredData)}
+                  onRowClick={handleRowClick}
+                />
+              </div>
+
+              <div className="mt-10">
+                {filteredData.length > 0 && (
+                  <Pagination
+                    page={page}
+                    totalPageCount={getTotalPages(filteredData)}
+                    onNext={() => onNext(getTotalPages(filteredData))}
+                    onPrevious={onPrevious}
+                  />
                 )}
-                data={
-                  tab.value === "registered"
-                    ? registeredRequests
-                    : tab.value === "processed"
-                      ? requests
-                          .filter(tab.filter)
-                          .sort(
-                            (a, b) =>
-                              new Date(b.requestDate.split(" ~ ")[0]).getTime() -
-                              new Date(a.requestDate.split(" ~ ")[0]).getTime(),
-                          ) // 최신순 정렬 적용 (날짜 기준)
-                      : requests.filter(tab.filter)
-                }
-                onRowClick={handleRowClick}
-              />
-            </div>
-          </TabsContent>
-        ))}
+              </div>
+            </TabsContent>
+          );
+        })}
       </Tabs>
       {selectedRequest && (
         <VacationDetailModal

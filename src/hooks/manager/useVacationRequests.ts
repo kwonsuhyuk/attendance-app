@@ -74,16 +74,79 @@ const dummyRequests: IVacationRequest[] = [
     reason: "개인 사정",
     status: "거절됨",
   },
+  {
+    id: 10,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
+  {
+    id: 11,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
+  {
+    id: 12,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
+  {
+    id: 13,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
+  {
+    id: 14,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
+  {
+    id: 15,
+    requestType: "연차",
+    requester: "한도윤",
+    requestDate: "2025.04.29",
+    reason: "개인 사정",
+    status: "거절됨",
+  },
 ];
 export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requests, setRequests] = useState<IVacationRequest[]>(dummyRequests);
   const [registeredRequests, setRegisteredRequests] = useState<IVacationRequest[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<IVacationRequest | null>(null);
+  const [page, setPage] = useState(0);
+  const itemsPerPage = 10;
 
   const pendingCount = requests.filter(req => req.status === "대기중").length;
 
   const toggleModal = () => setIsModalOpen(prev => !prev);
+
+  const getTotalPages = (filteredRequests: IVacationRequest[]) =>
+    Math.ceil(filteredRequests.length / itemsPerPage);
+
+  const getCurrentPageData = (filteredRequests: IVacationRequest[]) =>
+    filteredRequests.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+
+  const onNext = (totalPageCount: number) => {
+    if (page < totalPageCount - 1) setPage(prev => prev + 1);
+  };
+  const onPrevious = () => {
+    if (page > 0) setPage(prev => prev - 1);
+  };
 
   const handleRegister = (newRequest: IVacationRequest) => {
     setRegisteredRequests(prev => [...prev, newRequest]);
@@ -112,5 +175,11 @@ export const useVacationRequests = () => {
     pendingCount,
     handleRowClick,
     selectedRequest,
+    page,
+    setPage,
+    getTotalPages,
+    getCurrentPageData,
+    onNext,
+    onPrevious,
   };
 };
