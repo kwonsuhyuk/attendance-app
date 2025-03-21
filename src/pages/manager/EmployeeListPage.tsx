@@ -31,7 +31,7 @@ const EmployeeListPage = () => {
     <EmployeeListPageContainer>
       <div className="flex flex-col">
         <div className="p-6">
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
           </div>
           <EmployeeFilter
@@ -46,7 +46,7 @@ const EmployeeListPage = () => {
           <DataTable columns={columns} data={paginatedEmployees} onRowClick={setSelectedEmployee} />
         </div>
 
-        <div className="mb-3 w-full">
+        <div className="w-full p-2">
           <Pagination
             page={page}
             totalPageCount={totalPageCount}

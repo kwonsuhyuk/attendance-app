@@ -79,7 +79,7 @@ const VacationDetailPage = () => {
                 : requests.filter(tab.filter);
 
           return (
-            <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
+            <TabsContent key={tab.value} value={tab.value} className="mt-8 w-full">
               <div className="w-full overflow-x-auto">
                 <DataTable
                   columns={getVacationColumns(
@@ -93,14 +93,16 @@ const VacationDetailPage = () => {
                 />
               </div>
 
-              {filteredData.length > 0 && (
-                <Pagination
-                  page={page[tab.value]}
-                  totalPageCount={getTotalPages(filteredData)}
-                  onNext={() => onNext(tab.value, getTotalPages(filteredData))}
-                  onPrevious={() => onPrevious(tab.value)}
-                />
-              )}
+              <div className="p-5">
+                {filteredData.length > 0 && (
+                  <Pagination
+                    page={page[tab.value]}
+                    totalPageCount={getTotalPages(filteredData)}
+                    onNext={() => onNext(tab.value, getTotalPages(filteredData))}
+                    onPrevious={() => onPrevious(tab.value)}
+                  />
+                )}
+              </div>
             </TabsContent>
           );
         })}

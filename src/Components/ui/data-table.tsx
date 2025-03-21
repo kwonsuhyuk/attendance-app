@@ -29,7 +29,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
   });
 
   return (
-    <div className="h-[600px] min-h-[550px] overflow-x-auto rounded-md border">
+    <div className="h-[580px] min-h-[550px] overflow-x-auto rounded-md border">
       <Table className="min-w-2xl h-full w-full table-auto md:table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
