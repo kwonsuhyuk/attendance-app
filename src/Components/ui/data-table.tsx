@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -30,8 +29,8 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
   });
 
   return (
-    <div className="h-[550px] min-h-[550px] w-full overflow-x-auto rounded-md border">
-      <Table className="h-full w-full table-auto">
+    <div className="h-[580px] min-h-[550px] overflow-x-auto rounded-md border">
+      <Table className="min-w-2xl h-full w-full table-auto md:table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>

@@ -19,19 +19,17 @@ import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 import { differenceInDays } from "date-fns";
 import { Input } from "antd";
+import { IVacationRequest } from "@/components/company/table/VacationColumns";
+import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
 
 interface IVacationModalProps {
   onClose: () => void;
+  onRegister: (newRequest: IVacationRequest) => void;
 }
 
-const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
-  const [vacationType, setVacationType] = useState("");
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-
-  // 날짜 차이를 계산하여 휴가 일수 자동 계산
-  const vacationDays =
-    dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) + 1 : 0;
+const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegister }) => {
+  const { vacationType, setVacationType, dateRange, setDateRange, vacationDays, handleRegister } =
+    useVacationRegister(onRegister, onClose);
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -58,7 +56,7 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
           <div className="flex flex-col gap-3">
             <span className="font-medium">휴가 유형</span>
             <Select defaultValue={vacationType} onValueChange={setVacationType}>
-              <SelectTrigger className="dark:bg-white-bg">
+              <SelectTrigger className="dark:bg-white-bg dark:text-white-text">
                 <SelectValue placeholder="휴가 유형 선택" />
               </SelectTrigger>
               <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
@@ -66,7 +64,7 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
                   <SelectItem
                     key={type}
                     value={type}
-                    className="dark:text-white-text dark:hover:bg-dark-border"
+                    className="dark:text-white-text dark:hover:bg-white-bg"
                   >
                     {type}
                   </SelectItem>
@@ -89,7 +87,11 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
         </div>
 
         <DialogFooter>
-          <Button type="submit" className="dark:bg-white-bg dark:hover:text-white-text">
+          <Button
+            type="submit"
+            className="dark:bg-dark-bg dark:text-dark-text"
+            onClick={handleRegister}
+          >
             등록
           </Button>
         </DialogFooter>
@@ -98,4 +100,4 @@ const VacationModifyModal: React.FC<IVacationModalProps> = ({ onClose }) => {
   );
 };
 
-export default VacationModifyModal;
+export default VacationRegisterModal;
