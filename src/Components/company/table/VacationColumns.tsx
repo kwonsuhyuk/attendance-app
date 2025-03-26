@@ -8,10 +8,11 @@ export interface IVacationRequest {
   requestDate: string;
   reason: string;
   status: "대기중" | "승인" | "거절" | "자동 승인";
+  email?: string;
 }
 
 // 상태 배지 컴포넌트
-const StatusBadge = ({ status }: { status: "대기중" | "승인" | "거절" | "자동 승인" }) => {
+export const StatusBadge = ({ status }: { status: "대기중" | "승인" | "거절" | "자동 승인" }) => {
   const statusColors = {
     대기중: "bg-yellow-500",
     승인: "bg-green-500",

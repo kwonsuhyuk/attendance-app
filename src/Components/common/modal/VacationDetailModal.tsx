@@ -10,6 +10,7 @@ import {
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
+import { StatusBadge } from "@/components/company/table/VacationColumns";
 
 interface VacationDetailModalProps {
   request: IVacationRequest;
@@ -48,6 +49,9 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
             <strong>요청자 : </strong> {request.requester}
           </p>
           <p>
+            <strong>이메일 : </strong> {request.email ?? "-"}
+          </p>
+          <p>
             <strong>요청 일자 : </strong> {request.requestDate}
           </p>
           <p>
@@ -57,14 +61,7 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
           </p>
           {!isPending && (
             <p>
-              <strong>처리 상태 : </strong>{" "}
-              <span
-                className={`rounded-full px-3 py-1 text-sm text-white ${
-                  request.status === "승인됨" ? "bg-green-500" : "bg-red-500"
-                }`}
-              >
-                {request.status}
-              </span>
+              <strong>처리 상태 : </strong> <StatusBadge status={request.status} />
             </p>
           )}
         </div>

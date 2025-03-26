@@ -45,6 +45,7 @@ export const useVacationRegister = (
       requestDate: `${dateRange.from.toISOString().split("T")[0]} ~ ${dateRange.to.toISOString().split("T")[0]}`,
       reason,
       status: "자동 승인",
+      email: selectedEmployee.email,
       // 필요 시 email 등 추가 확장 가능
     };
 
