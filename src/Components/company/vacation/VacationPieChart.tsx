@@ -8,7 +8,6 @@ const data = [
 
 const RADIAN = Math.PI / 180;
 
-// 차트 내부 텍스트 렌더링
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -28,7 +27,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-// 커스텀 툴팁
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -44,7 +42,9 @@ const CustomTooltip = ({ active, payload }: any) => {
 const VacationPieChart = () => {
   return (
     <div className="flex flex-col items-center">
-      <h3 className="mb-3 text-lg font-semibold text-gray-800">기간내 휴가 유형별 비율</h3>
+      <h3 className="mb-3 text-lg font-semibold text-white-text dark:text-dark-text">
+        기간내 휴가 유형별 비율
+      </h3>
       <ResponsiveContainer width="100%" height={350}>
         <PieChart>
           <Pie
@@ -68,7 +68,7 @@ const VacationPieChart = () => {
         </PieChart>
       </ResponsiveContainer>
       {/* 차트 아래 휴가 일수 표시 */}
-      <div className="mt-3 flex flex-col items-center gap-1 text-sm text-gray-700">
+      <div className="mt-3 flex flex-col items-center gap-1 text-sm text-white-border dark:text-dark-border">
         {data.map(item => (
           <p key={item.name} className="flex items-center gap-2">
             <span
