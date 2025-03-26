@@ -22,7 +22,7 @@ export const StatusBadge = ({ status }: { status: "대기중" | "승인" | "거�
 
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full px-1 py-1 text-sm font-semibold text-white ${statusColors[status] || ""} h-[28px] min-w-[70px] whitespace-nowrap`}
+      className={`inline-flex items-center justify-center rounded-full px-1 py-1 text-sm font-semibold text-white ${statusColors[status] || ""} h-[28px] min-w-[65px] whitespace-nowrap`}
     >
       {status}
     </span>

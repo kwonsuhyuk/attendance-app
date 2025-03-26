@@ -53,13 +53,13 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <DialogTitle className="dark:text-white-text">휴가 등록</DialogTitle>
           <button
             onClick={onClose}
-            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border"
+            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border dark:hover:bg-white-bg"
           >
             <X size={20} strokeWidth={3} />
           </button>
         </DialogHeader>
 
-        <div className="grid gap-8 py-8">
+        <div className="grid gap-8 py-6">
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 대상</span>
             <div className="relative" ref={dropdownRef}>
@@ -71,12 +71,12 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                   search(keyword);
                 }}
                 placeholder="이름을 입력하세요"
-                className="h-10 placeholder:text-sm dark:bg-white-bg"
+                className="h-10 placeholder:text-sm dark:bg-white-bg dark:placeholder:text-white-text"
               />
 
               {searchResults.length > 0 && (
                 <ul
-                  className={`absolute top-full z-50 mt-1 w-full rounded-md border bg-white text-sm shadow-lg dark:bg-dark-bg ${searchResults.length > 5 ? "max-h-48 overflow-y-auto" : ""} `}
+                  className={`absolute top-full z-50 mt-1 w-full rounded-md border bg-white-card-bg text-sm shadow-lg dark:bg-white-card-bg dark:text-white-text ${searchResults.length > 5 ? "max-h-48 overflow-y-auto" : ""} `}
                 >
                   {searchResults.map(emp => (
                     <li
@@ -86,7 +86,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                         setInputValue(`${emp.name} (${emp.email})`);
                         setSearchResults([]);
                       }}
-                      className="cursor-pointer px-3 py-2 hover:bg-gray-100 dark:hover:bg-dark-card-bg"
+                      className="cursor-pointer px-3 py-2 hover:bg-white-bg dark:hover:bg-white-bg"
                     >
                       {emp.name} ({emp.email})
                     </li>
