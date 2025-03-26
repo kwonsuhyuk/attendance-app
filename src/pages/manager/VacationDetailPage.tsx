@@ -57,7 +57,10 @@ const VacationDetailPage = () => {
             ))}
           </TabsList>
 
-          <Button className="mt-4" onClick={toggleModal}>
+          <Button
+            className="mt-4 cursor-pointer bg-white-bg font-extrabold text-white-text hover:bg-white-bg dark:bg-dark-bg dark:text-dark-text"
+            onClick={toggleModal}
+          >
             요청 등록 +
           </Button>
         </div>
