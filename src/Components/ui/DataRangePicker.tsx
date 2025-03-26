@@ -47,7 +47,7 @@ export function DateRangePicker({
             defaultMonth={date?.from}
             selected={date}
             onSelect={setDate}
-            numberOfMonths={2} // 두 달짜리 캘린더
+            numberOfMonths={2}
           />
         </PopoverContent>
       </Popover>

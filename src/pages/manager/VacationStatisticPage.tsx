@@ -13,8 +13,8 @@ const VacationStatisticPage = () => {
       <VacationFilter />
       <VacationStatisticContainer>
         <VacationChart />
-        <div className="flex flex-col gap-3 md:flex-row">
-          <Card className="hidden h-full items-center justify-center px-4 py-10 md:block md:min-h-[600px] md:w-1/3">
+        <div className="flex min-h-[680px] flex-col gap-3 md:flex-row">
+          <Card className="hidden h-full items-center justify-center px-4 py-10 md:block md:min-h-[680px] md:w-1/3">
             <VacationPieChart />
           </Card>
           <VacationStatisticTable />
