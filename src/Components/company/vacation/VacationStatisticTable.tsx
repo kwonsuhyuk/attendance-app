@@ -51,10 +51,12 @@ const VacationStatisticTable = () => {
     }
     loadEmployees();
   }, [companyCode]);
+
   return (
     <Card className="relative p-4 md:w-2/3">
       <p className="absolute right-2 top-2 text-xs text-gray-500">(사용횟수 : 일)</p>
       <div className="mt-4 w-full overflow-x-auto">
+        <h2 className="mb-3 ml-3 text-lg font-semibold">휴가 사용 기록</h2>
         <div className="min-w-[600px]">
           <DataTable columns={columns} data={employeeList} />
         </div>

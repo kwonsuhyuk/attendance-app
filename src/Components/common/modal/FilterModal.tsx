@@ -19,9 +19,9 @@ const FilterModal = ({ jobList }: FilterModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 sm:hidden">
+        <Button className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 sm:w-fit">
           <FilterIcon className="h-5 w-5" />
-          상세 검색
+          직원 상세 검색
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md p-6">
