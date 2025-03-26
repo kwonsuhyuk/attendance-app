@@ -16,7 +16,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "이영희",
     requestDate: "2025.04.05",
     reason: "감기",
-    status: "승인됨",
+    status: "승인",
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "박민수",
     requestDate: "2025.04.07 ~ 2025.04.10",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "박선영",
     requestDate: "2025.04.20 ~ 2025.04.27",
     reason: "출산 예정",
-    status: "승인됨",
+    status: "승인",
   },
   {
     id: 7,
@@ -56,7 +56,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "이정훈",
     requestDate: "2025.04.18",
     reason: "병원 방문",
-    status: "승인됨",
+    status: "승인",
   },
   {
     id: 8,
@@ -64,7 +64,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "송지현",
     requestDate: "2025.04.25 ~ 2025.04.26",
     reason: "남아프리카 공화국 해외 출장 / 부산 출장",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 9,
@@ -72,7 +72,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 10,
@@ -80,7 +80,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 11,
@@ -88,7 +88,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 12,
@@ -96,7 +96,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 13,
@@ -104,7 +104,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 14,
@@ -112,7 +112,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
   {
     id: 15,
@@ -120,7 +120,7 @@ const dummyRequests: IVacationRequest[] = [
     requester: "한도윤",
     requestDate: "2025.04.29",
     reason: "개인 사정",
-    status: "거절됨",
+    status: "거절",
   },
 ];
 export const useVacationRequests = () => {
@@ -160,11 +160,11 @@ export const useVacationRequests = () => {
   };
 
   const handleApprove = (id: number) => {
-    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "승인됨" } : req)));
+    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "승인" } : req)));
   };
 
   const handleReject = (id: number) => {
-    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "거절됨" } : req)));
+    setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "거절" } : req)));
   };
 
   const handleRowClick = (request: IVacationRequest | null) => {
