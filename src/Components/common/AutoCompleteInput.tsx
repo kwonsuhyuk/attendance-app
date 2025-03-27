@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { UserIcon, MailIcon, BriefcaseIcon } from "lucide-react";
 import { TEmpUserData } from "@/model/types/user.type";
@@ -6,12 +6,19 @@ import { TEmpUserData } from "@/model/types/user.type";
 interface IAutoCompleteUserInputProps {
   users: TEmpUserData[];
   onSelect: (user: TEmpUserData) => void;
+  value?: string;
 }
 
-const AutoCompleteUserInput = ({ users, onSelect }: IAutoCompleteUserInputProps) => {
+const AutoCompleteUserInput = ({ users, onSelect, value }: IAutoCompleteUserInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<TEmpUserData[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setInputValue(value);
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

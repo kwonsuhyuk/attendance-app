@@ -7,6 +7,7 @@ interface IVacationFilterProps {
   selectedMonth: { year: number; month: number };
   setSelectedMonth: (value: { year: number; month: number }) => void;
   selectedMode: "month" | "year";
+  selectedName: TEmpUserData | null;
   setSelectedMode: (value: "month" | "year") => void;
   handleNameSelect: (user: TEmpUserData) => void;
 }
@@ -15,6 +16,7 @@ const VacationFilter = ({
   selectedMonth,
   setSelectedMonth,
   selectedMode,
+  selectedName,
   setSelectedMode,
   handleNameSelect,
 }: IVacationFilterProps) => {
@@ -100,7 +102,11 @@ const VacationFilter = ({
         mode={selectedMode}
         setMode={setSelectedMode}
       />
-      <AutoCompleteUserInput users={dummyEmployees} onSelect={handleNameSelect} />
+      <AutoCompleteUserInput
+        value={selectedName?.name}
+        users={dummyEmployees}
+        onSelect={handleNameSelect}
+      />
     </div>
   );
 };
