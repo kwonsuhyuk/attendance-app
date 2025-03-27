@@ -32,7 +32,9 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="dark:bg-white-card-bg dark:text-white-text sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="px-1 dark:text-white-text">요청 상세 정보</DialogTitle>
+          <DialogTitle className="flex justify-center px-1 dark:text-white-text">
+            상세 정보
+          </DialogTitle>
           <button
             onClick={onClose}
             className="absolute right-5 top-7 rounded-md border-none bg-transparent text-muted-foreground hover:text-dark-card-bg"
@@ -42,19 +44,21 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
         </DialogHeader>
 
         <div className="mb-3 grid gap-6 py-4">
-          <div className="rounded-md border bg-white-bg px-2 py-4 dark:bg-white-bg">
-            <strong>요청 유형 :</strong> {request.requestType}
+          <div className="flex gap-5">
+            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
+              <strong>휴가자 :</strong> {request.requester}
+            </div>
+            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
+              <strong>휴가 유형 :</strong> {request.requestType}
+            </div>
           </div>
-          <div className="rounded-md border bg-white-bg px-2 py-4 dark:bg-white-bg">
-            <strong>요청자 :</strong> {request.requester}
-          </div>
-          <div className="rounded-md border bg-white-bg px-2 py-4 dark:bg-white-bg">
+          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
             <strong>이메일 :</strong> {request.email ?? "-"}
           </div>
-          <div className="rounded-md border bg-white-bg px-2 py-4 dark:bg-white-bg">
-            <strong>요청 일자 :</strong> {request.requestDate}
+          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
+            <strong>휴가 일자 :</strong> {request.requestDate}
           </div>
-          <div className="whitespace-pre-wrap break-words rounded-md border bg-white-bg px-2 py-4 dark:bg-white-bg">
+          <div className="whitespace-pre-wrap break-words rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
             <strong>사유 : </strong>
             <div className="mt-3">{request.reason}</div>
           </div>

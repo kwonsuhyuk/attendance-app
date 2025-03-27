@@ -51,7 +51,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text dark:shadow-lg sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="dark:text-white-text">휴가 등록</DialogTitle>
+          <DialogTitle className="flex justify-center dark:text-white-text">휴가 등록</DialogTitle>
           <button
             onClick={onClose}
             className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border dark:hover:bg-white-bg"
@@ -141,7 +141,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
         <DialogFooter>
           <Button
             type="submit"
-            className="dark:bg-dark-bg dark:text-dark-text"
+            className="w-full dark:bg-dark-bg dark:text-dark-text"
             onClick={handleRegister}
           >
             등록
