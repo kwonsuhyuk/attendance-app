@@ -82,7 +82,13 @@ const VacationDetailPage = () => {
                 : requests.filter(tab.filter);
 
           return (
-            <TabsContent key={tab.value} value={tab.value} className="mt-8 w-full">
+            <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
+              {tab.value === "registered" && (
+                <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+                  ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다. 그 외 데이터는 자동
+                  정리됩니다.
+                </p>
+              )}
               <div className="w-full overflow-x-auto">
                 <DataTable
                   columns={getVacationColumns(

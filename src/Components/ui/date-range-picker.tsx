@@ -12,10 +12,12 @@ export function DateRangePicker({
   date,
   setDate,
   className,
+  toDate,
 }: {
   date: DateRange | undefined;
   setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   className?: string;
+  toDate?: Date;
 }) {
   return (
     <div className={cn("grid gap-2", className)}>
@@ -51,6 +53,7 @@ export function DateRangePicker({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2} // 두 달짜리 캘린더
+            toDate={toDate}
           />
         </PopoverContent>
       </Popover>

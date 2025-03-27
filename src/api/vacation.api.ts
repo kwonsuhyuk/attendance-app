@@ -6,7 +6,7 @@ import {
   getVacationRequestListPath,
 } from "@/constants/api.path";
 
-// 휴가 요청
+// 휴가 요청 (현재 사용 x, 추후 기능 추가 예정)
 export const createVacationRequest = (
   companyCode: string,
   requestId: string,
@@ -16,13 +16,13 @@ export const createVacationRequest = (
   return setData(path, data, "휴가 요청이 등록되었습니다.");
 };
 
-// 휴가 요청 조회 (추후 기능 추가 예정)
+// 휴가 요청 조회 (현재 사용 x, 추후 기능 추가 예정)
 export const fetchVacationRequests = (companyCode: string) => {
   const path = getVacationRequestListPath(companyCode);
   return getData<Record<string, TVacationRequest>>(path);
 };
 
-// 휴가 요청 상태 업데이트
+// 휴가 요청 상태 업데이트 (현재 사용 x, 추후 기능 추가 예정)
 export const updateVacationRequestStatus = (
   companyCode: string,
   requestId: string,
@@ -51,18 +51,17 @@ export const fetchVacationRegistered = async (
   companyCode: string,
 ): Promise<TRegisteredVacation[]> => {
   const resultMap = new Map<string, TRegisteredVacation>();
-  const tempDate = new Date();
-  tempDate.setDate(1); // 정확히 그 달로 맞추기 (예: 3월 31 → 3월 1)
+  const baseDate = new Date();
+  baseDate.setDate(1);
 
-  for (let i = 0; i < 6; i++) {
-    const year = String(tempDate.getFullYear());
-    const month = String(tempDate.getMonth() + 1).padStart(2, "0");
+  for (let i = -6; i <= 3; i++) {
+    const targetDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i);
+    const year = String(targetDate.getFullYear());
+    const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+
     const path = getRegisteredMonthPath(companyCode, year, month);
 
-    console.log("📂 조회 경로:", path);
-
     const monthData = await getData<Record<string, Record<string, TRegisteredVacation>>>(path);
-    console.log("📦 monthData:", monthData);
 
     if (monthData) {
       Object.values(monthData).forEach(userVacations => {
@@ -73,8 +72,6 @@ export const fetchVacationRegistered = async (
         });
       });
     }
-
-    tempDate.setMonth(tempDate.getMonth() - 1); // 한 달 전으로 이동
   }
 
   return Array.from(resultMap.values());

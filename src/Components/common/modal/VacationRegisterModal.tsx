@@ -44,6 +44,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
     selectedEmployee,
     setSelectedEmployee,
     dropdownRef,
+    maxDate,
   } = useVacationRegister(onRegister, onClose);
 
   return (
@@ -114,7 +115,6 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
               </SelectContent>
             </Select>
           </div>
-
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
               <span className="font-medium">사용 기간 :</span>
@@ -123,9 +123,11 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                 {vacationDays > 0 ? `${vacationDays}일` : ""}
               </div>
             </div>
-            <DateRangePicker date={dateRange} setDate={setDateRange} />
+            <DateRangePicker date={dateRange} setDate={setDateRange} toDate={maxDate} />
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              ※ 휴가 등록은 <strong>최대 3개월</strong> 이후까지만 가능합니다.
+            </p>
           </div>
-
           <div className="flex flex-col gap-2">
             <span>사유</span>
             <textarea
