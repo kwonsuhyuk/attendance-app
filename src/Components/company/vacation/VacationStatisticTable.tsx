@@ -1,6 +1,9 @@
 import { fetchEmployees } from "@/api/employee.api";
 import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import Pagination from "@/components/ui/pagination";
+import { DUMMY_EMPLOYEES } from "@/constants/dummyEmployees";
+import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { useCompanyStore } from "@/store/company.store";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,7 +15,6 @@ export const columns: ColumnDef<EmployeeInfo>[] = [
     accessorKey: "name",
     header: "이름",
   },
-
   {
     accessorKey: "annualLeaveCount",
     header: "연차",
@@ -40,26 +42,20 @@ export const columns: ColumnDef<EmployeeInfo>[] = [
 ];
 
 const VacationStatisticTable = () => {
-  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
-  const [employeeList, setEmployeeList] = useState<EmployeeInfo[]>([]);
-
-  useEffect(() => {
-    if (!companyCode) return;
-    async function loadEmployees() {
-      const employees = await fetchEmployees(companyCode as string);
-      setEmployeeList(employees ?? []);
-    }
-    loadEmployees();
-  }, [companyCode]);
+  const { paginatedEmployees, page, totalPageCount, handleNextPage, handlePreviousPage } =
+    useEmployeeList();
 
   return (
     <Card className="relative p-4 md:w-2/3">
       <p className="absolute right-2 top-2 text-xs text-gray-500">(사용횟수 : 일)</p>
-      <div className="mt-4 w-full overflow-x-auto">
-        <h2 className="mb-3 ml-3 text-lg font-semibold">휴가 사용 기록</h2>
-        <div className="min-w-[600px]">
-          <DataTable columns={columns} data={employeeList} />
-        </div>
+      <div className="w-full overflow-x-auto pt-4">
+        <DataTable columns={columns} data={paginatedEmployees} />
+        <Pagination
+          page={page}
+          totalPageCount={totalPageCount}
+          onNext={handleNextPage}
+          onPrevious={handlePreviousPage}
+        />
       </div>
     </Card>
   );
