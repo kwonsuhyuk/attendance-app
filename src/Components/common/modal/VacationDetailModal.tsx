@@ -30,11 +30,9 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
   const isPending = request.status === "대기중";
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="dark:bg-white-card-bg dark:text-white-text sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex justify-center px-1 dark:text-white-text">
-            상세 정보
-          </DialogTitle>
+          <DialogTitle className="flex justify-center dark:text-white-text">상세 정보</DialogTitle>
           <button
             onClick={onClose}
             className="absolute right-5 top-7 rounded-md border-none bg-transparent text-muted-foreground hover:text-dark-card-bg"

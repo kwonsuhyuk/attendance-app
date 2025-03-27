@@ -49,7 +49,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text dark:shadow-lg sm:max-w-md">
+      <DialogContent className="dark:border dark:border-dark-border sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex justify-center dark:text-white-text">휴가 등록</DialogTitle>
           <button
@@ -72,7 +72,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                   search(keyword);
                 }}
                 placeholder="이름을 입력하세요"
-                className="h-10 placeholder:text-sm dark:bg-white-bg dark:placeholder:text-white-text"
+                className="h-10 placeholder:text-sm dark:placeholder:text-white-text"
               />
 
               {searchResults.length > 0 && (
@@ -99,10 +99,10 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 유형</span>
             <Select value={vacationType} onValueChange={setVacationType}>
-              <SelectTrigger className="dark:bg-white-bg dark:text-white-text">
+              <SelectTrigger className="dark:text-white-text">
                 <SelectValue placeholder="휴가 유형 선택" />
               </SelectTrigger>
-              <SelectContent className="dark:border dark:border-dark-border dark:bg-white-bg dark:text-white-text">
+              <SelectContent className="dark:border dark:border-dark-border dark:bg-white-card-bg dark:text-white-text">
                 {VACATIONSELECT_TYPES.map(type => (
                   <SelectItem
                     key={type}
