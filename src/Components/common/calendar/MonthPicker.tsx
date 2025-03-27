@@ -40,7 +40,7 @@ const MonthPicker = ({ value, onChange }: IMonthPickerProps) => {
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal dark:bg-dark-border-sub dark:text-white-bg sm:w-48",
+            "h-full w-full justify-start text-left font-normal dark:bg-dark-border-sub dark:text-white-bg sm:w-48",
           )}
         >
           {monthString}
