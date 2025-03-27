@@ -118,7 +118,6 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
               <span className="font-medium">사용 기간 :</span>
-              {/* <span className="font-medium">휴가 일수 :</span> */}
               <div className="rounded-md border dark:border-dark-border dark:bg-white-bg">
                 {vacationDays > 0 ? `${vacationDays}일` : ""}
               </div>
