@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { UserIcon, MailIcon, BriefcaseIcon } from "lucide-react";
+import { UserIcon, MailIcon, BriefcaseIcon, XIcon } from "lucide-react";
 import { TEmpUserData } from "@/model/types/user.type";
 
 interface IAutoCompleteUserInputProps {
   users: TEmpUserData[];
-  onSelect: (user: TEmpUserData) => void;
+  onSelect: (user: TEmpUserData | null) => void;
   value?: string;
+  onClear?: () => void;
 }
 
-const AutoCompleteUserInput = ({ users, onSelect, value }: IAutoCompleteUserInputProps) => {
+const AutoCompleteUserInput = ({
+  users,
+  onSelect,
+  value,
+  onClear,
+}: IAutoCompleteUserInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<TEmpUserData[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -31,7 +37,6 @@ const AutoCompleteUserInput = ({ users, onSelect, value }: IAutoCompleteUserInpu
     }
 
     const filtered = users.filter(user => user.name.toLowerCase().includes(value.toLowerCase()));
-
     setFilteredUsers(filtered);
     setShowSuggestions(true);
   };
@@ -42,14 +47,32 @@ const AutoCompleteUserInput = ({ users, onSelect, value }: IAutoCompleteUserInpu
     onSelect(user);
   };
 
+  const handleClearClick = () => {
+    setInputValue("");
+    setFilteredUsers([]);
+    setShowSuggestions(false);
+    onSelect(null);
+    onClear?.();
+  };
+
   return (
     <div className="relative w-full">
       <Input
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-full w-full rounded-md placeholder:text-sm"
+        className="h-full w-full rounded-md pr-10 placeholder:text-sm"
       />
+      {inputValue && (
+        <button
+          type="button"
+          onClick={handleClearClick}
+          title="검색 초기화"
+          className="absolute right-2 top-1/2 -translate-y-1/2 border-none bg-transparent text-gray-400 hover:text-gray-600"
+        >
+          <XIcon size={16} />
+        </button>
+      )}
       {showSuggestions && filteredUsers.length > 0 && (
         <ul className="absolute z-10 mt-2 max-h-72 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
           {filteredUsers.map((user, idx) => (
