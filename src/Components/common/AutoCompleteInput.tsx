@@ -1,0 +1,78 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { UserIcon, MailIcon, BriefcaseIcon } from "lucide-react";
+import { TEmpUserData } from "@/model/types/user.type";
+
+interface IAutoCompleteUserInputProps {
+  users: TEmpUserData[];
+  onSelect: (user: TEmpUserData) => void;
+}
+
+const AutoCompleteUserInput = ({ users, onSelect }: IAutoCompleteUserInputProps) => {
+  const [inputValue, setInputValue] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<TEmpUserData[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (value.length === 0) {
+      setShowSuggestions(false);
+      setFilteredUsers([]);
+      return;
+    }
+
+    const filtered = users.filter(user => user.name.toLowerCase().includes(value.toLowerCase()));
+
+    setFilteredUsers(filtered);
+    setShowSuggestions(true);
+  };
+
+  const handleSelect = (user: TEmpUserData) => {
+    setInputValue(user.name);
+    setShowSuggestions(false);
+    onSelect(user);
+  };
+
+  return (
+    <div className="relative w-full">
+      <Input
+        value={inputValue}
+        onChange={handleChange}
+        placeholder="이름 검색"
+        className="h-full w-full rounded-md placeholder:text-sm"
+      />
+      {showSuggestions && filteredUsers.length > 0 && (
+        <ul className="absolute z-10 mt-2 max-h-72 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+          {filteredUsers.map((user, idx) => (
+            <li
+              key={idx}
+              onClick={() => handleSelect(user)}
+              className="cursor-pointer px-4 py-3 transition-colors duration-150 hover:bg-gray-100"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600">
+                  <UserIcon size={18} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-gray-800">{user.name}</span>
+                  <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+                    <MailIcon size={13} className="mr-1" />
+                    {user.email}
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <BriefcaseIcon size={13} className="mr-1" />
+                    {user.jobName} · {user.employmentType}
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default AutoCompleteUserInput;

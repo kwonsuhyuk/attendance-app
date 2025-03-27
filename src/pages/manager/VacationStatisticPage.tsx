@@ -6,18 +6,23 @@ import VacationStatisticTable from "@/components/company/vacation/VacationStatis
 import { Card } from "@/components/ui/card";
 import VacationPieChart from "@/components/company/vacation/VacationPieChart";
 import { useState } from "react";
+import { TEmpUserData } from "@/model/types/user.type";
 
 const VacationStatisticPage = () => {
   const today = new Date();
-
   const [selectedMonth, setSelectedMonth] = useState({
     year: today.getFullYear(),
     month: today.getMonth(),
   });
+  const [selectedName, setSelectedName] = useState<TEmpUserData | null>(null);
 
   return (
     <VacationStatisticLayout>
-      <VacationFilter selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+      <VacationFilter
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        handleNameSelect={setSelectedName}
+      />
       <VacationStatisticContainer>
         <VacationChart selectedMonth={selectedMonth} />
         <div className="flex min-h-[680px] flex-col gap-3 md:flex-row">
