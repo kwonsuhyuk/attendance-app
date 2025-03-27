@@ -3,21 +3,19 @@ import { Card } from "@/components/ui/card";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { format, startOfMonth, endOfMonth, addDays } from "date-fns";
 
-// 📌 이번 달의 모든 날짜를 생성하는 함수
-const getMonthDates = () => {
-  const today = new Date();
-  const firstDay = startOfMonth(today);
-  const lastDay = endOfMonth(today);
+const getMonthDates = (year: number, month: number) => {
+  const firstDay = startOfMonth(new Date(year, month));
+  const lastDay = endOfMonth(new Date(year, month));
 
   let dates = [];
   for (let day = firstDay; day <= lastDay; day = addDays(day, 1)) {
-    dates.push(format(day, "MM-dd")); // "03-01", "03-02" 형식
+    dates.push(format(day, "MM-dd"));
   }
   return dates;
 };
 
-const generateDummyVacationData = () => {
-  const dates = getMonthDates();
+const generateDummyVacationData = (year: number, month: number) => {
+  const dates = getMonthDates(year, month);
   return dates.map(date => ({
     date,
     annual: Math.floor(Math.random() * 10),
@@ -26,14 +24,21 @@ const generateDummyVacationData = () => {
   }));
 };
 
-const VacationChart = () => {
-  const dummyVacationData = useMemo(() => generateDummyVacationData(), []);
+interface IVacationChartProps {
+  selectedMonth: { year: number; month: number };
+}
+
+const VacationChart = ({ selectedMonth }: IVacationChartProps) => {
+  const dummyVacationData = useMemo(() => {
+    return generateDummyVacationData(selectedMonth.year, selectedMonth.month);
+  }, [selectedMonth]);
+
   return (
     <Card className="p-4">
       <h2 className="mb-4 text-lg font-semibold">직원 휴가 사용 현황</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={dummyVacationData} className="text-sm" margin={{ left: 0, right: 10 }}>
-          <XAxis dataKey="date" stroke="gray" />
+          <XAxis stroke="gray" dataKey="date" />
           <YAxis stroke="gray" width={30} />
           <Tooltip />
           <Legend align="right" />

@@ -1,9 +1,9 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 const data = [
-  { name: "연차", value: 60, color: "#0F4C75", days: 12 }, // 파란색
-  { name: "반차", value: 25, color: "#3282B8", days: 5 }, // 초록색
-  { name: "특별 휴가", value: 15, color: "#BBE1FA", days: 3 }, // 노란색
+  { name: "연차", value: 60, color: "#0F4C75", days: 12 },
+  { name: "반차", value: 25, color: "#3282B8", days: 5 },
+  { name: "특별 휴가", value: 15, color: "#BBE1FA", days: 3 },
 ];
 
 const RADIAN = Math.PI / 180;

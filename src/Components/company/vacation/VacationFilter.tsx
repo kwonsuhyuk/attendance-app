@@ -1,17 +1,13 @@
-import { useCompanyStore } from "@/store/company.store";
 import { SlidersHorizontalIcon } from "lucide-react";
-import React, { useState } from "react";
 import MonthPicker from "@/components/common/calendar/MonthPicker";
 import { Input } from "@/components/ui/input";
 
-const VacationFilter = () => {
-  const today = new Date();
+interface IVacationFilterProps {
+  selectedMonth: { year: number; month: number };
+  setSelectedMonth: (value: { year: number; month: number }) => void;
+}
 
-  const [selectedMonth, setSelectedMonth] = useState({
-    year: today.getFullYear(),
-    month: today.getMonth(),
-  });
-
+const VacationFilter = ({ selectedMonth, setSelectedMonth }: IVacationFilterProps) => {
   return (
     <div className="flex w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit">
       <SlidersHorizontalIcon className="hidden w-10 text-white-nav-text sm:block" />
