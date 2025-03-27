@@ -26,25 +26,33 @@ const generateDummyVacationData = (year: number, month: number) => {
   }));
 };
 
+const generateDummyYearlySummary = (year: number) => {
+  return Array.from({ length: 12 }, (_, i) => ({
+    monthLabel: `${i + 1}월`,
+    annual: Math.floor(Math.random() * 30),
+    half: Math.floor(Math.random() * 20),
+    special: Math.floor(Math.random() * 10),
+  }));
+};
+
 interface IVacationChartProps {
   selectedDate: { year: number; month: number };
   selectedName: TEmpUserData | null;
+  mode: "month" | "year";
 }
 
-const VacationChart = ({ selectedDate, selectedName }: IVacationChartProps) => {
+const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps) => {
   const dummyVacationData = useMemo(() => {
-    return generateDummyVacationData(selectedDate.year, selectedDate.month);
-  }, [selectedDate]);
+    if (mode === "month") {
+      return generateDummyVacationData(selectedDate.year, selectedDate.month);
+    }
+    return generateDummyYearlySummary(selectedDate.year);
+  }, [selectedDate, mode]);
 
-  const [selectedData, setSelectedData] = useState<{
-    date: string;
-    annual: number;
-    half: number;
-    special: number;
-  } | null>(null);
+  const [selectedData, setSelectedData] = useState<any>(null);
 
   const handleBarClick = (data: any) => {
-    setSelectedData(data); // data = { date, annual, half, special }
+    setSelectedData(data);
   };
 
   const handleClose = () => setSelectedData(null);
@@ -53,12 +61,12 @@ const VacationChart = ({ selectedDate, selectedName }: IVacationChartProps) => {
     <>
       <Card className="p-4">
         <h2 className="mb-12 text-lg font-semibold">
-          {selectedDate && `${selectedDate.year}년 ${selectedDate.month + 1}월 `}
+          {selectedDate.year}년 {mode === "month" && `${selectedDate.month + 1}월 `}
           {selectedName ? `${selectedName.name}님의` : "전체"} 휴가 사용 현황
         </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={dummyVacationData} className="text-sm" margin={{ left: 0, right: 10 }}>
-            <XAxis stroke="gray" dataKey="date" />
+            <XAxis stroke="gray" dataKey={mode === "year" ? "monthLabel" : "date"} />
             <YAxis stroke="gray" width={30} />
             <Tooltip />
             <Legend align="right" />
@@ -87,11 +95,12 @@ const VacationChart = ({ selectedDate, selectedName }: IVacationChartProps) => {
         </ResponsiveContainer>
       </Card>
 
-      {/* Fix : 여기 부분은 이제 해당 날짜에 휴가 사용중인, 사용한 인원 리스트 보여주는 모달로 교체 */}
       <Dialog open={!!selectedData} onOpenChange={handleClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedData?.date} 휴가 상세 정보</DialogTitle>
+            <DialogTitle>
+              {selectedData?.date || selectedData?.monthLabel} 휴가 상세 정보
+            </DialogTitle>
           </DialogHeader>
           <div className="mt-2 space-y-2 text-sm text-gray-700">
             <p>연차: {selectedData?.annual}건</p>

@@ -1,18 +1,21 @@
 import { SlidersHorizontalIcon } from "lucide-react";
 import MonthPicker from "@/components/common/calendar/MonthPicker";
-
 import AutoCompleteUserInput from "@/components/common/AutoCompleteInput";
 import { TEmpUserData } from "@/model/types/user.type";
 
 interface IVacationFilterProps {
   selectedMonth: { year: number; month: number };
   setSelectedMonth: (value: { year: number; month: number }) => void;
+  selectedMode: "month" | "year";
+  setSelectedMode: (value: "month" | "year") => void;
   handleNameSelect: (user: TEmpUserData) => void;
 }
 
 const VacationFilter = ({
   selectedMonth,
   setSelectedMonth,
+  selectedMode,
+  setSelectedMode,
   handleNameSelect,
 }: IVacationFilterProps) => {
   const dummyEmployees: TEmpUserData[] = [
@@ -91,7 +94,12 @@ const VacationFilter = ({
   return (
     <div className="flex w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit">
       <SlidersHorizontalIcon className="hidden w-10 text-white-nav-text sm:block" />
-      <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
+      <MonthPicker
+        value={selectedMonth}
+        onChange={setSelectedMonth}
+        mode={selectedMode}
+        setMode={setSelectedMode}
+      />
       <AutoCompleteUserInput users={dummyEmployees} onSelect={handleNameSelect} />
     </div>
   );
