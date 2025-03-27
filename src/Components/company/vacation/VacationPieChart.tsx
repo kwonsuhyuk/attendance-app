@@ -1,3 +1,4 @@
+import { TEmpUserData } from "@/model/types/user.type";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 const data = [
@@ -38,12 +39,17 @@ const CustomTooltip = ({ active, payload }: any) => {
   }
   return null;
 };
+interface IVacationPieChartProps {
+  selectedDate: { year: number; month: number };
+  selectedName: TEmpUserData | null;
+}
 
-const VacationPieChart = () => {
+const VacationPieChart = ({ selectedDate, selectedName }: IVacationPieChartProps) => {
   return (
     <div className="flex flex-col items-center">
       <h3 className="mb-3 text-lg font-semibold text-white-text dark:text-dark-text">
-        기간내 휴가 유형별 비율
+        {selectedDate && `${selectedDate.year}년 ${selectedDate.month + 1}월 `}
+        {selectedName ? `${selectedName.name}님의` : "전체"} 유형별 휴가 사용 현황
       </h3>
       <ResponsiveContainer width="100%" height={350}>
         <PieChart>
