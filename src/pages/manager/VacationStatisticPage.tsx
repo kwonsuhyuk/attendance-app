@@ -6,9 +6,8 @@ import VacationStatisticTable from "@/components/company/vacation/VacationStatis
 import VacationPieChart from "@/components/company/vacation/VacationPieChart";
 import VacationFilter from "@/components/company/vacation/VacationFilter";
 import { Card } from "@/components/ui/card";
-import { EmployeeInfo, TEmpUserData } from "@/model/types/user.type";
+import { EmployeeInfo } from "@/model/types/user.type";
 import { useSearchParams } from "react-router-dom";
-import { useCompanyStore } from "@/store/company.store";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 
 const VacationStatisticPage = () => {
@@ -17,10 +16,9 @@ const VacationStatisticPage = () => {
     year: today.getFullYear(),
     month: today.getMonth(),
   });
-  const [mode, setMode] = useState<"month" | "year">("month");
   const [selectedName, setSelectedName] = useState<EmployeeInfo | null>(null);
+  const [mode, setMode] = useState<"month" | "year">("month");
   const [searchParams, setSearchParams] = useSearchParams();
-
   const {
     employeeList,
     paginatedEmployees,

@@ -41,15 +41,16 @@ const MonthPicker = ({ value, onChange, mode, setMode }: IMonthPickerProps) => {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("h-full w-full justify-start text-left font-normal sm:w-56")}
+          className={cn("h-full w-full justify-start text-left font-normal sm:w-56", "text-sm")}
         >
           {label}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-fit p-3">
-        <div className="flex items-center gap-2">
+      <PopoverContent className="w-[90vw] max-w-sm p-4 sm:w-fit">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
+          {/* 보기 모드 선택 */}
           <Select value={mode} onValueChange={v => setMode(v as "month" | "year")}>
-            <SelectTrigger className="w-36">
+            <SelectTrigger className="w-full sm:w-36">
               <SelectValue placeholder="기간 선택" />
             </SelectTrigger>
             <SelectContent>
@@ -68,8 +69,9 @@ const MonthPicker = ({ value, onChange, mode, setMode }: IMonthPickerProps) => {
             </SelectContent>
           </Select>
 
+          {/* 연도 선택 */}
           <Select value={yearValue} onValueChange={handleYearChange}>
-            <SelectTrigger className="w-28">
+            <SelectTrigger className="w-full sm:w-28">
               <SelectValue placeholder="연도 선택" />
             </SelectTrigger>
             <SelectContent>
@@ -81,9 +83,10 @@ const MonthPicker = ({ value, onChange, mode, setMode }: IMonthPickerProps) => {
             </SelectContent>
           </Select>
 
+          {/* 월 선택 */}
           {mode === "month" && (
             <Select value={monthValue} onValueChange={handleMonthChange}>
-              <SelectTrigger className="w-28">
+              <SelectTrigger className="w-full sm:w-28">
                 <SelectValue placeholder="월 선택" />
               </SelectTrigger>
               <SelectContent>

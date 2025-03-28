@@ -56,12 +56,12 @@ const AutoCompleteUserInput = ({
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full px-0.5">
       <Input
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-full w-full rounded-md pr-10 placeholder:text-sm"
+        className="h-full rounded-sm border-none pr-10 placeholder:text-sm focus:outline-none focus:ring-0"
       />
       {inputValue && (
         <button
@@ -74,15 +74,15 @@ const AutoCompleteUserInput = ({
         </button>
       )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute z-10 mt-2 max-h-72 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+        <ul className="absolute left-0 right-0 z-10 mt-2 max-h-72 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white px-2 shadow-lg">
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}
               onClick={() => handleSelect(user)}
-              className="cursor-pointer px-4 py-3 transition-colors duration-150 hover:bg-gray-100"
+              className="cursor-pointer rounded-md px-3 py-3 transition-colors duration-150 hover:bg-gray-100"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-600">
                   <UserIcon size={18} />
                 </div>
                 <div className="flex flex-col">

@@ -1,6 +1,13 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { format } from "date-fns";
 import clsx from "clsx";
+import { XIcon } from "lucide-react";
 
 interface IVacationDetailModalProps {
   open: boolean;
@@ -24,13 +31,21 @@ const typeColorMap: Record<string, string> = {
 const VacationChartModal = ({ open, onClose, label, details }: IVacationDetailModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md md:max-w-2xl">
+      <DialogContent className="max-w-md md:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold md:text-xl">
             📅 {label} 휴가 상세 정보
           </DialogTitle>
         </DialogHeader>
-
+        <DialogClose asChild>
+          <button
+            type="button"
+            className="absolute right-3 top-3 rounded-sm border-none bg-transparent p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+            aria-label="Close"
+          >
+            <XIcon className="h-5 w-5" />
+          </button>
+        </DialogClose>
         <div className="mt-4 space-y-4">
           {details.length > 0 ? (
             details.map((item, idx) => (

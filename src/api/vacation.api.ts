@@ -94,6 +94,6 @@ export async function fetchRegisteredVacationsByMonth(
   month: string,
 ): Promise<Record<string, Record<string, TRegisteredVacation>> | null> {
   const path = getRegisteredMonthPath(companyCode, year, month.padStart(2, "0"));
-  console.log(path);
+
   return await getData(path);
 }
