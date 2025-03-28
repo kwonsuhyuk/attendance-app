@@ -15,7 +15,7 @@ export const TAB_CONTENTS = [
   },
   {
     value: "processed",
-    filter: (req: IVacationRequest) => req.status === "승인됨" || req.status === "거절됨",
+    filter: (req: IVacationRequest) => req.status === "승인" || req.status === "거절",
     includeActions: false,
     isRegistered: false,
   },

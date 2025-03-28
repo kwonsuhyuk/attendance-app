@@ -57,7 +57,10 @@ const VacationDetailPage = () => {
             ))}
           </TabsList>
 
-          <Button className="mt-4" onClick={toggleModal}>
+          <Button
+            className="mt-4 cursor-pointer bg-white-bg font-extrabold text-white-text hover:bg-white-bg dark:bg-dark-bg dark:text-dark-text"
+            onClick={toggleModal}
+          >
             요청 등록 +
           </Button>
         </div>
@@ -79,7 +82,13 @@ const VacationDetailPage = () => {
                 : requests.filter(tab.filter);
 
           return (
-            <TabsContent key={tab.value} value={tab.value} className="mt-8 w-full">
+            <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
+              {["registered", "processed"].includes(tab.value) && (
+                <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+                  ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다. 그 외 데이터는 자동
+                  정리됩니다.
+                </p>
+              )}
               <div className="w-full overflow-x-auto">
                 <DataTable
                   columns={getVacationColumns(
