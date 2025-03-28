@@ -1,5 +1,12 @@
-import { TEmpUserData } from "@/model/types/user.type";
+import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { EmployeeInfo } from "@/model/types/user.type";
+import {
+  fetchRegisteredVacationsByMonth,
+  fetchRegisteredVacationsByYear,
+} from "@/api/vacation.api";
+import { useCompanyStore } from "@/store/company.store";
+import { parseISO, eachDayOfInterval } from "date-fns";
 
 const RADIAN = Math.PI / 180;
 
@@ -28,7 +35,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     return (
       <div className="rounded-md bg-white p-2 text-xs text-black shadow-md">
         <p className="font-semibold">{name}</p>
-        <p>{`${value}% (${fullData.days}일)`}</p>
+        <p>{`${value.toFixed(1)}% (${fullData.days}일)`}</p>
       </div>
     );
   }
@@ -37,57 +44,131 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 interface IVacationPieChartProps {
   selectedDate: { year: number; month: number };
-  selectedName: TEmpUserData | null;
+  selectedName: EmployeeInfo | null;
   mode: "month" | "year";
 }
 
 const VacationPieChart = ({ selectedDate, selectedName, mode }: IVacationPieChartProps) => {
-  // 예시: 연간 or 월간에 따른 임시 더미 데이터
-  const pieData =
-    mode === "month"
-      ? [
-          { name: "연차", value: 60, color: "#0F4C75", days: 12 },
-          { name: "반차", value: 25, color: "#3282B8", days: 5 },
-          { name: "특별 휴가", value: 15, color: "#BBE1FA", days: 3 },
-        ]
-      : [
-          { name: "연차", value: 70, color: "#0F4C75", days: 38 },
-          { name: "반차", value: 20, color: "#3282B8", days: 10 },
-          { name: "특별 휴가", value: 10, color: "#BBE1FA", days: 6 },
-        ];
+  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
+  const [pieData, setPieData] = useState<any[]>([]);
+  const [rawData, setRawData] = useState<any[]>([]); // 하단 텍스트용
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const year = selectedDate.year.toString();
+      if (!companyCode) return;
+
+      let flattened: any[] = [];
+
+      if (mode === "month") {
+        const month = (selectedDate.month + 1).toString().padStart(2, "0");
+        const data = await fetchRegisteredVacationsByMonth(companyCode, year, month);
+
+        Object.entries(data || {}).forEach(([userId, userData]: [string, any]) => {
+          Object.values(userData).forEach((entry: any) => {
+            if (selectedName && selectedName.uid !== userId) return;
+
+            const start = parseISO(entry.startDate);
+            const end = parseISO(entry.endDate);
+
+            eachDayOfInterval({ start, end }).forEach(() => {
+              flattened.push({ type: entry.vacationType });
+            });
+          });
+        });
+      } else {
+        const data = await fetchRegisteredVacationsByYear(companyCode, year);
+
+        Object.values(data || {}).forEach((monthData: any) => {
+          Object.entries(monthData).forEach(([userId, userData]: [string, any]) => {
+            Object.values(userData).forEach((entry: any) => {
+              if (selectedName && selectedName.uid !== userId) return;
+
+              const start = parseISO(entry.startDate);
+              const end = parseISO(entry.endDate);
+
+              eachDayOfInterval({ start, end }).forEach(() => {
+                flattened.push({ type: entry.vacationType });
+              });
+            });
+          });
+        });
+      }
+
+      const counts = {
+        연차: flattened.filter(f => f.type === "연차").length,
+        반차: flattened.filter(f => f.type === "반차").length,
+        특별휴가: flattened.filter(f => f.type === "특별 휴가").length,
+      };
+
+      const total = counts.연차 + counts.반차 + counts.특별휴가;
+
+      const allData = [
+        {
+          name: "연차",
+          value: total ? (counts.연차 / total) * 100 : 0,
+          days: counts.연차,
+          color: "#0F4C75",
+        },
+        {
+          name: "반차",
+          value: total ? (counts.반차 / total) * 100 : 0,
+          days: counts.반차,
+          color: "#3282B8",
+        },
+        {
+          name: "특별 휴가",
+          value: total ? (counts.특별휴가 / total) * 100 : 0,
+          days: counts.특별휴가,
+          color: "#BBE1FA",
+        },
+      ];
+
+      setRawData(allData);
+      setPieData(allData.filter(d => d.days > 0));
+    };
+
+    fetchData();
+  }, [selectedDate, selectedName, mode, companyCode]);
 
   return (
     <div className="flex flex-col items-center">
-      <h3 className="mb-3 text-lg font-semibold text-white-text dark:text-dark-text">
+      <h3 className="mb-3 text-center text-lg font-semibold text-white-text dark:text-dark-text">
         {selectedDate.year}년{mode === "month" && ` ${selectedDate.month + 1}월 `}
-        {selectedName ? `${selectedName.name}님의` : "전체"} 유형별 휴가 사용 현황
+        {selectedName ? `${selectedName.name}님의` : "전체"} <br /> 유형별 휴가 사용 현황
       </h3>
 
-      <ResponsiveContainer width="100%" height={350}>
-        <PieChart>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="50%"
-            innerRadius={50}
-            outerRadius={120}
-            fill="#8884d8"
-            paddingAngle={5}
-            dataKey="value"
-            label={renderCustomizedLabel}
-            labelLine={false}
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-          <Legend verticalAlign="bottom" height={36} />
-        </PieChart>
-      </ResponsiveContainer>
+      {pieData.length > 0 ? (
+        <ResponsiveContainer width="100%" height={350}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              innerRadius={10}
+              outerRadius={120}
+              fill="#8884d8"
+              paddingAngle={1}
+              dataKey="value"
+              label={renderCustomizedLabel}
+              labelLine={false}
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+            <Legend verticalAlign="bottom" height={36} />
+          </PieChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="flex h-[350px] items-center justify-center text-sm text-white-text dark:text-dark-text">
+          휴가 데이터가 없습니다.
+        </div>
+      )}
 
       <div className="mt-3 flex flex-col items-center gap-1 text-sm text-white-border dark:text-dark-border">
-        {pieData.map(item => (
+        {rawData.map(item => (
           <p key={item.name} className="flex items-center gap-2">
             <span
               className="inline-block h-3 w-3 rounded-full"

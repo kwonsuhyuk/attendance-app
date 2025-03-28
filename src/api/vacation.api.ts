@@ -3,6 +3,7 @@ import { TVacationRequest, TRegisteredVacation } from "@/model/types/vacation.ty
 import {
   getRegisteredMonthPath,
   getRegisteredVacationDetailPath,
+  getRegisteredYearPath,
   getVacationRequestListPath,
 } from "@/constants/api.path";
 
@@ -76,3 +77,23 @@ export const fetchVacationRegistered = async (
 
   return Array.from(resultMap.values());
 };
+
+// 연도 전체 조회 (유저별 구조)
+export async function fetchRegisteredVacationsByYear(
+  companyCode: string,
+  year: string,
+): Promise<Record<string, Record<string, TRegisteredVacation>> | null> {
+  const path = getRegisteredYearPath(companyCode, year);
+  return await getData(path);
+}
+
+// 연월 전체 조회 (유저별 구조)
+export async function fetchRegisteredVacationsByMonth(
+  companyCode: string,
+  year: string,
+  month: string,
+): Promise<Record<string, Record<string, TRegisteredVacation>> | null> {
+  const path = getRegisteredMonthPath(companyCode, year, month.padStart(2, "0"));
+  console.log(path);
+  return await getData(path);
+}

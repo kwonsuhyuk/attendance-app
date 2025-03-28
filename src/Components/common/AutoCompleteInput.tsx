@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { UserIcon, MailIcon, BriefcaseIcon, XIcon } from "lucide-react";
-import { TEmpUserData } from "@/model/types/user.type";
+import { EmployeeInfo } from "@/model/types/user.type";
 
 interface IAutoCompleteUserInputProps {
-  users: TEmpUserData[];
-  onSelect: (user: TEmpUserData | null) => void;
+  users: EmployeeInfo[];
+  onSelect: (user: EmployeeInfo | null) => void;
   value?: string;
   onClear?: () => void;
 }
@@ -17,7 +17,7 @@ const AutoCompleteUserInput = ({
   onClear,
 }: IAutoCompleteUserInputProps) => {
   const [inputValue, setInputValue] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<TEmpUserData[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<EmployeeInfo[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const AutoCompleteUserInput = ({
     setShowSuggestions(true);
   };
 
-  const handleSelect = (user: TEmpUserData) => {
+  const handleSelect = (user: EmployeeInfo) => {
     setInputValue(user.name);
     setShowSuggestions(false);
     onSelect(user);
