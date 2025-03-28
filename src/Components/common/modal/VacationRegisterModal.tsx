@@ -20,6 +20,9 @@ import { Input } from "antd";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
 import { VACATIONSELECT_TYPES } from "@/constants/vacationSelect";
+import AutoCompleteUserInput from "../AutoCompleteInput";
+import { TEmpUserData } from "@/model/types/user.type";
+import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 
 interface IVacationModalProps {
   onClose: () => void;
@@ -47,6 +50,8 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
     maxDate,
   } = useVacationRegister(onRegister, onClose);
 
+  const { employeeList } = useEmployeeList();
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="dark:border dark:border-dark-border sm:max-w-md">
@@ -63,38 +68,13 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
         <div className="grid gap-8 py-6">
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 대상</span>
-            <div className="relative" ref={dropdownRef}>
-              <Input
-                value={inputValue}
-                onChange={e => {
-                  const keyword = e.target.value;
-                  setInputValue(keyword);
-                  search(keyword);
-                }}
-                placeholder="이름을 입력하세요"
-                className="h-10 placeholder:text-sm dark:placeholder:text-white-text"
-              />
-
-              {searchResults.length > 0 && (
-                <ul
-                  className={`absolute top-full z-50 mt-1 w-full rounded-md border bg-white-card-bg text-sm shadow-lg dark:bg-white-card-bg dark:text-white-text ${searchResults.length > 5 ? "max-h-48 overflow-y-auto" : ""} `}
-                >
-                  {searchResults.map(emp => (
-                    <li
-                      key={emp.uid}
-                      onClick={() => {
-                        setSelectedEmployee(emp);
-                        setInputValue(`${emp.name} (${emp.email})`);
-                        setSearchResults([]);
-                      }}
-                      className="cursor-pointer px-3 py-2 hover:bg-white-bg dark:hover:bg-white-bg"
-                    >
-                      {emp.name} ({emp.email})
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <AutoCompleteUserInput
+              users={employeeList as TEmpUserData[]}
+              onSelect={(emp: TEmpUserData) => {
+                setSelectedEmployee(emp);
+                setInputValue(`${emp.name} (${emp.email})`);
+              }}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 유형</span>
