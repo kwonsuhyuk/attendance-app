@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
+import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
+import { EmployeeInfo } from "@/model/types/user.type";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
+import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -15,12 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatMoney, numToKorean } from "../../../util/formatMoney.util";
-import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
-import { EmployeeInfo } from "@/model/types/user.type";
-import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
-import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
-import { X } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
