@@ -42,15 +42,12 @@ export const useVacationRequests = () => {
   const handleRegister = (newRequest: IVacationRequest) => {
     setRegisteredRequests(prev => [...prev, newRequest]);
   };
-
   const handleApprove = (id: number) => {
     setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "승인" } : req)));
   };
-
   const handleReject = (id: number) => {
     setRequests(prev => prev.map(req => (req.id === id ? { ...req, status: "거절" } : req)));
   };
-
   const handleRowClick = (request: IVacationRequest | null) => {
     setSelectedRequest(request);
   };
@@ -73,29 +70,55 @@ export const useVacationRequests = () => {
           email: item.email,
         };
       });
-
       setRegisteredRequests(mapped);
     };
 
     loadRegistered();
   }, [companyCode]);
 
+  const getFilteredVacationData = (
+    tabValue: string,
+    filter: (item: IVacationRequest) => boolean,
+  ) => {
+    if (tabValue === "registered") return registeredRequests;
+
+    if (tabValue === "processed") {
+      return requests
+        .filter(filter)
+        .sort(
+          (a, b) =>
+            new Date(b.requestDate.split(" ~ ")[0]).getTime() -
+            new Date(a.requestDate.split(" ~ ")[0]).getTime(),
+        );
+    }
+    return requests.filter(filter);
+  };
+
   return {
-    isModalOpen,
-    toggleModal,
-    requests,
-    registeredRequests,
-    handleRegister,
-    handleApprove,
-    handleReject,
-    pendingCount,
-    handleRowClick,
-    selectedRequest,
-    page,
-    setPage,
-    getTotalPages,
-    getCurrentPageData,
-    onNext,
-    onPrevious,
+    modal: {
+      isOpen: isModalOpen,
+      toggle: toggleModal,
+    },
+    requests: {
+      all: requests,
+      registered: registeredRequests,
+      register: handleRegister,
+      approve: handleApprove,
+      reject: handleReject,
+      filter: getFilteredVacationData,
+      pendingCount,
+    },
+    pagination: {
+      page,
+      setPage,
+      next: onNext,
+      previous: onPrevious,
+      getTotalPages,
+      getCurrentPageData,
+    },
+    selection: {
+      selected: selectedRequest,
+      select: handleRowClick,
+    },
   };
 };

@@ -1,33 +1,33 @@
-import { DataTable } from "@/components/ui/data-table";
 import { getVacationColumns } from "@/components/company/table/VacationColumns";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VacationRegisterModal from "@/components/common/modal/VacationRegisterModal";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 import { TAB_CONTENTS, TAB_ITEMS } from "@/constants/vacationTabs";
 import { Badge } from "@/components/ui/badge";
-import VacationRequestPageContainer from "@/components/container/manager/VacationRequestPageConatiner";
+import VacationRequestPageContainer from "@/components/container/manager/VacationRequestPageContainer";
 import VacationDetailModal from "@/components/common/modal/VacationDetailModal";
-import Pagination from "@/components/ui/pagination";
+import VacationTabContent from "@/components/company/table/VacationTabContent";
 
 const VacationDetailPage = () => {
   const {
-    isModalOpen,
-    toggleModal,
-    requests,
-    registeredRequests,
-    handleRegister,
-    handleApprove,
-    handleReject,
-    pendingCount,
-    handleRowClick,
-    selectedRequest,
-    page,
-    setPage,
-    getTotalPages,
-    getCurrentPageData,
-    onNext,
-    onPrevious,
+    modal: { isOpen: isModalOpen, toggle: toggleModal },
+    requests: {
+      register: handleRegister,
+      approve: handleApprove,
+      reject: handleReject,
+      pendingCount,
+      filter: getFilteredVacationData,
+    },
+    pagination: {
+      page,
+      setPage,
+      next: onNext,
+      previous: onPrevious,
+      getTotalPages,
+      getCurrentPageData,
+    },
+    selection: { selected: selectedRequest, select: handleRowClick },
   } = useVacationRequests();
 
   return (
@@ -61,58 +61,33 @@ const VacationDetailPage = () => {
             className="mt-4 cursor-pointer bg-white-bg font-extrabold text-white-text hover:bg-white-bg dark:bg-dark-bg dark:text-dark-text"
             onClick={toggleModal}
           >
-            요청 등록 +
+            휴가 등록 +
           </Button>
         </div>
 
         {isModalOpen && <VacationRegisterModal onClose={toggleModal} onRegister={handleRegister} />}
 
         {TAB_CONTENTS.map(tab => {
-          const filteredData =
-            tab.value === "registered"
-              ? registeredRequests
-              : tab.value === "processed"
-                ? requests
-                    .filter(tab.filter)
-                    .sort(
-                      (a, b) =>
-                        new Date(b.requestDate.split(" ~ ")[0]).getTime() -
-                        new Date(a.requestDate.split(" ~ ")[0]).getTime(),
-                    )
-                : requests.filter(tab.filter);
+          const filteredData = getFilteredVacationData(tab.value, tab.filter);
 
           return (
-            <TabsContent key={tab.value} value={tab.value} className="mt-6 w-full">
-              {["registered", "processed"].includes(tab.value) && (
-                <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
-                  ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다. 그 외 데이터는 자동
-                  정리됩니다.
-                </p>
-              )}
-              <div className="w-full overflow-x-auto">
-                <DataTable
-                  columns={getVacationColumns(
-                    tab.value === "registered" ? undefined : handleApprove,
-                    tab.value === "registered" ? undefined : handleReject,
-                    tab.includeActions,
-                    tab.isRegistered ?? false,
-                  )}
-                  data={getCurrentPageData(filteredData, tab.value)}
-                  onRowClick={handleRowClick}
-                />
-              </div>
-
-              <div className="p-5">
-                {filteredData.length > 0 && (
-                  <Pagination
-                    page={page[tab.value]}
-                    totalPageCount={getTotalPages(filteredData)}
-                    onNext={() => onNext(tab.value, getTotalPages(filteredData))}
-                    onPrevious={() => onPrevious(tab.value)}
-                  />
-                )}
-              </div>
-            </TabsContent>
+            <VacationTabContent
+              key={tab.value}
+              tab={tab}
+              filteredData={filteredData}
+              getCurrentPageData={getCurrentPageData}
+              page={page[tab.value]}
+              totalPageCount={getTotalPages(filteredData)}
+              onNext={() => onNext(tab.value, getTotalPages(filteredData))}
+              onPrevious={() => onPrevious(tab.value)}
+              onRowClick={handleRowClick}
+              columns={getVacationColumns({
+                onApprove: tab.value === "registered" ? undefined : handleApprove,
+                onReject: tab.value === "registered" ? undefined : handleReject,
+                includeActions: tab.includeActions,
+                isRegistered: tab.isRegistered ?? false,
+              })}
+            />
           );
         })}
       </Tabs>

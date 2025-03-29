@@ -11,15 +11,16 @@ import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { StatusBadge } from "@/components/company/table/VacationColumns";
+import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";
 
-interface VacationDetailModalProps {
+interface IVacationDetailModalProps {
   request: IVacationRequest;
   onClose: () => void;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
 }
 
-const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
+const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
   request,
   onClose,
   onApprove,
@@ -27,7 +28,13 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
 }) => {
   if (!request) return null;
 
-  const isPending = request.status === "대기중";
+  const { isPending, detailRows, handleApproveClick, handleRejectClick } = useVacationDetailModal(
+    request,
+    onApprove,
+    onReject,
+    onClose,
+  );
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
@@ -43,19 +50,20 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
 
         <div className="mb-3 grid gap-6 py-4">
           <div className="flex gap-5">
-            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-              <strong>휴가자 :</strong> {request.requester}
+            {detailRows.slice(0, 2).map(({ label, value }) => (
+              <div
+                key={label}
+                className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg"
+              >
+                <strong>{label} :</strong> {value}
+              </div>
+            ))}
+          </div>
+          {detailRows.slice(2).map(({ label, value }) => (
+            <div key={label} className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
+              <strong>{label} :</strong> {value}
             </div>
-            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-              <strong>휴가 유형 :</strong> {request.requestType}
-            </div>
-          </div>
-          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-            <strong>이메일 :</strong> {request.email ?? "-"}
-          </div>
-          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-            <strong>휴가 일자 :</strong> {request.requestDate}
-          </div>
+          ))}
           <div className="whitespace-pre-wrap break-words rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
             <strong>사유 : </strong>
             <div className="mt-3">{request.reason}</div>
@@ -67,17 +75,13 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
           )}
         </div>
 
-        {isPending && onApprove && onReject && (
+        {isPending && (
           <DialogFooter className="flex flex-row gap-2">
             <Button
               variant="default"
               size="sm"
               className="w-full bg-green-500 hover:bg-green-600"
-              onClick={() => {
-                onApprove(request.id);
-                toast.success("승인 처리되었습니다.");
-                onClose();
-              }}
+              onClick={handleApproveClick}
             >
               승인
             </Button>
@@ -85,11 +89,7 @@ const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
               variant="default"
               size="sm"
               className="w-full bg-red-500 hover:bg-red-600"
-              onClick={() => {
-                onReject(request.id);
-                toast.error("거절 처리되었습니다.");
-                onClose();
-              }}
+              onClick={handleRejectClick}
             >
               거절
             </Button>
