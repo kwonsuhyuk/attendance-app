@@ -11,6 +11,7 @@ import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { StatusBadge } from "@/components/company/table/VacationColumns";
+import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";
 
 interface IVacationDetailModalProps {
   request: IVacationRequest;
@@ -27,14 +28,13 @@ const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
 }) => {
   if (!request) return null;
 
-  const isPending = request.status === "대기중";
+  const { isPending, detailRows, handleApproveClick, handleRejectClick } = useVacationDetailModal(
+    request,
+    onApprove,
+    onReject,
+    onClose,
+  );
 
-  const detailRows = [
-    { label: "휴가자", value: request.requester },
-    { label: "휴가 유형", value: request.requestType },
-    { label: "이메일", value: request.email ?? "-" },
-    { label: "휴가 일자", value: request.requestDate },
-  ];
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
@@ -75,17 +75,13 @@ const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
           )}
         </div>
 
-        {isPending && onApprove && onReject && (
+        {isPending && (
           <DialogFooter className="flex flex-row gap-2">
             <Button
               variant="default"
               size="sm"
               className="w-full bg-green-500 hover:bg-green-600"
-              onClick={() => {
-                onApprove(request.id);
-                toast.success("승인 처리되었습니다.");
-                onClose();
-              }}
+              onClick={handleApproveClick}
             >
               승인
             </Button>
@@ -93,11 +89,7 @@ const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
               variant="default"
               size="sm"
               className="w-full bg-red-500 hover:bg-red-600"
-              onClick={() => {
-                onReject(request.id);
-                toast.error("거절 처리되었습니다.");
-                onClose();
-              }}
+              onClick={handleRejectClick}
             >
               거절
             </Button>
