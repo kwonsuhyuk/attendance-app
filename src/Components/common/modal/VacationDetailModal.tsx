@@ -12,14 +12,14 @@ import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { StatusBadge } from "@/components/company/table/VacationColumns";
 
-interface VacationDetailModalProps {
+interface IVacationDetailModalProps {
   request: IVacationRequest;
   onClose: () => void;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
 }
 
-const VacationDetailModal: React.FC<VacationDetailModalProps> = ({
+const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
   request,
   onClose,
   onApprove,

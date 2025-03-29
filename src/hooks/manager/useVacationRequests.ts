@@ -80,6 +80,22 @@ export const useVacationRequests = () => {
     loadRegistered();
   }, [companyCode]);
 
+  const getFilteredVacationData = (tabValue: string, filter: (item: any) => boolean) => {
+    if (tabValue === "registered") return registeredRequests;
+
+    if (tabValue === "processed") {
+      return requests
+        .filter(filter)
+        .sort(
+          (a, b) =>
+            new Date(b.requestDate.split(" ~ ")[0]).getTime() -
+            new Date(a.requestDate.split(" ~ ")[0]).getTime(),
+        );
+    }
+
+    return requests.filter(filter);
+  };
+
   return {
     isModalOpen,
     toggleModal,
@@ -97,5 +113,6 @@ export const useVacationRequests = () => {
     getCurrentPageData,
     onNext,
     onPrevious,
+    getFilteredVacationData,
   };
 };

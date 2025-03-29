@@ -29,45 +29,18 @@ export const StatusBadge = ({ status }: { status: "대기중" | "승인" | "거�
   );
 };
 
-// 승인/거절 버튼 컴포넌트
-const ActionButtons = ({
-  id,
-  handleApprove,
-  handleReject,
-}: {
-  id: number;
-  handleApprove: (id: number) => void;
-  handleReject: (id: number) => void;
-}) => {
-  return (
-    <div className="flex min-w-[100px] justify-center space-x-2 sm:min-w-[60px] sm:flex-col sm:space-x-0 sm:space-y-1 md:min-w-[100px] md:flex-row md:space-x-2 md:space-y-0">
-      <Button
-        variant="default"
-        size="sm"
-        className="w-full bg-green-500 hover:bg-green-600 sm:w-auto"
-        onClick={() => handleApprove(id)}
-      >
-        승인
-      </Button>
-      <Button
-        variant="default"
-        size="sm"
-        className="w-full bg-red-500 hover:bg-red-600 sm:w-auto"
-        onClick={() => handleReject(id)}
-      >
-        거절
-      </Button>
-    </div>
-  );
-};
-
 // 컬럼 정의 (관리 컬럼 포함 여부 옵션 추가)
-export const getVacationColumns = (
-  handleApprove?: (id: number) => void,
-  handleReject?: (id: number) => void,
-  includeActions: boolean = true,
-  isRegistered: boolean = false,
-): ColumnDef<IVacationRequest>[] => {
+export const getVacationColumns = ({
+  onApprove,
+  onReject,
+  includeActions = true,
+  isRegistered = false,
+}: {
+  onApprove?: (id: number) => void;
+  onReject?: (id: number) => void;
+  includeActions?: boolean;
+  isRegistered?: boolean;
+}): ColumnDef<IVacationRequest>[] => {
   const columns: ColumnDef<IVacationRequest>[] = [
     {
       accessorKey: "requestType",
