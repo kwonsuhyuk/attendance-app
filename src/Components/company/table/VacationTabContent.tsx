@@ -1,21 +1,23 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { DataTable } from "@/components/ui/data-table";
 import Pagination from "@/components/ui/pagination";
+import { IVacationRequest } from "./VacationColumns";
+import { ColumnDef } from "@tanstack/react-table";
 
-interface VacationTabContentProps {
+interface IVacationTabContentProps {
   tab: {
     value: string;
     includeActions?: boolean;
     isRegistered?: boolean;
   };
-  filteredData: any[];
-  getCurrentPageData: (data: any[], tabValue: string) => any[];
+  filteredData: IVacationRequest[];
+  getCurrentPageData: (data: IVacationRequest[], tabValue: string) => IVacationRequest[];
   page: number;
   totalPageCount: number;
   onNext: () => void;
   onPrevious: () => void;
-  onRowClick: (row: any) => void;
-  columns: any[];
+  onRowClick: (row: IVacationRequest) => void;
+  columns: ColumnDef<IVacationRequest>[];
 }
 
 const VacationTabContent = ({
@@ -28,7 +30,7 @@ const VacationTabContent = ({
   onPrevious,
   onRowClick,
   columns,
-}: VacationTabContentProps) => {
+}: IVacationTabContentProps) => {
   return (
     <TabsContent value={tab.value} className="mt-6 w-full">
       {["registered", "processed"].includes(tab.value) && (

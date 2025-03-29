@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { Input } from "antd";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
 import { VACATIONSELECT_TYPES } from "@/constants/vacationSelect";
@@ -39,14 +37,8 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
     handleRegister,
     reason,
     setReason,
-    inputValue,
     setInputValue,
-    searchResults,
-    setSearchResults,
-    search,
-    selectedEmployee,
     setSelectedEmployee,
-    dropdownRef,
     maxDate,
   } = useVacationRegister(onRegister, onClose);
 

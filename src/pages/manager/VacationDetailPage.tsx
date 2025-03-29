@@ -1,22 +1,18 @@
-import { DataTable } from "@/components/ui/data-table";
 import { getVacationColumns } from "@/components/company/table/VacationColumns";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VacationRegisterModal from "@/components/common/modal/VacationRegisterModal";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 import { TAB_CONTENTS, TAB_ITEMS } from "@/constants/vacationTabs";
 import { Badge } from "@/components/ui/badge";
 import VacationRequestPageContainer from "@/components/container/manager/VacationRequestPageContainer";
 import VacationDetailModal from "@/components/common/modal/VacationDetailModal";
-import Pagination from "@/components/ui/pagination";
 import VacationTabContent from "@/components/company/table/VacationTabContent";
 
 const VacationDetailPage = () => {
   const {
     isModalOpen,
     toggleModal,
-    requests,
-    registeredRequests,
     handleRegister,
     handleApprove,
     handleReject,
