@@ -38,7 +38,6 @@ export const useVacationRegister = (
   const vacationDays =
     dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) + 1 : 0;
 
-  // 날짜 구간 내 포함된 모든 연/월 리스트 구하기
   const getYearMonthList = (start: Date, end: Date) => {
     const list = [];
     const current = new Date(start.getFullYear(), start.getMonth(), 1);

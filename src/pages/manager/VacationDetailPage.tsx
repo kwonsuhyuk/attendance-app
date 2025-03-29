@@ -11,21 +11,23 @@ import VacationTabContent from "@/components/company/table/VacationTabContent";
 
 const VacationDetailPage = () => {
   const {
-    isModalOpen,
-    toggleModal,
-    handleRegister,
-    handleApprove,
-    handleReject,
-    pendingCount,
-    handleRowClick,
-    selectedRequest,
-    page,
-    setPage,
-    getTotalPages,
-    getCurrentPageData,
-    onNext,
-    onPrevious,
-    getFilteredVacationData,
+    modal: { isOpen: isModalOpen, toggle: toggleModal },
+    requests: {
+      register: handleRegister,
+      approve: handleApprove,
+      reject: handleReject,
+      pendingCount,
+      filter: getFilteredVacationData,
+    },
+    pagination: {
+      page,
+      setPage,
+      next: onNext,
+      previous: onPrevious,
+      getTotalPages,
+      getCurrentPageData,
+    },
+    selection: { selected: selectedRequest, select: handleRowClick },
   } = useVacationRequests();
 
   return (
