@@ -7,6 +7,7 @@ import ShowCalendarPage from "@/pages/employee/ShowCalendarPage";
 import AppGuidePage from "@/pages/employee/AppGuidePage";
 import AboutPage from "@/pages/common/AboutPage";
 import EmployeeMainContent from "./EmployeeMainContent";
+import { SidebarProvider } from "../ui/sidebar";
 
 const EmployeeRoutes = () => {
   return (

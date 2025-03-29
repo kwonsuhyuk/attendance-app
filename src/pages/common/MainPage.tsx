@@ -9,6 +9,7 @@ import { getCompanyInfo, subscribeToData } from "@/api";
 import { getCompanyInfoPath } from "@/constants/api.path";
 import Loading from "@/components/common/Loading";
 import { TCompanyInfo } from "@/model/types/company.type";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const MainPage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);
@@ -56,7 +57,13 @@ const MainPage = () => {
 
   if (isLoading) return <Loading />;
 
-  return <>{userType === "manager" ? <ManagerRoutes /> : <EmployeeRoutes />}</>;
+  return (
+    <>
+      <SidebarProvider>
+        {userType === "manager" ? <ManagerRoutes /> : <EmployeeRoutes />}
+      </SidebarProvider>
+    </>
+  );
 };
 
 export default MainPage;

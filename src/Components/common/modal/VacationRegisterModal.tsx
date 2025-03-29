@@ -19,8 +19,8 @@ import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
 import { VACATIONSELECT_TYPES } from "@/constants/vacationSelect";
 import AutoCompleteUserInput from "../AutoCompleteInput";
-import { TEmpUserData } from "@/model/types/user.type";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
+import { EmployeeInfo } from "@/model/types/user.type";
 
 interface IVacationModalProps {
   onClose: () => void;
@@ -61,10 +61,10 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 대상</span>
             <AutoCompleteUserInput
-              users={employeeList as TEmpUserData[]}
-              onSelect={(emp: TEmpUserData) => {
+              users={employeeList as EmployeeInfo[]}
+              onSelect={(emp: EmployeeInfo | null) => {
                 setSelectedEmployee(emp);
-                setInputValue(`${emp.name} (${emp.email})`);
+                setInputValue(`${emp?.name} (${emp?.email})`);
               }}
             />
           </div>

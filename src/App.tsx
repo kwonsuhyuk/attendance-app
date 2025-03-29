@@ -22,6 +22,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import { MAIN_ROUTES } from "./constants/routes";
 import { TCMUserData, TEmpUserData } from "./model/types/user.type";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
