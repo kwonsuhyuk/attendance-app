@@ -28,6 +28,13 @@ const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
   if (!request) return null;
 
   const isPending = request.status === "대기중";
+
+  const detailRows = [
+    { label: "휴가자", value: request.requester },
+    { label: "휴가 유형", value: request.requestType },
+    { label: "이메일", value: request.email ?? "-" },
+    { label: "휴가 일자", value: request.requestDate },
+  ];
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
@@ -43,19 +50,20 @@ const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({
 
         <div className="mb-3 grid gap-6 py-4">
           <div className="flex gap-5">
-            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-              <strong>휴가자 :</strong> {request.requester}
+            {detailRows.slice(0, 2).map(({ label, value }) => (
+              <div
+                key={label}
+                className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg"
+              >
+                <strong>{label} :</strong> {value}
+              </div>
+            ))}
+          </div>
+          {detailRows.slice(2).map(({ label, value }) => (
+            <div key={label} className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
+              <strong>{label} :</strong> {value}
             </div>
-            <div className="w-full rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-              <strong>휴가 유형 :</strong> {request.requestType}
-            </div>
-          </div>
-          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-            <strong>이메일 :</strong> {request.email ?? "-"}
-          </div>
-          <div className="rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
-            <strong>휴가 일자 :</strong> {request.requestDate}
-          </div>
+          ))}
           <div className="whitespace-pre-wrap break-words rounded-md border bg-white-bg px-3 py-4 dark:bg-white-bg">
             <strong>사유 : </strong>
             <div className="mt-3">{request.reason}</div>
