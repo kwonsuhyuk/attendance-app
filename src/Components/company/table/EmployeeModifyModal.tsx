@@ -136,7 +136,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             }}
             className="w-full dark:bg-dark-bg dark:text-dark-text dark:hover:bg-dark-card-bg"
           >
-            {isEditing ? "완료" : "수정"}
+            {isEditing ? "완료하기" : "수정하기"}
           </Button>
         </DialogFooter>
       </DialogContent>
