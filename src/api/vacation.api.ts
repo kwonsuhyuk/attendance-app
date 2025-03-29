@@ -97,3 +97,4 @@ export async function fetchRegisteredVacationsByMonth(
 
   return await getData(path);
 }
+

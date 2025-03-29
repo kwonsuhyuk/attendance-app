@@ -1,3 +1,4 @@
+import { TEmpUserData } from "@/model/types/user.type";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { useVacationPieChart } from "@/hooks/vacation/useVacationPieChart";
@@ -10,6 +11,7 @@ interface IVacationPieChartProps {
   selectedName: EmployeeInfo | null;
   mode: "month" | "year";
 }
+
 
 const VacationPieChart = ({ selectedDate, selectedName, mode }: IVacationPieChartProps) => {
   const { pieData, rawData } = useVacationPieChart(selectedDate, selectedName, mode);

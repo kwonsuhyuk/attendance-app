@@ -10,6 +10,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { useSearchParams } from "react-router-dom";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 
+
 const VacationStatisticPage = () => {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState({

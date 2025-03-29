@@ -48,6 +48,7 @@ const VacationFilter = ({
         onSelect={handleNameSelect}
         onClear={handleClear}
       />
+
     </div>
   );
 };

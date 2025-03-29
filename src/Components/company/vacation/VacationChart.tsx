@@ -75,7 +75,6 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
           </BarChart>
         </ResponsiveContainer>
       </Card>
-
       <VacationChartModal
         open={!!selectedData}
         onClose={handleClose}
