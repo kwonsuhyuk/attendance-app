@@ -11,7 +11,6 @@ import { LogOut } from "lucide-react";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
-import { useCompanyStore } from "@/store/company.store";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
@@ -20,7 +19,7 @@ export const ManagerMenuBar = () => {
   return (
     <Sidebar
       side={isMobile ? "right" : "left"}
-      className="h-screen w-64 border-r border-gray-200 bg-white-bg dark:border-gray-100 dark:bg-dark-bg"
+      className="h-screen w-64 border-r border-gray-200 bg-white-card-bg dark:border-gray-100 dark:bg-dark-bg"
     >
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 border-solid border-dark-border bg-dark-card-bg p-4 font-bold dark:bg-dark-bg">
         <AppTitle className="text-white" />

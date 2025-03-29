@@ -1,7 +1,6 @@
 import { get, set, getDatabase, ref, update, onValue, off } from "firebase/database";
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
-import { TCompanyInfo } from "@/model/types/company.type";
 
 const db = getDatabase();
 
@@ -107,10 +106,11 @@ export async function updateEmployeeSettings(companyCode, uid, settings) {
  * @param companyCode - 조회할 회사의 고유 코드
  * @returns 회사 정보 데이터 또는 null
  */
-export async function getCompanyInfo(companyCode: string) {
+export async function getCompanyInfo(companyCode?: string) {
   if (!companyCode) return null;
   return await getData(getCompanyInfoPath(companyCode));
 }
+
 //
 //
 //

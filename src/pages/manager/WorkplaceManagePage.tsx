@@ -1,5 +1,5 @@
 import CompanyWorkPlaceStep from "@/components/company/company-settings/workplace-setting/CompanyWorkPlaceStep";
-import CompanySettingPageContainer from "@/components/container/manager/CompanyInfoPageContainer";
+import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import { Button } from "@/components/ui/button";
 import { useWorkplacePage } from "@/hooks/company-settings/useWorkplacePage";
 import { useCompanyStore } from "@/store/company.store";

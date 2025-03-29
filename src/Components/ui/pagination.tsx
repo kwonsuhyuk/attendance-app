@@ -9,7 +9,7 @@ interface PaginationProps {
 
 const Pagination = ({ page, totalPageCount, onNext, onPrevious }: PaginationProps) => {
   return (
-    <div className="flex items-center justify-center gap-5 py-1">
+    <div className="flex items-center justify-center gap-5 pb-2 pt-2">
       <Button
         variant="default"
         size="sm"

@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
+    "types": ["react", "react-dom", "node"],
     "noEmit": true,
     "baseUrl": "./src",
     "paths": {
