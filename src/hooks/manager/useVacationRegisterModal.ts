@@ -7,7 +7,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { registerVacation } from "@/api/vacation.api";
 import { format } from "date-fns";
 import { TVacationType } from "@/model/types/vacation.type";
-import { toast } from "react-toastify";
+import { useToast } from "../use-toast";
 
 export const useVacationRegister = (
   onRegister: (newRequest: IVacationRequest) => void,
@@ -21,6 +21,8 @@ export const useVacationRegister = (
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const maxDate = new Date();
+  const { toast } = useToast();
+
   maxDate.setMonth(maxDate.getMonth() + 3);
 
   useEffect(() => {
@@ -55,7 +57,11 @@ export const useVacationRegister = (
 
   const handleRegister = async () => {
     if (!vacationType || !dateRange?.from || !dateRange?.to || !selectedEmployee || !reason) {
-      toast.error("필수 정보를 모두 입력해주세요.");
+      toast({
+        title: "등록 실패",
+        description: "필수 정보를 모두 입력해주세요.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -94,7 +100,10 @@ export const useVacationRegister = (
       );
     }
     onRegister(newRequest);
-    toast.success("휴가 등록이 완료되었습니다.");
+    toast({
+      title: "등록 완료",
+      description: `${selectedEmployee.name}님의 휴가가 정상 등록되었습니다.`,
+    });
     onClose();
   };
 

@@ -1,5 +1,5 @@
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
-import { toast } from "react-toastify";
+import { useToast } from "../use-toast";
 
 export const useVacationDetailModal = (
   request: IVacationRequest,
@@ -7,6 +7,7 @@ export const useVacationDetailModal = (
   onReject: (id: number) => void,
   onClose: () => void,
 ) => {
+  const { toast } = useToast();
   const isPending = request.status === "대기중";
 
   const detailRows = [
@@ -18,13 +19,21 @@ export const useVacationDetailModal = (
 
   const handleApproveClick = () => {
     onApprove(request.id);
-    toast.success("승인 처리되었습니다.");
+    toast({
+      title: "승인 처리 완료",
+      description: `${request.requester}님의 휴가 요청을 승인했습니다.`,
+      variant: "destructive",
+    });
     onClose();
   };
 
   const handleRejectClick = () => {
     onReject(request.id);
-    toast.error("거절 처리되었습니다.");
+    toast({
+      title: "거절 처리 완료",
+      description: `${request.requester}님의 휴가 요청을 거절했습니다.`,
+      variant: "destructive",
+    });
     onClose();
   };
 
