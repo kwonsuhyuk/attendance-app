@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { UserIcon, MailIcon, BriefcaseIcon } from "lucide-react";
-import { TEmpUserData } from "@/model/types/user.type";
+import { UserIcon, MailIcon, BriefcaseIcon, XIcon } from "lucide-react";
+import { EmployeeInfo } from "@/model/types/user.type";
 
 interface IAutoCompleteUserInputProps {
-  users: TEmpUserData[];
-  onSelect: (user: TEmpUserData) => void;
+  users: EmployeeInfo[];
+  onSelect: (user: EmployeeInfo | null) => void;
+  value?: string;
+  onClear?: () => void;
 }
 
-const AutoCompleteUserInput = ({ users, onSelect }: IAutoCompleteUserInputProps) => {
+const AutoCompleteUserInput = ({
+  users,
+  onSelect,
+  value,
+  onClear,
+}: IAutoCompleteUserInputProps) => {
   const [inputValue, setInputValue] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<TEmpUserData[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<EmployeeInfo[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setInputValue(value);
+    }
+  }, [value]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -24,35 +38,52 @@ const AutoCompleteUserInput = ({ users, onSelect }: IAutoCompleteUserInputProps)
     }
 
     const filtered = users.filter(user => user.name.toLowerCase().includes(value.toLowerCase()));
-
     setFilteredUsers(filtered);
     setShowSuggestions(true);
   };
 
-  const handleSelect = (user: TEmpUserData) => {
+  const handleSelect = (user: EmployeeInfo) => {
     setInputValue(user.name);
     setShowSuggestions(false);
     onSelect(user);
   };
+  
+  const handleClearClick = () => {
+    setInputValue("");
+    setFilteredUsers([]);
+    setShowSuggestions(false);
+    onSelect(null);
+    onClear?.();
+  };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full px-0.5">
       <Input
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-full w-full rounded-md placeholder:text-sm"
+        className="h-full rounded-sm border-none pr-10 placeholder:text-sm focus:outline-none focus:ring-0"
       />
+      {inputValue && (
+        <button
+          type="button"
+          onClick={handleClearClick}
+          title="검색 초기화"
+          className="absolute right-2 top-1/2 -translate-y-1/2 border-none bg-transparent text-gray-400 hover:text-gray-600"
+        >
+          <XIcon size={16} />
+        </button>
+      )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute z-10 mt-2 max-h-72 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+        <ul className="absolute left-0 right-0 z-10 mt-2 max-h-72 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white px-2 shadow-lg">
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}
               onClick={() => handleSelect(user)}
-              className="cursor-pointer px-4 py-3 transition-colors duration-150 hover:bg-gray-100"
+              className="cursor-pointer rounded-md px-3 py-3 transition-colors duration-150 hover:bg-gray-100"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-600">
                   <UserIcon size={18} />
                 </div>
                 <div className="flex flex-col">

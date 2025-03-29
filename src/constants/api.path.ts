@@ -1,4 +1,4 @@
-import { TVacationStatus } from "@/model/types/vacation.type";
+import { TRegisteredVacation, TVacationStatus } from "@/model/types/vacation.type";
 
 export const getCompanyPath = (companyCode: string) => `companyCode/${companyCode}`;
 
@@ -16,6 +16,9 @@ export const getUserWorkDatePath = (companyCode: string, userId: string, date: s
 // 휴가 요청 전체 목록 조회 (탭 요청용)
 export const getVacationRequestListPath = (companyCode: string) =>
   `vacation/${companyCode}/requests`;
+
+export const getRegisteredYearPath = (companyCode: string, year: string) =>
+  `vacation/${companyCode}/registered/${year}`;
 
 // 휴가 등록 전체 목록 중 특정 연도/월의 전체 사용자 조회 (통계 및 등록 탭 조회용)
 export const getRegisteredMonthPath = (companyCode: string, year: string, month: string) =>
