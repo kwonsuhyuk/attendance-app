@@ -5,7 +5,7 @@ import MenuBar from "../components/common/menubar/MenuBar";
 
 const EmployeeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="relative flex min-h-screen w-full justify-center bg-white">
+    <div className="relative flex min-h-screen w-full justify-center bg-white-bg text-white-text dark:bg-dark-bg dark:text-dark-text">
       <div className="relative flex w-full max-w-screen-sm flex-col">
         <Header variant="employee" />
         <MenuBar />

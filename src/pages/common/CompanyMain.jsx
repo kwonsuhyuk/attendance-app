@@ -5,7 +5,7 @@ import { useUserStore } from "@/store/user.store";
 import { ADMIN_STEP, EMPLOYEE_STEP } from "@/constants/tourStep";
 import ManagerMainContent from "@/components/company/ManagerMainContent";
 import EmployeeMainContent from "@/components/employee/EmployeeMainContent";
-import EmployeePageContainer from "@/layout/EmployeePageContainer";
+import EmployeePageContainer from "@/layout/EmployeeLayout";
 import Header from "@/components/common/Header";
 
 const CompanyMain = () => {

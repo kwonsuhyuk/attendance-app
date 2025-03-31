@@ -75,12 +75,12 @@ const EmployeeMenuBar = ({ onLogout }: EmployeeMenuBarProps) => {
           />
         );
       })}
-      {/* <BottomNavButton
+      <BottomNavButton
         icon={<LogOut className="h-5 w-5" />}
         title="로그아웃"
         onClick={onLogout}
         active={false}
-      /> */}
+      />
     </nav>
   );
 };

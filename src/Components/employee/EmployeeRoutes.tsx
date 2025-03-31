@@ -5,7 +5,7 @@ import ShowCalendarPage from "@/pages/employee/ShowCalendarPage";
 import AppGuidePage from "@/pages/employee/AppGuidePage";
 import AboutPage from "@/pages/common/AboutPage";
 import EmployeeMainContent from "./EmployeeMainContent";
-import EmployeeLayout from "@/layout/EmployeePageContainer";
+import EmployeeLayout from "@/layout/EmployeeLayout";
 
 const EmployeeRoutes = () => {
   return (
