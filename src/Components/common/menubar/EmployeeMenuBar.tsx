@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, CalendarClock, Plane, Megaphone, User, LogOut } from "lucide-react";
+import { Home, CalendarClock, Plane, Megaphone, User, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -26,9 +26,9 @@ const navItems = [
   },
 
   {
-    title: "마이페이지",
-    path: "mypage",
-    icon: <User className="h-5 w-5" />,
+    title: "메뉴",
+    path: "employeemenu",
+    icon: <Menu className="h-5 w-5" />,
   },
 ];
 
@@ -49,7 +49,7 @@ const BottomNavButton = ({
 }) => (
   <Button
     onClick={onClick}
-    className={`flex h-full flex-1 flex-col items-center justify-center gap-1 rounded-none px-2 py-3 text-xs ${active ? "font-semibold text-point-color" : "text-white"} `}
+    className={`flex h-full flex-1 flex-col items-center justify-center gap-1 rounded-none px-2 py-3 text-xs dark:bg-dark-bg ${active ? "font-semibold text-point-color" : "text-white"} `}
   >
     {icon}
     {title}
@@ -75,12 +75,12 @@ const EmployeeMenuBar = ({ onLogout }: EmployeeMenuBarProps) => {
           />
         );
       })}
-      <BottomNavButton
+      {/* <BottomNavButton
         icon={<LogOut className="h-5 w-5" />}
         title="로그아웃"
         onClick={onLogout}
         active={false}
-      />
+      /> */}
     </nav>
   );
 };
