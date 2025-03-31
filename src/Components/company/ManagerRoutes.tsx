@@ -14,7 +14,6 @@ import NoticePage from "@/pages/manager/NoticePage";
 import Layout from "@/layout/ManagerLayout";
 import CompanyInfoPage from "@/pages/manager/CompanyInfoPage";
 import HolidayNightManagePage from "@/pages/manager/HolidayNightManagePage";
-import VacationStatisticDetailPage from "@/pages/manager/VacationStatisticDetailPage";
 
 const ManagerRoutes = () => {
   return (

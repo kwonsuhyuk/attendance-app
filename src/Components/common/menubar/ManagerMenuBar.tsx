@@ -11,10 +11,15 @@ import { LogOut } from "lucide-react";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
+import { useCompanyStore } from "@/store/company.store";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
   const { isMobile } = useSidebar();
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
   return (
     <Sidebar
@@ -24,8 +29,17 @@ export const ManagerMenuBar = () => {
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 border-solid border-dark-border bg-dark-card-bg p-4 font-bold dark:bg-dark-bg">
         <AppTitle className="text-white" />
       </SidebarHeader>
-
       <SidebarContent className="overflow-y-auto dark:bg-dark-bg">
+        <div className="m-4 flex items-center gap-2 rounded-md bg-point-color px-4 py-3">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={companyLogo} alt="회사 로고" />
+            <AvatarFallback className="text-sm">{companyName?.charAt(0) ?? "C"}</AvatarFallback>
+          </Avatar>
+          <div className="max-w-full truncate text-center text-base font-bold text-gray-800 dark:text-white">
+            {companyName}
+          </div>
+        </div>
+        <Separator className="bg-border dark:bg-dark-border" />
         <ManagerMenuBarList />
       </SidebarContent>
 

@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 import CompanyInfoHeader from "./CompanyInfoHeader";
 import ShowSalary from "./showSalary/ShowSalary";
+import { Card } from "../ui/card";
 
 const EmployeeMainContent = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const EmployeeMainContent = () => {
   const matchHome = useMatch(`/${companyCode}/companymain`);
 
   return (
-    <>
+    <Card className="flex w-full flex-col gap-4">
       <CompanyInfoHeader />
       <div className="flex flex-col items-center gap-4">
         <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
@@ -44,7 +45,7 @@ const EmployeeMainContent = () => {
           QR SCAN
         </div>
       </div>
-    </>
+    </Card>
   );
 };
 
