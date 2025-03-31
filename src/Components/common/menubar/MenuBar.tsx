@@ -1,15 +1,11 @@
+import EmployeeMenuBar from "./EmployeeMenuBar";
 import { ManagerMenuBar } from "./ManagerMenuBar";
-import { EmployeeMenuBar } from "./EmployeeMenuBar";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 
 const MenuBar = () => {
-  const { userType, ...menuState } = useMenuBar();
+  const { userType, logout } = useMenuBar();
 
-  if (userType === "manager") {
-    return <ManagerMenuBar />;
-  } else {
-    return <EmployeeMenuBar {...menuState} />;
-  }
+  return userType === "manager" ? <ManagerMenuBar /> : <EmployeeMenuBar onLogout={logout} />;
 };
 
 export default MenuBar;

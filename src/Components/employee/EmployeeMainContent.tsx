@@ -17,7 +17,7 @@ const EmployeeMainContent = () => {
   const matchHome = useMatch(`/${companyCode}/companymain`);
 
   return (
-    <>
+    <div className="flex w-full flex-col gap-4">
       <CompanyInfoHeader />
       <div className="flex flex-col items-center gap-4">
         <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
@@ -44,7 +44,7 @@ const EmployeeMainContent = () => {
           QR SCAN
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

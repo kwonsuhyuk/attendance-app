@@ -1,13 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import { EMPLOYEE_ROUTES, COMMON_ROUTES } from "@/constants/routes";
 import EmployeePageContainer from "@/components/container/EmployeePageContainer";
-import Footer from "@/components/common/Footer";
 import AccessCameraPage from "@/pages/employee/AccessCameraPage";
 import ShowCalendarPage from "@/pages/employee/ShowCalendarPage";
 import AppGuidePage from "@/pages/employee/AppGuidePage";
 import AboutPage from "@/pages/common/AboutPage";
 import EmployeeMainContent from "./EmployeeMainContent";
-import { SidebarProvider } from "../ui/sidebar";
 
 const EmployeeRoutes = () => {
   return (
