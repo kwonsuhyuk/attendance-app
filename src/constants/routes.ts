@@ -12,6 +12,8 @@ export const EMPLOYEE_ROUTES = {
   COMMUTE: "/camera",
   APP_GUIDE: "/appguide",
   EMPLOYEE_DATE_CHECK: "/calendar",
+  MY_VACATION: "/myvacation",
+  EMPLOYEE_MENU: "/employeemenu",
 };
 
 export const MANAGER_ROUTES = {
@@ -24,12 +26,12 @@ export const MANAGER_ROUTES = {
   PERIROD_ATT: "/perirodatt",
   VACATION_STATISTIC: "/vacationstatistic",
   VACATION_DETAIL: "/vacationdetail",
-  NOTICE: "/notice",
   COMPANY_INFO: "/companyinfo",
   HOLIDAY_MANAGE: "/holidaymanage",
 };
 
 export const COMMON_ROUTES = {
   COMPANY_MAIN: "/companymain",
+  NOTICE: "/notice",
   ABOUT: "/about",
 };

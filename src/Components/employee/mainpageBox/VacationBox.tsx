@@ -2,9 +2,10 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { CheckCircle2, XCircle, Clock, ChevronRight, PlaneTakeoff } from "lucide-react";
 import React from "react";
-import { TVacationRequest } from "@/types/vacation.type";
+
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import { TVacationRequest } from "@/model/types/vacation.type";
 
 const VacationBox = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const VacationBox = () => {
   return (
     <Card
       className="group relative cursor-pointer p-4 shadow-md transition hover:bg-accent"
-      onClick={() => navigate(`/${companyCode}/leave/history`)}
+      onClick={() => navigate(`/${companyCode}/myvacation`)}
     >
       {/* 우측 이동 아이콘 */}
       <ChevronRight className="absolute right-4 top-4 h-5 w-5 text-muted-foreground group-hover:text-foreground" />
@@ -132,7 +133,7 @@ const VacationBox = () => {
             );
           })
         ) : (
-          <div className="text-sm text-muted-foreground">📭 휴가 요청 내역이 없습니다.</div>
+          <div className="text-sm text-muted-foreground">휴가 요청 내역이 없습니다.</div>
         )}
       </div>
     </Card>

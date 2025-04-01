@@ -1,11 +1,12 @@
-import React from 'react'
+import EmployeeEtcPageTitle from "@/components/employee/EmployeeEtcPageTitle";
+import React from "react";
 
 const NoticePage = () => {
   return (
-    <div>
-      공지사항
+    <div className="flex w-full flex-col gap-4 sm:py-5">
+      <EmployeeEtcPageTitle title="공지사항" />
     </div>
-  )
-}
+  );
+};
 
-export default NoticePage
+export default NoticePage;

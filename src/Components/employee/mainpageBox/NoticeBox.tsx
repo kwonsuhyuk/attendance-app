@@ -1,15 +1,16 @@
 import { Card, CardTitle } from "@/components/ui/card";
 import { ChevronRight, Megaphone } from "lucide-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const NoticeBox = () => {
   const navigate = useNavigate();
+  const { companyCode } = useParams();
 
   return (
     <Card
       className="relative cursor-pointer p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg"
-      onClick={() => navigate("/notice")}
+      onClick={() => navigate(`/${companyCode}/notice`)}
     >
       {/* 우측 이동 아이콘 */}
       <ChevronRight className="absolute right-4 top-4 h-5 w-5 text-muted-foreground group-hover:text-foreground" />

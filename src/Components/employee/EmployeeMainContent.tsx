@@ -12,7 +12,6 @@ import CommuteHistoryBox from "./mainpageBox/CommuteHistoryBox";
 import VacationBox from "./mainpageBox/VacationBox";
 
 const EmployeeMainContent = () => {
-  const navigate = useNavigate();
   const companyName = useCompanyStore(state => state.currentCompany?.companyName);
   const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
