@@ -2,9 +2,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 
 export interface IVacationRequest {
-  id: number;
+  id: string;
   requestType: string;
-  requester: string;
+  requester: {
+    name: string;
+    email: string;
+    uid?: string;
+    jobName?: string;
+  };
   requestDate: string;
   reason: string;
   status: "대기중" | "승인" | "거절" | "자동 승인";
@@ -36,8 +41,8 @@ export const getVacationColumns = ({
   includeActions = true,
   isRegistered = false,
 }: {
-  onApprove?: (id: number) => void;
-  onReject?: (id: number) => void;
+  onApprove?: (id: string) => void | Promise<void>;
+  onReject?: (id: string) => void | Promise<void>;
   includeActions?: boolean;
   isRegistered?: boolean;
 }): ColumnDef<IVacationRequest>[] => {
@@ -48,8 +53,9 @@ export const getVacationColumns = ({
       cell: ({ getValue }) => <span>{getValue() as string}</span>,
     },
     {
-      accessorKey: "requester",
       header: "휴가자",
+      accessorFn: row => row.requester.name,
+      id: "requester",
       cell: ({ getValue }) => <span>{getValue() as string}</span>,
     },
     {

@@ -16,8 +16,8 @@ import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";
 interface IVacationDetailModalProps {
   request: IVacationRequest;
   onClose: () => void;
-  onApprove: (id: number) => void;
-  onReject: (id: number) => void;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
 }
 
 const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({

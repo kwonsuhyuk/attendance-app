@@ -28,14 +28,18 @@ const VacationDetailPage = () => {
       getCurrentPageData,
     },
     selection: { selected: selectedRequest, select: handleRowClick },
+    tab: { active: activeTab, setActive: setActiveTab },
   } = useVacationRequests();
 
   return (
     <VacationRequestPageContainer>
       <Tabs
-        defaultValue="pending"
+        value={activeTab}
         className="w-full"
-        onValueChange={tab => setPage(prev => ({ ...prev, [tab]: 0 }))}
+        onValueChange={tab => {
+          setActiveTab(tab);
+          setPage(prev => ({ ...prev, [tab]: 0 }));
+        }}
       >
         <div className="flex justify-between bg-white-bg dark:bg-dark-bg">
           <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
@@ -95,8 +99,16 @@ const VacationDetailPage = () => {
         <VacationDetailModal
           request={selectedRequest}
           onClose={() => handleRowClick(null)}
-          onApprove={handleApprove}
-          onReject={handleReject}
+          onApprove={id => {
+            handleApprove(String(id));
+            setActiveTab("processed");
+            setPage(prev => ({ ...prev, processed: 0 }));
+          }}
+          onReject={id => {
+            handleReject(String(id));
+            setActiveTab("processed");
+            setPage(prev => ({ ...prev, processed: 0 }));
+          }}
         />
       )}
     </VacationRequestPageContainer>
