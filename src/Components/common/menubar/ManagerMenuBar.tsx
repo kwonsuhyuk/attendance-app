@@ -14,6 +14,7 @@ import AppTitle from "../AppTitle";
 import { useCompanyStore } from "@/store/company.store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import CompanySummaryInfo from "../CompanySummaryInfo";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
@@ -30,15 +31,7 @@ export const ManagerMenuBar = () => {
         <AppTitle className="text-white" />
       </SidebarHeader>
       <SidebarContent className="overflow-y-auto dark:bg-dark-bg">
-        <div className="m-4 flex items-center gap-2 rounded-md bg-point-color px-4 py-3">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={companyLogo} alt="회사 로고" />
-            <AvatarFallback className="text-sm">{companyName?.charAt(0) ?? "C"}</AvatarFallback>
-          </Avatar>
-          <div className="max-w-full truncate text-center text-base font-bold text-gray-800 dark:text-white">
-            {companyName}
-          </div>
-        </div>
+        <CompanySummaryInfo companyLogo={companyLogo} companyName={companyName} />
         <Separator className="bg-border dark:bg-dark-border" />
         <ManagerMenuBarList />
       </SidebarContent>
