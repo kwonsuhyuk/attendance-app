@@ -1,51 +1,41 @@
-import { useNavigate, useMatch } from "react-router-dom";
-import { useUserStore } from "@/store/user.store";
-import { useShallow } from "zustand/shallow";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import CompanyInfoHeader from "./CompanyInfoHeader";
-import ShowSalary from "./showSalary/ShowSalary";
-import { Card } from "../ui/card";
+import CompanySummaryInfo from "../common/CompanySummaryInfo";
+import { useCompanyStore } from "@/store/company.store";
+import IntroGuideBox from "./mainpageBox/IntroGuideBox";
+import CommuteBox from "./mainpageBox/CommuteBox";
+import NoticeBox from "./mainpageBox/NoticeBox";
+import CommuteHistoryBox from "./mainpageBox/CommuteHistoryBox";
+import VacationBox from "./mainpageBox/VacationBox";
 
 const EmployeeMainContent = () => {
-  const navigate = useNavigate();
-  const { companyCode, userType } = useUserStore(
-    useShallow(state => ({
-      companyCode: state.currentUser?.companyCode,
-      userType: state.currentUser?.userType,
-    })),
-  );
-
-  const matchCalendar = useMatch(`/${companyCode}/calendar`);
-  const matchHome = useMatch(`/${companyCode}/companymain`);
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
   return (
-    <Card className="flex w-full flex-col gap-4">
-      <CompanyInfoHeader />
-      <div className="flex flex-col items-center gap-4">
-        <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-        <div
-          className="flex w-full cursor-pointer flex-row items-center justify-between text-sm"
-          onClick={() => navigate(`/${companyCode}/calendar`)}
-        >
-          <div>캘린더 바로가기</div>
-          <div>&gt;</div>
-        </div>
-        <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-        <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-        <div className="w-full" data-tour="step-33">
-          {userType === "employee" && (
-            <ShowSalary matchCalendar={matchCalendar} matchHome={matchHome} />
-          )}
-        </div>
-        <div className="h-[1px] w-full bg-white-border-sub dark:bg-dark-border-sub"></div>
-        <div
-          data-tour="step-34"
-          className="flex cursor-pointer items-center justify-center pb-5 text-lg font-extrabold underline"
-          onClick={() => navigate(`/${companyCode}/camera`)}
-        >
-          QR SCAN
-        </div>
-      </div>
-    </Card>
+    <div className="flex w-full flex-col gap-4 sm:py-5">
+      {/* 서비스 이용 가이드 바로가기 */}
+      <IntroGuideBox />
+      {/* 회사 정보 */}
+      <CompanySummaryInfo
+        companyLogo={companyLogo}
+        companyName={companyName}
+        type="employee"
+        className="mx-0 my-0 shadow-md"
+      />
+      {/* 공지사항 박스 */}
+      <NoticeBox />
+      {/* 출근 하기 버튼 */}
+      <CommuteBox />
+      {/* 이번주 출퇴근 현황 */}
+      <CommuteHistoryBox />
+
+      {/* 휴가 요청/승인 내역 */}
+      <VacationBox />
+    </div>
   );
 };
 

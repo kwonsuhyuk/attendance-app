@@ -8,11 +8,11 @@ const navItems = [
     path: "companymain",
     icon: <Home className="h-5 w-5" />,
   },
-  {
-    title: "공지사항",
-    path: "notice",
-    icon: <Megaphone className="h-5 w-5" />,
-  },
+  // {
+  //   title: "공지사항",
+  //   path: "notice",
+  //   icon: <Megaphone className="h-5 w-5" />,
+  // },
   {
     title: "출퇴근기록",
     path: "calendar",
@@ -21,7 +21,7 @@ const navItems = [
 
   {
     title: "휴가",
-    path: "leave",
+    path: "myvacation",
     icon: <Plane className="h-5 w-5" />,
   },
 
@@ -56,7 +56,7 @@ const BottomNavButton = ({
   </Button>
 );
 
-const EmployeeMenuBar = ({ onLogout }: EmployeeMenuBarProps) => {
+const EmployeeMenuBar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const companyCode = pathname.split("/")[1];
@@ -75,12 +75,6 @@ const EmployeeMenuBar = ({ onLogout }: EmployeeMenuBarProps) => {
           />
         );
       })}
-      <BottomNavButton
-        icon={<LogOut className="h-5 w-5" />}
-        title="로그아웃"
-        onClick={onLogout}
-        active={false}
-      />
     </nav>
   );
 };

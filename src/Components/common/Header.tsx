@@ -10,8 +10,6 @@ interface HeaderProps {
 }
 
 export default function Header({ variant = "manager" }: HeaderProps) {
-  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
-
   if (variant === "manager") {
     return (
       <div
