@@ -8,7 +8,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
-import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { StatusBadge } from "@/components/company/table/VacationColumns";
 import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";

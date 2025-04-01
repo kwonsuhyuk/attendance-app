@@ -10,11 +10,18 @@ export const useVacationDetailModal = (
   const { toast } = useToast();
   const isPending = request.status === "대기중";
 
+  const displayRequestDate = request.requestDate.includes("~")
+    ? (() => {
+        const [from, to] = request.requestDate.split(" ~ ");
+        return from === to ? from : request.requestDate;
+      })()
+    : request.requestDate;
+
   const detailRows = [
     { label: "휴가자", value: request.requester.name },
     { label: "휴가 유형", value: request.requestType },
     { label: "이메일", value: request.email ?? "-" },
-    { label: "휴가 일자", value: request.requestDate },
+    { label: "휴가 일자", value: displayRequestDate },
   ];
 
   const handleApproveClick = () => {

@@ -104,23 +104,23 @@ export const useVacationRequests = () => {
       if (!companyCode) return;
       const data = await fetchVacationRegistered(companyCode);
 
-      const mapped: IVacationRequest[] = data.map((item, idx) => {
-        const status: IVacationRequest["status"] = "자동 승인"; // 등록은 무조건 자동 승인
-
-        return {
-          id: String(idx + 1),
-          requestType: item.vacationType,
-          requester: {
-            name: item.name,
+      const mapped = data
+        .map(item => {
+          const status: IVacationRequest["status"] = "자동 승인";
+          return {
+            id: item.createdAt ?? new Date().toISOString(),
+            requestType: item.vacationType,
+            requester: {
+              name: item.name,
+              email: item.email,
+            },
+            requestDate: `${item.startDate} ~ ${item.endDate}`,
+            reason: item.reason,
+            status,
             email: item.email,
-            jobName: item.jobName,
-          },
-          requestDate: `${item.startDate} ~ ${item.endDate}`,
-          reason: item.reason,
-          status,
-          email: item.email,
-        };
-      });
+          };
+        })
+        .sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime());
       setRegisteredRequests(mapped);
     };
 
