@@ -51,19 +51,22 @@ export const useVacationRequests = () => {
   const handleApprove = async (id: string) => {
     if (!companyCode) return;
 
-    await updateVacationRequestStatus(companyCode, id, "승인");
+    const processedAt = new Date().toISOString();
+    await updateVacationRequestStatus(companyCode, id, "승인", processedAt);
 
     setRequests(prev =>
-      prev.map(req => (req.id === id ? { ...req, status: "승인" as const } : req)),
+      prev.map(req => (req.id === id ? { ...req, status: "승인", processedAt } : req)),
     );
   };
+
   const handleReject = async (id: string) => {
     if (!companyCode) return;
 
-    await updateVacationRequestStatus(companyCode, id, "거절");
+    const processedAt = new Date().toISOString();
+    await updateVacationRequestStatus(companyCode, id, "거절", processedAt);
 
     setRequests(prev =>
-      prev.map(req => (req.id === id ? { ...req, status: "거절" as const } : req)),
+      prev.map(req => (req.id === id ? { ...req, status: "거절", processedAt } : req)),
     );
   };
 
@@ -91,6 +94,7 @@ export const useVacationRequests = () => {
         reason: item.reason,
         status: item.status === "승인" ? "승인" : item.status === "거절" ? "거절" : "대기중",
         email: item.requester.email,
+        processedAt: item.processedAt,
       }));
 
       setRequests(mapped);
@@ -134,14 +138,17 @@ export const useVacationRequests = () => {
     if (tabValue === "registered") return registeredRequests;
 
     if (tabValue === "processed") {
-      return requests
-        .filter(filter)
-        .sort(
-          (a, b) =>
-            new Date(b.requestDate.split(" ~ ")[0]).getTime() -
-            new Date(a.requestDate.split(" ~ ")[0]).getTime(),
-        );
+      return requests.filter(filter).sort((a, b) => {
+        const aTime = a.processedAt
+          ? new Date(a.processedAt).getTime()
+          : new Date(a.requestDate.split(" ~ ")[0]).getTime();
+        const bTime = b.processedAt
+          ? new Date(b.processedAt).getTime()
+          : new Date(b.requestDate.split(" ~ ")[0]).getTime();
+        return bTime - aTime;
+      });
     }
+
     return requests.filter(filter);
   };
 
