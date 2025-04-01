@@ -100,7 +100,13 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                 {vacationDays > 0 ? `${vacationDays}일` : ""}
               </div>
             </div>
-            <DateRangePicker date={dateRange} setDate={handleDateChange} toDate={maxDate} />
+            <DateRangePicker
+              date={dateRange}
+              setDate={handleDateChange}
+              toDate={maxDate}
+              vacationType={vacationType}
+              handleDateChange={handleDateChange}
+            />
             <p className="text-xs text-gray-500 dark:text-gray-400">
               ※ 휴가 등록은 <strong>최대 3개월</strong> 이후까지만 가능합니다.
             </p>
