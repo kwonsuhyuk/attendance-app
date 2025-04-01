@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { differenceInDays, format } from "date-fns";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
@@ -70,7 +70,11 @@ export const useMyVacationRequestModal = (
         uid: currentUser.uid,
         jobName: currentUser.jobName,
       },
-      requestDate: `${format(dateRange.from, "yyyy-MM-dd")} ~ ${format(dateRange.to, "yyyy-MM-dd")}`,
+      requestDate:
+        vacationType === "반차" ||
+        format(dateRange.from, "yyyy-MM-dd") === format(dateRange.to, "yyyy-MM-dd")
+          ? format(dateRange.from, "yyyy-MM-dd")
+          : `${format(dateRange.from, "yyyy-MM-dd")} ~ ${format(dateRange.to, "yyyy-MM-dd")}`,
       reason,
       status: "대기중",
       email: currentUser.email,
@@ -84,6 +88,24 @@ export const useMyVacationRequestModal = (
     onClose();
   };
 
+  const handleDateChange: React.Dispatch<React.SetStateAction<DateRange | undefined>> = value => {
+    const range = typeof value === "function" ? value(undefined) : value;
+    if (!range?.from) return;
+
+    if (vacationType === "반차") {
+      setDateRange({ from: range.from, to: range.from });
+    } else {
+      setDateRange(range);
+    }
+  };
+
+  // "반차"일 경우 하루 고정
+  useEffect(() => {
+    if (vacationType === "반차" && dateRange?.from) {
+      setDateRange({ from: dateRange.from, to: dateRange.from });
+    }
+  }, [vacationType, dateRange?.from]);
+
   return {
     vacationType,
     setVacationType,
@@ -94,5 +116,6 @@ export const useMyVacationRequestModal = (
     setReason,
     maxDate,
     handleRegister,
+    handleDateChange,
   };
 };

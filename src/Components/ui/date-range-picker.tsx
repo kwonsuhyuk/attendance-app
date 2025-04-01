@@ -34,9 +34,13 @@ export function DateRangePicker({
             <CalendarIcon size={18} />
             {date?.from ? (
               date.to ? (
-                <>
-                  {format(date.from, "yyyy-MM-dd")} ~ {format(date.to, "yyyy-MM-dd")}
-                </>
+                format(date.from, "yyyy-MM-dd") === format(date.to, "yyyy-MM-dd") ? (
+                  format(date.from, "yyyy-MM-dd")
+                ) : (
+                  <>
+                    {format(date.from, "yyyy-MM-dd")} ~ {format(date.to, "yyyy-MM-dd")}
+                  </>
+                )
               ) : (
                 format(date.from, "yyyy-MM-dd")
               )

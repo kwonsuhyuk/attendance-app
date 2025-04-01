@@ -61,7 +61,16 @@ export const getVacationColumns = ({
     {
       accessorKey: "requestDate",
       header: "휴가 일자",
-      cell: ({ getValue }) => <span>{getValue() as string}</span>,
+      cell: ({ getValue }) => {
+        const value = getValue() as string;
+
+        if (value.includes("~")) {
+          const [from, to] = value.split(" ~ ");
+          return from === to ? <span>{from}</span> : <span>{value}</span>;
+        }
+
+        return <span>{value}</span>;
+      },
     },
     {
       accessorKey: "reason",

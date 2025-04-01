@@ -40,6 +40,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
     setInputValue,
     setSelectedEmployee,
     maxDate,
+    handleDateChange,
   } = useVacationRegister(onRegister, onClose);
 
   const { employeeList } = useEmployeeList();
@@ -86,6 +87,11 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                 ))}
               </SelectContent>
             </Select>
+            {vacationType === "반차" && (
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                ※ 반차는 하루만 선택할 수 있으며, 오전/오후 선택은 별도 설정 없이 처리됩니다.
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
@@ -94,7 +100,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
                 {vacationDays > 0 ? `${vacationDays}일` : ""}
               </div>
             </div>
-            <DateRangePicker date={dateRange} setDate={setDateRange} toDate={maxDate} />
+            <DateRangePicker date={dateRange} setDate={handleDateChange} toDate={maxDate} />
             <p className="text-xs text-gray-500 dark:text-gray-400">
               ※ 휴가 등록은 <strong>최대 3개월</strong> 이후까지만 가능합니다.
             </p>

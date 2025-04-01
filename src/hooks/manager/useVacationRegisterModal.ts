@@ -66,9 +66,14 @@ export const useVacationRegister = (
     }
 
     const newRequest: IVacationRequest = {
-      id: Date.now(),
+      id: String(Date.now()),
       requestType: vacationType as TVacationType,
-      requester: selectedEmployee.name,
+      requester: {
+        name: selectedEmployee.name,
+        email: selectedEmployee.email,
+        uid: selectedEmployee.uid,
+        jobName: selectedEmployee.jobName,
+      },
       requestDate: `${dateRange.from.toISOString().split("T")[0]} ~ ${dateRange.to.toISOString().split("T")[0]}`,
       reason,
       status: "자동 승인",
@@ -107,6 +112,24 @@ export const useVacationRegister = (
     onClose();
   };
 
+  const handleDateChange: React.Dispatch<React.SetStateAction<DateRange | undefined>> = value => {
+    const range = typeof value === "function" ? value(undefined) : value;
+    if (!range?.from) return;
+
+    if (vacationType === "반차") {
+      setDateRange({ from: range.from, to: range.from });
+    } else {
+      setDateRange(range);
+    }
+  };
+
+  // "반차"일 경우 하루 고정
+  useEffect(() => {
+    if (vacationType === "반차" && dateRange?.from) {
+      setDateRange({ from: dateRange.from, to: dateRange.from });
+    }
+  }, [vacationType, dateRange?.from]);
+
   return {
     vacationType,
     setVacationType,
@@ -125,5 +148,6 @@ export const useVacationRegister = (
     setSelectedEmployee,
     dropdownRef,
     maxDate,
+    handleDateChange,
   };
 };
