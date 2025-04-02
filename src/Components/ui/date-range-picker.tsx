@@ -13,11 +13,15 @@ export function DateRangePicker({
   setDate,
   className,
   toDate,
+  vacationType,
+  handleDateChange,
 }: {
   date: DateRange | undefined;
   setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   className?: string;
   toDate?: Date;
+  vacationType: string;
+  handleDateChange: (range: DateRange | undefined) => void;
 }) {
   return (
     <div className={cn("grid gap-2", className)}>
@@ -34,9 +38,13 @@ export function DateRangePicker({
             <CalendarIcon size={18} />
             {date?.from ? (
               date.to ? (
-                <>
-                  {format(date.from, "yyyy-MM-dd")} ~ {format(date.to, "yyyy-MM-dd")}
-                </>
+                format(date.from, "yyyy-MM-dd") === format(date.to, "yyyy-MM-dd") ? (
+                  format(date.from, "yyyy-MM-dd")
+                ) : (
+                  <>
+                    {format(date.from, "yyyy-MM-dd")} ~ {format(date.to, "yyyy-MM-dd")}
+                  </>
+                )
               ) : (
                 format(date.from, "yyyy-MM-dd")
               )
@@ -46,15 +54,27 @@ export function DateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2} // 두 달짜리 캘린더
-            toDate={toDate}
-          />
+          {vacationType === "반차" ? (
+            <Calendar
+              initialFocus
+              mode="single"
+              defaultMonth={date?.from}
+              selected={date?.from}
+              onSelect={day => handleDateChange(day ? { from: day, to: day } : undefined)}
+              numberOfMonths={1}
+              toDate={toDate}
+            />
+          ) : (
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={date?.from}
+              selected={date}
+              onSelect={handleDateChange}
+              numberOfMonths={2}
+              toDate={toDate}
+            />
+          )}
         </PopoverContent>
       </Popover>
     </div>

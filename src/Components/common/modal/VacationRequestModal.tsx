@@ -16,40 +16,33 @@ import {
 import { X } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
-import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
+import { useMyVacationRequestModal } from "@/hooks/employee/useMyVacationRequestModal";
 import { VACATIONSELECT_TYPES } from "@/constants/vacationSelect";
-import AutoCompleteUserInput from "../AutoCompleteInput";
-import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { EmployeeInfo } from "@/model/types/user.type";
 
 interface IVacationModalProps {
   onClose: () => void;
   onRegister: (newRequest: IVacationRequest) => void;
 }
 
-const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegister }) => {
+const VacationRequestModal: React.FC<IVacationModalProps> = ({ onClose, onRegister }) => {
   const {
     vacationType,
     setVacationType,
     dateRange,
     setDateRange,
+    handleDateChange,
     vacationDays,
     handleRegister,
     reason,
     setReason,
-    setInputValue,
-    setSelectedEmployee,
     maxDate,
-    handleDateChange,
-  } = useVacationRegister(onRegister, onClose);
-
-  const { employeeList } = useEmployeeList();
+  } = useMyVacationRequestModal(onRegister, onClose)!;
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="dark:border dark:border-dark-border sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex justify-center dark:text-white-text">휴가 등록</DialogTitle>
+          <DialogTitle className="flex justify-center dark:text-white-text">휴가 요청</DialogTitle>
           <button
             onClick={onClose}
             className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border dark:hover:bg-white-bg"
@@ -59,16 +52,6 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
         </DialogHeader>
 
         <div className="grid gap-8 py-6">
-          <div className="flex flex-col gap-2">
-            <span className="font-medium">휴가 대상</span>
-            <AutoCompleteUserInput
-              users={employeeList as EmployeeInfo[]}
-              onSelect={(emp: EmployeeInfo | null) => {
-                setSelectedEmployee(emp);
-                setInputValue(`${emp?.name} (${emp?.email})`);
-              }}
-            />
-          </div>
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 유형</span>
             <Select value={vacationType} onValueChange={setVacationType}>
@@ -135,4 +118,4 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
   );
 };
 
-export default VacationRegisterModal;
+export default VacationRequestModal;
