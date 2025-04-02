@@ -18,7 +18,7 @@ const EmployeeEtcPageTitle = ({ title, className }: IEmployeeEtcPageTitleProps) 
         size="icon"
         onClick={() => navigate(-1)}
         aria-label="뒤로 가기"
-        className="bg-white-bg text-muted-foreground hover:text-foreground dark:bg-dark-bg"
+        className="bg-white-bg text-muted-foreground hover:bg-white-bg hover:text-foreground dark:bg-dark-bg"
       >
         <ChevronLeft className="h-16 w-16" />
       </Button>
