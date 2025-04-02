@@ -47,7 +47,7 @@ const VacationDetailPage = () => {
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="h-13 relative mt-2 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
+                className="relative mt-4 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
               >
                 <span className="flex items-center justify-center gap-1 pt-2">
                   {tab.label}
