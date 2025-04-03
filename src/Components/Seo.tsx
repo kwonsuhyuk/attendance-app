@@ -1,4 +1,3 @@
-// src/components/Seo.tsx
 import { Helmet } from "react-helmet";
 
 interface SeoProps {
