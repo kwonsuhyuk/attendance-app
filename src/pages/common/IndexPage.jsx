@@ -6,7 +6,7 @@ function IndexPage() {
   return (
     <>
       <Seo
-        title="출퇴근 서비스 시작하기 | On & Off"
+        title="On & Off"
         description="출퇴근 기록을 확인하고 관리하세요. 지금 바로 시작해보세요."
       />
 

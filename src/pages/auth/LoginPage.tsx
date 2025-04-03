@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Seo title="로그인 | On & Off" description="On & Off에 로그인하고 근태 현황을 확인하세요." />
+      <Seo title="On & Off | 로그인" description="On & Off에 로그인하고 근태 현황을 확인하세요." />
 
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">

@@ -44,7 +44,7 @@ const SignupPage = () => {
   return (
     <>
       <Seo
-        title="회원가입 | On & Off"
+        title="On & Off | 회원가입"
         description="On & Off에 가입하고 스마트한 출퇴근 관리를 시작하세요."
       />
 

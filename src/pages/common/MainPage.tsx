@@ -60,10 +60,7 @@ const MainPage = () => {
 
   return (
     <>
-      <Seo
-        title="메인 페이지 | On & Off"
-        description="On & Off에서 근태관리 서비스를 이용해보세요."
-      />
+      <Seo title="On & Off | 홈" description="On & Off에서 근태관리 서비스를 이용해보세요." />
 
       <SidebarProvider>
         {userType === "manager" ? <ManagerRoutes /> : <EmployeeRoutes />}
