@@ -10,6 +10,7 @@ import { getCompanyInfoPath } from "@/constants/api.path";
 import Loading from "@/components/common/Loading";
 import { TCompanyInfo } from "@/model/types/company.type";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import Seo from "@/components/Seo";
 
 const MainPage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);
@@ -59,6 +60,8 @@ const MainPage = () => {
 
   return (
     <>
+      <Seo title="홈 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
+
       <SidebarProvider>
         {userType === "manager" ? <ManagerRoutes /> : <EmployeeRoutes />}
       </SidebarProvider>

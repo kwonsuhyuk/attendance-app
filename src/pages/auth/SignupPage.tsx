@@ -11,6 +11,7 @@ import { PersonalInfoForm } from "@/components/auth/PersonalInfoForm";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { useSignup } from "@/hooks/auth/useSignup";
+import Seo from "@/components/Seo";
 
 const SignupPage = () => {
   const {
@@ -41,42 +42,49 @@ const SignupPage = () => {
   }, [error, toast]);
 
   return (
-    <div className="mt-10">
-      <div className="max-w-md mx-auto px-4">
-        <div className="flex flex-col justify-center items-center">
-          <AuthHeader icon={LockIcon} title="회원가입" />
-          <Form {...form}>
-            <form onSubmit={onSubmit} className="w-full mt-4 space-y-6">
-              <PositionSelector position={position} onPositionChange={handlePositionChange} />
-              {position === "manager" && (
-                <ManagerConfirmation
-                  isManagerCheck={isManagerCheck}
-                  setManagerCheck={setManagerCheck}
+    <>
+      <Seo
+        title="회원가입 | On & Off"
+        description="On & Off에 가입하고 스마트한 출퇴근 관리를 시작하세요."
+      />
+
+      <div className="mt-10">
+        <div className="mx-auto max-w-md px-4">
+          <div className="flex flex-col items-center justify-center">
+            <AuthHeader icon={LockIcon} title="회원가입" />
+            <Form {...form}>
+              <form onSubmit={onSubmit} className="mt-4 w-full space-y-6">
+                <PositionSelector position={position} onPositionChange={handlePositionChange} />
+                {position === "manager" && (
+                  <ManagerConfirmation
+                    isManagerCheck={isManagerCheck}
+                    setManagerCheck={setManagerCheck}
+                  />
+                )}
+                {position === "employee" && (
+                  <EmployeeCompanyForm
+                    form={form}
+                    isCodeValid={isCodeValid}
+                    tempCompInfo={tempCompInfo}
+                    companyCode={companyCode}
+                    checkCompanyCode={checkCompanyCode}
+                  />
+                )}
+                <Separator />
+                <PersonalInfoForm form={form} password={password} />
+                <Separator />
+                <AuthFooter
+                  buttonText="회원가입"
+                  linkText="계정이 있나요? 로그인으로 이동"
+                  linkTo="/signin"
+                  loading={loading}
                 />
-              )}
-              {position === "employee" && (
-                <EmployeeCompanyForm
-                  form={form}
-                  isCodeValid={isCodeValid}
-                  tempCompInfo={tempCompInfo}
-                  companyCode={companyCode}
-                  checkCompanyCode={checkCompanyCode}
-                />
-              )}
-              <Separator />
-              <PersonalInfoForm form={form} password={password} />
-              <Separator />
-              <AuthFooter
-                buttonText="회원가입"
-                linkText="계정이 있나요? 로그인으로 이동"
-                linkTo="/signin"
-                loading={loading}
-              />
-            </form>
-          </Form>
+              </form>
+            </Form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

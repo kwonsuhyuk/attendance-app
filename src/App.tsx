@@ -22,6 +22,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import { MAIN_ROUTES } from "./constants/routes";
 import { TCMUserData, TEmpUserData } from "./model/types/user.type";
+import Seo from "./components/Seo";
 
 const App = () => {
   const { currentUser, isLoading, setUser, clearUser } = useUserStore(
@@ -57,6 +58,7 @@ const App = () => {
 
   return (
     <>
+      <Seo title="On & Off" description="출퇴근, 휴가, 근태관리를 쉽고 빠르게." />
       <ThemeProvider excludePaths={["/signin", "/signup"]}>
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <Toaster />
