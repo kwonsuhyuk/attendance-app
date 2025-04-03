@@ -32,7 +32,6 @@ const EmployeeMainContent = () => {
       <CommuteBox />
       {/* 이번주 출퇴근 현황 */}
       <CommuteHistoryBox />
-
       {/* 휴가 요청/승인 내역 */}
       <VacationBox />
     </div>
