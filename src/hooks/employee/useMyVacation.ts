@@ -21,7 +21,6 @@ export const useMyVacation = () => {
 
     const id = uuid();
     await setData(`vacation/requests/${companyCode}/${id}`, dataWithStatus);
-    console.log("🔥 요청 저장됨:", dataWithStatus);
   };
 
   return {

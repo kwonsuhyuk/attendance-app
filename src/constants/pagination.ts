@@ -1,0 +1,1 @@
+export const EMPLOYEE_VACATION_ITEMS_PER_PAGE = 5;

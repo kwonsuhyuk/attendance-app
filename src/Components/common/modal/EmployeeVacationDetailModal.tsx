@@ -3,18 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { TVacationRequest } from "@/model/types/vacation.type";
 import { Calendar, User, BadgeCheck, FileText, PlaneTakeoff } from "lucide-react";
-
-const VACATION_TYPE_CLASSES: Record<string, string> = {
-  연차: "bg-[#0F4C75]",
-  반차: "bg-[#3282B8]",
-  "특별 휴가": "bg-[#BBE1FA] text-black",
-};
-
-const VACATION_STATUS_CLASSES: Record<string, string> = {
-  승인됨: "bg-green-500",
-  거절됨: "bg-red-500",
-  대기중: "bg-yellow-500",
-};
+import { VACATION_STATUS_CLASSES, VACATION_TYPE_COLORS } from "@/constants/\bvacation";
 
 interface TEmployeeVacationDetailModalProps {
   modalOpen: boolean;
@@ -35,7 +24,7 @@ const EmployeeVacationDetailModal = ({
   isSameDay,
   label,
 }: TEmployeeVacationDetailModalProps) => {
-  const badgeTypeClass = VACATION_TYPE_CLASSES[request.vacationType] || "bg-gray-400";
+  const badgeTypeClass = VACATION_TYPE_COLORS[request.vacationType] || "bg-gray-400";
   const badgeStatusClass = VACATION_STATUS_CLASSES[label] || "bg-gray-400";
 
   return (
@@ -48,7 +37,7 @@ const EmployeeVacationDetailModal = ({
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold text-white ${badgeTypeClass}`}
+                className={`rounded-full px-3 py-1 text-xs font-semibold text-white bg-[${badgeTypeClass}]`}
               >
                 {request.vacationType}
               </span>
