@@ -58,10 +58,7 @@ const App = () => {
 
   return (
     <>
-      <Seo
-        title="On & Off | 출퇴근 관리 서비스"
-        description="출퇴근, 휴가, 근태관리를 쉽고 빠르게."
-      />
+      <Seo title="On & Off" description="출퇴근, 휴가, 근태관리를 쉽고 빠르게." />
       <ThemeProvider excludePaths={["/signin", "/signup"]}>
         <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} />
         <Toaster />
