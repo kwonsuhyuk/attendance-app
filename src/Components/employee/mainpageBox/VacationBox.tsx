@@ -2,7 +2,6 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronRight, PlaneTakeoff } from "lucide-react";
 import React from "react";
-
 import { useGetEmployeeVacationList } from "@/hooks/vacation/useGetEmployeeVacationList";
 import { useUserStore } from "@/store/user.store";
 import Loading from "@/components/common/Loading";
@@ -13,6 +12,7 @@ const VacationBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
   const userId = useUserStore(state => state.currentUser?.uid);
+
 
   if (!companyCode || !userId) return null;
 

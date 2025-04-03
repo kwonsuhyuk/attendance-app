@@ -3,15 +3,12 @@ import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { PlaneTakeoff } from "lucide-react";
-
 import { useUserStore } from "@/store/user.store";
 import { useMyVacation } from "@/hooks/employee/useMyVacation";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 import { useGetEmployeeVacationList } from "@/hooks/vacation/useGetEmployeeVacationList";
-
 import VacationRequestModal from "@/components/common/modal/VacationRequestModal";
 import EmployeeVacationYearFilter from "@/components/employee/vacation/EmployeeVacationYearFilter";
-
 import { useFilteredVacationRequests } from "@/hooks/vacation/useFilteredVacationRequests";
 import { TVacationStatus } from "@/model/types/vacation.type";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
@@ -45,6 +42,16 @@ const MyVacationPage = () => {
 
   const handleSubmit = (data: IVacationRequest) => {
     handleRequest(data);
+  };
+
+  const year = date.getFullYear();
+
+  const handleYearChange = (direction: "prev" | "next") => {
+    setDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setFullYear(direction === "prev" ? prev.getFullYear() - 1 : prev.getFullYear() + 1);
+      return newDate;
+    });
   };
 
   return (
