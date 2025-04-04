@@ -45,9 +45,10 @@ const MyCalendar = () => {
           onSelect={handleDateSelect}
           modifiersClassNames={{}}
           classNames={{
-            day: "w-8 font-normal text-sm text-black rounded-md",
-            day_today: "bg-dark-bg text-white",
-            day_selected: "bg-muted text-black",
+            day: "w-8 font-normal text-sm rounded-md",
+            day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text",
+            day_selected: "bg-white-border-sub dark:bg-dark-border-sub pb-2",
+            cell: "h-9 w-9 p-0 text-center text-sm relative",
           }}
           modifiers={{
             출근: date => dummyWorkData[format(date, "yyyy-MM-dd")]?.type === "출근",
