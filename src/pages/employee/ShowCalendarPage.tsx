@@ -45,22 +45,6 @@ const ShowCalendarPage = () => {
         <CardContent className="p-8">
           <MyCalendar />
         </CardContent>
-        {/* <CardFooter>
-          <div className="ml-6 flex gap-2">
-            <div className="flex items-center gap-1">
-              <div className="h-3 w-3 rounded-full bg-green-400" />
-              <span className="text-sm">출근</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="h-3 w-3 rounded-full bg-yellow-300" />
-              <span className="text-sm">휴가</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="h-3 w-3 rounded-full bg-blue-400" />
-              <span className="text-sm">외근</span>
-            </div>
-          </div>
-        </CardFooter> */}
       </Card>
 
       <div className="mb-4 ml-2 flex gap-2">
@@ -75,10 +59,6 @@ const ShowCalendarPage = () => {
         <div className="flex items-center gap-1">
           <div className="h-3 w-3 rounded-full bg-blue-400" />
           <span className="text-sm">외근</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="h-3 w-3 rounded-full bg-gray-300" />
-          <span className="text-sm">기록 없음</span>
         </div>
       </div>
 
