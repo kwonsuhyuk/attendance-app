@@ -39,15 +39,15 @@ const ShowCalendarPage = () => {
   }, [isOpen, setCurrentStep, setSteps, setIsOpen]);
 
   return (
-    <div className="flex w-full flex-col justify-between">
+    <div className="flex w-full flex-col items-center">
       {/* 캘린더 */}
-      <Card className="mb-4 w-full max-w-md shadow-md">
+      <Card className="m-4 w-full shadow-md">
         <CardContent className="p-8">
           <MyCalendar />
         </CardContent>
       </Card>
 
-      <div className="mb-4 ml-2 flex gap-2">
+      <div className="mb-4 flex w-full gap-2">
         <div className="flex items-center gap-1">
           <div className="h-3 w-3 rounded-full bg-green-400" />
           <span className="text-sm">출근</span>
@@ -62,7 +62,7 @@ const ShowCalendarPage = () => {
         </div>
       </div>
 
-      <div className="mb-4 w-full max-w-2xl">
+      <div className="max-w2xl mb-4 w-full">
         <Table className="w-full">
           <TableHeader>
             <TableRow className="border-b border-solid border-white-border dark:border-dark-border">
