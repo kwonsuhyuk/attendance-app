@@ -1,66 +1,46 @@
-import { useEffect, useRef, useState } from "react";
-import { useUserStore } from "@/store/user.store";
-import { useCompanyStore } from "@/store/company.store";
-import { login } from "@/api/auth.api";
-import { z } from "zod";
+import { useState, useEffect } from "react";
 import { loginFormSchema } from "@/model/schema/authSchema/login.schema";
+import { login } from "@/api/auth.api";
+import { loginParseZodError } from "@/util/loginParseZodError";
 
-export const useLogin = () => {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+interface Props {
+  emailRef: React.RefObject<HTMLInputElement>;
+  passwordRef: React.RefObject<HTMLInputElement>;
+}
+
+export const useLogin = ({ emailRef, passwordRef }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = {
-      email: emailRef.current?.value || "",
-      password: passwordRef.current?.value || "",
-    };
+    const email = emailRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
 
-    try {
-      loginFormSchema.parse(formData);
-      setIsLoading(true);
-      setError(null);
+    const validation = loginFormSchema.safeParse({ email, password });
 
-      const response = await login(formData);
+    if (!validation.success) {
+      setError(loginParseZodError(validation.error));
+      return;
+    }
 
-      if (!response.success) {
-        setError("이메일 또는 비밀번호가 올바르지 않습니다");
-        return;
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldName = error.errors[0].path[0];
-        if (fieldName === "email") {
-          setError("이메일 형식이 올바르지 않습니다");
-        } else if (fieldName === "password") {
-          setError("비밀번호는 6자 이상이어야 합니다");
-        }
-      } else {
-        setError("로그인 중 오류가 발생했습니다");
-      }
-    } finally {
-      setIsLoading(false);
+    setIsLoading(true);
+    const result = await login({ email, password });
+    setIsLoading(false);
+
+    if (!result.success) {
+      setError("이메일 또는 비밀번호가 올바르지 않습니다");
     }
   };
 
   const handleGuestLogin = async (email: string, password: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    const result = await login({ email, password });
+    setIsLoading(false);
 
-      const response = await login({ email, password });
-
-      if (!response.success) {
-        setError("게스트 로그인 실패");
-        return;
-      }
-    } catch (error) {
-      setError("게스트 로그인 중 오류가 발생했습니다");
-    } finally {
-      setIsLoading(false);
+    if (!result.success) {
+      setError("게스트 로그인 실패");
     }
   };
 
@@ -73,8 +53,6 @@ export const useLogin = () => {
   return {
     error,
     isLoading,
-    emailRef,
-    passwordRef,
     handleSubmit,
     handleGuestLogin,
   };
