@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { useSearchParams } from "react-router-dom";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-
+import Seo from "@/components/Seo";
 
 const VacationStatisticPage = () => {
   const today = new Date();
@@ -45,34 +45,44 @@ const VacationStatisticPage = () => {
   };
 
   return (
-    <VacationStatisticLayout>
-      <VacationFilter
-        selectedName={selectedName}
-        selectedMonth={selectedDate}
-        setSelectedMonth={setSelectedDate}
-        selectedMode={mode}
-        setSelectedMode={setMode}
-        handleNameSelect={handleNameSelect}
-        employeeList={employeeList}
+    <>
+      <Seo
+        title="휴가 통계 | On & Off"
+        description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
-      <VacationStatisticContainer>
-        <VacationChart selectedDate={selectedDate} selectedName={selectedName} mode={mode} />
-        <div className="flex min-h-[680px] flex-col gap-3 md:flex-row">
-          <Card className="hidden h-full items-center justify-center px-4 py-10 md:block md:min-h-[680px] md:w-1/3">
-            <VacationPieChart selectedDate={selectedDate} selectedName={selectedName} mode={mode} />
-          </Card>
-          <VacationStatisticTable
-            employeeList={paginatedEmployees}
-            page={page}
-            totalPages={totalPageCount}
-            handleNextPage={handleNextPage}
-            handlePreviousPage={handlePreviousPage}
-            selectedDate={selectedDate}
-            mode={mode}
-          />
-        </div>
-      </VacationStatisticContainer>
-    </VacationStatisticLayout>
+      <VacationStatisticLayout>
+        <VacationFilter
+          selectedName={selectedName}
+          selectedMonth={selectedDate}
+          setSelectedMonth={setSelectedDate}
+          selectedMode={mode}
+          setSelectedMode={setMode}
+          handleNameSelect={handleNameSelect}
+          employeeList={employeeList}
+        />
+        <VacationStatisticContainer>
+          <VacationChart selectedDate={selectedDate} selectedName={selectedName} mode={mode} />
+          <div className="flex min-h-[680px] flex-col gap-3 md:flex-row">
+            <Card className="hidden h-full items-center justify-center px-4 py-10 md:block md:min-h-[680px] md:w-1/3">
+              <VacationPieChart
+                selectedDate={selectedDate}
+                selectedName={selectedName}
+                mode={mode}
+              />
+            </Card>
+            <VacationStatisticTable
+              employeeList={paginatedEmployees}
+              page={page}
+              totalPages={totalPageCount}
+              handleNextPage={handleNextPage}
+              handlePreviousPage={handlePreviousPage}
+              selectedDate={selectedDate}
+              mode={mode}
+            />
+          </div>
+        </VacationStatisticContainer>
+      </VacationStatisticLayout>
+    </>
   );
 };
 
