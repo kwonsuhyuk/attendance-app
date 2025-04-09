@@ -7,7 +7,6 @@ import EmployeeEtcPageTitle from "@/components/employee/EmployeeEtcPageTitle";
 const AboutPage = () => {
   return (
     <div className="w-full">
-      <EmployeeEtcPageTitle title="만든 사람들" />
       <div className="mx-auto max-w-7xl space-y-16 px-4">
         {/* MADE BY */}
         <div className="flex flex-col gap-8 md:flex-row md:justify-center md:gap-12">

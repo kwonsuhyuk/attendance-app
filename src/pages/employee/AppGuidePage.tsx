@@ -1,13 +1,8 @@
-import { useEffect } from "react";
-import { useTour } from "@reactour/tour";
 import iphoneImg from "@/assets/guideImg/iphoneadd.jpeg";
 import iphoneImg2 from "@/assets/guideImg/iphoneadd2.jpeg";
 import galaxyguide from "@/assets/guideImg/galaxyguide.jpg";
 import galaxyguide2 from "@/assets/guideImg/galaxyguide2.jpg";
-import qrguide from "@/assets/guideImg/qrguide.png";
-import qrguide2 from "@/assets/guideImg/qrguide2.png";
-import darkModeStore from "@/store/darkmode.store";
-import { APP_GUIDE_STEPS } from "@/constants/tourStep";
+
 import {
   Accordion,
   AccordionContent,
@@ -15,8 +10,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
-import PoweredByFooter from "@/components/common/PoweredByFooter";
-import EmployeeEtcPageTitle from "@/components/employee/EmployeeEtcPageTitle";
 
 const FAQS = [
   {
@@ -124,25 +117,8 @@ const FAQS = [
 ];
 
 const AppGuidePage = () => {
-  // const darkMode = darkModeStore(state => state.darkMode);
-  // const { isOpen, setCurrentStep, setSteps } = useTour();
-
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     const timer = setTimeout(() => {
-  //       setCurrentStep(0);
-  //       setSteps(APP_GUIDE_STEPS);
-  //     }, 300);
-  //     return () => {
-  //       clearTimeout(timer);
-  //       setSteps([]);
-  //     };
-  //   }
-  // }, [isOpen, setCurrentStep, setSteps]);
-
   return (
     <div className="w-full" data-tour="step-30">
-      <EmployeeEtcPageTitle title="다운로드 가이드" />
       <Accordion type="single" collapsible className="w-full">
         {FAQS.map((faq, index) => (
           <>
