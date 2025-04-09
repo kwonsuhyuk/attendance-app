@@ -10,9 +10,9 @@ export const MAIN_ROUTES = {
 
 export const EMPLOYEE_ROUTES = {
   COMMUTE: "/camera",
-  APP_GUIDE: "/appguide",
   EMPLOYEE_DATE_CHECK: "/calendar",
   MY_VACATION: "/myvacation",
+  APP_GUIDE: "/appguide",
   EMPLOYEE_MENU: "/employeemenu",
 };
 

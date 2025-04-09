@@ -46,6 +46,7 @@ const EmployeeVacationList = ({ requests, paginated = false }: Props) => {
 
           return (
             <EmployeeVacationItem
+              key={request.createdAt}
               request={request}
               label={label}
               start={start}

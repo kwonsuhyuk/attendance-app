@@ -43,9 +43,9 @@ const DarkModeSwitch = React.forwardRef<
     <SwitchPrimitives.Thumb
       className={cn(
         // Thumb도 반응형으로 크기 & 위치 조정
-        "pointer-events-none flex items-center justify-center rounded-full bg-white shadow-lg ring-0 transition-transform dark:bg-dark-bg",
-        "h-6 w-6 data-[state=checked]:translate-x-5 data-[state=unchecked]:-translate-x-2",
-        "md:h-8 md:w-8 md:data-[state=checked]:translate-x-7 md:data-[state=unchecked]:-translate-x-3",
+        "pointer-events-none flex items-center justify-center rounded-full bg-white shadow-lg ring-0 transition-transform dark:bg-dark-card-bg",
+        "h-6 w-6 data-[state=checked]:translate-x-6 data-[state=unchecked]:-translate-x-2",
+        "md:h-8 md:w-8 md:data-[state=checked]:translate-x-8 md:data-[state=unchecked]:-translate-x-3",
       )}
     >
       {children}

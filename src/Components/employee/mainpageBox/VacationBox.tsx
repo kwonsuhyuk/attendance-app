@@ -13,7 +13,6 @@ const VacationBox = () => {
   const { companyCode } = useParams();
   const userId = useUserStore(state => state.currentUser?.uid);
 
-
   if (!companyCode || !userId) return null;
 
   const { requests, loading, error } = useGetEmployeeVacationList({
@@ -40,7 +39,7 @@ const VacationBox = () => {
       </CardTitle>
 
       {/* 데이터 상태 처리 */}
-      {loading ? <Loading /> : error ? <Error /> : <EmployeeVacationList requests={requests} />}
+      {error ? <Error /> : <EmployeeVacationList requests={requests} />}
     </Card>
   );
 };
