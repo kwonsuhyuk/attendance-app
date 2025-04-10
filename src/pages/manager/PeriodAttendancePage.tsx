@@ -1,19 +1,11 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import Seo from "@/components/Seo";
-import dayjs from "dayjs";
-import CustomCalendarHeader from "@/components/company/attendance/CustomCalendarHeader";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import PeriodAttCalendarGrid from "@/components/company/attendance/PeriodAttCalendarGrid";
+import PeriodAttFilterSection from "@/components/company/attendance/PeriodAttFilterSection";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-
-const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+import dayjs from "dayjs";
+import { Card } from "@/components/ui/card";
+import AttendancePageContainer from "@/components/container/manager/AttendancePageContainer";
 
 const PeriodAttendancePage = () => {
   const [tab, setTab] = useState("total");
@@ -35,62 +27,6 @@ const PeriodAttendancePage = () => {
 
   const calendar = generateCalendar(currentDate);
 
-  const renderCalendar = () => (
-    <>
-      <div className="grid grid-cols-7 gap-2 border-b border-t border-solid border-white-border-sub pb-3 pt-3 text-center font-medium text-muted-foreground dark:border-dark-border-sub">
-        {DAYS.map(day => (
-          <div key={day}>{day}</div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-7">
-        {calendar.map((day, idx) => {
-          const isSunday = idx % 7 === 0;
-          return (
-            <Card
-              key={idx}
-              className="flex h-[120px] flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub"
-            >
-              {day ? (
-                <>
-                  <div className="mb-1 flex items-center justify-between text-[15px] font-medium">
-                    <span className={isSunday ? "text-red-500" : "text-muted-foreground"}>
-                      {day < 10 ? `0${day}` : day}
-                    </span>
-                    <span className="text-muted-foreground">총원 12</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-1">
-                    <div className="flex items-center gap-1 rounded border border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub">
-                      <span className="h-3 w-1.5 rounded-full bg-cyan-300" />
-                      <span>출근</span>
-                      <span className="ml-auto font-semibold">3</span>
-                    </div>
-                    <div className="flex items-center gap-1 rounded border border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub">
-                      <span className="h-3 w-1.5 rounded-full bg-green-400" />
-                      <span>휴가</span>
-                      <span className="ml-auto font-semibold">0</span>
-                    </div>
-                    <div className="flex items-center gap-1 rounded border border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub">
-                      <span className="h-3 w-1.5 rounded-full bg-lime-300" />
-                      <span>외근</span>
-                      <span className="ml-auto font-semibold">0</span>
-                    </div>
-                    <div className="flex items-center gap-1 rounded border border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub">
-                      <span className="h-3 w-1.5 rounded-full bg-yellow-400" />
-                      <span>미출근</span>
-                      <span className="ml-auto font-semibold">1</span>
-                    </div>
-                  </div>
-                </>
-              ) : null}
-            </Card>
-          );
-        })}
-      </div>
-    </>
-  );
-
   return (
     <>
       <Seo
@@ -98,86 +34,58 @@ const PeriodAttendancePage = () => {
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
 
-      <div className="w-full max-w-none p-2">
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="total">전체 근태 현황</TabsTrigger>
-            <TabsTrigger value="employee">사원별 근태 현황</TabsTrigger>
-          </TabsList>
+      <AttendancePageContainer>
+        <Card className="w-full rounded-lg bg-white shadow-sm">
+          <Tabs value={tab} onValueChange={setTab}>
+            <div className="relative p-6">
+              <div className="absolute bottom-5 left-0 z-0 h-[1px] w-full translate-y-[0.5px] bg-gray-200" />
 
-          {/* 전체 근태 현황 */}
-          <TabsContent value="total">
-            <div className="mb-4 flex gap-3">
-              <CustomCalendarHeader onChangeMonth={setCurrentDate} />
-              <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">근무지</span>
-                  <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="근무지 선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="전체">전체</SelectItem>
-                      <SelectItem value="본사">본사</SelectItem>
-                      <SelectItem value="지점A">지점 A</SelectItem>
-                      <SelectItem value="지점B">지점 B</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              {/* 탭 리스트 */}
+              <TabsList className="relative z-10 flex w-fit gap-5 bg-transparent">
+                <TabsTrigger
+                  value="total"
+                  className="rounded-t-md border border-b-0 border-gray-300 px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white data-[state=active]:bg-white data-[state=inactive]:bg-gray-100 data-[state=active]:text-black data-[state=inactive]:text-gray-400"
+                >
+                  전체 근태 현황
+                </TabsTrigger>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">근무 형태</span>
-                  <Select value={workTypeFilter} onValueChange={setWorkTypeFilter}>
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="근로유형 선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="전체">전체</SelectItem>
-                      <SelectItem value="정규직">정규직</SelectItem>
-                      <SelectItem value="계약직">계약직</SelectItem>
-                      <SelectItem value="아르바이트">아르바이트</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+                <TabsTrigger
+                  value="employee"
+                  className="rounded-t-md border border-b-0 border-gray-300 px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white data-[state=active]:bg-white data-[state=inactive]:bg-gray-100 data-[state=active]:text-black data-[state=inactive]:text-gray-400"
+                >
+                  직원별 월간 현황
+                </TabsTrigger>
+              </TabsList>
             </div>
-            {renderCalendar()}
-          </TabsContent>
 
-          {/* 사원별 근태 현황 */}
-          <TabsContent value="employee">
-            <div className="mb-4 flex gap-3">
-              <CustomCalendarHeader onChangeMonth={setCurrentDate} />
-              <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-muted-foreground">근무지</span>
-                  <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>
-                    <SelectTrigger className="w-[160px]">
-                      <SelectValue placeholder="근무지 선택" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="전체">전체</SelectItem>
-                      <SelectItem value="본사">본사</SelectItem>
-                      <SelectItem value="지점A">지점 A</SelectItem>
-                      <SelectItem value="지점B">지점 B</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-center gap-2 whitespace-nowrap">
-                  <span className="text-sm font-medium text-muted-foreground">사원 이름</span>
-                  <Input
-                    className="w-[180px]"
-                    placeholder="이름 입력"
-                    value={employeeName}
-                    onChange={e => setEmployeeName(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-            {renderCalendar()}
-          </TabsContent>
-        </Tabs>
-      </div>
+            <TabsContent value="total">
+              <PeriodAttFilterSection
+                type="total"
+                currentDate={currentDate}
+                onChangeDate={setCurrentDate}
+                workplaceFilter={workplaceFilter}
+                setWorkplaceFilter={setWorkplaceFilter}
+                workTypeFilter={workTypeFilter}
+                setWorkTypeFilter={setWorkTypeFilter}
+              />
+              <PeriodAttCalendarGrid calendar={calendar} />
+            </TabsContent>
+
+            <TabsContent value="employee">
+              <PeriodAttFilterSection
+                type="employee"
+                currentDate={currentDate}
+                onChangeDate={setCurrentDate}
+                workplaceFilter={workplaceFilter}
+                setWorkplaceFilter={setWorkplaceFilter}
+                employeeName={employeeName}
+                setEmployeeName={setEmployeeName}
+              />
+              <PeriodAttCalendarGrid calendar={calendar} />
+            </TabsContent>
+          </Tabs>
+        </Card>
+      </AttendancePageContainer>
     </>
   );
 };
