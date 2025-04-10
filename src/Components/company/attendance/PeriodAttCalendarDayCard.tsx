@@ -7,9 +7,15 @@ interface Props {
 
 const PeriodAttCalendarDayCard = ({ day, isSunday }: Props) => {
   return (
-    <Card className="flex h-[120px] flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-3 text-sm dark:border-dark-border-sub">
+    <Card className="flex h-[120px] flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub">
       <div className="mb-1 flex items-center justify-between text-[15px] font-medium">
-        <span className={isSunday ? "text-red-500" : "text-muted-foreground"}>
+        <span
+          className={
+            isSunday
+              ? "flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-[15px] text-red-500"
+              : "text-muted-foreground"
+          }
+        >
           {day < 10 ? `0${day}` : day}
         </span>
         <span className="text-muted-foreground">총원 12</span>

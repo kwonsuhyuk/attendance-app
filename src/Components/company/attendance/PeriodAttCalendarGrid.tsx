@@ -10,7 +10,7 @@ interface Props {
 const PeriodAttCalendarGrid = ({ calendar }: Props) => {
   return (
     <div className="overflow-hidden rounded-lg border border-white-border-sub p-6 dark:border-dark-border-sub">
-      <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-vacation-color pb-2 pt-2 text-center font-medium text-dark-nav-selected dark:border-dark-border-sub">
+      <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-dark-card-bg pb-2 pt-2 text-center font-medium text-dark-nav-selected dark:border-dark-border-sub dark:bg-white-bg dark:text-white-text">
         {DAYS.map(day => (
           <div key={day}>{day}</div>
         ))}

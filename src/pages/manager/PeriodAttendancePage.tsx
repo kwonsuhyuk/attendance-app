@@ -6,6 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import dayjs from "dayjs";
 import { Card } from "@/components/ui/card";
 import AttendancePageContainer from "@/components/container/manager/AttendancePageContainer";
+import PeriodAttTable from "@/components/company/attendance/PeriodAttTable";
 
 const PeriodAttendancePage = () => {
   const [tab, setTab] = useState("total");
@@ -38,20 +39,19 @@ const PeriodAttendancePage = () => {
         <Card className="w-full rounded-lg bg-white shadow-sm">
           <Tabs value={tab} onValueChange={setTab}>
             <div className="relative p-6">
-              <div className="absolute bottom-5 left-0 z-0 h-[1px] w-full translate-y-[0.5px] bg-gray-200" />
+              <div className="absolute bottom-5 left-0 z-0 h-[1px] w-full translate-y-[0.5px] bg-white-bg dark:bg-dark-border-sub" />
 
-              {/* 탭 리스트 */}
               <TabsList className="relative z-10 flex w-fit gap-5 bg-transparent">
                 <TabsTrigger
                   value="total"
-                  className="rounded-t-md border border-b-0 border-gray-300 px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white data-[state=active]:bg-white data-[state=inactive]:bg-gray-100 data-[state=active]:text-black data-[state=inactive]:text-gray-400"
+                  className="rounded-t-md border border-b-0 border-white-border-sub px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white-card-bg data-[state=active]:bg-white-card-bg data-[state=inactive]:bg-white-bg data-[state=active]:text-white-text data-[state=inactive]:text-white-nav-text dark:border-dark-border-sub dark:data-[state=inactive]:border-b-0 dark:data-[state=active]:border-b-dark-card-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=inactive]:bg-dark-bg dark:data-[state=active]:text-dark-text dark:data-[state=inactive]:text-dark-nav-text"
                 >
                   전체 근태 현황
                 </TabsTrigger>
 
                 <TabsTrigger
                   value="employee"
-                  className="rounded-t-md border border-b-0 border-gray-300 px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white data-[state=active]:bg-white data-[state=inactive]:bg-gray-100 data-[state=active]:text-black data-[state=inactive]:text-gray-400"
+                  className="rounded-t-md border border-b-0 border-white-border-sub px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white-card-bg data-[state=active]:bg-white-card-bg data-[state=inactive]:bg-white-bg data-[state=active]:text-white-text data-[state=inactive]:text-white-nav-text dark:border-dark-border-sub dark:data-[state=inactive]:border-b-0 dark:data-[state=active]:border-b-dark-card-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=inactive]:bg-dark-bg dark:data-[state=active]:text-dark-text dark:data-[state=inactive]:text-dark-nav-text"
                 >
                   직원별 월간 현황
                 </TabsTrigger>
@@ -81,7 +81,7 @@ const PeriodAttendancePage = () => {
                 employeeName={employeeName}
                 setEmployeeName={setEmployeeName}
               />
-              <PeriodAttCalendarGrid calendar={calendar} />
+              <PeriodAttTable calendar={calendar} currentDate={currentDate} />
             </TabsContent>
           </Tabs>
         </Card>

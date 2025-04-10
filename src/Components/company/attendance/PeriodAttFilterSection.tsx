@@ -79,6 +79,20 @@ const PeriodAttFilterSection = ({
           </div>
         )}
       </div>
+
+      {type === "total" && (
+        <div className="mt-2 flex items-center gap-4 pl-6 text-sm text-muted-foreground">
+          <span>※</span>
+          <div className="flex items-center gap-1">
+            <span className="h-3 w-3 rounded-full bg-red-300" />
+            <span>공휴일</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="h-3 w-3 rounded-full bg-yellow-300" />
+            <span>회사 공휴일</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
