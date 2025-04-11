@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useCompanyStore } from "@/store/company.store";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CommuteBox = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-
+  const navigate = useNavigate();
+  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   // 실시간 시간 업데이트
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,12 +41,7 @@ const CommuteBox = () => {
         <p className="mt-1 text-xl font-bold">{formatTime(currentTime)}</p>
       </div>
 
-      <Button
-        className="mt-3 w-full max-w-xs"
-        onClick={() => {
-          /* 출근 모달 열기 */
-        }}
-      >
+      <Button className="mt-3 w-full max-w-xs" onClick={() => navigate(`/${companyCode}/commute`)}>
         출근하기
       </Button>
     </Card>

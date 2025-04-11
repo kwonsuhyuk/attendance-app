@@ -7,22 +7,19 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import useWorkingModal from "@/hooks/employee/useWorkingModal";
+import useOutWorkingModal from "@/hooks/employee/useOutWorkingModal";
 
 const OutWorkingModal = () => {
-  const { open, setOpen, today, submitOutJob } = useWorkingModal();
+  const { open, setOpen, today, submitOutJob } = useOutWorkingModal();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div
-          data-tour="step-38"
-          className="underline text-sm text-red-500 text-center mb-3 cursor-pointer"
-        >
+        <Button className="mb-3 cursor-pointer text-center text-sm font-thin underline">
           외근 시 여기를 클릭해주세요.
-        </div>
+        </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[90vw]">
         <DialogHeader>
           <DialogTitle>정말 외근으로 출근 하시는게 맞습니까?</DialogTitle>
           <DialogDescription>

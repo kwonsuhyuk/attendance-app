@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useShallow } from "zustand/shallow";
 
-export default function useWorkingModal() {
+export default function useOutWorkingModal() {
   const { companyCode, userId } = useUserStore(
     useShallow(state => ({
       companyCode: state.currentUser?.companyCode,

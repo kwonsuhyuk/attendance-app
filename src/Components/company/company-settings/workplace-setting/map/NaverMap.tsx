@@ -2,8 +2,13 @@ import React, { useEffect } from "react";
 interface INaverMapProps {
   onLocationSelect: (lat: number, lng: number) => void;
   selectedLocation: { lat: number; lng: number };
+  markerDragAble?: boolean;
 }
-const NaverMap = ({ onLocationSelect, selectedLocation }: INaverMapProps) => {
+const NaverMap = ({
+  onLocationSelect,
+  selectedLocation,
+  markerDragAble = true,
+}: INaverMapProps) => {
   useEffect(() => {
     const map = new naver.maps.Map("map", {
       center: new naver.maps.LatLng(selectedLocation.lat, selectedLocation.lng),
@@ -13,7 +18,7 @@ const NaverMap = ({ onLocationSelect, selectedLocation }: INaverMapProps) => {
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(selectedLocation.lat, selectedLocation.lng),
       map: map,
-      draggable: true, //  드래그 가능하도록 설정
+      draggable: markerDragAble,
     });
 
     //  마커 드래그 종료 시 이벤트 발생

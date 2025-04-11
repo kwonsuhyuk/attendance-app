@@ -8,15 +8,26 @@ interface WorkPlaceMapProps {
   lng: number;
   isLoaded: boolean;
   onLocationSelect: (lat: number, lng: number) => void;
+  markerDragAble?: boolean;
 }
 
-const WorkPlaceMap = ({ lat, lng, isLoaded, onLocationSelect }: WorkPlaceMapProps) => {
+const WorkPlaceMap = ({
+  lat,
+  lng,
+  isLoaded,
+  onLocationSelect,
+  markerDragAble = true,
+}: WorkPlaceMapProps) => {
   return (
-    <Suspense fallback={<Skeleton className="w-full h-48 rounded-md animate-pulse" />}>
+    <Suspense fallback={<Skeleton className="h-48 w-full animate-pulse rounded-md" />}>
       {isLoaded ? (
-        <NaverMap onLocationSelect={onLocationSelect} selectedLocation={{ lat, lng }} />
+        <NaverMap
+          onLocationSelect={onLocationSelect}
+          selectedLocation={{ lat, lng }}
+          markerDragAble={markerDragAble}
+        />
       ) : (
-        <Skeleton className="w-full h-48 rounded-md animate-pulse" />
+        <Skeleton className="h-48 w-full animate-pulse rounded-md" />
       )}
     </Suspense>
   );
