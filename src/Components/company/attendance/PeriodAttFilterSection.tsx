@@ -35,6 +35,7 @@ const PeriodAttFilterSection = ({
     <div className="flex gap-3 pl-6">
       <CustomCalendarHeader onChangeMonth={onChangeDate} />
       <div className="flex flex-wrap gap-3">
+        {/* 이 필터는 전체 탭만 사용 예정 */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">근무지</span>
           <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>

@@ -26,7 +26,6 @@ const PeriodAttCalendarDayCard = ({ day, isSunday }: Props) => {
           { label: "출근", color: "bg-cyan-300", value: 3 },
           { label: "휴가", color: "bg-green-400", value: 0 },
           { label: "외근", color: "bg-lime-300", value: 0 },
-          { label: "미출근", color: "bg-yellow-400", value: 1 },
         ].map(item => (
           <div
             key={item.label}
