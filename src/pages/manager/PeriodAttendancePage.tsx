@@ -38,10 +38,12 @@ const PeriodAttendancePage = () => {
       <AttendancePageContainer>
         <Card className="w-full rounded-lg bg-white shadow-sm">
           <Tabs value={tab} onValueChange={setTab}>
-            <div className="relative p-6">
-              <div className="absolute bottom-5 left-0 z-0 h-[1px] w-full translate-y-[0.5px] bg-white-bg dark:bg-dark-border-sub" />
+            <div className="relative px-4 pb-2 pt-4 sm:px-6 sm:pt-6">
+              {/* 바닥선: 모바일에서는 겹침 방지를 위해 숨김 */}
+              <div className="absolute bottom-1 left-0 z-0 hidden h-[1px] w-full translate-y-[0.5px] bg-white-bg dark:bg-dark-border-sub sm:block" />
 
-              <TabsList className="relative z-10 flex w-fit gap-5 bg-transparent">
+              {/* 반응형 탭 리스트 */}
+              <TabsList className="relative z-10 flex w-full flex-wrap gap-2 bg-transparent sm:w-fit sm:flex-nowrap sm:gap-5">
                 <TabsTrigger
                   value="total"
                   className="rounded-t-md border border-b-0 border-white-border-sub px-6 py-2 text-base font-semibold data-[state=inactive]:border-b-0 data-[state=active]:border-b-white-card-bg data-[state=active]:bg-white-card-bg data-[state=inactive]:bg-white-bg data-[state=active]:text-white-text data-[state=inactive]:text-white-nav-text dark:border-dark-border-sub dark:data-[state=inactive]:border-b-0 dark:data-[state=active]:border-b-dark-card-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=inactive]:bg-dark-bg dark:data-[state=active]:text-dark-text dark:data-[state=inactive]:text-dark-nav-text"
@@ -68,7 +70,11 @@ const PeriodAttendancePage = () => {
                 workTypeFilter={workTypeFilter}
                 setWorkTypeFilter={setWorkTypeFilter}
               />
-              <PeriodAttCalendarGrid calendar={calendar} variant="total" />
+              <PeriodAttCalendarGrid
+                calendar={calendar}
+                currentDate={currentDate}
+                variant="total"
+              />
             </TabsContent>
 
             <TabsContent value="employee">
@@ -82,7 +88,11 @@ const PeriodAttendancePage = () => {
                 setEmployeeName={setEmployeeName}
               />
               {/* <PeriodAttTable calendar={calendar} currentDate={currentDate} /> */}
-              <PeriodAttCalendarGrid calendar={calendar} variant="employee" />
+              <PeriodAttCalendarGrid
+                calendar={calendar}
+                currentDate={currentDate}
+                variant="employee"
+              />
             </TabsContent>
           </Tabs>
         </Card>
