@@ -35,7 +35,8 @@ export const MENU_STRUCTURE = [
       { label: "금일 출퇴근 현황", path: "/todayatt" },
       {
         label: "기간 출퇴근 현황",
-        path: "/datecheck/:id",
+        path: "/periodatt",
+        // path: "/datecheck/:id", **기존 경로입니다
         tourStep: "step-2",
       },
     ],
