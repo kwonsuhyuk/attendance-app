@@ -68,7 +68,7 @@ const PeriodAttendancePage = () => {
                 workTypeFilter={workTypeFilter}
                 setWorkTypeFilter={setWorkTypeFilter}
               />
-              <PeriodAttCalendarGrid calendar={calendar} />
+              <PeriodAttCalendarGrid calendar={calendar} variant="total" />
             </TabsContent>
 
             <TabsContent value="employee">
@@ -81,7 +81,8 @@ const PeriodAttendancePage = () => {
                 employeeName={employeeName}
                 setEmployeeName={setEmployeeName}
               />
-              <PeriodAttTable calendar={calendar} currentDate={currentDate} />
+              {/* <PeriodAttTable calendar={calendar} currentDate={currentDate} /> */}
+              <PeriodAttCalendarGrid calendar={calendar} variant="employee" />
             </TabsContent>
           </Tabs>
         </Card>

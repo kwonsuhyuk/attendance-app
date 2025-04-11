@@ -231,11 +231,8 @@ const PeriodAttTable = ({ calendar, currentDate }: Props) => {
                     {emp.name} / {emp.position}
                   </td>
                   {emp.records.map((status, i) => (
-                    <td
-                      key={i}
-                      className={`w-[80px] whitespace-nowrap border border-white-border-sub p-3 ${getStatusColor(status)}`}
-                    >
-                      {status}
+                    <td key={i} className={`w-[80px] border border-white-border-sub p-3`}>
+                      <div className={`h-6 w-full rounded ${getStatusColor(status)}`} />
                     </td>
                   ))}
                 </tr>
