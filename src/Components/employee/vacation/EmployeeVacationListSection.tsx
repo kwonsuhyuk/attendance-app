@@ -22,7 +22,7 @@ const VacationListSection = ({
   totalPageCount,
   setCurrentPage,
 }: IVacationListSectionProps) => {
-  if (loading) return <Loading />;
+  // if (loading) return <Loading />;
   if (error) return <Error />;
 
   return (

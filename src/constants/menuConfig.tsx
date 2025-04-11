@@ -1,4 +1,13 @@
-import { Bell, Calendar, Clock, Home, Settings, Users } from "lucide-react";
+import {
+  Bell,
+  BookOpenCheck,
+  Calendar,
+  Clock,
+  Home,
+  Info,
+  Megaphone,
+  Settings,
+} from "lucide-react";
 
 export interface MenuButtonConfig {
   label: string;
@@ -57,4 +66,23 @@ export const MENU_STRUCTURE = [
   //   highlight: true,
   //   path: "/about",
   // },
+];
+
+export const EMPLOYEE_SUB_MENUS = (companyCode: string) => [
+  {
+    icon: <Megaphone className="h-5 w-5 text-primary" />,
+    label: "회사 공지사항",
+    path: `/${companyCode}/notice`,
+  },
+  {
+    icon: <BookOpenCheck className="h-5 w-5 text-primary" />,
+    label: "다운로드 가이드",
+    path: `/${companyCode}/appguide`,
+  },
+
+  {
+    icon: <Info className="h-5 w-5 text-primary" />,
+    label: "만든 사람들",
+    path: `/${companyCode}/about`,
+  },
 ];

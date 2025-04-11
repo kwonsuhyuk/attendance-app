@@ -12,12 +12,7 @@ interface HeaderProps {
 export default function Header({ variant = "manager" }: HeaderProps) {
   if (variant === "manager") {
     return (
-      <div
-        className={twMerge(
-          "fixed top-0 z-50 w-full border-b bg-dark-card-bg px-4 shadow-md dark:bg-dark-bg",
-          "h-12 sm:h-14 md:h-16",
-        )}
-      >
+      <div className="fixed top-0 z-50 h-12 w-full border-b bg-dark-card-bg px-4 shadow-md dark:bg-dark-bg sm:h-14 md:h-16">
         <div className="flex h-full w-full items-center justify-between">
           <DarkmodeSwitch className="hidden md:-order-first md:flex" />
           <div className="text-sm text-white md:hidden">
@@ -33,12 +28,7 @@ export default function Header({ variant = "manager" }: HeaderProps) {
   }
 
   return (
-    <div
-      className={twMerge(
-        "fixed top-0 z-50 h-12 w-full border-b bg-dark-card-bg px-4 shadow-md dark:bg-dark-bg sm:h-14 md:h-16",
-        "left-1/2 max-w-screen-sm -translate-x-1/2",
-      )}
-    >
+    <div className="fixed left-1/2 top-0 z-50 h-12 w-full max-w-screen-sm -translate-x-1/2 border-b bg-dark-card-bg px-4 shadow-md dark:bg-dark-bg sm:h-14 md:h-16">
       <div className="flex h-full w-full items-center justify-between">
         <AppTitle className="text-base text-white" />
         <DarkmodeSwitch />
