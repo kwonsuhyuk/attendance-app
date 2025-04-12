@@ -76,7 +76,7 @@ export const EMPLOYEE_SUB_MENUS = (companyCode: string) => [
   },
   {
     icon: <CheckCheck className="h-5 w-5 text-primary" />,
-    label: "출근하기",
+    label: "출퇴근 등록",
     path: `/${companyCode}/commute`,
   },
   {

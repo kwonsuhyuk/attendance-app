@@ -47,10 +47,12 @@ const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfir
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogContent className="z-[101] max-w-[90vw] sm:max-w-md">
+      <DialogContent className="z-[110] max-w-[90vw] bg-white sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>출근 확인</DialogTitle>
-          <DialogDescription>출근 전 정보를 다시 확인해주세요.</DialogDescription>
+          <DialogTitle className="text-black dark:text-black">출근 확인</DialogTitle>
+          <DialogDescription>
+            <p className="mt-2 text-xs text-red-500">⚠️ 출근 후에는 취소할 수 없습니다.</p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4 text-sm">
@@ -80,17 +82,15 @@ const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfir
             <span className="text-gray-500">출근 시간</span>
             <span className="font-medium text-gray-800">{currentTime}</span>
           </div>
-
-          <p className="mt-2 text-xs text-red-500">
-            ⚠️ 출근 후에는 취소할 수 없습니다. 출근지를 확인해주세요.
-          </p>
         </div>
 
         <div className="mt-6 flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel}>
+          <Button className="bg-gray-100 text-gray-800 dark:bg-gray-100" onClick={onCancel}>
             취소
           </Button>
-          <Button onClick={onConfirm}>출근하기</Button>
+          <Button className="bg-point-color text-gray-800" onClick={onConfirm}>
+            출근하기
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
