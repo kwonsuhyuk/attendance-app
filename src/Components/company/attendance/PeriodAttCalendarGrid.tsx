@@ -3,6 +3,8 @@ import PeriodAttCalendarDayCard from "./PeriodAttCalendarDayCard";
 import PeriodAttCalendarList from "./PeriodAttCalendarList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import dayjs from "dayjs";
+import { useState } from "react";
+import { EmployeeInfo } from "@/model/types/user.type";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -10,9 +12,17 @@ interface Props {
   calendar: (number | null)[];
   currentDate: Date;
   variant?: "total" | "employee";
+  selectedEmployee?: EmployeeInfo | null;
+  workplace?: string;
 }
 
-const PeriodAttCalendarGrid = ({ calendar, currentDate, variant = "total" }: Props) => {
+const PeriodAttCalendarGrid = ({
+  calendar,
+  currentDate,
+  variant = "total",
+  selectedEmployee,
+  workplace,
+}: Props) => {
   const isMobile = useIsMobile();
   if (isMobile) {
     const year = dayjs(currentDate).format("YYYY");
@@ -38,10 +48,13 @@ const PeriodAttCalendarGrid = ({ calendar, currentDate, variant = "total" }: Pro
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-white-border-sub p-6 dark:border-dark-border-sub">
-      <div className="sticky top-0 z-20 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text">
-        {variant === "total" ? "본사 전체 근태 현황" : "오민택님의 근태 현황"}
+    <div className="overflow-hidden rounded-lg border border-white-border-sub px-6 dark:border-dark-border-sub">
+      <div className="sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text">
+        {variant === "total"
+          ? `${workplace === "전체" ? "본사" : workplace} 전체 근태 현황`
+          : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
       </div>
+
       <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-white-bg pb-2 pt-2 text-center font-medium text-white-text dark:border-dark-border-sub dark:bg-white-bg dark:text-white-text">
         {DAYS.map(day => (
           <div key={day}>{day}</div>

@@ -7,6 +7,12 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import AutoCompleteUserInput from "@/components/common/AutoCompleteInput";
+import { useUserStore } from "@/store/user.store";
+import { useState } from "react";
+import { EmployeeInfo } from "@/model/types/user.type";
+import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
+import { useCompanyStore } from "@/store/company.store";
 
 interface Props {
   type: "total" | "employee";
@@ -18,6 +24,8 @@ interface Props {
   setWorkTypeFilter?: (v: string) => void;
   employeeName?: string;
   setEmployeeName?: (v: string) => void;
+  selectedEmployee?: EmployeeInfo | null;
+  setSelectedEmployee?: (emp: EmployeeInfo | null) => void;
 }
 
 const PeriodAttFilterSection = ({
@@ -30,15 +38,20 @@ const PeriodAttFilterSection = ({
   setWorkTypeFilter,
   employeeName,
   setEmployeeName,
+  setSelectedEmployee,
 }: Props) => {
+  const [inputValue, setInputValue] = useState("");
+  const { employeeList } = useEmployeeList();
+  const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList);
+
   return (
-    <div className="mt-4 flex flex-col gap-4 px-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
+    <div className="flex flex-col gap-3 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
       <div className="flex justify-center py-2 sm:justify-start">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-        {/* 근무지 필터 - total에서만 */}
+        {/* 근무지 필터 - total */}
         {type === "total" && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
             <label className="mb-1 text-sm font-medium text-muted-foreground">근무지</label>
@@ -48,26 +61,32 @@ const PeriodAttFilterSection = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="전체">전체</SelectItem>
-                <SelectItem value="본사">본사</SelectItem>
-                <SelectItem value="지점A">지점 A</SelectItem>
-                <SelectItem value="지점B">지점 B</SelectItem>
+                {workPlacesList?.map(place => (
+                  <SelectItem key={place.id} value={place.name}>
+                    {place.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         )}
 
-        {/* 사원 이름 필터 - employee에서만 */}
+        {/* 직원 이름 필터 - employee */}
         {type === "employee" && employeeName !== undefined && setEmployeeName && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+          <div className="flex flex-col py-1 sm:flex-row sm:items-center sm:gap-3">
             <label className="mb-1 whitespace-nowrap text-sm font-medium text-muted-foreground sm:mb-0">
               직원 검색
             </label>
-            <Input
-              className="h-[40px] w-full min-w-[140px] sm:w-[180px]"
-              placeholder="이름 입력"
-              value={employeeName}
-              onChange={e => setEmployeeName(e.target.value)}
-            />
+            <div className="w-full min-w-[160px] sm:w-[240px]">
+              <AutoCompleteUserInput
+                users={employeeList}
+                onSelect={(emp: EmployeeInfo | null) => {
+                  setSelectedEmployee?.(emp);
+                  setInputValue(`${emp?.name} (${emp?.email})`);
+                  setEmployeeName?.(emp?.name || "");
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -91,7 +110,7 @@ const PeriodAttFilterSection = ({
 
       {/* 범례 - employee */}
       {type === "employee" && (
-        <div className="mx-1 mb-2 flex flex-1 flex-wrap items-center gap-3 text-sm text-muted-foreground">
+        <div className="mx-1 mb-3 flex flex-1 flex-wrap items-center gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <span>※</span>
           </div>
