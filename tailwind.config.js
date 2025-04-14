@@ -24,6 +24,7 @@ export default {
         "white-border-sub": "#00000033",
         "white-nav-text": "#6F6F6F",
         "white-nav-selected": "#000000",
+        "white-hover": "#f3f4f6",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

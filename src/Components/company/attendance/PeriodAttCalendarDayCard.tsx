@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Props {
   day: number;
@@ -8,8 +9,18 @@ interface Props {
 }
 
 const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total" }: Props) => {
+  const navigate = useNavigate();
+  const { companyCode } = useParams();
+
   return (
-    <Card className="flex h-[120px] flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub sm:h-[140px] md:h-[160px] lg:h-[120px]">
+    <Card
+      onClick={() => {
+        if (variant === "total" && companyCode) {
+          navigate(`/${companyCode}/todayatt`);
+        }
+      }}
+      className="hover:bg-white-hover flex h-[120px] cursor-pointer flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub dark:hover:bg-white-border sm:h-[140px] md:h-[160px] lg:h-[120px]"
+    >
       {/* 상단 날짜 */}
       <div className="mb-1 flex items-center justify-between text-[15px] font-medium">
         <span
