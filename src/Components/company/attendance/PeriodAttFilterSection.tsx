@@ -45,7 +45,7 @@ const PeriodAttFilterSection = ({
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   return (
-    <div className="flex flex-col gap-3 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
+    <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
       <div className="flex justify-center py-2 sm:justify-start">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>
@@ -56,7 +56,7 @@ const PeriodAttFilterSection = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
             <label className="mb-1 text-sm font-medium text-muted-foreground">근무지</label>
             <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>
-              <SelectTrigger className="w-full min-w-[140px] sm:w-[160px]">
+              <SelectTrigger className="w-full min-w-[140px] sm:w-[180px]">
                 <SelectValue placeholder="근무지 선택" />
               </SelectTrigger>
               <SelectContent>
@@ -77,7 +77,7 @@ const PeriodAttFilterSection = ({
             <label className="mb-1 whitespace-nowrap text-sm font-medium text-muted-foreground sm:mb-0">
               직원 검색
             </label>
-            <div className="w-full min-w-[160px] sm:w-[240px]">
+            <div className="w-full min-w-[160px] sm:w-[220px]">
               <AutoCompleteUserInput
                 users={employeeList}
                 onSelect={(emp: EmployeeInfo | null) => {
@@ -110,9 +110,15 @@ const PeriodAttFilterSection = ({
 
       {/* 범례 - employee */}
       {type === "employee" && (
-        <div className="mx-1 mb-3 flex flex-1 flex-wrap items-center gap-3 text-sm text-muted-foreground">
+        <div className="mx-1 mb-3 flex flex-1 flex-wrap items-center gap-2 text-sm text-muted-foreground sm:flex-nowrap">
+          <span>※</span>
           <div className="flex items-center gap-1">
-            <span>※</span>
+            <span className="h-3 w-3 rounded-full bg-red-300" />
+            <span>공휴일</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="h-3 w-3 rounded-full bg-yellow-300" />
+            <span>회사 공휴일</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="h-3 w-3 rounded-full bg-green-400" />

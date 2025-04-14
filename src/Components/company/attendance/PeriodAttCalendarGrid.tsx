@@ -3,7 +3,6 @@ import PeriodAttCalendarDayCard from "./PeriodAttCalendarDayCard";
 import PeriodAttCalendarList from "./PeriodAttCalendarList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import dayjs from "dayjs";
-import { useState } from "react";
 import { EmployeeInfo } from "@/model/types/user.type";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -48,14 +47,14 @@ const PeriodAttCalendarGrid = ({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-white-border-sub px-6 dark:border-dark-border-sub">
-      <div className="sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text">
+    <div className="overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 dark:border-dark-border-sub">
+      <div className="dark:bg-vacation-dark-color sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text">
         {variant === "total"
-          ? `${workplace === "전체" ? "본사" : workplace} 전체 근태 현황`
+          ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
           : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
       </div>
 
-      <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-white-bg pb-2 pt-2 text-center font-medium text-white-text dark:border-dark-border-sub dark:bg-white-bg dark:text-white-text">
+      <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-white-bg pb-2 pt-2 text-center font-medium text-white-text dark:border-dark-border-sub dark:bg-dark-bg dark:text-dark-text">
         {DAYS.map(day => (
           <div key={day}>{day}</div>
         ))}
@@ -64,13 +63,20 @@ const PeriodAttCalendarGrid = ({
       <div className="grid grid-cols-7">
         {calendar.map((day, idx) => {
           const isSunday = idx % 7 === 0;
+          const isSaturday = idx % 7 === 6;
 
           return day ? (
-            <PeriodAttCalendarDayCard key={idx} day={day} isSunday={isSunday} variant={variant} />
+            <PeriodAttCalendarDayCard
+              key={idx}
+              day={day}
+              isSunday={isSunday}
+              isSaturday={isSaturday}
+              variant={variant}
+            />
           ) : (
             <Card
               key={idx}
-              className="h-[120px] rounded-none border-[0.5px] border-solid border-white-border-sub dark:border-dark-border-sub"
+              className="h-[120px] rounded-none border-[0.5px] border-solid border-white-border-sub dark:border-dark-border-sub sm:h-[140px] md:h-[160px] lg:h-[120px]"
             />
           );
         })}

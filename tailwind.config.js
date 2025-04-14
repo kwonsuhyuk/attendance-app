@@ -9,6 +9,7 @@ export default {
       colors: {
         "point-color": "#FFD369",
         "vacation-color": "#609966",
+        "vacation-dark-color": "#325834",
         "dark-bg": "#09090B",
         "dark-card-bg": "#202020",
         "dark-text": "#FFFFFF",
