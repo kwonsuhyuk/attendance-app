@@ -32,7 +32,7 @@ const PeriodAttFilterSection = ({
   setEmployeeName,
 }: Props) => {
   return (
-    <div className="flex flex-col gap-4 px-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
+    <div className="mt-4 flex flex-col gap-4 px-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
       <div className="flex justify-center py-2 sm:justify-start">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>
