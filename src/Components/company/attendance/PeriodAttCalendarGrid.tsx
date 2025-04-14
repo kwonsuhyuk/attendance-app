@@ -30,7 +30,9 @@ const PeriodAttCalendarGrid = ({
     return (
       <div className="px-2">
         <div className="rounded-t-lg bg-vacation-color py-4 pl-4 text-left text-base font-semibold text-dark-text">
-          {variant === "total" ? "본사 전체 근태 현황" : "오민택님의 근태 현황"}
+          {variant === "total"
+            ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
+            : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
         </div>
         {calendar
           .filter(day => day !== null)

@@ -1,15 +1,14 @@
-import { useState } from "react";
 import Seo from "@/components/Seo";
 import PeriodAttCalendarGrid from "@/components/company/attendance/PeriodAttCalendarGrid";
 import PeriodAttFilterSection from "@/components/company/attendance/PeriodAttFilterSection";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import dayjs from "dayjs";
 import { Card } from "@/components/ui/card";
 import AttendancePageContainer from "@/components/container/manager/AttendancePageContainer";
-import { EmployeeInfo } from "@/model/types/user.type";
 import usePeriodAttendance from "@/hooks/manager/usePeriodAttendance";
+import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 
 const PeriodAttendancePage = () => {
+  const { employeeList } = useEmployeeList();
   const {
     tab,
     setTab,
@@ -24,7 +23,7 @@ const PeriodAttendancePage = () => {
     selectedEmployee,
     setSelectedEmployee,
     calendar,
-  } = usePeriodAttendance();
+  } = usePeriodAttendance(employeeList);
 
   const tabTriggerBaseClass =
     "rounded-t-md border border-b-0 border-white-border-sub px-1 py-2 text-base font-semibold " +
