@@ -26,7 +26,6 @@ const AutoCompleteUserInput = ({
     }
   }, [value]);
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
@@ -47,7 +46,7 @@ const AutoCompleteUserInput = ({
     setShowSuggestions(false);
     onSelect(user);
   };
-  
+
   const handleClearClick = () => {
     setInputValue("");
     setFilteredUsers([]);

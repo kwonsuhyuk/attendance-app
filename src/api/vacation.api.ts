@@ -7,7 +7,7 @@ import {
   getVacationRequestListPath,
 } from "@/constants/api.path";
 
-// 휴가 요청 (현재 사용 x, 추후 기능 추가 예정)
+// 휴가 요청 생성
 export const createVacationRequest = (
   companyCode: string,
   requestId: string,
@@ -17,17 +17,17 @@ export const createVacationRequest = (
   return setData(path, data, "휴가 요청이 등록되었습니다.");
 };
 
-// 휴가 요청 조회 (현재 사용 x, 추후 기능 추가 예정)
+// 휴가 요청 조회
 export const fetchVacationRequests = (companyCode: string) => {
   const path = getVacationRequestListPath(companyCode);
   return getData<Record<string, TVacationRequest>>(path);
 };
 
-// 휴가 요청 상태 업데이트 (현재 사용 x, 추후 기능 추가 예정)
+// 휴가 요청 상태 업데이트
 export const updateVacationRequestStatus = (
   companyCode: string,
   requestId: string,
-  status: "승인됨" | "거절됨",
+  status: "승인" | "거절",
   processedAt: string = new Date().toISOString(),
 ) => {
   const path = `${getVacationRequestListPath(companyCode)}/${requestId}`;
@@ -97,4 +97,3 @@ export async function fetchRegisteredVacationsByMonth(
 
   return await getData(path);
 }
-

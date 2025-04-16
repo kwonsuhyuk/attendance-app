@@ -1,13 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         "point-color": "#FFD369",
+        "vacation-color": "#609966",
+        "vacation-dark-color": "#325834",
         "dark-bg": "#09090B",
         "dark-card-bg": "#202020",
         "dark-text": "#FFFFFF",
@@ -22,6 +24,7 @@ export default {
         "white-border-sub": "#00000033",
         "white-nav-text": "#6F6F6F",
         "white-nav-selected": "#000000",
+        "white-hover": "#f3f4f6",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -85,9 +88,27 @@ export default {
             width: "100%",
           },
         },
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
       },
       animation: {
         underline: "underline 0.5s ease-in-out forwards",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       borderRadius: {
         lg: "var(--radius)",

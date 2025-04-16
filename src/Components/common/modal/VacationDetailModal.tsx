@@ -8,7 +8,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
-import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { StatusBadge } from "@/components/company/table/VacationColumns";
 import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";
@@ -16,8 +15,8 @@ import { useVacationDetailModal } from "@/hooks/manager/useVacationDetailModal";
 interface IVacationDetailModalProps {
   request: IVacationRequest;
   onClose: () => void;
-  onApprove: (id: number) => void;
-  onReject: (id: number) => void;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
 }
 
 const VacationDetailModal: React.FC<IVacationDetailModalProps> = ({

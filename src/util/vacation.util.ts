@@ -1,3 +1,4 @@
+import { TVacationRequest } from "@/model/types/vacation.type";
 import { addDays, eachDayOfInterval, endOfMonth, format, parseISO, startOfMonth } from "date-fns";
 
 export const flattenVacationEntries = (entries: any[], uid?: string) => {
@@ -63,4 +64,34 @@ export const getFilteredDetails = ({
   }
 
   return [];
+};
+
+export const calculateVacationDaysByType = (requests: TVacationRequest[]) => {
+  const result = {
+    totalDays: 0,
+    annual: 0,
+    half: 0,
+    special: 0,
+  };
+
+  requests.forEach(request => {
+    const start = new Date(request.startDate);
+    const end = new Date(request.endDate);
+    const duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+    // 승인된 휴가만 계산
+    if (request.status !== "승인") return;
+
+    if (request.vacationType === "연차") {
+      result.annual += duration;
+    } else if (request.vacationType === "반차") {
+      result.half += 0.5; // 반차는 보통 0.5일로 간주
+    } else if (request.vacationType === "특별") {
+      result.special += duration;
+    }
+
+    result.totalDays = result.annual + result.half + result.special;
+  });
+
+  return result;
 };

@@ -10,8 +10,10 @@ export const MAIN_ROUTES = {
 
 export const EMPLOYEE_ROUTES = {
   COMMUTE: "/camera",
-  APP_GUIDE: "/appguide",
   EMPLOYEE_DATE_CHECK: "/calendar",
+  MY_VACATION: "/myvacation",
+  APP_GUIDE: "/appguide",
+  EMPLOYEE_MENU: "/employeemenu",
 };
 
 export const MANAGER_ROUTES = {
@@ -21,15 +23,15 @@ export const MANAGER_ROUTES = {
   WORKPLACE_MANAGE: "/workplacemanage",
   CALENDAR: "/datecheck/:id",
   TODAY_ATT: "/todayatt",
-  PERIROD_ATT: "/perirodatt",
+  PERIOD_ATT: "/periodatt",
   VACATION_STATISTIC: "/vacationstatistic",
   VACATION_DETAIL: "/vacationdetail",
-  NOTICE: "/notice",
   COMPANY_INFO: "/companyinfo",
   HOLIDAY_MANAGE: "/holidaymanage",
 };
 
 export const COMMON_ROUTES = {
   COMPANY_MAIN: "/companymain",
+  NOTICE: "/notice",
   ABOUT: "/about",
 };

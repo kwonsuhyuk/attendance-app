@@ -11,10 +11,16 @@ import { LogOut } from "lucide-react";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
+import { useCompanyStore } from "@/store/company.store";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import CompanySummaryInfo from "../CompanySummaryInfo";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
   const { isMobile } = useSidebar();
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
   return (
     <Sidebar
@@ -24,8 +30,9 @@ export const ManagerMenuBar = () => {
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 border-solid border-dark-border bg-dark-card-bg p-4 font-bold dark:bg-dark-bg">
         <AppTitle className="text-white" />
       </SidebarHeader>
-
       <SidebarContent className="overflow-y-auto dark:bg-dark-bg">
+        <CompanySummaryInfo companyLogo={companyLogo} companyName={companyName} />
+        <Separator className="bg-border dark:bg-dark-border" />
         <ManagerMenuBarList />
       </SidebarContent>
 

@@ -31,7 +31,9 @@ const NavTitle = () => {
   const normalizedPath = currentPath.replace(/^\/[^/]+(\/[^/]+)?/, "$1") || "/";
   const title = findTitle(MENU_STRUCTURE as MenuItem[], normalizedPath);
 
-  return <div className="text-lg font-bold text-dark-text">{title || "페이지 없음"}</div>;
+  return (
+    <div className="hidden text-lg font-bold text-dark-text md:block">{title || "페이지 없음"}</div>
+  );
 };
 
 export default NavTitle;

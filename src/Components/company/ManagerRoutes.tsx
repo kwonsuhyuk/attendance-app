@@ -14,7 +14,6 @@ import NoticePage from "@/pages/manager/NoticePage";
 import Layout from "@/layout/ManagerLayout";
 import CompanyInfoPage from "@/pages/manager/CompanyInfoPage";
 import HolidayNightManagePage from "@/pages/manager/HolidayNightManagePage";
-import VacationStatisticDetailPage from "@/pages/manager/VacationStatisticDetailPage";
 
 const ManagerRoutes = () => {
   return (
@@ -25,12 +24,12 @@ const ManagerRoutes = () => {
         <Route path={MANAGER_ROUTES.CALENDAR} element={<DateCheckPage />} />
         <Route path={COMMON_ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={MANAGER_ROUTES.TODAY_ATT} element={<TodayAttenancePage />} />
-        <Route path={MANAGER_ROUTES.PERIROD_ATT} element={<PeriodAttendancePage />} />
+        <Route path={MANAGER_ROUTES.PERIOD_ATT} element={<PeriodAttendancePage />} />
         <Route path={MANAGER_ROUTES.POSITION_MANAGE} element={<PositionManagePage />} />
         <Route path={MANAGER_ROUTES.WORKPLACE_MANAGE} element={<WorkplaceManagePage />} />
         <Route path={MANAGER_ROUTES.VACATION_STATISTIC} element={<VacationStatisticPage />} />
         <Route path={MANAGER_ROUTES.VACATION_DETAIL} element={<VacationDetailPage />} />
-        <Route path={MANAGER_ROUTES.NOTICE} element={<NoticePage />} />
+        <Route path={COMMON_ROUTES.NOTICE} element={<NoticePage />} />
         <Route path={MANAGER_ROUTES.COMPANY_INFO} element={<CompanyInfoPage />} />
         <Route path={MANAGER_ROUTES.HOLIDAY_MANAGE} element={<HolidayNightManagePage />} />
       </Routes>
