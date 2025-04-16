@@ -19,7 +19,7 @@ const CommuteBox = () => {
   const { status, commuteData, isLoading } = useCommuteStatus(companyCode, userId);
 
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList ?? []);
-
+  console.log(status);
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(interval);
@@ -32,7 +32,9 @@ const CommuteBox = () => {
 
   const getWorkplaceInfo = (type: "startPlace" | "endPlace") => {
     const id = type === "startPlace" ? commuteData?.startWorkplaceId : commuteData?.endWorkplaceId;
-
+    if (id === "외근") {
+      return { name: "외근", address: "" };
+    }
     return workPlacesList.find(place => place.id === id);
   };
 
@@ -124,7 +126,6 @@ const CommuteBox = () => {
               <Sparkles className="h-6 w-6 text-amber-600 dark:text-amber-400" />
               오늘도 수고 많으셨습니다!
             </div>
-
             {commuteData?.startTime && startWorkplace && (
               <div className="flex items-center justify-between gap-3 rounded-md bg-green-200 px-4 py-3 text-sm text-green-800 shadow-sm dark:bg-green-700 dark:text-green-100">
                 <div className="flex shrink-0 items-center gap-2">
@@ -180,6 +181,45 @@ const CommuteBox = () => {
             >
               출근하기
             </Button>
+          </div>
+        );
+      case "out-working":
+        return (
+          <div
+            className={`${baseContainer} border border-amber-300 bg-amber-50 dark:border-yellow-900 dark:bg-zinc-900`}
+          >
+            <div className="flex items-center gap-3 text-base font-semibold text-amber-800 dark:text-yellow-200">
+              <MapPin className="h-5 w-5 text-amber-700 dark:text-yellow-300" />
+              외근 중
+            </div>
+
+            <div className="rounded-xl bg-white p-5 shadow-sm dark:bg-zinc-800">
+              <div className="text-xl font-bold text-gray-900 dark:text-white">
+                금일은 외근입니다
+              </div>
+              {commuteData?.outworkingMemo && (
+                <p className="mt-2 text-sm italic text-gray-600 dark:text-gray-300">
+                  “{commuteData.outworkingMemo}”
+                </p>
+              )}
+            </div>
+
+            {commuteData?.startTime && (
+              <div className="flex items-center justify-between gap-3 rounded-md bg-amber-100 px-4 py-3 text-sm text-amber-900 shadow-inner dark:bg-yellow-800 dark:text-yellow-100">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-amber-700 dark:text-yellow-300" />
+                  <span className="font-medium">출근</span>
+                </div>
+                <span className="shrink-0 text-xs font-semibold">
+                  {getKSTDateInfo(commuteData.startTime)}
+                </span>
+              </div>
+            )}
+
+            <div className="mt-2 rounded-md bg-amber-100 px-4 py-2 text-sm text-amber-700 dark:bg-yellow-700 dark:text-yellow-100">
+              외근으로 출근이 처리되었습니다. <br />
+              별도의 퇴근 처리는 필요하지 않습니다.
+            </div>
           </div>
         );
 

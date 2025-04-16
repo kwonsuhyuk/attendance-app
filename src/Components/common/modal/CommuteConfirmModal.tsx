@@ -21,10 +21,18 @@ interface CommuteConfirmModalProps {
     address: string;
     memo?: string;
   };
+  isCheckoutMode: boolean;
 }
 
-const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfirmModalProps) => {
+const CommuteConfirmModal = ({
+  open,
+  onConfirm,
+  onCancel,
+  place,
+  isCheckoutMode,
+}: CommuteConfirmModalProps) => {
   const [currentTime, setCurrentTime] = useState(() => format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+
   const { name, employmentType, jobName } = useUserStore(
     useShallow(state => {
       const user = state.currentUser as TEmpUserData;
@@ -41,17 +49,27 @@ const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfir
     const interval = setInterval(() => {
       setCurrentTime(format(new Date(), "yyyy-MM-dd HH:mm:ss"));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [open]);
+
+  const actionText = isCheckoutMode ? "퇴근" : "출근";
+  const timeLabel = isCheckoutMode ? "퇴근 시간" : "출근 시간";
+  const confirmButtonColor = isCheckoutMode
+    ? "bg-orange-500 hover:bg-orange-600"
+    : "bg-green-500 hover:bg-green-600";
+  const warningText = isCheckoutMode
+    ? "⚠️ 퇴근 후에는 수정이 어렵습니다."
+    : "⚠️ 출근 후에는 취소할 수 없습니다.";
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
       <DialogContent className="z-[110] max-w-[90vw] bg-white sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-black dark:text-black">출근 확인</DialogTitle>
+          <DialogTitle className={`text-lg font-bold text-black dark:text-black`}>
+            {actionText} 확인
+          </DialogTitle>
           <DialogDescription>
-            <p className="mt-2 text-xs text-red-500">⚠️ 출근 후에는 취소할 수 없습니다.</p>
+            <p className="mt-2 text-xs text-red-500">{warningText}</p>
           </DialogDescription>
         </DialogHeader>
 
@@ -72,14 +90,16 @@ const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfir
               </div>
             )}
           </div>
+
           <div className="flex justify-between border-t pt-4 text-sm">
             <span className="text-gray-500">유저 정보</span>
             <span className="font-medium text-gray-800">
               {name}/{jobName}/{employmentType}
             </span>
           </div>
+
           <div className="flex justify-between border-t pt-2 text-sm">
-            <span className="text-gray-500">출근 시간</span>
+            <span className="text-gray-500">{timeLabel}</span>
             <span className="font-medium text-gray-800">{currentTime}</span>
           </div>
         </div>
@@ -88,8 +108,8 @@ const CommuteConfirmModal = ({ open, onConfirm, onCancel, place }: CommuteConfir
           <Button className="bg-gray-100 text-gray-800 dark:bg-gray-100" onClick={onCancel}>
             취소
           </Button>
-          <Button className="bg-point-color text-gray-800" onClick={onConfirm}>
-            출근하기
+          <Button className={`${confirmButtonColor} text-white`} onClick={onConfirm}>
+            {actionText}하기
           </Button>
         </div>
       </DialogContent>
