@@ -40,7 +40,6 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
         )}
       </div>
 
-      {/* total: 상태별 정보, employee: 내용 없음 */}
       {variant === "total" ? (
         <div className="grid grid-cols-1 gap-1 lg:grid-cols-2">
           {[
@@ -59,7 +58,7 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
           ))}
         </div>
       ) : (
-        <div className="flex flex-col text-base text-muted-foreground">
+        <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
             <span>근무지A 출근 09:00</span>

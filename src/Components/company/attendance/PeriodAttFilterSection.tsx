@@ -110,7 +110,7 @@ const PeriodAttFilterSection = ({
 
       {/* 범례 - employee */}
       {type === "employee" && (
-        <div className="mx-1 mb-3 flex flex-1 flex-wrap items-center gap-2 text-sm text-muted-foreground sm:flex-nowrap">
+        <div className="mx-1 mb-3 flex flex-1 flex-wrap items-center gap-2 text-sm text-muted-foreground sm:flex-nowrap md:flex-wrap">
           <span>※</span>
           <div className="flex items-center gap-1">
             <span className="h-3 w-3 rounded-full bg-red-300" />

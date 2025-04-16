@@ -28,7 +28,7 @@ const PeriodAttCalendarGrid = ({
     const month = dayjs(currentDate).format("MM");
 
     return (
-      <div className="px-2">
+      <div className="p-2">
         <div className="rounded-t-lg bg-vacation-color py-4 pl-4 text-left text-base font-semibold text-dark-text">
           {variant === "total"
             ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
@@ -40,8 +40,13 @@ const PeriodAttCalendarGrid = ({
             <PeriodAttCalendarList
               key={idx}
               date={`${year}-${month}-${String(day).padStart(2, "0")}`}
-              checkIn={{ time: "09:00", workplace: "근무지A" }} // 이후 실제 데이터로 교체
-              checkOut={{ time: "18:00", workplace: "근무지A" }} // 이후 실제 데이터로 교체
+              variant={variant}
+              checkIn={variant === "employee" ? { time: "09:00", workplace: "근무지A" } : undefined}
+              checkOut={
+                variant === "employee" ? { time: "21:00", workplace: "근무지B" } : undefined
+              }
+              isHoliday={true}
+              isCompanyHoliday={false}
             />
           ))}
       </div>
