@@ -2,6 +2,7 @@ import {
   Bell,
   BookOpenCheck,
   Calendar,
+  CheckCheck,
   Clock,
   Home,
   Info,
@@ -73,6 +74,11 @@ export const EMPLOYEE_SUB_MENUS = (companyCode: string) => [
     icon: <Megaphone className="h-5 w-5 text-primary" />,
     label: "회사 공지사항",
     path: `/${companyCode}/notice`,
+  },
+  {
+    icon: <CheckCheck className="h-5 w-5 text-primary" />,
+    label: "출퇴근 등록",
+    path: `/${companyCode}/commute`,
   },
   {
     icon: <BookOpenCheck className="h-5 w-5 text-primary" />,

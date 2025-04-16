@@ -11,7 +11,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { formatMoney } from "../../util/formatMoney.util";
 import { toast } from "react-toastify";
-import convertTime from "@/util/formatTime.util";
+import convertTime from "@/util/time.util";
 import { useTour } from "@reactour/tour";
 import Loading from "@/components/common/Loading";
 import {
