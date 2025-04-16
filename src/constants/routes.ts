@@ -23,7 +23,7 @@ export const MANAGER_ROUTES = {
   WORKPLACE_MANAGE: "/workplacemanage",
   CALENDAR: "/datecheck/:id",
   TODAY_ATT: "/todayatt",
-  PERIROD_ATT: "/perirodatt",
+  PERIOD_ATT: "/periodatt",
   VACATION_STATISTIC: "/vacationstatistic",
   VACATION_DETAIL: "/vacationdetail",
   COMPANY_INFO: "/companyinfo",

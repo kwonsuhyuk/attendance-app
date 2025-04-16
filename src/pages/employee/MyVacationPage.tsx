@@ -14,6 +14,7 @@ import { TVacationStatus } from "@/model/types/vacation.type";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import VacationFilterButtons from "@/components/employee/vacation/EmployeeVacationTableFilterButton";
 import VacationListSection from "@/components/employee/vacation/EmployeeVacationListSection";
+import Seo from "@/components/Seo";
 
 const MyVacationPage = () => {
   const { companyCode } = useParams();
@@ -55,42 +56,45 @@ const MyVacationPage = () => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 sm:py-5">
-      <EmployeeVacationYearFilter
-        setDate={setDate}
-        setCurrentPage={setCurrentPage}
-        year={year}
-        yearFilteredRequests={yearFilteredRequests}
-      />
-
-      <Button className="w-full cursor-pointer" onClick={toggleModal}>
-        휴가 요청
-      </Button>
-
-      <Card className="relative flex flex-col gap-5 p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg">
-        <div className="flex items-center gap-2 text-base font-semibold">
-          <PlaneTakeoff className="h-5 w-5 text-primary" />
-          <CardTitle className="text-base">휴가 내역</CardTitle>
-        </div>
-
-        <VacationFilterButtons
-          filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
-          resetPage={() => setCurrentPage(0)}
-        />
-
-        <VacationListSection
-          loading={loading}
-          error={!!error}
-          requests={paginatedRequests}
-          currentPage={currentPage}
-          totalPageCount={totalPageCount}
+    <>
+      <Seo title="휴가 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
+      <div className="flex w-full flex-col gap-4 sm:py-5">
+        <EmployeeVacationYearFilter
+          setDate={setDate}
           setCurrentPage={setCurrentPage}
+          year={year}
+          yearFilteredRequests={yearFilteredRequests}
         />
-      </Card>
 
-      {isModalOpen && <VacationRequestModal onClose={toggleModal} onRegister={handleSubmit} />}
-    </div>
+        <Button className="w-full cursor-pointer" onClick={toggleModal}>
+          휴가 요청
+        </Button>
+
+        <Card className="relative flex flex-col gap-5 p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg">
+          <div className="flex items-center gap-2 text-base font-semibold">
+            <PlaneTakeoff className="h-5 w-5 text-primary" />
+            <CardTitle className="text-base">휴가 내역</CardTitle>
+          </div>
+
+          <VacationFilterButtons
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            resetPage={() => setCurrentPage(0)}
+          />
+
+          <VacationListSection
+            loading={loading}
+            error={!!error}
+            requests={paginatedRequests}
+            currentPage={currentPage}
+            totalPageCount={totalPageCount}
+            setCurrentPage={setCurrentPage}
+          />
+        </Card>
+
+        {isModalOpen && <VacationRequestModal onClose={toggleModal} onRegister={handleSubmit} />}
+      </div>
+    </>
   );
 };
 

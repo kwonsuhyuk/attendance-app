@@ -24,7 +24,7 @@ const ManagerRoutes = () => {
         <Route path={MANAGER_ROUTES.CALENDAR} element={<DateCheckPage />} />
         <Route path={COMMON_ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={MANAGER_ROUTES.TODAY_ATT} element={<TodayAttenancePage />} />
-        <Route path={MANAGER_ROUTES.PERIROD_ATT} element={<PeriodAttendancePage />} />
+        <Route path={MANAGER_ROUTES.PERIOD_ATT} element={<PeriodAttendancePage />} />
         <Route path={MANAGER_ROUTES.POSITION_MANAGE} element={<PositionManagePage />} />
         <Route path={MANAGER_ROUTES.WORKPLACE_MANAGE} element={<WorkplaceManagePage />} />
         <Route path={MANAGER_ROUTES.VACATION_STATISTIC} element={<VacationStatisticPage />} />

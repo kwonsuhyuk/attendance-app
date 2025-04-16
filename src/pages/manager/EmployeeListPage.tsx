@@ -5,6 +5,7 @@ import EmployeeFilter from "@/components/company/table/EmployeeFilter";
 import EmployeeListPageContainer from "@/components/container/manager/EmployeeListPageContainer";
 import Pagination from "@/components/ui/pagination";
 import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
+import Seo from "@/components/Seo";
 
 const EmployeeListPage = () => {
   const {
@@ -28,42 +29,52 @@ const EmployeeListPage = () => {
   const columns = getEmployeeColumns();
 
   return (
-    <EmployeeListPageContainer>
-      <div className="flex flex-col">
-        <div className="p-6">
-          <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+    <>
+      <Seo
+        title="직원 관리 | On & Off"
+        description="On & Off에서 근태관리 서비스를 이용해보세요."
+      />
+      <EmployeeListPageContainer>
+        <div className="flex flex-col">
+          <div className="p-6">
+            <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
+            </div>
+            <EmployeeFilter
+              register={register}
+              setValue={setValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+            />
           </div>
-          <EmployeeFilter
-            register={register}
-            setValue={setValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
+
+          <div className="flex-1 px-2">
+            <DataTable
+              columns={columns}
+              data={paginatedEmployees}
+              onRowClick={setSelectedEmployee}
+            />
+          </div>
+
+          <div className="w-full p-2">
+            <Pagination
+              page={page}
+              totalPageCount={totalPageCount}
+              onNext={handleNextPage}
+              onPrevious={handlePreviousPage}
+            />
+          </div>
+        </div>
+
+        {selectedEmployee && (
+          <EmployeeModifyModal
+            user={selectedEmployee}
+            onClose={handleClose}
+            setIsUpdated={setIsUpdated}
           />
-        </div>
-
-        <div className="flex-1 px-2">
-          <DataTable columns={columns} data={paginatedEmployees} onRowClick={setSelectedEmployee} />
-        </div>
-
-        <div className="w-full p-2">
-          <Pagination
-            page={page}
-            totalPageCount={totalPageCount}
-            onNext={handleNextPage}
-            onPrevious={handlePreviousPage}
-          />
-        </div>
-      </div>
-
-      {selectedEmployee && (
-        <EmployeeModifyModal
-          user={selectedEmployee}
-          onClose={handleClose}
-          setIsUpdated={setIsUpdated}
-        />
-      )}
-    </EmployeeListPageContainer>
+        )}
+      </EmployeeListPageContainer>
+    </>
   );
 };
 

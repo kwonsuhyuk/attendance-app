@@ -8,6 +8,11 @@ const navItems = [
     path: "companymain",
     icon: <Home className="h-5 w-5" />,
   },
+  // {
+  //   title: "공지사항",
+  //   path: "notice",
+  //   icon: <Megaphone className="h-5 w-5" />,
+  // },
   {
     title: "출퇴근기록",
     path: "calendar",

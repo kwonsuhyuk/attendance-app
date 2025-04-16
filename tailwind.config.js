@@ -9,6 +9,7 @@ export default {
       colors: {
         "point-color": "#FFD369",
         "vacation-color": "#609966",
+        "vacation-dark-color": "#325834",
         "dark-bg": "#09090B",
         "dark-card-bg": "#202020",
         "dark-text": "#FFFFFF",
@@ -23,6 +24,7 @@ export default {
         "white-border-sub": "#00000033",
         "white-nav-text": "#6F6F6F",
         "white-nav-selected": "#000000",
+        "white-hover": "#f3f4f6",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

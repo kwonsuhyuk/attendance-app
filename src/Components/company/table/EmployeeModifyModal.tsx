@@ -49,7 +49,12 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
         <DialogHeader className="relative flex justify-between">
           <div className="flex items-center gap-4">
             <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
-            <Link to={`/${companyCode}/datecheck/${user.uid}`}>
+            <Link
+              to={{
+                pathname: `/${companyCode}/periodatt`,
+                search: `?tab=employee&userId=${user.uid}`,
+              }}
+            >
               <Button
                 variant="outline"
                 className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
