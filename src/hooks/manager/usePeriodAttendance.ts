@@ -1,8 +1,10 @@
-// hooks/usePeriodAttendance.ts
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { EmployeeInfo } from "@/model/types/user.type";
 import { useLocation } from "react-router-dom";
+import { EmployeeInfo } from "@/model/types/user.type";
+import { TCalendarDayInfo, TCommuteData } from "@/model/types/commute.type";
+import { fetchCalendarSummaryByWorkplace, fetchCommutesByPeriod } from "@/api/commute.api";
+import { useUserStore } from "@/store/user.store";
 
 const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const [tab, setTab] = useState<"total" | "employee" | "">("total");
@@ -11,19 +13,11 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const [workTypeFilter, setWorkTypeFilter] = useState("전체");
   const [employeeName, setEmployeeName] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
-  const location = useLocation();
+  const [calendar, setCalendar] = useState<(TCalendarDayInfo | null)[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const calendar = useMemo(() => {
-    const startOfMonth = dayjs(currentDate).startOf("month").day();
-    const daysInMonth = dayjs(currentDate).daysInMonth();
-    const totalCells = Math.ceil((startOfMonth + daysInMonth) / 7) * 7;
-
-    return Array.from({ length: totalCells }, (_, i) => {
-      const day = i - startOfMonth + 1;
-      return day > 0 && day <= daysInMonth ? day : null;
-    });
-  }, [currentDate]);
+  const location = useLocation();
+  const companyCode = useUserStore(state => state.currentUser?.companyCode);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -41,6 +35,39 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
       }
     }
   }, [location.search, employeeList, isInitialized]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!companyCode) return;
+
+      const year = dayjs(currentDate).format("YYYY");
+      const month = dayjs(currentDate).format("MM");
+
+      if (tab === "total") {
+        const summary = await fetchCalendarSummaryByWorkplace(
+          companyCode,
+          year,
+          month,
+          workplaceFilter,
+        );
+        setCalendar(summary);
+      }
+
+      if (tab === "employee") {
+        if (!selectedEmployee) {
+          const empty = mapCommuteDataToCalendar(null, currentDate);
+          setCalendar(empty);
+          return;
+        }
+
+        const raw = await fetchCommutesByPeriod(companyCode, selectedEmployee.uid, year, month);
+        const converted = mapCommuteDataToCalendar(raw, currentDate);
+        setCalendar(converted);
+      }
+    };
+
+    fetchData();
+  }, [tab, currentDate, workplaceFilter, selectedEmployee, companyCode]);
 
   return {
     tab,
@@ -60,3 +87,43 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
 };
 
 export default usePeriodAttendance;
+
+// ✅ 직원 탭용 데이터 변환 함수
+function mapCommuteDataToCalendar(
+  data: Record<string, TCommuteData> | null,
+  currentDate: Date,
+): (TCalendarDayInfo | null)[] {
+  const daysInMonth = dayjs(currentDate).daysInMonth();
+  const startOfMonth = dayjs(currentDate).startOf("month").day();
+  const totalCells = Math.ceil((startOfMonth + daysInMonth) / 7) * 7;
+
+  return Array.from({ length: totalCells }, (_, i) => {
+    const day = i - startOfMonth + 1;
+    if (day < 1 || day > daysInMonth) return null;
+
+    const key = String(day).padStart(2, "0");
+    const commute = data?.[key];
+
+    return {
+      day,
+      summary: {
+        출근: commute?.startTime ? 1 : 0,
+        외근: commute?.startWorkplaceId === "외근" ? 1 : 0,
+        휴가: 0,
+        총원: commute ? 1 : 0,
+      },
+      checkIn: commute?.startTime
+        ? {
+            time: dayjs(commute.startTime).format("HH:mm"),
+            workplace: commute.startWorkplaceId || "근무지",
+          }
+        : undefined,
+      checkOut: commute?.endTime
+        ? {
+            time: dayjs(commute.endTime).format("HH:mm"),
+            workplace: commute.endWorkplaceId || "근무지",
+          }
+        : undefined,
+    };
+  });
+}

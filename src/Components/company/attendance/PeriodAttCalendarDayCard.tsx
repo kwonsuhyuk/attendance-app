@@ -6,9 +6,31 @@ interface Props {
   isSunday: boolean;
   isSaturday: boolean;
   variant?: "total" | "employee";
+  summary?: {
+    출근: number;
+    외근: number;
+    휴가: number;
+    총원: number;
+  };
+  checkIn?: {
+    time: string;
+    workplace: string;
+  };
+  checkOut?: {
+    time: string;
+    workplace: string;
+  };
 }
 
-const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total" }: Props) => {
+const PeriodAttCalendarDayCard = ({
+  day,
+  isSunday,
+  isSaturday,
+  variant = "total",
+  summary,
+  checkIn,
+  checkOut,
+}: Props) => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
 
@@ -36,16 +58,16 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
         </span>
 
         {variant === "total" && (
-          <span className="whitespace-nowrap text-muted-foreground">총원 12</span>
+          <span className="whitespace-nowrap text-muted-foreground">총원 {summary?.총원 ?? 0}</span>
         )}
       </div>
 
       {variant === "total" ? (
         <div className="grid grid-cols-1 gap-1 lg:grid-cols-2">
           {[
-            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: 3 },
-            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: 0 },
-            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: 0 },
+            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: summary?.출근 ?? 0 },
+            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: summary?.외근 ?? 0 },
+            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: summary?.휴가 ?? 0 },
           ].map(item => (
             <div
               key={item.label}
@@ -59,14 +81,23 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
         </div>
       ) : (
         <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
-            <span>근무지A 출근 09:00</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-300" />
-            <span>근무지B 퇴근 21:00</span>
-          </div>
+          {checkIn ? (
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
+              <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+            </div>
+          ) : (
+            <span className="text-xs text-gray-400">출근 기록 없음</span>
+          )}
+
+          {checkOut ? (
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-300" />
+              <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
+            </div>
+          ) : (
+            <span className="text-xs text-gray-400">퇴근 기록 없음</span>
+          )}
         </div>
       )}
     </Card>
