@@ -9,6 +9,7 @@ import {
   TEndOutwokingPayload,
   TCalendarDayInfo,
 } from "@/model/types/commute.type";
+import { TWorkPlace } from "@/model/types/company.type";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -243,6 +244,7 @@ export async function fetchCalendarSummaryByWorkplace(
   year: string,
   month: string,
   workplaceFilter: string,
+  workPlaceList: TWorkPlace[],
 ): Promise<(TCalendarDayInfo | null)[]> {
   const monthPath = `attendance/${companyCode}/${year}/${month}`;
 
@@ -274,13 +276,15 @@ export async function fetchCalendarSummaryByWorkplace(
 
       if (dayData) {
         Object.values(dayData).forEach(data => {
-          const workplace = data.startWorkplaceId || data.endWorkplaceId;
+          const workplaceId = data.startWorkplaceId || data.endWorkplaceId;
+          const workplaceName =
+            workplaceId === "외근" ? "외근" : workPlaceList.find(p => p.id === workplaceId)?.name;
 
-          if (workplaceFilter !== "전체" && workplace !== workplaceFilter) return;
+          if (workplaceFilter !== "전체" && workplaceName !== workplaceFilter) return;
 
           dayInfo.summary.총원 += 1;
 
-          if (workplace === "외근" || data.outworkingMemo) {
+          if (workplaceName === "외근" || data.outworkingMemo) {
             dayInfo.summary.외근 += 1;
           } else if (data.startTime) {
             dayInfo.summary.출근 += 1;
@@ -291,7 +295,6 @@ export async function fetchCalendarSummaryByWorkplace(
       result.push(dayInfo);
     }
 
-    // 👉 3. 끝을 7의 배수로 맞추기 위해 null 패딩
     while (result.length % 7 !== 0) {
       result.push(null);
     }

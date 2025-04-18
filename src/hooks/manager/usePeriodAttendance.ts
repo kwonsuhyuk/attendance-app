@@ -5,6 +5,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { TCalendarDayInfo, TCommuteData } from "@/model/types/commute.type";
 import { fetchCalendarSummaryByWorkplace, fetchCommutesByPeriod } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 
 const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const [tab, setTab] = useState<"total" | "employee" | "">("total");
@@ -18,6 +19,7 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
 
   const location = useLocation();
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -49,6 +51,7 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
           year,
           month,
           workplaceFilter,
+          workPlacesList,
         );
         setCalendar(summary);
       }
