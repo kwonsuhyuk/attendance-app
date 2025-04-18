@@ -42,12 +42,11 @@ const PeriodAttCalendarGrid = ({
               key={idx}
               date={`${year}-${month}-${String(day!.day).padStart(2, "0")}`}
               variant={variant}
-              checkIn={variant === "employee" ? { time: "09:00", workplace: "근무지A" } : undefined}
-              checkOut={
-                variant === "employee" ? { time: "21:00", workplace: "근무지B" } : undefined
-              }
-              isHoliday={true}
-              isCompanyHoliday={false}
+              summary={day.summary}
+              checkIn={day.checkIn}
+              checkOut={day.checkOut}
+              isCompanyHoliday={day?.isCompanyHoliday ?? false}
+              isHoliday={dayjs(`${year}-${month}-${String(day!.day).padStart(2, "0")}`).day() === 0}
             />
           ))}
       </div>

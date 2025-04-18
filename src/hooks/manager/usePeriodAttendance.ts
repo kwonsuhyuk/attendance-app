@@ -6,7 +6,6 @@ import { TCalendarDayInfo, TCommuteData } from "@/model/types/commute.type";
 import { fetchCalendarSummaryByWorkplace, fetchCommutesByPeriod } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
-import { TWorkPlace } from "@/model/types/company.type";
 import { mapCommuteDataToCalendar } from "@/util/mapCommuteDataToCalendar.util";
 
 const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {

@@ -12,6 +12,12 @@ interface Props {
     time: string;
     workplace?: string;
   };
+  summary?: {
+    출근: number;
+    외근: number;
+    휴가: number;
+    총원: number;
+  };
   variant?: "total" | "employee";
   isHoliday?: boolean;
   isCompanyHoliday?: boolean;
@@ -21,6 +27,7 @@ const PeriodAttCalendarList = ({
   date,
   checkIn,
   checkOut,
+  summary,
   variant = "total",
   isHoliday = false,
   isCompanyHoliday = false,
@@ -47,24 +54,34 @@ const PeriodAttCalendarList = ({
       {/* 날짜 + 총원 */}
       <div className="mb-2 flex justify-between text-base font-semibold">
         <span className="text-[15px] text-muted-foreground">
-          {dateText} (
-          <span className={isSunday ? "text-red-500" : isSaturday ? "text-yellow-500" : ""}>
+          {dayjs(date).format("M월 D일 ")}(
+          <span
+            className={
+              isCompanyHoliday
+                ? "text-yellow-500"
+                : isSunday
+                  ? "text-red-500"
+                  : "text-muted-foreground"
+            }
+          >
             {dayText}
           </span>
           )
         </span>
 
         {variant === "total" && (
-          <span className="whitespace-nowrap text-sm text-muted-foreground">총원 12</span>
+          <span className="whitespace-nowrap text-sm text-muted-foreground">
+            총원 {summary?.총원 ?? 0}
+          </span>
         )}
       </div>
 
       {variant === "total" ? (
         <div className="grid grid-cols-3 gap-1 py-2">
           {[
-            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: 3 },
-            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: 0 },
-            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: 0 },
+            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: summary?.출근 ?? 0 },
+            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: summary?.외근 ?? 0 },
+            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: summary?.휴가 ?? 0 },
           ].map(item => (
             <div
               key={item.label}
