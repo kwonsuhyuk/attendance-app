@@ -6,11 +6,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
+
 import { useUserStore } from "@/store/user.store";
 import { useShallow } from "zustand/shallow";
 import { TEmpUserData } from "@/model/types/user.type";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
+import { useCommuteModalText } from "@/hooks/employee/useCommuteModalText";
 
 interface CommuteConfirmModalProps {
   open: boolean;
@@ -31,8 +32,7 @@ const CommuteConfirmModal = ({
   place,
   isCheckoutMode,
 }: CommuteConfirmModalProps) => {
-  const [currentTime, setCurrentTime] = useState(() => format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-
+  const currentTime = useCurrentTime(open, "yyyy-MM-dd HH:mm:ss");
   const { name, employmentType, jobName } = useUserStore(
     useShallow(state => {
       const user = state.currentUser as TEmpUserData;
@@ -43,23 +43,8 @@ const CommuteConfirmModal = ({
       };
     }),
   );
-
-  useEffect(() => {
-    if (!open) return;
-    const interval = setInterval(() => {
-      setCurrentTime(format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [open]);
-
-  const actionText = isCheckoutMode ? "퇴근" : "출근";
-  const timeLabel = isCheckoutMode ? "퇴근 시간" : "출근 시간";
-  const confirmButtonColor = isCheckoutMode
-    ? "bg-orange-500 hover:bg-orange-600"
-    : "bg-green-500 hover:bg-green-600";
-  const warningText = isCheckoutMode
-    ? "⚠️ 퇴근 후에는 수정이 어렵습니다."
-    : "⚠️ 출근 후에는 취소할 수 없습니다.";
+  const { actionText, timeLabel, confirmButtonColor, warningText } =
+    useCommuteModalText(isCheckoutMode);
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>

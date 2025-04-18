@@ -1,4 +1,3 @@
-// OutWorkingModal.tsx
 import { useState } from "react";
 import {
   Dialog,
@@ -32,10 +31,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
     try {
       setIsSubmitting(true);
       const nowTime = new Date().toISOString();
-      // 퇴근일때
-      console.log(status);
       if (isCheckout) await submitOutJob(memo, isCheckout, status, nowTime);
-      // 출근일때
       else await submitOutJob(memo, isCheckout);
       setMemo("");
     } catch (error) {
