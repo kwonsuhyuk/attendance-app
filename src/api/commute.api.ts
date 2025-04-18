@@ -229,10 +229,20 @@ export async function fetchCommutesByPeriod(
   year: string,
   month: string,
 ): Promise<Record<string, TCommuteData> | null> {
-  const basePath = `commute/${companyCode}/${year}/${month}/${userId}`;
+  const basePath = `attendance/${companyCode}/${year}/${month}`;
   try {
-    const snapshot = await getData<Record<string, TCommuteData>>(basePath);
-    return snapshot || null;
+    const snapshot = await getData<Record<string, Record<string, TCommuteData>>>(basePath);
+    if (!snapshot) return null;
+
+    const result: Record<string, TCommuteData> = {};
+
+    Object.entries(snapshot).forEach(([day, users]) => {
+      if (users[userId]) {
+        result[day] = users[userId];
+      }
+    });
+
+    return result;
   } catch (error) {
     console.error("❌ 출퇴근 조회 실패:", error);
     return null;

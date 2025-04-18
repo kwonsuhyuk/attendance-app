@@ -6,6 +6,7 @@ import { TCalendarDayInfo, TCommuteData } from "@/model/types/commute.type";
 import { fetchCalendarSummaryByWorkplace, fetchCommutesByPeriod } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
+import { TWorkPlace } from "@/model/types/company.type";
 
 const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const [tab, setTab] = useState<"total" | "employee" | "">("total");
@@ -58,17 +59,20 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
 
       if (tab === "employee") {
         if (!selectedEmployee) {
-          const empty = mapCommuteDataToCalendar(null, currentDate);
+          const empty = mapCommuteDataToCalendar(null, currentDate, workPlacesList);
           setCalendar(empty);
           return;
         }
 
         const raw = await fetchCommutesByPeriod(companyCode, selectedEmployee.uid, year, month);
-        const converted = mapCommuteDataToCalendar(raw, currentDate);
+        console.log("불러온 데이터", raw);
+        const converted = mapCommuteDataToCalendar(raw, currentDate, workPlacesList);
+        console.log("달력 데이터", converted);
         setCalendar(converted);
       }
     };
 
+    console.log("선택된 직원: ", selectedEmployee);
     fetchData();
   }, [tab, currentDate, workplaceFilter, selectedEmployee, companyCode]);
 
@@ -95,6 +99,7 @@ export default usePeriodAttendance;
 function mapCommuteDataToCalendar(
   data: Record<string, TCommuteData> | null,
   currentDate: Date,
+  workPlacesList: TWorkPlace[] = [], // ✅ 근무지 리스트 추가
 ): (TCalendarDayInfo | null)[] {
   const daysInMonth = dayjs(currentDate).daysInMonth();
   const startOfMonth = dayjs(currentDate).startOf("month").day();
@@ -107,6 +112,10 @@ function mapCommuteDataToCalendar(
     const key = String(day).padStart(2, "0");
     const commute = data?.[key];
 
+    const startPlace =
+      workPlacesList.find(p => p.id === commute?.startWorkplaceId)?.name || "근무지";
+    const endPlace = workPlacesList.find(p => p.id === commute?.endWorkplaceId)?.name || "근무지";
+
     return {
       day,
       summary: {
@@ -118,13 +127,13 @@ function mapCommuteDataToCalendar(
       checkIn: commute?.startTime
         ? {
             time: dayjs(commute.startTime).format("HH:mm"),
-            workplace: commute.startWorkplaceId || "근무지",
+            workplace: startPlace,
           }
         : undefined,
       checkOut: commute?.endTime
         ? {
             time: dayjs(commute.endTime).format("HH:mm"),
-            workplace: commute.endWorkplaceId || "근무지",
+            workplace: endPlace,
           }
         : undefined,
     };

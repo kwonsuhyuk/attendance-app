@@ -96,7 +96,7 @@ const PeriodAttCalendarDayCard = ({
               <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
             </div>
           ) : (
-            <span className="text-xs text-gray-400">퇴근 기록 없음</span>
+            <span className="text-xs text-gray-400"></span>
           )}
         </div>
       )}
