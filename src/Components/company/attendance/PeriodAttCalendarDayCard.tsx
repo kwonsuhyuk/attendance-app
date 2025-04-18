@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 interface Props {
   day: number;
   isSunday: boolean;
-  isSaturday: boolean;
+  isCompanyHoliday?: boolean;
   variant?: "total" | "employee";
   summary?: {
     출근: number;
@@ -25,7 +25,7 @@ interface Props {
 const PeriodAttCalendarDayCard = ({
   day,
   isSunday,
-  isSaturday,
+  isCompanyHoliday,
   variant = "total",
   summary,
   checkIn,
@@ -49,7 +49,7 @@ const PeriodAttCalendarDayCard = ({
           className={
             isSunday
               ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[15px] text-dark-text dark:bg-red-500"
-              : isSaturday
+              : isCompanyHoliday
                 ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 text-[15px] text-dark-text dark:bg-yellow-500"
                 : "text-muted-foreground"
           }

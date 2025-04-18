@@ -81,7 +81,7 @@ const PeriodAttCalendarGrid = ({
               checkIn={data.checkIn}
               checkOut={data.checkOut}
               isSunday={isSunday}
-              isSaturday={isSaturday}
+              isCompanyHoliday={data.isCompanyHoliday}
               variant={variant}
             />
           ) : (

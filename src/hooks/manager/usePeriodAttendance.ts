@@ -21,6 +21,7 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const location = useLocation();
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
+  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList || []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -53,20 +54,21 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
           month,
           workplaceFilter,
           workPlacesList,
+          holidayList,
         );
         setCalendar(summary);
       }
 
       if (tab === "employee") {
         if (!selectedEmployee) {
-          const empty = mapCommuteDataToCalendar(null, currentDate, workPlacesList);
+          const empty = mapCommuteDataToCalendar(null, currentDate, workPlacesList, holidayList);
           setCalendar(empty);
           return;
         }
 
         const raw = await fetchCommutesByPeriod(companyCode, selectedEmployee.uid, year, month);
         console.log("불러온 데이터", raw);
-        const converted = mapCommuteDataToCalendar(raw, currentDate, workPlacesList);
+        const converted = mapCommuteDataToCalendar(raw, currentDate, workPlacesList, holidayList);
         console.log("달력 데이터", converted);
         setCalendar(converted);
       }
@@ -95,15 +97,19 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
 
 export default usePeriodAttendance;
 
-// ✅ 직원 탭용 데이터 변환 함수
+// 직원 탭용 데이터 변환 함수
 function mapCommuteDataToCalendar(
   data: Record<string, TCommuteData> | null,
   currentDate: Date,
-  workPlacesList: TWorkPlace[] = [], // ✅ 근무지 리스트 추가
+  workPlacesList: TWorkPlace[] = [],
+  holidayList: string[] = [],
 ): (TCalendarDayInfo | null)[] {
   const daysInMonth = dayjs(currentDate).daysInMonth();
   const startOfMonth = dayjs(currentDate).startOf("month").day();
   const totalCells = Math.ceil((startOfMonth + daysInMonth) / 7) * 7;
+
+  const year = dayjs(currentDate).format("YYYY");
+  const month = dayjs(currentDate).format("MM");
 
   return Array.from({ length: totalCells }, (_, i) => {
     const day = i - startOfMonth + 1;
@@ -115,6 +121,7 @@ function mapCommuteDataToCalendar(
     const startPlace =
       workPlacesList.find(p => p.id === commute?.startWorkplaceId)?.name || "근무지";
     const endPlace = workPlacesList.find(p => p.id === commute?.endWorkplaceId)?.name || "근무지";
+    const isCompanyHoliday = holidayList.includes(`${year}-${month}-${key}`);
 
     return {
       day,
@@ -136,6 +143,7 @@ function mapCommuteDataToCalendar(
             workplace: endPlace,
           }
         : undefined,
+      isCompanyHoliday,
     };
   });
 }

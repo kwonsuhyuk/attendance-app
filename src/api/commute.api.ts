@@ -255,6 +255,7 @@ export async function fetchCalendarSummaryByWorkplace(
   month: string,
   workplaceFilter: string,
   workPlaceList: TWorkPlace[],
+  holidayList: string[] = [],
 ): Promise<(TCalendarDayInfo | null)[]> {
   const monthPath = `attendance/${companyCode}/${year}/${month}`;
 
@@ -274,6 +275,8 @@ export async function fetchCalendarSummaryByWorkplace(
       const dayKey = String(i).padStart(2, "0");
       const dayData = monthData?.[dayKey];
 
+      const isCompanyHoliday = holidayList.includes(`${year}-${month}-${dayKey}`);
+
       const dayInfo: TCalendarDayInfo = {
         day: i,
         summary: {
@@ -282,6 +285,7 @@ export async function fetchCalendarSummaryByWorkplace(
           휴가: 0,
           총원: 0,
         },
+        isCompanyHoliday,
       };
 
       if (dayData) {
