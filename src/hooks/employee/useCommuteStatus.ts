@@ -4,11 +4,15 @@ import { getData } from "@/api";
 import { TCommuteData, TCommuteStatus } from "@/model/types/commute.type";
 import { computeCommuteStatus } from "@/util/commute.util";
 import { getDatePath } from "@/util/getpath.util";
+import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 
-export function useCommuteStatus(companyCode?: string, userId?: string) {
+export function useCommuteStatus() {
   const [commuteData, setCommuteData] = useState<TCommuteData | null>(null);
   const [status, setStatus] = useState<TCommuteStatus>("not-checked-in");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
+  const userId = useUserStore(state => state.currentUser?.uid);
 
   useEffect(() => {
     if (!companyCode || !userId) return;
@@ -35,7 +39,7 @@ export function useCommuteStatus(companyCode?: string, userId?: string) {
     };
 
     fetchCommuteStatus();
-  }, [companyCode, userId]);
+  }, []);
 
   return { status, commuteData, isLoading };
 }

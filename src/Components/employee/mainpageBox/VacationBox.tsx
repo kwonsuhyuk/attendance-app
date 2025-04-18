@@ -11,13 +11,9 @@ import EmployeeVacationList from "../vacation/EmployeeVacationList";
 const VacationBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
-  const userId = useUserStore(state => state.currentUser?.uid);
 
-  if (!companyCode || !userId) return null;
-
-  const { requests, loading, error } = useGetEmployeeVacationList({
+  const { requests, error } = useGetEmployeeVacationList({
     companyCode,
-    userId,
     year: new Date().getFullYear().toString(),
   });
 

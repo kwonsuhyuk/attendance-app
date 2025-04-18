@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { useCompanyStore } from "@/store/company.store";
 import useCommuteBox from "@/hooks/employee/useCommuteBox";
@@ -6,8 +6,8 @@ import CommuteBoxRenderItem from "./CommuteBoxRenderItem";
 import Clock from "../Clock";
 
 const CommuteBox = () => {
-  const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
-  const { status, commuteData, startWorkplace, endWorkplace } = useCommuteBox(companyCode!);
+  const { status, commuteData, startWorkplace, endWorkplace } = useCommuteBox();
+  const { companyCode } = useParams();
   const navigate = useNavigate();
 
   const handleClick = () => {
