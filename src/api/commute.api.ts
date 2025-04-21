@@ -10,6 +10,8 @@ import {
   TCalendarDayInfo,
 } from "@/model/types/commute.type";
 import { TWorkPlace } from "@/model/types/company.type";
+import { fetchRegisteredVacationsByMonth } from "./vacation.api";
+import dayjs from "dayjs";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -237,8 +239,15 @@ export async function fetchCommutesByPeriod(
     const result: Record<string, TCommuteData> = {};
 
     Object.entries(snapshot).forEach(([day, users]) => {
-      if (users[userId]) {
-        result[day] = users[userId];
+      const userCommute = users[userId];
+
+      if (
+        userCommute?.startTime ||
+        userCommute?.endTime ||
+        userCommute?.startWorkplaceId === "외근" ||
+        userCommute?.endWorkplaceId === "외근"
+      ) {
+        result[day] = userCommute;
       }
     });
 
@@ -260,7 +269,23 @@ export async function fetchCalendarSummaryByWorkplace(
   const monthPath = `attendance/${companyCode}/${year}/${month}`;
 
   try {
-    const monthData = await getData<Record<string, Record<string, TCommuteData>>>(monthPath);
+    const [monthData, vacationData] = await Promise.all([
+      getData<Record<string, Record<string, TCommuteData>>>(monthPath),
+      fetchRegisteredVacationsByMonth(companyCode, year, month),
+    ]);
+
+    // ✅ 날짜별 휴가 카운트 집계
+    const vacationCountMap = new Map<string, number>();
+    Object.values(vacationData ?? {}).forEach(userVacations => {
+      Object.values(userVacations).forEach(vac => {
+        const start = dayjs(vac.startDate);
+        const end = dayjs(vac.endDate);
+        for (let d = start; d.isSameOrBefore(end); d = d.add(1, "day")) {
+          const dayKey = d.format("DD");
+          vacationCountMap.set(dayKey, (vacationCountMap.get(dayKey) ?? 0) + 1);
+        }
+      });
+    });
 
     const daysInMonth = new Date(Number(year), Number(month), 0).getDate();
     const startDay = new Date(Number(year), Number(month) - 1, 1).getDay(); // 0: 일 ~ 6: 토
@@ -282,7 +307,7 @@ export async function fetchCalendarSummaryByWorkplace(
         summary: {
           출근: 0,
           외근: 0,
-          휴가: 0,
+          휴가: vacationCountMap.get(dayKey) ?? 0, // ✅ 날짜별 휴가 수 포함
           총원: 0,
         },
         isCompanyHoliday,

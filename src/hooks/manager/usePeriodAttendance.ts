@@ -7,6 +7,8 @@ import { fetchCalendarSummaryByWorkplace, fetchCommutesByPeriod } from "@/api/co
 import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
 import { mapCommuteDataToCalendar } from "@/util/mapCommuteDataToCalendar.util";
+import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
+import { TRegisteredVacation } from "@/model/types/vacation.type";
 
 const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const [tab, setTab] = useState<"total" | "employee" | "">("total");
@@ -22,6 +24,28 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
   const holidayList = useCompanyStore(state => state.currentCompany?.holidayList || []);
+
+  const getVacationDateSet = (
+    data: Record<string, Record<string, TRegisteredVacation>> | null,
+    uid: string,
+  ): Set<string> => {
+    const set = new Set<string>();
+    if (!data) return set;
+
+    const userVacations = data[uid];
+    if (!userVacations) return set;
+
+    Object.values(userVacations).forEach(vacation => {
+      const start = dayjs(vacation.startDate);
+      const end = dayjs(vacation.endDate);
+
+      for (let d = start; d.isSameOrBefore(end); d = d.add(1, "day")) {
+        set.add(d.format("YYYY-MM-DD"));
+      }
+    });
+
+    return set;
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -67,7 +91,16 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
         }
 
         const raw = await fetchCommutesByPeriod(companyCode, selectedEmployee.uid, year, month);
-        const converted = mapCommuteDataToCalendar(raw, currentDate, workPlacesList, holidayList);
+        const vacations = await fetchRegisteredVacationsByMonth(companyCode, year, month);
+        const vacationDateSet = getVacationDateSet(vacations, selectedEmployee.uid);
+
+        const converted = mapCommuteDataToCalendar(
+          raw,
+          currentDate,
+          workPlacesList,
+          holidayList,
+          vacationDateSet,
+        );
 
         setCalendar(converted);
       }

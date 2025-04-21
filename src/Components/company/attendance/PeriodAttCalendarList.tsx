@@ -54,7 +54,7 @@ const PeriodAttCalendarList = ({
       {/* 날짜 + 총원 */}
       <div className="mb-2 flex justify-between text-base font-semibold">
         <span className="text-[15px] text-muted-foreground">
-          {dayjs(date).format("M월 D일 ")}(
+          {dateText} (
           <span
             className={
               isCompanyHoliday
@@ -68,7 +68,6 @@ const PeriodAttCalendarList = ({
           </span>
           )
         </span>
-
         {variant === "total" && (
           <span className="whitespace-nowrap text-sm text-muted-foreground">
             총원 {summary?.총원 ?? 0}
@@ -98,8 +97,14 @@ const PeriodAttCalendarList = ({
           {checkIn ? (
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
-              <span>{`${checkIn.workplace ?? "근무지"} 출근 ${checkIn.time}`}</span>
+              <span
+                className={`${checkIn.workplace === "외근" ? "font-semibold text-[#f3c78c]" : ""}`}
+              >
+                {`${checkIn.workplace ?? "근무지"} 출근 ${checkIn.time}`}
+              </span>
             </div>
+          ) : summary?.휴가 ? (
+            <div className="font-semibold text-blue-500">휴가</div>
           ) : (
             <div className="text-xs text-gray-400">출근 기록 없음</div>
           )}
@@ -107,9 +112,13 @@ const PeriodAttCalendarList = ({
           {checkOut ? (
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-300" />
-              <span>{`${checkOut.workplace ?? "근무지"} 퇴근 ${checkOut.time}`}</span>
+              <span
+                className={`${checkOut.workplace === "외근" ? "font-semibold text-[#f3c78c]" : ""}`}
+              >
+                {`${checkOut.workplace ?? "근무지"} 퇴근 ${checkOut.time}`}
+              </span>
             </div>
-          ) : (
+          ) : summary?.휴가 ? null : (
             <div className="text-xs text-gray-400">퇴근 기록 없음</div>
           )}
         </div>

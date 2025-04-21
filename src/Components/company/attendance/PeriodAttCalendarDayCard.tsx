@@ -62,6 +62,7 @@ const PeriodAttCalendarDayCard = ({
         )}
       </div>
 
+      {/* 총괄 요약 (관리자 탭) */}
       {variant === "total" ? (
         <div className="grid grid-cols-1 gap-1 lg:grid-cols-2">
           {[
@@ -80,23 +81,40 @@ const PeriodAttCalendarDayCard = ({
           ))}
         </div>
       ) : (
+        // 직원 탭: 출근/퇴근/휴가 표시
         <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
-          {checkIn ? (
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
-              <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+          {summary?.휴가 && !checkIn && !checkOut ? (
+            // 휴가만 있는 경우에만 표시
+            <div className="flex items-center gap-2 text-sm font-semibold text-blue-500">
+              <span>휴가</span>
             </div>
           ) : (
-            <span className="text-xs text-gray-400">출근 기록 없음</span>
-          )}
-
-          {checkOut ? (
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-300" />
-              <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
-            </div>
-          ) : (
-            <span className="text-xs text-gray-400"></span>
+            <>
+              {checkIn && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkIn.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-green-300 dark:bg-green-500"
+                    }`}
+                  />
+                  <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+                </div>
+              )}
+              {checkOut && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkOut.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-gray-400 dark:bg-gray-300"
+                    }`}
+                  />
+                  <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
