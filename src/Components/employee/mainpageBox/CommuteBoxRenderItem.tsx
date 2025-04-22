@@ -36,7 +36,6 @@ const CommuteBoxRenderItem = ({
   endWorkplace,
   onButtonClick,
 }: CommuteBoxRenderItemProps) => {
-  console.log(status);
   switch (status) {
     case "not-checked-in":
       return (

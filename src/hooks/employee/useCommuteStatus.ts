@@ -22,7 +22,7 @@ export function useCommuteStatus() {
 
       const now = new Date();
       const todayPath = getDatePath(now, companyCode, userId);
-      console.log(todayPath);
+
       const yesterday = new Date(now);
       yesterday.setDate(now.getDate() - 1);
       const yesterdayPath = getDatePath(yesterday, companyCode, userId);
@@ -39,7 +39,7 @@ export function useCommuteStatus() {
     };
 
     fetchCommuteStatus();
-  }, []);
+  }, [companyCode, userId]);
 
   return { status, commuteData, isLoading };
 }

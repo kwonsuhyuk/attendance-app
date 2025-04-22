@@ -9,7 +9,7 @@ import { DoorOpen, Clock as ClockIcon, CalendarCheck2, Plane, MapPin } from "luc
 import { TCommuteStatus } from "@/model/types/commute.type";
 
 const CommuteBox = () => {
-  const { status, commuteData, startWorkplace, endWorkplace } = useCommuteBox();
+  const { status, commuteData, startWorkplace, endWorkplace, isLoading } = useCommuteBox();
   const { companyCode } = useParams();
   const navigate = useNavigate();
 
@@ -22,22 +22,27 @@ const CommuteBox = () => {
 
   return (
     <Card className="flex w-full flex-col justify-center p-6 shadow-md">
-      <div className="mb-6 flex items-center justify-between">
-        <Clock />
-        <div
-          className={`flex h-10 w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${colorClass}`}
-        >
-          {icon}
-          <span>{label}</span>
-        </div>
-      </div>
-      <CommuteBoxRenderItem
-        status={status}
-        commuteData={commuteData}
-        startWorkplace={startWorkplace}
-        endWorkplace={endWorkplace}
-        onButtonClick={handleClick}
-      />
+      {!isLoading && (
+        <>
+          <div className="mb-6 flex items-center justify-between">
+            <Clock />
+            <div
+              className={`flex h-10 w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${colorClass}`}
+            >
+              {icon}
+              <span>{label}</span>
+            </div>
+          </div>
+
+          <CommuteBoxRenderItem
+            status={status}
+            commuteData={commuteData}
+            startWorkplace={startWorkplace}
+            endWorkplace={endWorkplace}
+            onButtonClick={handleClick}
+          />
+        </>
+      )}
     </Card>
   );
 };
