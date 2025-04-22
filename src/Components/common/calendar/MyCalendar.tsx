@@ -1,64 +1,71 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { format } from "date-fns";
+import { format, getYear, getMonth } from "date-fns";
+import { TCommuteData } from "@/model/types/commute.type";
+import { getWorkTypeFromCommute } from "@/util/commute.util";
 
-interface IWorkType {
-  type: "출근" | "휴가" | "외근";
-  start?: string;
-  end?: string;
-  location?: string;
+interface MyCalendarProps {
+  data: Record<string, TCommuteData>;
+  vacationDates: string[];
+  onDateClick: (date: string) => void;
+  onMonthChange: (year: string, month: string) => void;
 }
-
-const dummyWorkData: Record<string, IWorkType> = {
-  "2025-04-04": { type: "출근", start: "09:01", end: "18:03", location: "서울 강남구" },
-  "2025-04-05": { type: "외근" },
-  "2025-04-06": { type: "휴가" },
-};
 
 const getStatusDot = (type: string | undefined) => {
   if (type === "출근") return <div className="mx-auto mt-1 h-2 w-2 rounded-full bg-green-500" />;
-  if (type === "외근") return <div className="mx-auto mt-1 h-2 w-2 rounded-full bg-blue-500" />;
-  if (type === "휴가") return <div className="mx-auto mt-1 h-2 w-2 rounded-full bg-yellow-400" />;
+  if (type === "외근") return <div className="mx-auto mt-1 h-2 w-2 rounded-full bg-yellow-500" />;
+  if (type === "휴가") return <div className="mx-auto mt-1 h-2 w-2 rounded-full bg-blue-500" />;
   return null;
 };
 
-const MyCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>();
-  const [open, setOpen] = useState(false);
+const MyCalendar = ({ data, vacationDates, onDateClick, onMonthChange }: MyCalendarProps) => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const handleDateSelect = (date: Date | undefined) => {
-    if (!date) return;
-    setSelectedDate(date);
-    setOpen(true);
-  };
-
-  const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
-  const selectedData = dummyWorkData[formattedDate];
+  useEffect(() => {
+    const now = new Date();
+    const year = String(now.getFullYear());
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    onMonthChange(year, month);
+  }, []);
 
   return (
     <div className="flex w-full flex-col items-center">
       <div className="scale-110">
         <Calendar
           mode="single"
+          key={format(selectedDate ?? new Date(), "yyyy-MM")}
           selected={selectedDate}
-          onSelect={handleDateSelect}
-          modifiersClassNames={{}}
+          onSelect={date => {
+            if (!date) return;
+            onDateClick(format(date, "yyyy-MM-dd"));
+          }}
           classNames={{
             day: "w-8 font-normal text-sm rounded-md",
-            day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text",
-            day_selected: "bg-white-border-sub dark:bg-dark-border-sub pb-2",
-            cell: "h-9 w-9 p-0 text-center text-sm relative",
+            day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text pb-4",
+            day_selected: "bg-white-border-sub dark:bg-dark-border-sub pb-1",
+            cell: "h-9 w-9 text-center text-sm relative",
           }}
           modifiers={{
-            출근: date => dummyWorkData[format(date, "yyyy-MM-dd")]?.type === "출근",
-            휴가: date => dummyWorkData[format(date, "yyyy-MM-dd")]?.type === "휴가",
-            외근: date => dummyWorkData[format(date, "yyyy-MM-dd")]?.type === "외근",
+            출근: date => getWorkTypeFromCommute(data[format(date, "yyyy-MM-dd")]) === "출근",
+            외근: date => getWorkTypeFromCommute(data[format(date, "yyyy-MM-dd")]) === "외근",
+            휴가: date => vacationDates.includes(format(date, "yyyy-MM-dd")),
           }}
           components={{
             DayContent: ({ date }) => {
               const key = format(date, "yyyy-MM-dd");
-              const type = dummyWorkData[key]?.type;
+              const commuteType = getWorkTypeFromCommute(data[key]);
+              const isVacation = vacationDates.includes(key);
+              const type =
+                commuteType === "출근"
+                  ? "출근"
+                  : commuteType === "외근"
+                    ? "외근"
+                    : isVacation
+                      ? "휴가"
+                      : undefined;
+              // console.log("📅 렌더 날짜:", key, "| 타입:", type);
+
               return (
                 <div className="p-1 text-sm">
                   {format(date, "d")}
@@ -69,25 +76,6 @@ const MyCalendar = () => {
           }}
         />
       </div>
-
-      {/* 상세 정보 모달 */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{formattedDate} 상세기록</DialogTitle>
-          </DialogHeader>
-          {selectedData ? (
-            <div className="space-y-2 text-sm">
-              <p>유형: {selectedData.type}</p>
-              {selectedData.start && <p>출근 시간: {selectedData.start}</p>}
-              {selectedData.end && <p>퇴근 시간: {selectedData.end}</p>}
-              {selectedData.location && <p>근무지: {selectedData.location}</p>}
-            </div>
-          ) : (
-            <p>근무기록이 없습니다.</p>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
