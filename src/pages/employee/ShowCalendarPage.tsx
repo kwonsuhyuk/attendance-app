@@ -32,10 +32,6 @@ const ShowCalendarPage = () => {
     formatMinutesToHourText,
   } = useShowCalendar();
 
-  useEffect(() => {
-    console.log("📦 summary 갱신됨:", summary);
-  }, [summary]);
-
   return (
     <>
       <Seo title="출퇴근 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />

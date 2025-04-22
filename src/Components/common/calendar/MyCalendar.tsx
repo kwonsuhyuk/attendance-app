@@ -44,7 +44,7 @@ const MyCalendar = ({ data, vacationDates, onDateClick, onMonthChange }: MyCalen
           }}
           classNames={{
             day: "w-8 font-normal text-sm rounded-md",
-            day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text pb-4",
+            day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text pb-1",
             day_selected: "bg-white-border-sub dark:bg-dark-border-sub pb-1",
             cell: "h-9 w-9 text-center text-sm relative",
             day_outside: "text-muted-foreground opacity-30",
