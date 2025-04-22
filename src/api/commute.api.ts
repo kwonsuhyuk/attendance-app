@@ -274,7 +274,7 @@ export async function fetchCalendarSummaryByWorkplace(
       fetchRegisteredVacationsByMonth(companyCode, year, month),
     ]);
 
-    // ✅ 날짜별 휴가 카운트 집계
+    // 날짜별 휴가 카운트 집계
     const vacationCountMap = new Map<string, number>();
     Object.values(vacationData ?? {}).forEach(userVacations => {
       Object.values(userVacations).forEach(vac => {
@@ -307,7 +307,7 @@ export async function fetchCalendarSummaryByWorkplace(
         summary: {
           출근: 0,
           외근: 0,
-          휴가: vacationCountMap.get(dayKey) ?? 0, // ✅ 날짜별 휴가 수 포함
+          휴가: vacationCountMap.get(dayKey) ?? 0, // 날짜별 휴가 수 포함
           총원: 0,
         },
         isCompanyHoliday,
@@ -319,14 +319,19 @@ export async function fetchCalendarSummaryByWorkplace(
           const workplaceName =
             workplaceId === "외근" ? "외근" : workPlaceList.find(p => p.id === workplaceId)?.name;
 
-          if (workplaceFilter !== "전체" && workplaceName !== workplaceFilter) return;
-
-          dayInfo.summary.총원 += 1;
-
+          // 외근은 필터 상관없이 항상 포함
           if (workplaceName === "외근" || data.outworkingMemo) {
             dayInfo.summary.외근 += 1;
-          } else if (data.startTime) {
-            dayInfo.summary.출근 += 1;
+            dayInfo.summary.총원 += 1;
+            return;
+          }
+
+          // 출근은 필터 기준에 따라 포함 여부 결정
+          if (data.startTime) {
+            if (workplaceFilter === "전체" || workplaceName === workplaceFilter) {
+              dayInfo.summary.출근 += 1;
+              dayInfo.summary.총원 += 1;
+            }
           }
         });
       }
