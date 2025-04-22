@@ -1,4 +1,3 @@
-// OutWorkingModal.tsx
 import { useState } from "react";
 import {
   Dialog,
@@ -32,10 +31,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
     try {
       setIsSubmitting(true);
       const nowTime = new Date().toISOString();
-      // 퇴근일때
-      console.log(status);
       if (isCheckout) await submitOutJob(memo, isCheckout, status, nowTime);
-      // 출근일때
       else await submitOutJob(memo, isCheckout);
       setMemo("");
     } catch (error) {
@@ -51,7 +47,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="mb-3 cursor-pointer bg-point-color px-3 text-center font-baseFont text-sm text-black dark:text-black"
+          className="mb-3 w-full cursor-pointer bg-white px-3 text-center font-baseFont text-sm text-black dark:bg-zinc-800 dark:text-white"
         >
           외근으로 {isCheckout ? "퇴근" : "출근"} 하시겠습니까?
         </Button>

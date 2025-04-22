@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import { TVacationRequest, TRegisteredVacation } from "@/model/types/vacation.type";
 import { fetchRegisteredVacationsByYear, fetchVacationRequests } from "@/api/vacation.api";
+import { useUserStore } from "@/store/user.store";
 
 interface IUseGetEmployeeVacationList {
   companyCode: string;
-  userId: string;
   year?: string; // 선택적으로 연도 지정 가능
 }
 
@@ -18,19 +18,19 @@ interface IEmployeeVacationList {
 
 export const useGetEmployeeVacationList = ({
   companyCode,
-  userId,
   year,
 }: IUseGetEmployeeVacationList): IEmployeeVacationList => {
   const [requests, setRequests] = useState<TVacationRequest[]>([]);
   const [registered, setRegistered] = useState<TRegisteredVacation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const userId = useUserStore(state => state.currentUser?.uid);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
+        if (!userId) return;
         const [requestData, registerData] = await Promise.all([
           fetchVacationRequests(companyCode),
           fetchRegisteredVacationsByYear(companyCode, year || new Date().getFullYear().toString()),
