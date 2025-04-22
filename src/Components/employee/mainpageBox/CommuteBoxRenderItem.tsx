@@ -1,8 +1,18 @@
 import React from "react";
 import { TCommuteStatus, TCommuteData } from "@/model/types/commute.type";
 import { Button } from "@/components/ui/button";
-import { Sun, MapPin, Clock, Sparkles, AlertTriangle } from "lucide-react";
-import { getKSTDateInfo } from "@/util/time.util";
+import {
+  Sun,
+  MapPin,
+  Clock,
+  Sparkles,
+  AlertTriangle,
+  Building2,
+  TimerIcon,
+  MessageSquare,
+  StickyNote,
+} from "lucide-react";
+import { calculateWorkDuration, getKSTDateInfo } from "@/util/time.util";
 
 interface Workplace {
   name: string;
@@ -26,111 +36,114 @@ const CommuteBoxRenderItem = ({
   endWorkplace,
   onButtonClick,
 }: CommuteBoxRenderItemProps) => {
+  console.log(status);
   switch (status) {
     case "not-checked-in":
       return (
-        <div
-          className={`${baseContainer} border border-sky-200 bg-sky-50 dark:border-sky-900 dark:bg-slate-900`}
+        <Button
+          className="w-full bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+          size="lg"
+          onClick={onButtonClick}
         >
-          <div className="flex items-center gap-3 text-base font-semibold text-sky-700 dark:text-sky-300">
-            <Sun className="h-5 w-5 text-sky-500 dark:text-sky-400" />
-            아직 출근하지 않으셨네요
-          </div>
-          <div className="text-sm text-gray-700 dark:text-slate-300">
-            오늘 일정, 지금부터 시작해볼까요?
-          </div>
-          <Button
-            className="w-full bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
-            size="lg"
-            onClick={onButtonClick}
-          >
-            출근하기
-          </Button>
-        </div>
+          출근하기
+        </Button>
       );
 
     case "checked-in-only":
       return (
-        <div
-          className={`${baseContainer} border border-green-300 bg-green-100 dark:border-green-800 dark:bg-green-900`}
-        >
-          <div className="flex items-center gap-3 text-base font-semibold text-green-800 dark:text-green-200">
-            <MapPin className="h-5 w-5 text-green-700 dark:text-green-300" />
-            출근 중
+        <>
+          <div className="w-full rounded-xl border border-green-300 bg-green-100 p-4 dark:border-green-800 dark:bg-green-900">
+            {/* 근무지 정보 */}
+            {startWorkplace ? (
+              <div className="rounded-xl border border-green-300 bg-white p-4 shadow-sm dark:border-green-600">
+                <div className="mb-2 flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-green-600" />
+                  <p className="text-sm font-semibold text-gray-900">근무지 정보</p>
+                </div>
+
+                <div className="pl-6">
+                  <p className="text-sm font-medium text-gray-800">{startWorkplace.name}</p>
+                  <p className="mt-1 text-xs text-gray-600" title={startWorkplace.address}>
+                    {startWorkplace.address}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-red-500 dark:text-red-300">
+                근무지 정보를 찾을 수 없습니다.
+              </p>
+            )}
+
+            {/* 출근 시간 */}
+            {commuteData?.startTime && (
+              <div className="mt-3 flex items-center justify-between rounded-md bg-green-200 px-4 py-2 text-sm text-green-900 shadow-sm dark:bg-green-800 dark:text-green-100">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-green-700 dark:text-green-300" />
+                  <span className="font-medium">출근 시간</span>
+                </div>
+                <span className="text-xs font-semibold">
+                  {getKSTDateInfo(commuteData.startTime)}
+                </span>
+              </div>
+            )}
           </div>
-
-          {startWorkplace ? (
-            <div className="mt-3 rounded-lg bg-white p-4 shadow-inner dark:bg-green-800">
-              <div className="mb-1 text-xs text-gray-500 dark:text-green-300">근무지 정보</div>
-              <div className="text-lg font-bold text-gray-900 dark:text-white">
-                {startWorkplace.name}
-              </div>
-              <div
-                className="mt-1 truncate text-xs text-gray-700 dark:text-green-200"
-                title={startWorkplace.address}
-              >
-                {startWorkplace.address}
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm text-red-500 dark:text-red-300">
-              근무지 정보를 찾을 수 없습니다.
-            </p>
-          )}
-
-          {commuteData?.startTime && (
-            <div className="mt-3 flex items-center justify-between gap-3 rounded-md bg-green-200 px-4 py-3 text-sm text-green-900 shadow-sm dark:bg-green-800 dark:text-green-100">
-              <div className="flex shrink-0 items-center gap-2">
-                <Clock className="h-4 w-4 text-green-700 dark:text-green-300" />
-                <span className="font-medium">출근</span>
-              </div>
-              <span className="shrink-0 text-xs font-semibold">
-                {getKSTDateInfo(commuteData.startTime)}
-              </span>
-            </div>
-          )}
-
+          {/* 퇴근 버튼 */}
           <Button
-            className="mt-4 w-full bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+            className="mt-5 w-full bg-green-600 text-white hover:bg-green-700 dark:bg-green-800 dark:hover:bg-green-600"
             onClick={onButtonClick}
           >
             퇴근하기
           </Button>
-        </div>
+        </>
       );
 
     case "checked-in-and-out":
       return (
-        <div
-          className={`${baseContainer} border border-amber-200 bg-amber-100 dark:border-amber-600 dark:bg-amber-800`}
-        >
-          <div className="mb-7 flex items-center justify-center gap-3 text-lg font-bold text-amber-700 dark:text-amber-300">
-            <Sparkles className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-            오늘도 수고 많으셨습니다!
+        <div className="w-full rounded-xl border border-yellow-300 bg-white p-4 shadow-md dark:border-yellow-700 dark:bg-zinc-800">
+          {/* 헤더 메시지 */}
+          <div className="mb-4 flex items-center gap-2 text-yellow-600 dark:text-yellow-300">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-sm font-semibold">오늘도 수고 많으셨습니다!</span>
           </div>
 
+          {/* 출근 정보 */}
           {commuteData?.startTime && startWorkplace && (
-            <div className="flex items-center justify-between gap-3 rounded-md bg-green-200 px-4 py-3 text-sm text-green-800 shadow-sm dark:bg-green-700 dark:text-green-100">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-green-600 dark:text-green-300" />
-                <span className="font-medium">출근</span>
+            <div className="mb-2 flex items-start gap-3 rounded-md border border-green-200 bg-green-50 px-4 py-3 dark:border-green-600 dark:bg-green-900">
+              <Clock className="mt-1 h-5 w-5 text-green-600 dark:text-green-300" />
+              <div className="flex flex-col text-sm">
+                <span className="font-semibold text-green-800 dark:text-green-100">
+                  출근: {getKSTDateInfo(commuteData.startTime)}
+                </span>
+                <span className="mt-1 pl-[2px] text-xs text-gray-700 dark:text-green-300">
+                  근무지: {startWorkplace.name}
+                </span>
               </div>
-              <span className="flex-1 truncate text-center text-xs">{startWorkplace.name}</span>
-              <span className="shrink-0 text-xs font-semibold">
-                {getKSTDateInfo(commuteData.startTime)}
-              </span>
             </div>
           )}
 
+          {/* 퇴근 정보 */}
           {commuteData?.endTime && endWorkplace && (
-            <div className="flex items-center justify-between gap-3 rounded-md bg-blue-100 px-4 py-3 text-sm text-blue-800 shadow-sm dark:bg-blue-700 dark:text-blue-100">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-blue-600 dark:text-blue-300" />
-                <span className="font-medium">퇴근</span>
+            <div className="mb-2 flex items-start gap-3 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-600 dark:bg-blue-900">
+              <Clock className="mt-1 h-5 w-5 text-blue-600 dark:text-blue-300" />
+              <div className="flex flex-col text-sm">
+                <span className="font-semibold text-blue-800 dark:text-blue-100">
+                  퇴근: {getKSTDateInfo(commuteData.endTime)}
+                </span>
+                <span className="mt-1 pl-[2px] text-xs text-gray-700 dark:text-blue-300">
+                  근무지: {endWorkplace.name}
+                </span>
               </div>
-              <span className="flex-1 truncate text-center text-xs">{endWorkplace.name}</span>
-              <span className="shrink-0 text-xs font-semibold">
-                {getKSTDateInfo(commuteData.endTime)}
+            </div>
+          )}
+
+          {/* 총 근무 시간 */}
+          {commuteData?.startTime && commuteData?.endTime && (
+            <div className="mt-4 flex items-center justify-between border-t pt-3 text-sm text-gray-700 dark:text-gray-200">
+              <div className="flex items-center gap-2 font-medium">
+                <TimerIcon className="h-4 w-4 text-yellow-500 dark:text-yellow-300" />총 근무 시간
+              </div>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {calculateWorkDuration(commuteData.startTime, commuteData.endTime)}
               </span>
             </div>
           )}
@@ -158,45 +171,41 @@ const CommuteBoxRenderItem = ({
           </Button>
         </div>
       );
-
     case "out-working":
       return (
-        <div
-          className={`${baseContainer} border border-amber-300 bg-amber-50 dark:border-yellow-900 dark:bg-zinc-900`}
-        >
-          <div className="flex items-center gap-3 text-base font-semibold text-amber-800 dark:text-yellow-200">
-            <MapPin className="h-5 w-5 text-amber-700 dark:text-yellow-300" />
-            외근 중
-          </div>
-
-          <div className="rounded-xl bg-white p-5 shadow-sm dark:bg-zinc-800">
-            <div className="text-xl font-bold text-gray-900 dark:text-white">금일은 외근입니다</div>
-            {commuteData?.outworkingMemo && (
-              <p className="mt-2 text-sm italic text-gray-600 dark:text-gray-300">
-                “{commuteData.outworkingMemo}”
-              </p>
-            )}
+        <div className="w-full rounded-xl border border-orange-300 bg-orange-50 p-4 shadow-sm dark:border-orange-400 dark:bg-[#3b2a20]">
+          <div className="rounded-xl border border-orange-300 bg-white p-4 shadow-sm dark:bg-[#fdf6f0]">
+            <div className="mb-2 flex items-center gap-2">
+              <StickyNote className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-800">외근 메모</p>
+            </div>
+            <div className="pl-6">
+              {commuteData?.outworkingMemo ? (
+                <p className="text-sm text-gray-700 dark:text-gray-800">
+                  {commuteData.outworkingMemo}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-400 dark:text-gray-500">메모 없음</p>
+              )}
+            </div>
           </div>
 
           {commuteData?.startTime && (
-            <div className="flex items-center justify-between gap-3 rounded-md bg-amber-100 px-4 py-3 text-sm text-amber-900 shadow-inner dark:bg-yellow-800 dark:text-yellow-100">
+            <div className="mt-3 flex items-center justify-between rounded-md bg-orange-100 px-4 py-2 text-sm text-orange-900 shadow-sm dark:bg-[#e6c1a6] dark:text-[#3b2a20]">
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-amber-700 dark:text-yellow-300" />
-                <span className="font-medium">출근</span>
+                <Clock className="h-4 w-4 text-orange-700 dark:text-[#bb774b]" />
+                <span className="font-medium">출근 시간</span>
               </div>
-              <span className="shrink-0 text-xs font-semibold">
-                {getKSTDateInfo(commuteData.startTime)}
-              </span>
+              <span className="text-xs font-semibold">{getKSTDateInfo(commuteData.startTime)}</span>
             </div>
           )}
 
-          <div className="mt-2 rounded-md bg-amber-100 px-4 py-2 text-sm text-amber-700 dark:bg-yellow-700 dark:text-yellow-100">
+          <div className="mt-4 rounded-md border border-orange-100 bg-orange-50 px-4 py-2 text-xs text-orange-800 dark:border-[#cba68b] dark:bg-[#e9d3c2] dark:text-[#3b2a20]">
             외근으로 출근이 처리되었습니다. <br />
-            별도의 퇴근 처리는 필요하지 않습니다.
+            금일 별도의 퇴근 처리는 필요하지 않습니다.
           </div>
         </div>
       );
-
     default:
       return null;
   }

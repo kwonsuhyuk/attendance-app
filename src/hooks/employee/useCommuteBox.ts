@@ -7,7 +7,7 @@ import { useMemo } from "react";
 export default function useCommuteBox() {
   const { status, commuteData, isLoading } = useCommuteStatus();
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList);
-
+  console.log(status, "qwe");
   const getWorkplaceInfo = (type: "startPlace" | "endPlace") => {
     const id = type === "startPlace" ? commuteData?.startWorkplaceId : commuteData?.endWorkplaceId;
     if (id === "외근") {

@@ -43,9 +43,7 @@ export const CommutePlaceItem = ({ place, isSelected, onSelect }: CommutePlaceIt
         {place.name}
       </p>
       <p className="text-sm text-gray-600 dark:text-gray-400">{place.address}</p>
-      {place.memo && (
-        <p className="mt-1 text-xs italic text-gray-400 dark:text-gray-500">“{place.memo}”</p>
-      )}
+      {place.memo && <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">{place.memo}</p>}
     </button>
   );
 };
@@ -80,7 +78,7 @@ interface CommuteButtonProps {
 export const CommuteButton = ({ isCheckoutMode, disabled, onClick }: CommuteButtonProps) => (
   <Button
     disabled={disabled}
-    className={`w-full ${disabled ? "bg-muted text-muted-foreground" : ""}`}
+    className={`w-full ${disabled ? "bg-muted text-muted-foreground" : ""} `}
     onClick={onClick}
     variant={disabled ? "secondary" : "default"}
   >

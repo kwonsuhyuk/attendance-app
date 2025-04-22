@@ -21,7 +21,6 @@ import {
 import { useDefaultSelectedPlace } from "@/hooks/employee/useDefaultSelectedPlace";
 
 export default function CommutePage() {
-  const { companyCode } = useParams();
   const userId = useUserStore(state => state.currentUser?.uid);
   const { workPlacesList } = useCompanyStore(
     useShallow(state => ({
@@ -35,7 +34,7 @@ export default function CommutePage() {
     () => nearbyPlaces.find(p => p.id === selectedPlaceId),
     [selectedPlaceId, nearbyPlaces],
   );
-  const { status } = useCommuteStatus(companyCode, userId);
+  const { status } = useCommuteStatus();
   const isCheckoutMode = status === "checked-in-only";
   const { isConfirmOpen, setIsConfirmOpen, handleCommuteModal, handleConfirmCommute } =
     useCommuteModal({
@@ -51,7 +50,7 @@ export default function CommutePage() {
   if (error) return <CommuteError error={error} />;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 px-4 py-12">
+    <div className="flex flex-col items-center justify-center gap-4 px-4 py-12">
       {nearbyPlaces.length > 0 ? (
         <div className="w-full max-w-md space-y-6">
           <CommuteHeader isCheckoutMode={isCheckoutMode} />

@@ -70,8 +70,8 @@ const CommuteConfirmModal = ({
             </div>
             {place.memo && (
               <div className="mt-2">
-                <p className="text-xs text-muted-foreground">메모</p>
-                <p className="text-sm italic text-gray-500">{place.memo}</p>
+                <p className="text-xs text-muted-foreground">근무지 메모</p>
+                <p className="text-sm text-gray-500">{place.memo}</p>
               </div>
             )}
           </div>
