@@ -54,15 +54,15 @@ const ShowCalendarPage = () => {
 
         <div className="mb-4 ml-4 flex w-full gap-2">
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded-full bg-green-400" />
+            <div className="h-3 w-3 rounded-full bg-green-500" />
             <span className="text-sm">출근</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded-full bg-yellow-300" />
+            <div className="h-3 w-3 rounded-full bg-blue-500" />
             <span className="text-sm">휴가</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded-full bg-blue-400" />
+            <div className="h-3 w-3 rounded-full bg-yellow-500" />
             <span className="text-sm">외근</span>
           </div>
         </div>
