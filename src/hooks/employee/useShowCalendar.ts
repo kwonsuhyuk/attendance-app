@@ -6,20 +6,26 @@ import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
 import { getVacationDateRange } from "@/util/vacation.util";
 import { TCommuteData } from "@/model/types/commute.type";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 import { getToday } from "@/util/date.util";
+import { calculateCommuteSummaryByType } from "@/util/commute.util";
 
 export const useShowCalendar = () => {
   const { isOpen, setCurrentStep, setSteps, setIsOpen } = useTour();
+
   const [openModal, setOpenModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
   const [currentDate, setCurrentDate] = useState(() => getToday());
+
   const [commuteData, setCommuteData] = useState<Record<string, TCommuteData>>({});
   const [vacationDates, setVacationDates] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState<ReturnType<typeof calculateCommuteSummaryByType> | null>(
+    null,
+  );
 
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userId = useUserStore(state => state.currentUser?.uid);
+  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList || []);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,36 +39,6 @@ export const useShowCalendar = () => {
       };
     }
   }, [isOpen, setCurrentStep, setSteps, setIsOpen]);
-
-  const loadCommuteData = async (year: string, month: string) => {
-    if (!companyCode || !userId) return;
-
-    setLoading(true);
-    const raw = await fetchCommutesByPeriod(companyCode, userId, year, month);
-
-    const normalized = normalizeCommuteData(raw || {}, year, month);
-    setCommuteData(normalized);
-
-    setLoading(false);
-  };
-
-  const loadVacationDates = async (year: string, month: string) => {
-    if (!companyCode || !userId) return;
-    const snapshot = await fetchRegisteredVacationsByMonth(companyCode, year, month);
-    if (!snapshot) return;
-
-    const result = Object.values(snapshot[userId])
-      .map(vac => getVacationDateRange(vac.startDate, vac.endDate))
-      .flat();
-
-    setVacationDates(result);
-  };
-
-  const handleMonthChange = async (newYear: string, newMonth: string) => {
-    setCurrentDate(`${newYear}-${newMonth}`);
-    await loadCommuteData(newYear, newMonth);
-    await loadVacationDates(newYear, newMonth);
-  };
 
   const handleDateClick = (date: string) => {
     setSelectedDate(date);
@@ -82,6 +58,39 @@ export const useShowCalendar = () => {
     return result;
   };
 
+  const handleMonthChange = async (newYear: string, newMonth: string) => {
+    const monthStr = newMonth.padStart(2, "0");
+    const yyyymm = `${newYear}-${monthStr}`;
+    setCurrentDate(yyyymm);
+
+    if (!companyCode || !userId) return;
+
+    const rawCommute = await fetchCommutesByPeriod(companyCode, userId, newYear, monthStr);
+    const normalized = normalizeCommuteData(rawCommute || {}, newYear, monthStr);
+    setCommuteData(normalized);
+
+    const snapshot = await fetchRegisteredVacationsByMonth(companyCode, newYear, monthStr);
+    const vacationList = snapshot?.[userId] ?? {};
+    const vacationDateList = Object.values(vacationList).flatMap(vac =>
+      getVacationDateRange(vac.startDate, vac.endDate),
+    );
+    setVacationDates(vacationDateList);
+
+    const newSummary = calculateCommuteSummaryByType(
+      normalized,
+      vacationDateList,
+      newYear,
+      monthStr,
+    );
+    setSummary(newSummary);
+  };
+
+  const formatMinutesToHourText = (minutes: number) => {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h.toString().padStart(2, "0")}시간 ${m.toString().padStart(2, "0")}분`;
+  };
+
   return {
     isOpen,
     openModal,
@@ -92,6 +101,7 @@ export const useShowCalendar = () => {
     currentDate,
     handleMonthChange,
     handleDateClick,
-    loading,
+    summary,
+    formatMinutesToHourText,
   };
 };

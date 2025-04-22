@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { format, getYear, getMonth } from "date-fns";
+import { format } from "date-fns";
 import { TCommuteData } from "@/model/types/commute.type";
 import { getWorkTypeFromCommute } from "@/util/commute.util";
 
@@ -20,24 +19,27 @@ const getStatusDot = (type: string | undefined) => {
 };
 
 const MyCalendar = ({ data, vacationDates, onDateClick, onMonthChange }: MyCalendarProps) => {
+  const [month, setMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  // 최초 마운트 시 호출
   useEffect(() => {
-    const now = new Date();
-    const year = String(now.getFullYear());
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    onMonthChange(year, month);
-  }, []);
+    const year = String(month.getFullYear());
+    const m = String(month.getMonth() + 1).padStart(2, "0");
+    onMonthChange(year, m);
+  }, [month]);
 
   return (
     <div className="flex w-full flex-col items-center">
       <div className="scale-110">
         <Calendar
           mode="single"
-          key={format(selectedDate ?? new Date(), "yyyy-MM")}
+          month={month}
+          onMonthChange={setMonth}
           selected={selectedDate}
           onSelect={date => {
             if (!date) return;
+            setSelectedDate(date);
             onDateClick(format(date, "yyyy-MM-dd"));
           }}
           classNames={{
@@ -45,6 +47,7 @@ const MyCalendar = ({ data, vacationDates, onDateClick, onMonthChange }: MyCalen
             day_today: "bg-dark-bg text-dark-text dark:bg-white-bg dark:text-white-text pb-4",
             day_selected: "bg-white-border-sub dark:bg-dark-border-sub pb-1",
             cell: "h-9 w-9 text-center text-sm relative",
+            day_outside: "text-muted-foreground opacity-30",
           }}
           modifiers={{
             출근: date => getWorkTypeFromCommute(data[format(date, "yyyy-MM-dd")]) === "출근",
@@ -64,7 +67,6 @@ const MyCalendar = ({ data, vacationDates, onDateClick, onMonthChange }: MyCalen
                     : isVacation
                       ? "휴가"
                       : undefined;
-              // console.log("📅 렌더 날짜:", key, "| 타입:", type);
 
               return (
                 <div className="p-1 text-sm">

@@ -28,7 +28,13 @@ const ShowCalendarPage = () => {
     handleMonthChange,
     handleDateClick,
     vacationDates,
+    summary,
+    formatMinutesToHourText,
   } = useShowCalendar();
+
+  useEffect(() => {
+    console.log("📦 summary 갱신됨:", summary);
+  }, [summary]);
 
   return (
     <>
@@ -66,27 +72,29 @@ const ShowCalendarPage = () => {
             <TableHeader>
               <TableRow className="border-b border-solid border-white-border dark:border-dark-border">
                 <TableHead>WORK</TableHead>
-                <TableHead>TIME</TableHead>
                 <TableHead>COUNT</TableHead>
+                <TableHead>TIME</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                <TableCell>주간</TableCell>
-                <TableCell>00시간 00분</TableCell>
-                <TableCell>0</TableCell>
-              </TableRow>
-              <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                <TableCell>야간</TableCell>
-                <TableCell>00시간 00분</TableCell>
-                <TableCell>0</TableCell>
-              </TableRow>
-              <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                <TableCell>공휴일 및 주말</TableCell>
-                <TableCell>00시간 00분</TableCell>
-                <TableCell>0</TableCell>
-              </TableRow>
-            </TableBody>
+            {summary && (
+              <TableBody>
+                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                  <TableCell>출근</TableCell>
+                  <TableCell>{summary.work.count} 일</TableCell>
+                  <TableCell>{formatMinutesToHourText(summary.work.time)}</TableCell>
+                </TableRow>
+                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                  <TableCell>외근</TableCell>
+                  <TableCell>{summary.out.count} 일</TableCell>
+                  <TableCell>{formatMinutesToHourText(summary.out.time)}</TableCell>
+                </TableRow>
+                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
+                  <TableCell>휴가</TableCell>
+                  <TableCell>{summary.vacation.count} 일</TableCell>
+                  <TableCell>-</TableCell>
+                </TableRow>
+              </TableBody>
+            )}
           </Table>
         </div>
 
