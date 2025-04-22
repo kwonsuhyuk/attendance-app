@@ -30,7 +30,7 @@ const CommuteDetailModal = ({
         <DialogHeader>
           {selectedDate && (
             <DialogTitle className="flex items-center justify-between text-xl">
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 dark:text-white-text">
                 <CalendarDays className="h-5 w-5" />
                 {selectedDate}
               </span>
