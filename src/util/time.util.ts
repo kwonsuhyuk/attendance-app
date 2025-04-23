@@ -63,3 +63,21 @@ export function getKSTDateInfo(dateString: string): string {
     hour12: false,
   }).format(date);
 }
+
+export const calculateWorkDuration = (start: string, end: string): string => {
+  const startTime = new Date(start);
+  const endTime = new Date(end);
+  const diffMs = endTime.getTime() - startTime.getTime();
+
+  if (diffMs <= 0) return "0분";
+
+  const totalMinutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0) {
+    return `${hours}시간 ${minutes}분`;
+  } else {
+    return `${minutes}분`;
+  }
+};

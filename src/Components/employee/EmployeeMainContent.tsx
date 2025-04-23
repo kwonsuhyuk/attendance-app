@@ -12,20 +12,12 @@ import CommuteHistoryBox from "./mainpageBox/CommuteHistoryBox";
 import VacationBox from "./mainpageBox/VacationBox";
 
 const EmployeeMainContent = () => {
-  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
-  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
-
   return (
     <div className="flex w-full flex-col gap-4 sm:py-5">
       {/* 서비스 이용 가이드 바로가기 */}
       <IntroGuideBox />
       {/* 회사 정보 */}
-      <CompanySummaryInfo
-        companyLogo={companyLogo}
-        companyName={companyName}
-        type="employee"
-        className="mx-0 my-0 shadow-md"
-      />
+      <CompanySummaryInfo type="employee" className="mx-0 my-0 shadow-md" />
       {/* 공지사항 박스 */}
       <NoticeBox />
       {/* 출근 하기 버튼 */}
