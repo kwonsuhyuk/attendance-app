@@ -4,11 +4,12 @@ import PeriodAttCalendarList from "./PeriodAttCalendarList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
+import { TCalendarDayInfo } from "@/model/types/commute.type";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 interface Props {
-  calendar: (number | null)[];
+  calendar: (TCalendarDayInfo | null)[];
   currentDate: Date;
   variant?: "total" | "employee";
   selectedEmployee?: EmployeeInfo | null;
@@ -39,14 +40,13 @@ const PeriodAttCalendarGrid = ({
           .map((day, idx) => (
             <PeriodAttCalendarList
               key={idx}
-              date={`${year}-${month}-${String(day).padStart(2, "0")}`}
+              date={`${year}-${month}-${String(day!.day).padStart(2, "0")}`}
               variant={variant}
-              checkIn={variant === "employee" ? { time: "09:00", workplace: "근무지A" } : undefined}
-              checkOut={
-                variant === "employee" ? { time: "21:00", workplace: "근무지B" } : undefined
-              }
-              isHoliday={true}
-              isCompanyHoliday={false}
+              summary={day.summary}
+              checkIn={day.checkIn}
+              checkOut={day.checkOut}
+              isCompanyHoliday={day?.isCompanyHoliday ?? false}
+              isHoliday={dayjs(`${year}-${month}-${String(day!.day).padStart(2, "0")}`).day() === 0}
             />
           ))}
       </div>
@@ -68,16 +68,19 @@ const PeriodAttCalendarGrid = ({
       </div>
 
       <div className="grid grid-cols-7">
-        {calendar.map((day, idx) => {
+        {calendar.map((data, idx) => {
           const isSunday = idx % 7 === 0;
           const isSaturday = idx % 7 === 6;
 
-          return day ? (
+          return data ? (
             <PeriodAttCalendarDayCard
               key={idx}
-              day={day}
+              day={data.day}
+              summary={data.summary}
+              checkIn={data.checkIn}
+              checkOut={data.checkOut}
               isSunday={isSunday}
-              isSaturday={isSaturday}
+              isCompanyHoliday={data.isCompanyHoliday}
               variant={variant}
             />
           ) : (

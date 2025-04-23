@@ -4,11 +4,33 @@ import { useNavigate, useParams } from "react-router-dom";
 interface Props {
   day: number;
   isSunday: boolean;
-  isSaturday: boolean;
+  isCompanyHoliday?: boolean;
   variant?: "total" | "employee";
+  summary?: {
+    출근: number;
+    외근: number;
+    휴가: number;
+    총원: number;
+  };
+  checkIn?: {
+    time: string;
+    workplace: string;
+  };
+  checkOut?: {
+    time: string;
+    workplace: string;
+  };
 }
 
-const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total" }: Props) => {
+const PeriodAttCalendarDayCard = ({
+  day,
+  isSunday,
+  isCompanyHoliday,
+  variant = "total",
+  summary,
+  checkIn,
+  checkOut,
+}: Props) => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
 
@@ -27,7 +49,7 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
           className={
             isSunday
               ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[15px] text-dark-text dark:bg-red-500"
-              : isSaturday
+              : isCompanyHoliday
                 ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 text-[15px] text-dark-text dark:bg-yellow-500"
                 : "text-muted-foreground"
           }
@@ -36,16 +58,17 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
         </span>
 
         {variant === "total" && (
-          <span className="whitespace-nowrap text-muted-foreground">총원 12</span>
+          <span className="whitespace-nowrap text-muted-foreground">총원 {summary?.총원 ?? 0}</span>
         )}
       </div>
 
+      {/* 총괄 요약 (관리자 탭) */}
       {variant === "total" ? (
         <div className="grid grid-cols-1 gap-1 lg:grid-cols-2">
           {[
-            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: 3 },
-            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: 0 },
-            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: 0 },
+            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: summary?.출근 ?? 0 },
+            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: summary?.외근 ?? 0 },
+            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: summary?.휴가 ?? 0 },
           ].map(item => (
             <div
               key={item.label}
@@ -58,15 +81,41 @@ const PeriodAttCalendarDayCard = ({ day, isSunday, isSaturday, variant = "total"
           ))}
         </div>
       ) : (
+        // 직원 탭: 출근/퇴근/휴가 표시
         <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-green-300 dark:bg-green-500" />
-            <span>근무지A 출근 09:00</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-300" />
-            <span>근무지B 퇴근 21:00</span>
-          </div>
+          {summary?.휴가 && !checkIn && !checkOut ? (
+            // 휴가만 있는 경우에만 표시
+            <div className="flex items-center gap-2 text-sm font-semibold text-blue-500">
+              <span>휴가</span>
+            </div>
+          ) : (
+            <>
+              {checkIn && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkIn.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-green-300 dark:bg-green-500"
+                    }`}
+                  />
+                  <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+                </div>
+              )}
+              {checkOut && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkOut.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-gray-400 dark:bg-gray-300"
+                    }`}
+                  />
+                  <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
     </Card>

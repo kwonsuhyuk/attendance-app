@@ -7,7 +7,11 @@ import {
   TCommuteStatus,
   TStartOutWorkingPayload,
   TEndOutwokingPayload,
+  TCalendarDayInfo,
 } from "@/model/types/commute.type";
+import { TWorkPlace } from "@/model/types/company.type";
+import { fetchRegisteredVacationsByMonth } from "./vacation.api";
+import dayjs from "dayjs";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -217,5 +221,153 @@ export async function registerOutWork(
       success: false,
       error: "정상적으로 기록되지 않았습니다.",
     };
+  }
+}
+
+// 기간별 조회 함수
+export async function fetchCommutesByPeriod(
+  companyCode: string,
+  userId: string,
+  year: string,
+  month: string,
+): Promise<Record<string, TCommuteData> | null> {
+  const basePath = `attendance/${companyCode}/${year}/${month}`;
+  try {
+    const snapshot = await getData<Record<string, Record<string, TCommuteData>>>(basePath);
+    if (!snapshot) return null;
+
+    const result: Record<string, TCommuteData> = {};
+
+    Object.entries(snapshot).forEach(([day, users]) => {
+      const userCommute = users[userId];
+
+      if (
+        userCommute?.startTime ||
+        userCommute?.endTime ||
+        userCommute?.startWorkplaceId === "외근" ||
+        userCommute?.endWorkplaceId === "외근"
+      ) {
+        result[day] = userCommute;
+      }
+    });
+
+    return result;
+  } catch (error) {
+    console.error("❌ 출퇴근 조회 실패:", error);
+    return null;
+  }
+}
+
+export async function fetchCalendarSummaryByWorkplace(
+  companyCode: string,
+  year: string,
+  month: string,
+  workplaceFilter: string,
+  workPlaceList: TWorkPlace[],
+  holidayList: string[] = [],
+): Promise<(TCalendarDayInfo | null)[]> {
+  const monthPath = `attendance/${companyCode}/${year}/${month}`;
+
+  try {
+    const [monthData, vacationData] = await Promise.all([
+      getData<Record<string, Record<string, TCommuteData>>>(monthPath),
+      fetchRegisteredVacationsByMonth(companyCode, year, month),
+    ]);
+
+    // 날짜별 휴가 카운트 집계
+    const vacationCountMap = new Map<string, number>();
+    Object.values(vacationData ?? {}).forEach(userVacations => {
+      Object.values(userVacations).forEach(vac => {
+        const start = dayjs(vac.startDate);
+        const end = dayjs(vac.endDate);
+        for (let d = start; d.isSameOrBefore(end); d = d.add(1, "day")) {
+          const dayKey = d.format("DD");
+          vacationCountMap.set(dayKey, (vacationCountMap.get(dayKey) ?? 0) + 1);
+        }
+      });
+    });
+
+    const daysInMonth = new Date(Number(year), Number(month), 0).getDate();
+    const startDay = new Date(Number(year), Number(month) - 1, 1).getDay(); // 0: 일 ~ 6: 토
+
+    const result: (TCalendarDayInfo | null)[] = [];
+
+    for (let i = 0; i < startDay; i++) {
+      result.push(null);
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayKey = String(i).padStart(2, "0");
+      const dayData = monthData?.[dayKey];
+
+      const isCompanyHoliday = holidayList.includes(`${year}-${month}-${dayKey}`);
+
+      const dayInfo: TCalendarDayInfo = {
+        day: i,
+        summary: {
+          출근: 0,
+          외근: 0,
+          휴가: vacationCountMap.get(dayKey) ?? 0, // 날짜별 휴가 수 포함
+          총원: 0,
+        },
+        isCompanyHoliday,
+      };
+
+      if (dayData) {
+        Object.values(dayData).forEach(data => {
+          const workplaceId = data.startWorkplaceId || data.endWorkplaceId;
+          const workplaceName =
+            workplaceId === "외근" ? "외근" : workPlaceList.find(p => p.id === workplaceId)?.name;
+
+          // 외근은 필터 상관없이 항상 포함
+          if (workplaceName === "외근" || data.outworkingMemo) {
+            dayInfo.summary.외근 += 1;
+            dayInfo.summary.총원 += 1;
+            return;
+          }
+
+          // 출근은 필터 기준에 따라 포함 여부 결정
+          if (data.startTime) {
+            if (workplaceFilter === "전체" || workplaceName === workplaceFilter) {
+              dayInfo.summary.출근 += 1;
+              dayInfo.summary.총원 += 1;
+            }
+          }
+        });
+      }
+
+      result.push(dayInfo);
+    }
+
+    while (result.length % 7 !== 0) {
+      result.push(null);
+    }
+
+    return result;
+  } catch (err) {
+    console.error("❌ fetchCalendarSummaryByWorkplace error:", err);
+
+    const daysInMonth = new Date(Number(year), Number(month), 0).getDate();
+    const startDay = new Date(Number(year), Number(month) - 1, 1).getDay();
+
+    const result: (TCalendarDayInfo | null)[] = [];
+
+    for (let i = 0; i < startDay; i++) result.push(null);
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      result.push({
+        day: i,
+        summary: {
+          출근: 0,
+          외근: 0,
+          휴가: 0,
+          총원: 0,
+        },
+      });
+    }
+
+    while (result.length % 7 !== 0) result.push(null);
+
+    return result;
   }
 }

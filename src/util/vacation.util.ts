@@ -95,3 +95,11 @@ export const calculateVacationDaysByType = (requests: TVacationRequest[]) => {
 
   return result;
 };
+
+export const getVacationDateRange = (start: string, end: string): string[] => {
+  const days = eachDayOfInterval({
+    start: new Date(start),
+    end: new Date(end),
+  });
+  return days.map(day => format(day, "yyyy-MM-dd"));
+};

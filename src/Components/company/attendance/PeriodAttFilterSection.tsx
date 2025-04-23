@@ -77,7 +77,7 @@ const PeriodAttFilterSection = ({
             <label className="mb-1 whitespace-nowrap text-sm font-medium text-muted-foreground sm:mb-0">
               직원 검색
             </label>
-            <div className="w-full min-w-[160px] sm:w-[220px]">
+            <div className="w-full min-w-[160px] sm:w-[260px]">
               <AutoCompleteUserInput
                 users={employeeList}
                 onSelect={(emp: EmployeeInfo | null) => {
