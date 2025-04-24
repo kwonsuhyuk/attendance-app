@@ -28,16 +28,28 @@ export const AttendanceHeader = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-5">
-        <h1 className="text-2xl font-bold">금일 출퇴근 현황</h1>
-        <DatePickerDemo pickDate={new Date()} />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-          <RefreshCw className="h-4 w-4" />
+    <div className="flex flex-col gap-4">
+      <h1 className="text-xl font-bold sm:text-2xl">금일 출퇴근 현황</h1>
+      {/* 모바일 레이아웃 */}
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:hidden">
+        <div className="flex w-full items-center justify-between gap-2">
+          <DatePickerDemo pickDate={new Date()} />
+          <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
+        <Button className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200">
+          <Plus className="h-4 w-4" /> 수동 출퇴근 등록
         </Button>
+      </div>
+      {/* 데스크탑 레이아웃 */}
+      <div className="hidden sm:flex sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <DatePickerDemo pickDate={new Date()} />
+          <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
         <Button className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200">
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
         </Button>
@@ -47,35 +59,40 @@ export const AttendanceHeader = () => {
 };
 
 export const AttendanceStatsCards = () => (
-  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+  <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
+    {/* 전체 직원 수 */}
     <Card>
-      <CardContent className="flex items-center gap-4 p-4">
-        <Users className="text-blue-600" />
-        <div>
-          <p className="text-xs text-muted-foreground">전체 직원 수</p>
-          <p className="text-lg font-bold">87명</p>
+      <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
+        <Users className="h-5 w-5 text-blue-600 md:h-6 md:w-6" />
+        <div className="text-center md:text-left">
+          <p className="text-[0.65rem] text-muted-foreground md:text-xs">전체 직원 수</p>
+          <p className="text-sm font-bold md:text-lg">87명</p>
         </div>
       </CardContent>
     </Card>
+
+    {/* 출근 현황 */}
     <Card className="border border-green-200 bg-green-100 dark:bg-green-800">
-      <CardContent className="flex items-center gap-4 p-4">
-        <UserCheck className="text-green-800 dark:text-green-300" />
-        <div>
-          <p className="text-xs text-muted-foreground dark:text-dark-text">출근 현황</p>
-          <p className="text-lg font-bold text-green-800 dark:text-green-300">68명 / 76명</p>
+      <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
+        <UserCheck className="h-5 w-5 text-green-800 dark:text-green-300 md:h-6 md:w-6" />
+        <div className="text-center md:text-left">
+          <p className="text-[0.65rem] dark:text-dark-text md:text-xs">출근 현황</p>
+          <p className="text-sm font-bold text-green-800 dark:text-green-300 md:text-lg">
+            68명 / 76명
+          </p>
         </div>
       </CardContent>
     </Card>
+
+    {/* 휴가 인원 */}
     <Card className="cursor-pointer transition hover:bg-purple-50 dark:hover:bg-zinc-900">
-      <CardContent className="flex items-center justify-between gap-4 p-4">
-        <div className="flex items-center gap-4">
-          <PlaneTakeoffIcon className="text-purple-600" />
-          <div>
-            <p className="text-xs text-muted-foreground">휴가 인원</p>
-            <p className="text-lg font-bold">11명</p>
-          </div>
+      <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
+        <PlaneTakeoffIcon className="h-5 w-5 text-purple-600 md:h-6 md:w-6" />
+        <div className="text-center md:text-left">
+          <p className="text-[0.65rem] text-muted-foreground md:text-xs">휴가 인원</p>
+          <p className="text-sm font-bold md:text-lg">11명</p>
         </div>
-        <ChevronRight className="text-muted-foreground" />
+        <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground sm:block md:ml-auto md:mt-0" />
       </CardContent>
     </Card>
   </div>
@@ -94,40 +111,45 @@ export const FullAttendanceRatioChart = () => {
   const total = totalData.reduce((acc, cur) => acc + cur.value, 0);
 
   return (
-    <Card className="h-full max-h-[500px] border bg-white">
-      <CardContent className="flex h-full flex-col space-y-4 p-4 pb-0">
-        <div className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-white">
+    <Card className="border bg-white dark:bg-zinc-900">
+      <CardContent className="flex flex-col space-y-2 p-4 sm:space-y-4">
+        {/* 제목 */}
+        <h3 className="text-base font-semibold text-gray-800 dark:text-white sm:text-lg">
           전체 출근 분포
-        </div>
-        <div className="h-48">
+        </h3>
+
+        {/* 차트 컨테이너: 모바일→sm→md→lg→xl 별로 높이 조정 */}
+        <div className="h-48 w-full md:h-64 lg:h-72 xl:h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
               <Pie
                 data={totalData}
                 cx="50%"
                 cy="50%"
-                innerRadius={20}
-                outerRadius={70}
-                paddingAngle={3}
+                innerRadius="30%"
+                outerRadius="70%"
+                paddingAngle={2}
                 dataKey="value"
               >
-                {totalData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                {totalData.map((_, idx) => (
+                  <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
                 ))}
               </Pie>
             </RechartPieChart>
           </ResponsiveContainer>
         </div>
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-y-auto py-5 pr-1 text-sm sm:grid-cols-2">
+
+        {/* 범례: 모바일 1열, sm 이상 2열 */}
+        <div className="grid grid-cols-1 gap-2 overflow-y-auto py-2 pr-1 text-xs sm:grid-cols-2 sm:gap-3 sm:text-sm">
           {totalData.map((item, idx) => {
             const percent = ((item.value / total) * 100).toFixed(1);
             return (
               <div
                 key={idx}
-                className="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-2 dark:bg-zinc-700"
+                className="flex items-center gap-2 rounded bg-gray-50 px-2 py-1 dark:bg-zinc-700"
               >
                 <span
-                  className="inline-flex h-3 w-3 shrink-0 rounded-full"
+                  className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: pieColors[idx] }}
                 />
                 <span className="font-medium text-gray-700 dark:text-white">{item.name}</span>
@@ -197,22 +219,25 @@ export const OutworkingBox = () => {
   ];
 
   return (
-    <Card className="h-full max-h-[500px] border border-yellow-100 bg-yellow-50 pb-0 dark:border-yellow-300">
-      <CardContent className="flex h-full flex-col space-y-4 p-4 pb-0">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-yellow-700 dark:text-yellow-300">
+    <Card className="h-[450px] border border-yellow-100 bg-yellow-50 dark:border-yellow-300 dark:bg-zinc-800 sm:h-[550px]">
+      {/* flex-col & h-full 추가 */}
+      <CardContent className="flex h-full flex-col p-4">
+        {/* 헤더 */}
+        <div className="mb-2 flex items-center justify-between sm:mb-4">
+          <h3 className="text-base font-semibold text-yellow-700 dark:text-yellow-300 sm:text-lg">
             외근 인원{" "}
-            <span className="ml-1 text-sm font-normal text-yellow-600 dark:text-yellow-400">
+            <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-yellow-400">
               ({outworkers.length}명)
             </span>
           </h3>
         </div>
 
-        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pb-5 pr-1">
+        {/* 리스트: flex-1 + overflow-y-auto 로 남은 영역 스크롤 */}
+        <div className="flex-1 space-y-2 overflow-y-auto pb-2 pr-1 sm:space-y-3">
           {outworkers.length > 0 ? (
-            outworkers.map((worker, idx) => <OutworkerItem key={idx} {...worker} />)
+            outworkers.map((w, i) => <OutworkerItem key={i} {...w} />)
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-sm text-yellow-600 dark:text-yellow-300">
+            <div className="flex h-full items-center justify-center text-sm text-yellow-600 dark:text-yellow-300">
               금일 외근 인원이 없습니다.
             </div>
           )}
@@ -236,21 +261,24 @@ export const OutworkerItem = ({
   memo: string;
 }) => {
   return (
-    <div className="flex gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-zinc-600 dark:bg-zinc-800">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-bold text-yellow-900 dark:bg-yellow-500 dark:text-white">
-        <User className="h-4 w-4" />
+    <div className="flex items-start gap-2 rounded-lg border border-gray-200 bg-white p-4 dark:border-zinc-600 dark:bg-zinc-700">
+      {/* 아이콘 */}
+      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-yellow-900 dark:bg-yellow-500 dark:text-white sm:h-9 sm:w-9">
+        <User className="h-4 w-4 sm:h-5 sm:w-5" />
       </div>
-      <div className="flex flex-col justify-center">
-        <h3 className="text-sm font-medium leading-tight text-gray-900 dark:text-white">{name}</h3>
-        <p className="text-xs leading-tight text-gray-600 dark:text-gray-300">
+
+      {/* 내용 */}
+      <div className="flex-1">
+        <h4 className="text-sm font-medium text-gray-900 dark:text-white sm:text-base">{name}</h4>
+        <p className="text-xs text-gray-600 dark:text-gray-300 sm:text-sm">
           {jobName} · {employmentType}
         </p>
-        <p className="mt-1 flex items-center text-xs leading-tight text-gray-500 dark:text-gray-400">
-          <Phone className="mr-1 h-3 w-3" /> {phoneNumber}
+        <p className="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+          <Phone className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> {phoneNumber}
         </p>
-        <div className="mt-2 flex items-center gap-2 text-xs">
-          <StickyNote className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
-          <span className="rounded-full bg-yellow-50 px-2 py-0.5 font-medium text-yellow-800 dark:bg-yellow-600 dark:text-white">
+        <div className="mt-2 flex items-center gap-1 text-xs sm:text-sm">
+          <StickyNote className="h-3 w-3 text-yellow-600 dark:text-yellow-400 sm:h-4 sm:w-4" />
+          <span className="rounded bg-yellow-50 px-1 py-0.5 font-medium text-yellow-800 dark:bg-transparent dark:text-yellow-400">
             {memo?.trim() ? memo : "-"}
           </span>
         </div>
@@ -392,31 +420,37 @@ export const WorkplaceBreakdown = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
   return (
-    <Card className="border bg-white dark:border-zinc-700 dark:bg-zinc-900">
-      <CardContent className="space-y-4 p-6">
-        <div className="flex items-center gap-2 text-lg font-semibold text-blue-800 dark:text-blue-300">
+    <Card className="w-full border bg-white dark:border-zinc-700 dark:bg-zinc-900">
+      <CardContent className="p-4">
+        <div className="mb-4 flex items-center gap-2 text-base font-semibold text-blue-800 dark:text-blue-300 sm:text-lg">
           <BarChart3 className="h-5 w-5" /> 근무지별 출근 인원
         </div>
-        <Carousel className="relative">
-          <CarouselContent className="mx-auto my-3">
-            {places.length > 0 ? (
-              places.map((place, idx) => (
-                <CarouselItem key={idx} className="basis-full px-2 sm:basis-1/2 md:basis-1/3">
-                  <PlaceCard place={place} />
-                </CarouselItem>
-              ))
-            ) : (
-              <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm">
-                등록된 근무지가 없습니다. 근무지를 등록해주세요.
-                <Button onClick={() => navigate(`/${companyCode}/workplacemanage`)}>
-                  근무지 등록하러 가기
-                </Button>
-              </div>
-            )}
-          </CarouselContent>
-          <CarouselPrevious className="left-0 top-1/2 -translate-x-6 -translate-y-1/2 bg-white shadow-sm dark:bg-zinc-700" />
-          <CarouselNext className="right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white shadow-sm dark:bg-zinc-700" />
-        </Carousel>
+
+        {/* overflow-hidden 으로 Carousel이 화면을 넘지 않도록 */}
+        <div className="relative w-full overflow-hidden">
+          <Carousel>
+            <CarouselContent
+              className={`mx-4 my-6 h-[450px] w-64 max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]`}
+            >
+              {places.length > 0 ? (
+                places.map((place, idx) => (
+                  <CarouselItem key={idx} className="flex-none basis-full sm:basis-1/2">
+                    <PlaceCard place={place} />
+                  </CarouselItem>
+                ))
+              ) : (
+                <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm">
+                  등록된 근무지가 없습니다. 근무지를 등록해주세요.
+                  <Button onClick={() => navigate(`/${companyCode}/workplacemanage`)}>
+                    근무지 등록하러 가기
+                  </Button>
+                </div>
+              )}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow-sm dark:bg-zinc-700" />
+            <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow-sm dark:bg-zinc-700" />
+          </Carousel>
+        </div>
       </CardContent>
     </Card>
   );
@@ -424,63 +458,58 @@ export const WorkplaceBreakdown = () => {
 
 export const PlaceCard = ({ place }: { place: any }) => {
   return (
-    <div className="flex h-[450px] flex-col gap-8 rounded-2xl border border-solid border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+    <div
+      className={`flex h-full flex-col gap-4 rounded-2xl border border-solid border-gray-200 bg-white p-4 pl-5 shadow-sm transition hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900 md:h-[450px]`}
+    >
       {/* 헤더 */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-start justify-between">
-          <div className="flex flex-col gap-1">
-            <h3 className="text-lg font-bold text-gray-800 dark:text-white">{place.name}</h3>
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <MapPin className="h-4 w-4" />
-              <span>{place.address}</span>
-            </div>
-          </div>
-          <div className="text-right text-sm font-medium text-blue-700 dark:text-blue-300">
-            <Users className="mr-1 inline-block h-4 w-4" />
-            {place.count}명
+      <div className="mb-2 flex items-start justify-between">
+        <div>
+          <h3 className="text-base font-bold text-gray-800 dark:text-white sm:text-lg">
+            {place.name}
+          </h3>
+          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+            <MapPin className="h-4 w-4 sm:h-5 sm:w-5" /> {place.address}
           </div>
         </div>
-
-        {/* 메모 */}
-        {place.memo && (
-          <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
-            <StickyNote className="mt-0.5 h-4 w-4" />
-            <span className="leading-snug">{place.memo}</span>
-          </div>
-        )}
       </div>
 
+      {/* 메모 */}
+      {place.memo && (
+        <p className="mb-4 flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 sm:text-sm">
+          <StickyNote className="h-4 w-4 sm:h-5 sm:w-5" /> {place.memo}
+        </p>
+      )}
+
       {/* 직원 리스트 */}
-      <div className="mt-4 flex h-[250px] flex-col">
-        <h4 className="mb-5 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-white">
-          <Users className="h-4 w-4" />
-          출근 직원
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <h4 className="mb-4 flex items-center gap-1 text-sm font-semibold text-gray-700 dark:text-white sm:text-base">
+          <Users className="h-4 w-4 sm:h-5 sm:w-5" /> 출근 직원 ({place.employees.length})
         </h4>
-        <div className="flex h-full flex-col py-1">
-          <div className="scrollbar-thin scrollbar-thumb-blue-300 flex-1 divide-y divide-gray-100 overflow-y-auto pr-1 dark:divide-zinc-700">
-            {place.employees.length > 0 ? (
-              place.employees.map((emp: any, i: number) => (
-                <div key={i} className="flex items-start gap-3 py-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white">
-                    <User className="h-4 w-4" />
-                  </div>
-                  <div className="text-sm">
-                    <p className="font-medium text-gray-800 dark:text-white">{emp.name}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-300">
-                      {emp.jobName} / {emp.employmentType}
-                    </p>
-                    <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                      <Phone className="h-3 w-3" /> {emp.phone}
-                    </p>
-                  </div>
+        <div className="scrollbar-thin scrollbar-thumb-blue-300 h-40 flex-1 divide-y divide-gray-100 overflow-y-auto py-1 pr-1 dark:divide-zinc-700 sm:h-[250px]">
+          {place.employees.length > 0 ? (
+            place.employees.map((emp: any, i: number) => (
+              <div key={i} className="flex items-start gap-2 py-2 sm:gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white sm:h-9 sm:w-9">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-              ))
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm">
-                금일 출근한 직원이 없습니다.
+                <div>
+                  <p className="text-xs font-medium text-gray-800 dark:text-white sm:text-base">
+                    {emp.name}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-300 sm:text-sm">
+                    {emp.jobName} · {emp.employmentType}
+                  </p>
+                  <p className="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+                    <Phone className="mr-1 h-3 w-3" /> {emp.phone}
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm text-gray-500 dark:text-gray-400 sm:text-base">
+              금일 출근한 직원이 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </div>
