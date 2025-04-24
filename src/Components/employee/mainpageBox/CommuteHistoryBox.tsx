@@ -77,15 +77,6 @@ const CommuteHistoryBox = () => {
     fetchData();
   }, [companyCode]);
 
-  // 예시 데이터 (출근: true, 연차: false, undefined는 없음)
-  // const commuteData: Record<string, boolean | undefined> = {
-  //   [format(addDays(start, 0), "yyyy-MM-dd")]: true,
-  //   [format(addDays(start, 1), "yyyy-MM-dd")]: true,
-  //   [format(addDays(start, 2), "yyyy-MM-dd")]: false,
-  //   [format(addDays(start, 3), "yyyy-MM-dd")]: true,
-  //   [format(addDays(start, 4), "yyyy-MM-dd")]: true,
-  // };
-
   const renderStatusIcon = (date: Date) => {
     const key = format(date, "yyyy-MM-dd");
     const status = commuteData[key];
