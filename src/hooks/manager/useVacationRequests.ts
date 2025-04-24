@@ -6,6 +6,9 @@ import {
   fetchVacationRequests,
   updateVacationRequestStatus,
 } from "@/api/vacation.api";
+import { registerVacation } from "@/api/vacation.api";
+import { format } from "date-fns";
+import { TRegisteredVacation, TVacationType } from "@/model/types/vacation.type";
 
 export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +56,33 @@ export const useVacationRequests = () => {
 
     const processedAt = new Date().toISOString();
     await updateVacationRequestStatus(companyCode, id, "승인", processedAt);
+
+    const approved = requests.find(req => req.id === id);
+    if (!approved) return;
+
+    const { requester, requestType, reason, requestDate } = approved;
+    const [startDate, endDate] = requestDate.split(" ~ ");
+
+    if (!requester.uid) return;
+    if (!requester.jobName) return;
+
+    const year = format(new Date(startDate), "yyyy");
+    const month = format(new Date(startDate), "MM");
+    const registerId = `${id}-${requester.uid}`;
+    const data: TRegisteredVacation = {
+      registerId,
+      name: requester.name,
+      email: requester.email,
+      jobName: requester.jobName,
+      vacationType: requestType as TVacationType,
+      startDate,
+      endDate,
+      reason,
+      createdAt: processedAt,
+      status: "승인",
+    };
+
+    await registerVacation(companyCode, year, month, requester.uid, registerId, data);
 
     setRequests(prev =>
       prev.map(req => (req.id === id ? { ...req, status: "승인", processedAt } : req)),

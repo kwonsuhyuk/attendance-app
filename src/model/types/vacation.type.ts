@@ -23,7 +23,7 @@ export type TRegisteredVacation<T extends TJobList = TJobList> = {
   startDate: string;
   endDate: string;
   vacationType: TVacationType;
-  status: "자동 승인됨";
+  status: "자동 승인됨" | "승인";
   reason: string;
   createdAt: string;
 } & Pick<TUserBase, "name" | "email"> & {
