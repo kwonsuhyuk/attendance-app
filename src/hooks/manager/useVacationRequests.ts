@@ -139,8 +139,8 @@ export const useVacationRequests = () => {
       const data = await fetchVacationRegistered(companyCode);
 
       const mapped = data
+        .filter(item => item.status === "자동 승인됨") // ✅ 자동 승인만 등록탭에 포함
         .map(item => {
-          const status: IVacationRequest["status"] = "자동 승인";
           return {
             id: item.createdAt ?? new Date().toISOString(),
             requestType: item.vacationType,
@@ -150,11 +150,12 @@ export const useVacationRequests = () => {
             },
             requestDate: `${item.startDate} ~ ${item.endDate}`,
             reason: item.reason,
-            status,
+            status: "자동 승인" as IVacationRequest["status"],
             email: item.email,
           };
         })
         .sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime());
+
       setRegisteredRequests(mapped);
     };
 
