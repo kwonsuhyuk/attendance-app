@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import { cn } from "@/util/cn.util";
 import { useNavigate } from "react-router-dom";
+import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 
 interface ManagerMenuItemProps {
   section: {
@@ -16,6 +17,9 @@ interface ManagerMenuItemProps {
 
 const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
   const { companyCode, location, expandedSections, toggleSection } = useMenuBar();
+  const {
+    requests: { pendingCount },
+  } = useVacationRequests();
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -55,7 +59,14 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
                         "font-medium text-gray-900",
                     )}
                   >
-                    <span>{item.label}</span>
+                    <div className="flex items-center gap-2">
+                      <span>{item.label}</span>
+                      {item.label === "휴가 등록/요청" && pendingCount > 0 && (
+                        <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                          {pendingCount}
+                        </span>
+                      )}
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
