@@ -1,31 +1,33 @@
 import { db } from "@/api";
-import { ref, push, update } from "firebase/database";
+import { ref, push, update, remove } from "firebase/database";
+import { NotificationPayload } from "@/model/types/notification.type";
 
-export const sendNotification = async (
-  userId: string,
-  type: "vacation_status" | "notice" | "holiday_update",
-  message: string,
-) => {
+// 알림 전송 함수
+export const sendNotification = async (payload: NotificationPayload) => {
   try {
-    const notificationRef = ref(db, `notifications/${userId}`);
+    const { receiverId, ...rest } = payload;
+    const notificationRef = ref(db, `notifications/${receiverId}`);
     await push(notificationRef, {
-      type,
-      message,
-      createdAt: Date.now(),
-      read: false,
+      ...rest,
     });
   } catch (error) {
-    console.error("Error sending notification:", error);
+    console.error("❌ Error sending notification:", error);
     throw error;
   }
 };
 
-export const markNotificationAsRead = async (userId: string, notificationId: string) => {
+// 알림 삭제 함수 (알림 읽음 처리 후)
+export const deleteNotification = async (userId: string, notificationId: string) => {
+  if (!userId || !notificationId) {
+    console.error("❌ 삭제할 알림의 userId나 notificationId가 없습니다.");
+    return;
+  }
+
   try {
     const notificationRef = ref(db, `notifications/${userId}/${notificationId}`);
-    await update(notificationRef, { read: true });
+    await remove(notificationRef);
   } catch (error) {
-    console.error("Error marking notification as read:", error);
+    console.error("❌ 알림 삭제 실패:", error);
     throw error;
   }
 };
