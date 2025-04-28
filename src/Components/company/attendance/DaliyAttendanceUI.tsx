@@ -24,17 +24,30 @@ import { Building2, Laptop, MapPin, Briefcase, Slash, Phone } from "lucide-react
 import { DatePickerDemo } from "@/components/ui/DatePicker";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const AttendanceHeader = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+interface IAttendanceHeaderProps {
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+}
+
+export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceHeaderProps) => {
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-xl font-bold sm:text-2xl">금일 출퇴근 현황</h1>
+
       {/* 모바일 레이아웃 */}
       <div className="flex flex-wrap items-center justify-between gap-2 sm:hidden">
         <div className="flex w-full items-center justify-between gap-2">
-          <DatePickerDemo pickDate={new Date()} />
-          <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
+          <DatePickerDemo pickDate={selectedDate} setPickDate={setSelectedDate} />
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 bg-transparent"
+            onClick={handleRefresh}
+          >
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
@@ -42,11 +55,17 @@ export const AttendanceHeader = () => {
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
         </Button>
       </div>
+
       {/* 데스크탑 레이아웃 */}
       <div className="hidden sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <DatePickerDemo pickDate={new Date()} />
-          <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
+          <DatePickerDemo pickDate={selectedDate} setPickDate={setSelectedDate} />
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 bg-transparent"
+            onClick={handleRefresh}
+          >
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>

@@ -1,3 +1,6 @@
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Seo from "@/components/Seo";
 import {
   AttendanceHeader,
   AttendanceStatsCards,
@@ -5,10 +8,19 @@ import {
   OutworkingBox,
   WorkplaceBreakdown,
 } from "@/components/company/attendance/DaliyAttendanceUI";
-import Seo from "@/components/Seo";
-import React from "react";
+import { getKSTFormattedDate } from "@/util/time.util";
 
 const TodayAttenancePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dateParam = searchParams.get("date");
+  const initialDate = dateParam ? new Date(dateParam) : new Date();
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+
+  useEffect(() => {
+    const formattedDate = getKSTFormattedDate(selectedDate);
+    setSearchParams({ date: formattedDate });
+  }, [selectedDate, setSearchParams]);
+
   return (
     <>
       <Seo
@@ -16,14 +28,14 @@ const TodayAttenancePage = () => {
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
       <div className="max-w-7xl flex-1 space-y-6">
-        <AttendanceHeader />
-        <AttendanceStatsCards />
+        <AttendanceHeader selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <AttendanceStatsCards selectedDate={selectedDate} />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <FullAttendanceRatioChart />
-          <OutworkingBox />
+          <FullAttendanceRatioChart selectedDate={selectedDate} />
+          <OutworkingBox selectedDate={selectedDate} />
         </div>
         <div className="w-full">
-          <WorkplaceBreakdown />
+          <WorkplaceBreakdown selectedDate={selectedDate} />
         </div>
       </div>
     </>

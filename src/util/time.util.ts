@@ -7,6 +7,11 @@ export default function convertTime(decimalTime) {
   return `${hours}시간 ${minutes}분`;
 }
 
+export const getKSTFormattedDate = (date: Date) => {
+  const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kstDate.toISOString().split("T")[0];
+};
+
 export const formatDate = (date: Date): string => {
   const weekDay = ["일", "월", "화", "수", "목", "금", "토"];
   const year = date.getFullYear();
@@ -29,30 +34,6 @@ export const formatRawUTCToHHMM = (utc: string): string => {
   const date = new Date(utc);
   return date.toISOString().slice(11, 16); // "HH:MM"
 };
-
-// export const getKSTDateInfo = (utc: string): string => {
-//   const utcDate = new Date(utc);
-//   const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-
-//   const now = new Date();
-//   const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-
-//   const kstDateYMD = kstDate.toISOString().slice(0, 10);
-//   const todayYMD = kstNow.toISOString().slice(0, 10);
-
-//   const yesterday = new Date(kstNow);
-//   yesterday.setDate(kstNow.getDate() - 1);
-//   const yesterdayYMD = yesterday.toISOString().slice(0, 10);
-
-//   let prefix = "";
-//   if (kstDateYMD === todayYMD) prefix = "오늘";
-//   else if (kstDateYMD === yesterdayYMD) prefix = "어제";
-//   else prefix = `${kstDateYMD.replace(/-/g, ".")}`;
-
-//   const time = formatRawUTCToHHMM(utc);
-
-//   return `${prefix} ${time}`;
-// };
 
 export function getKSTDateInfo(dateString: string): string {
   const date = new Date(dateString);
