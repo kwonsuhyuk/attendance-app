@@ -37,8 +37,16 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
           >
             <div className="flex items-center gap-2">
               {section.icon && <section.icon className="h-5 w-5" />}
-              <span className="text-base">{section.label}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-base">{section.label}</span>
+                {section.label === "휴가" && pendingCount > 0 && (
+                  <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    {pendingCount}
+                  </span>
+                )}
+              </div>
             </div>
+
             {expandedSections[section.label] ? (
               <ChevronDown className="h-4 w-4" />
             ) : (
@@ -62,7 +70,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
                     <div className="flex items-center gap-2">
                       <span>{item.label}</span>
                       {item.label === "휴가 등록/요청" && pendingCount > 0 && (
-                        <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                           {pendingCount}
                         </span>
                       )}

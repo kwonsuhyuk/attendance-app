@@ -2,7 +2,7 @@ import { get, set, getDatabase, ref, update, onValue, off } from "firebase/datab
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
 
-const db = getDatabase();
+export const db = getDatabase();
 
 export async function getData<T>(path: string): Promise<T | null> {
   try {
