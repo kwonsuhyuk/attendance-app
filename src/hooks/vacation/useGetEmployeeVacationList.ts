@@ -46,7 +46,8 @@ export const useGetEmployeeVacationList = ({
           : [];
 
         // 등록 목록 최신순 정렬
-        const filteredRegistered: TRegisteredVacation[] = [];
+        const filteredRegisteredRaw: TRegisteredVacation[] = [];
+        const filteredRegisteredConverted: TVacationRequest[] = [];
 
         if (registerData) {
           Object.values(registerData).forEach(monthData => {
@@ -54,22 +55,40 @@ export const useGetEmployeeVacationList = ({
             if (userData) {
               Object.entries(userData).forEach(([registerId, data]) => {
                 if (data && typeof data === "object") {
-                  filteredRegistered.push({
-                    ...(data as TRegisteredVacation),
-                    registerId,
+                  const typedData = data as TRegisteredVacation;
+                  filteredRegisteredRaw.push({ ...typedData, registerId });
+
+                  // 🔁 변환용
+                  filteredRegisteredConverted.push({
+                    requestId: registerId,
+                    vacationType: typedData.vacationType,
+                    requester: {
+                      uid: userId,
+                      name: typedData.name,
+                      email: typedData.email,
+                      jobName: typedData.jobName,
+                    },
+                    startDate: typedData.startDate,
+                    endDate: typedData.endDate,
+                    reason: typedData.reason,
+                    createdAt: typedData.createdAt,
+                    status: "승인",
                   });
                 }
               });
             }
           });
 
-          filteredRegistered.sort((a, b) => {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-          });
+          filteredRegisteredRaw.sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+          filteredRegisteredConverted.sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
         }
 
-        setRequests(filteredRequests);
-        setRegistered(filteredRegistered);
+        setRequests([...filteredRequests, ...filteredRegisteredConverted]);
+        setRegistered(filteredRegisteredRaw);
       } catch (err) {
         console.error("휴가 데이터 조회 실패:", err);
         setError("휴가 정보를 가져오는 중 문제가 발생했습니다.");
@@ -81,5 +100,5 @@ export const useGetEmployeeVacationList = ({
     if (companyCode && userId) fetchData();
   }, [companyCode, userId, year]);
 
-  return { requests, registered, loading, error };
+  return { requests, registered: [], loading, error };
 };
