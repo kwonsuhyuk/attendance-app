@@ -1,4 +1,4 @@
-import { getUserDayCommutePath } from "@/constants/api.path";
+import { getDayCommutePath, getUserDayCommutePath } from "@/constants/api.path";
 import { getData, setData, updateData } from ".";
 import {
   TStartCommutePayload,
@@ -8,10 +8,12 @@ import {
   TStartOutWorkingPayload,
   TEndOutwokingPayload,
   TCalendarDayInfo,
+  TCommuteRecord,
 } from "@/model/types/commute.type";
 import { TWorkPlace } from "@/model/types/company.type";
 import { fetchRegisteredVacationsByMonth } from "./vacation.api";
 import dayjs from "dayjs";
+import { TUserBase } from "@/model/types/user.type";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -369,5 +371,39 @@ export async function fetchCalendarSummaryByWorkplace(
     while (result.length % 7 !== 0) result.push(null);
 
     return result;
+  }
+}
+
+export async function fetchTodayCommuteDataWithUserInfo(
+  companyCode: string,
+  year: string,
+  month: string,
+  day: string,
+): Promise<TCommuteRecord[]> {
+  try {
+    const commutePath = getDayCommutePath(companyCode, year, month, day);
+    const commuteData = await getData(commutePath);
+
+    const usersPath = `companyCode/${companyCode}/users`;
+    const usersData = await getData(usersPath);
+
+    if (!commuteData || !usersData) {
+      return [];
+    }
+
+    const result: TCommuteRecord[] = Object.entries(commuteData).map(([userId, record]: any) => ({
+      userId,
+      startTime: record.startTime,
+      startWorkplaceId: record.startWorkplaceId,
+      endTime: record.endTime,
+      endWorkplaceId: record.endWorkplaceId,
+      outworkingMemo: record.outworkingMemo,
+      userInfo: usersData[userId] || undefined,
+    }));
+
+    return result;
+  } catch (error) {
+    console.error("❌ 출퇴근 + 유저 데이터 조회 실패:", error);
+    return [];
   }
 }

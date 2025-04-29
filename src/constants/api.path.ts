@@ -49,3 +49,6 @@ export const getUserDayCommutePath = (
   day: string,
   userId: string,
 ) => `attendance/${companyCode}/${year}/${month}/${day}/${userId}`;
+
+export const getDayCommutePath = (companyCode: string, year: string, month: string, day: string) =>
+  `attendance/${companyCode}/${year}/${month}/${day}`;

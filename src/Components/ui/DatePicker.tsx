@@ -10,11 +10,10 @@ import { cn } from "@/util/cn.util";
 
 interface DatePickerDemoProps {
   pickDate: Date;
+  setPickDate: (date: Date) => void;
 }
 
-export function DatePickerDemo({ pickDate }: DatePickerDemoProps) {
-  const [date, setDate] = React.useState<Date | undefined>(pickDate);
-
+export function DatePickerDemo({ pickDate, setPickDate }: DatePickerDemoProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -22,18 +21,22 @@ export function DatePickerDemo({ pickDate }: DatePickerDemoProps) {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal sm:w-[240px]",
-            !date && "text-muted-foreground",
+            !pickDate && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP", { locale: ko }) : <span>날짜 선택</span>}
+          {pickDate ? format(pickDate, "PPP", { locale: ko }) : <span>날짜 선택</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={pickDate}
+          onSelect={date => {
+            if (date) {
+              setPickDate(date);
+            }
+          }}
           initialFocus
           locale={ko}
           modifiers={{ today: new Date() }}
