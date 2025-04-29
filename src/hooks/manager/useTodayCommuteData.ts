@@ -56,5 +56,10 @@ export function useTodayCommuteData({ year, month, day }: UseTodayCommuteDataPro
     loadCommuteData();
   }, [companyCode, year, month, day]);
 
-  return { employeeList, commuteData };
+  return {
+    employeeList,
+    commuteData,
+    totalEmployeeNumber: employeeList.length,
+    commuteEmployeeNumber: commuteData.length,
+  };
 }

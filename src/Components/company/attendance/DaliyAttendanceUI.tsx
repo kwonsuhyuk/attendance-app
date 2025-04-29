@@ -10,11 +10,8 @@ import {
   User,
   PlaneTakeoffIcon,
   StickyNote,
-  Clock,
-  LogIn,
-  LogOut,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { ResponsiveContainer, Pie, PieChart as RechartPieChart, Cell, Tooltip } from "recharts";
 import {
   Carousel,
@@ -23,12 +20,10 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { Building2, Laptop, MapPin, Briefcase, Slash, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { DatePickerDemo } from "@/components/ui/DatePicker";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchEmployees } from "@/api/employee.api";
 import dayjs from "dayjs";
-import { TCommuteData } from "@/model/types/commute.type";
 import { useTodayCommuteData } from "@/hooks/manager/useTodayCommuteData";
 import VacationChartModal from "@/components/common/modal/VacationChartModal";
 import { useVacationChartData } from "@/hooks/vacation/useVacationChartData";
@@ -96,7 +91,7 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
   const [selectedData, setSelectedData] = useState<any>(null);
-  const { employeeList, commuteData } = useTodayCommuteData({
+  const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
@@ -109,20 +104,21 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
     null,
     "month",
   );
-  const handleClose = () => setSelectedData(null);
-
+  const { todayVacationData, totalTodayVacationCount } = useTodayVacationData({
+    vacationData,
+    selectedDate,
+  });
   const detailedList = getFilteredDetails({
     rawDetails,
     selectedData,
     mode: "month",
   });
+
+  const handleClose = () => setSelectedData(null);
+
   const handleVacationBoxClick = (data: any) => {
     setSelectedData(data);
   };
-  const { todayVacationData, totalTodayVacationCount } = useTodayVacationData({
-    vacationData,
-    selectedDate,
-  });
 
   return (
     <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
@@ -132,7 +128,7 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
           <Users className="h-5 w-5 text-blue-600 md:h-6 md:w-6" />
           <div className="text-center md:text-left">
             <p className="text-[0.65rem] text-muted-foreground md:text-xs">전체 직원 수</p>
-            <p className="text-sm font-bold md:text-lg">{employeeList.length}명</p>
+            <p className="text-sm font-bold md:text-lg">{totalEmployeeNumber}명</p>
           </div>
         </CardContent>
       </Card>
@@ -144,7 +140,7 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
           <div className="text-center md:text-left">
             <p className="text-[0.65rem] dark:text-dark-text md:text-xs">출근 현황</p>
             <p className="text-sm font-bold text-green-800 dark:text-green-300 md:text-lg">
-              {commuteData.length}명 / {employeeList.length}명
+              {commuteEmployeeNumber}명 / {totalEmployeeNumber}명
             </p>
           </div>
         </CardContent>
@@ -189,7 +185,6 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
 
   const pieColors = ["#4F46E5", "#22C55E", "#F97316", "#E11D48", "#3B82F6", "#FACC15", "#10B981"];
 
-  // 데이터 합치기
   const totalData = [
     ...workplacePlaces.map(place => ({
       name: place.name,
@@ -280,7 +275,6 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
 
   return (
     <Card className="h-[450px] border border-yellow-100 bg-yellow-50 dark:border-yellow-300 dark:bg-zinc-800 sm:h-[550px]">
-      {/* flex-col & h-full 추가 */}
       <CardContent className="flex h-full flex-col p-4">
         {/* 헤더 */}
         <div className="mb-2 flex items-center justify-between sm:mb-4">
@@ -292,7 +286,6 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
           </h3>
         </div>
 
-        {/* 리스트: flex-1 + overflow-y-auto 로 남은 영역 스크롤 */}
         <div className="flex-1 space-y-2 overflow-y-auto pb-2 pr-1 sm:space-y-3">
           {outworkingEmployees.length > 0 ? (
             outworkingEmployees.map((item, i) => <OutworkerItem key={i} {...item} />)
@@ -353,7 +346,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
-  console.log("commute", commuteData);
+
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { workplacePlaces } = useFilterWork(commuteData, placeList ?? [], employeeList);
 
