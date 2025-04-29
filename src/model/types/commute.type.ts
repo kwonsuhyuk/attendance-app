@@ -1,3 +1,5 @@
+import { TEmpUserData, TUserBase } from "./user.type";
+
 // 출근 일시
 export type TStartCommutePayload = {
   startTime: string;
@@ -59,4 +61,14 @@ export type TCalendarDayInfo = {
     time: string;
     workplace: string;
   };
+};
+
+export type TCommuteRecord = {
+  userId: string;
+  startTime?: string;
+  startWorkplaceId?: string;
+  endTime?: string;
+  outworkingMemo?: string;
+  endWorkplaceId?: string;
+  userInfo?: TEmpUserData;
 };
