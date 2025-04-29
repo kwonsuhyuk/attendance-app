@@ -8,7 +8,7 @@ import Loading from "@/components/common/Loading";
 import Error from "@/components/Error";
 import EmployeeVacationList from "../vacation/EmployeeVacationList";
 import { Badge } from "@/components/ui/badge";
-import { useEmployeeNotification } from "@/hooks/employee/useEmployeeNotification";
+import { useNotification } from "@/hooks/employee/useNotification";
 
 const VacationBox = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const VacationBox = () => {
     year: new Date().getFullYear().toString(),
   });
 
-  const { unreadVacationNotifications } = useEmployeeNotification();
+  const { unreadVacationNotifications } = useNotification();
 
   return (
     <Card className="group relative p-4 shadow-md transition hover:bg-accent">

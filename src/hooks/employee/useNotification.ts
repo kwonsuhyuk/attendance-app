@@ -8,6 +8,9 @@ import { NotificationPayload } from "@/model/types/notification.type";
 export const useNotification = () => {
   const userId = useUserStore(state => state.currentUser?.uid);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState<{ id: string; data: NotificationPayload }[]>(
+    [],
+  );
 
   // ✅ 알림 보내기
   const notify = async (payload: NotificationPayload) => {
@@ -22,7 +25,17 @@ export const useNotification = () => {
 
     const unsubscribe = onValue(notificationRef, snapshot => {
       const data = snapshot.val() || {};
-      const unread = Object.values(data).filter((n: any) => !n.read).length;
+
+      // notifications 배열 업데이트
+      const mapped = Object.entries(data).map(([id, value]) => ({
+        id,
+        data: value as NotificationPayload,
+      }));
+
+      setNotifications(mapped);
+
+      // unreadCount 업데이트
+      const unread = mapped.filter(n => !n.data.read).length;
       setUnreadCount(unread);
     });
 
@@ -31,5 +44,5 @@ export const useNotification = () => {
     };
   }, [userId]);
 
-  return { notify, unreadCount };
+  return { notify, unreadCount, notifications };
 };
