@@ -15,4 +15,5 @@ export type NotificationPayload = {
   read: boolean; // 읽음 여부
   senderId?: string; // 발신자 (선택)
   relatedId?: string; // 관련된 id (휴가 id, 직원 id 등, 선택)
+  requestDate?: string; // 휴가 일자
 };

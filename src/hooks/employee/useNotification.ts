@@ -27,10 +27,12 @@ export const useNotification = () => {
       const data = snapshot.val() || {};
 
       // notifications 배열 업데이트
-      const mapped = Object.entries(data).map(([id, value]) => ({
-        id,
-        data: value as NotificationPayload,
-      }));
+      const mapped = Object.entries(data)
+        .map(([id, value]) => ({
+          id,
+          data: value as NotificationPayload,
+        }))
+        .filter(n => n.data.message && n.data.message.trim() !== "");
 
       setNotifications(mapped);
 

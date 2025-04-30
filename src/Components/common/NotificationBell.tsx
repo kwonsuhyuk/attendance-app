@@ -52,6 +52,7 @@ const NotificationBell = () => {
         <NotificationDropdown
           notifications={notifications}
           onClickNotification={handleClickNotification}
+          onCloseDropdown={() => setOpen(false)}
         />
       )}
     </div>

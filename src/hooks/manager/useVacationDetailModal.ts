@@ -1,6 +1,6 @@
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { useToast } from "../use-toast";
-import { sendNotification } from "@/api/notification.api";
+// import { sendNotification } from "@/api/notification.api";
 
 export const useVacationDetailModal = (
   request: IVacationRequest,
@@ -25,8 +25,8 @@ export const useVacationDetailModal = (
     { label: "휴가 일자", value: displayRequestDate },
   ];
 
-  const handleApproveClick = async () => {
-    // onApprove(request.id);
+  const handleApproveClick = () => {
+    onApprove(request.id);
     // await sendNotification(request.requester.uid!, "vacation_status", "");
     toast({
       title: "승인 처리 완료",
@@ -36,8 +36,8 @@ export const useVacationDetailModal = (
     onClose();
   };
 
-  const handleRejectClick = async () => {
-    // onReject(request.id);
+  const handleRejectClick = () => {
+    onReject(request.id);
     // await sendNotification(request.requester.uid!, "vacation_status", "");
     toast({
       title: "거절 처리 완료",
