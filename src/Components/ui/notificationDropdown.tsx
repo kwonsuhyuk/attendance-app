@@ -1,5 +1,5 @@
 import { NotificationPayload } from "@/model/types/notification.type";
-import { CheckCircle, XCircle, Info, Briefcase, X } from "lucide-react";
+import { CheckCircle, XCircle, Info, Megaphone, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -7,7 +7,7 @@ import { useUserStore } from "@/store/user.store";
 
 interface NotificationDropdownProps {
   notifications: { id: string; data: NotificationPayload }[];
-  onClickNotification: (id: string) => void;
+  onClickNotification: (id: string, closeDropdown?: boolean) => void;
   onCloseDropdown: () => void;
 }
 
@@ -17,10 +17,10 @@ const getIcon = (type: string) => {
       return <CheckCircle className="h-4 w-4 text-green-500" />;
     case "vacation_rejected":
       return <XCircle className="h-4 w-4 text-red-500" />;
-    case "notice_posted":
+    case "vacation_registered":
       return <Info className="h-4 w-4 text-blue-500" />;
     default:
-      return <Briefcase className="h-4 w-4 text-gray-400" />;
+      return <Megaphone className="h-4 w-4 text-gray-400" />;
   }
 };
 
@@ -81,7 +81,7 @@ const NotificationDropdown = ({
 
                 <button
                   className="rounded p-1 text-xs text-gray-400 hover:text-red-500"
-                  onClick={() => onClickNotification(id)}
+                  onClick={() => onClickNotification(id, false)}
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>

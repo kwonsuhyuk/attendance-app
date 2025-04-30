@@ -28,10 +28,10 @@ const NotificationBell = () => {
     };
   }, [open]);
 
-  const handleClickNotification = async (notificationId: string) => {
+  const handleClickNotification = async (notificationId: string, closeDropdown = true) => {
     if (!userId) return;
     await deleteNotification(userId, notificationId);
-    setOpen(false);
+    if (closeDropdown) setOpen(false);
   };
 
   return (

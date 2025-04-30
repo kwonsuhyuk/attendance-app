@@ -1,6 +1,6 @@
-import { PAYMENT_METHODS } from "@/constants/employmentType";
+import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 
-export type TSalaryType = keyof typeof PAYMENT_METHODS;
+export type TSalaryType = keyof typeof EMPLOYMENT_TYPE;
 
 export type TEmployee = {
   uid: string;
@@ -12,4 +12,10 @@ export type TEmployee = {
   phone?: string;
   salary?: number;
   companyCode: string;
+};
+
+export type TNotice = {
+  title: string;
+  content: string;
+  createdAt: string;
 };
