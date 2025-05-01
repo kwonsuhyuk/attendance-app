@@ -14,7 +14,7 @@ const NaverMap = ({
   radius = 3, // 기본 300m
 }: INaverMapProps) => {
   const getZoomByRadius = (radius: number) => {
-    if (radius <= 100) return 16.5; // 눈금: 50m
+    if (radius <= 100) return 17; // 눈금: 50m
     if (radius <= 300) return 15; // 눈금: 300m
     if (radius <= 500) return 15; // 눈금: 300m
     if (radius <= 1000) return 14; // 눈금: 500m
@@ -22,7 +22,6 @@ const NaverMap = ({
   };
 
   useEffect(() => {
-    if (!radius || radius <= 0) return;
     const center = new naver.maps.LatLng(selectedLocation.lat, selectedLocation.lng);
 
     const zoom = getZoomByRadius(radius); // ✅ 반경에 따른 줌 계산
@@ -31,6 +30,8 @@ const NaverMap = ({
       center,
       zoom,
     });
+
+    naver.maps.Event.trigger(map, "resize");
 
     const marker = new naver.maps.Marker({
       position: center,
@@ -48,6 +49,8 @@ const NaverMap = ({
       fillColor: "#93C5FD",
       fillOpacity: 0.3,
     });
+
+    map.setCenter(center);
 
     naver.maps.Event.addListener(marker, "dragend", function (e) {
       const lat = e.coord.y;
