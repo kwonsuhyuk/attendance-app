@@ -76,7 +76,10 @@ const VacationDetailPage = () => {
           </div>
 
           {isModalOpen && (
-            <VacationRegisterModal onClose={toggleModal} onRegister={handleRegister} />
+            <VacationRegisterModal
+              onClose={toggleModal}
+              onRegister={newRequest => handleRegister(newRequest, true)}
+            />
           )}
 
           {TAB_CONTENTS.map(tab => {

@@ -5,10 +5,11 @@ import {
   fetchVacationRegistered,
   fetchVacationRequests,
   updateVacationRequestStatus,
+  registerVacation,
 } from "@/api/vacation.api";
-import { registerVacation } from "@/api/vacation.api";
 import { format } from "date-fns";
 import { TRegisteredVacation, TVacationType } from "@/model/types/vacation.type";
+import { useNotification } from "@/hooks/employee/useNotification";
 
 export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +26,9 @@ export const useVacationRequests = () => {
   const [activeTab, setActiveTab] = useState("pending");
 
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
+  const userId = useUserStore(state => state.currentUser?.uid);
+  const { notify } = useNotification();
+
   const itemsPerPage = 10;
   const pendingCount = requests.filter(req => req.status === "대기중").length;
 
@@ -47,8 +51,21 @@ export const useVacationRequests = () => {
     }
   };
 
-  const handleRegister = (newRequest: IVacationRequest) => {
+  const handleRegister = (newRequest: IVacationRequest, isManual: boolean = false) => {
     setRegisteredRequests(prev => [...prev, newRequest]);
+
+    if (isManual && newRequest.requester?.uid) {
+      notify({
+        receiverId: newRequest.requester.uid,
+        type: "vacation_registered",
+        message: "관리자가 휴가를 부여했습니다.",
+        createdAt: Date.now(),
+        read: false,
+        senderId: userId,
+        relatedId: newRequest.id,
+        requestDate: newRequest.requestDate,
+      });
+    }
   };
 
   const handleApprove = async (id: string) => {
@@ -63,8 +80,7 @@ export const useVacationRequests = () => {
     const { requester, requestType, reason, requestDate } = approved;
     const [startDate, endDate] = requestDate.split(" ~ ");
 
-    if (!requester.uid) return;
-    if (!requester.jobName) return;
+    if (!requester.uid || !requester.jobName) return;
 
     const year = format(new Date(startDate), "yyyy");
     const month = format(new Date(startDate), "MM");
@@ -84,6 +100,17 @@ export const useVacationRequests = () => {
 
     await registerVacation(companyCode, year, month, requester.uid, registerId, data);
 
+    await notify({
+      receiverId: requester.uid,
+      type: "vacation_approved",
+      message: "휴가 요청이 승인되었습니다.",
+      createdAt: Date.now(),
+      read: false,
+      senderId: userId,
+      relatedId: id,
+      requestDate: requestDate,
+    });
+
     setRequests(prev =>
       prev.map(req => (req.id === id ? { ...req, status: "승인", processedAt } : req)),
     );
@@ -94,6 +121,20 @@ export const useVacationRequests = () => {
 
     const processedAt = new Date().toISOString();
     await updateVacationRequestStatus(companyCode, id, "거절", processedAt);
+
+    const rejected = requests.find(req => req.id === id);
+    if (!rejected || !rejected.requester.uid) return;
+
+    await notify({
+      receiverId: rejected.requester.uid,
+      type: "vacation_rejected",
+      message: "휴가 요청이 거절되었습니다.",
+      createdAt: Date.now(),
+      read: false,
+      senderId: userId,
+      relatedId: id,
+      requestDate: rejected.requestDate,
+    });
 
     setRequests(prev =>
       prev.map(req => (req.id === id ? { ...req, status: "거절", processedAt } : req)),
