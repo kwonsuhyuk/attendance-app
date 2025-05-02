@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { TCalendarDayInfo } from "@/model/types/commute.type";
 
+
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 interface Props {

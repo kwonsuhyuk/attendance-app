@@ -11,6 +11,7 @@ import MyVacationPage from "@/pages/employee/MyVacationPage";
 import EmployeeMenuPage from "@/pages/employee/EmployeeMenuPage";
 import CommutePage from "@/pages/employee/CommutePage";
 
+
 const EmployeeRoutes = () => {
   return (
     <Routes>
@@ -27,6 +28,7 @@ const EmployeeRoutes = () => {
         <Route path={COMMON_ROUTES.NOTICE} element={<NoticePage />} />
         <Route path={EMPLOYEE_ROUTES.APP_GUIDE} element={<AppGuidePage />} />
         <Route path={EMPLOYEE_ROUTES.COMMUTE} element={<CommutePage />} />
+
       </Route>
     </Routes>
   );

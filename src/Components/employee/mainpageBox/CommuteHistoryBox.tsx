@@ -16,6 +16,7 @@ import { fetchCommutesByPeriod } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
 import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
 
+
 const CommuteHistoryBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
@@ -123,8 +124,6 @@ const CommuteHistoryBox = () => {
         ))}
       </div>
 
-      {/* 범례 설명 */}
-      {/* 범례 설명 */}
       <div className="mt-10 flex flex-wrap gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <CircleDot className="h-3 w-3 text-green-500" />

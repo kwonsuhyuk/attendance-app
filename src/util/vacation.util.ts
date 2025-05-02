@@ -103,3 +103,4 @@ export const getVacationDateRange = (start: string, end: string): string[] => {
   });
   return days.map(day => format(day, "yyyy-MM-dd"));
 };
+

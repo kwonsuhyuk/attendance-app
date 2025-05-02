@@ -26,6 +26,7 @@ export const useGetEmployeeVacationList = ({
   const [error, setError] = useState<string | null>(null);
   const userId = useUserStore(state => state.currentUser?.uid);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +49,6 @@ export const useGetEmployeeVacationList = ({
         // 등록 목록 최신순 정렬
         const filteredRegisteredRaw: TRegisteredVacation[] = [];
         const filteredRegisteredConverted: TVacationRequest[] = [];
-
         if (registerData) {
           Object.values(registerData).forEach(monthData => {
             const userData = monthData[userId];
@@ -57,8 +57,6 @@ export const useGetEmployeeVacationList = ({
                 if (data && typeof data === "object") {
                   const typedData = data as TRegisteredVacation;
                   filteredRegisteredRaw.push({ ...typedData, registerId });
-
-                  // 🔁 변환용
                   filteredRegisteredConverted.push({
                     requestId: registerId,
                     vacationType: typedData.vacationType,

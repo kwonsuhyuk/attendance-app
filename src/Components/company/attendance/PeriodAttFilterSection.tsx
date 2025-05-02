@@ -14,6 +14,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { useCompanyStore } from "@/store/company.store";
 
+
 interface Props {
   type: "total" | "employee";
   currentDate: Date;
@@ -26,6 +27,7 @@ interface Props {
   setEmployeeName?: (v: string) => void;
   selectedEmployee?: EmployeeInfo | null;
   setSelectedEmployee?: (emp: EmployeeInfo | null) => void;
+
 }
 
 const PeriodAttFilterSection = ({
@@ -90,7 +92,6 @@ const PeriodAttFilterSection = ({
           </div>
         )}
       </div>
-
       {/* 범례 - total */}
       {type === "total" && (
         <div className="mx-1 mb-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -136,6 +137,7 @@ const PeriodAttFilterSection = ({
             <span className="h-3 w-3 rounded-full bg-orange-300" />
             <span>외근</span>
           </div>
+
         </div>
       )}
     </div>

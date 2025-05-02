@@ -75,7 +75,6 @@ export const EMPLOYEE_SUB_MENUS = (companyCode: string) => [
     label: "회사 공지사항",
     path: `/${companyCode}/notice`,
   },
-
   {
     icon: <BookOpenCheck className="h-5 w-5 text-primary" />,
     label: "다운로드 가이드",

@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { TRegisteredVacation, TVacationType } from "@/model/types/vacation.type";
 import { useNotification } from "@/hooks/employee/useNotification";
 
+
 export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 더미데이터 사용시
@@ -196,7 +197,6 @@ export const useVacationRequests = () => {
           };
         })
         .sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime());
-
       setRegisteredRequests(mapped);
     };
 

@@ -6,6 +6,7 @@ import { useCompanyStore } from "@/store/company.store";
 import AppTitle from "./AppTitle";
 import NotificationBell from "./NotificationBell";
 
+
 interface HeaderProps {
   variant?: "employee" | "manager";
 }

@@ -10,6 +10,7 @@ import EmployeeVacationList from "../vacation/EmployeeVacationList";
 import { Badge } from "@/components/ui/badge";
 import { useNotification } from "@/hooks/employee/useNotification";
 
+
 const VacationBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();

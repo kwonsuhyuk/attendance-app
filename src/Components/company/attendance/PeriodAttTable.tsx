@@ -1,4 +1,6 @@
+
 import { useCompanyStore } from "@/store/company.store";
+
 import dayjs from "dayjs";
 
 interface Props {
@@ -12,13 +14,6 @@ const DAYS = Array.from({ length: 30 }, (_, i) => {
   return `${date}/${day}`;
 });
 
-const MOCK_EMPLOYEES = [
-  {
-    name: "오민택",
-    position: "대리",
-    records: Array(30).fill("출근"),
-  },
-];
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -39,160 +34,16 @@ const PeriodAttTable = ({ calendar, currentDate }: Props) => {
   const daysInMonth = dayjs(currentDate).daysInMonth();
   const companyName = useCompanyStore(state => state.currentCompany?.companyName);
 
+
   const dynamicDays = Array.from({ length: daysInMonth }, (_, i) => {
     const date = i + 1;
     const day = new Date(currentDate.getFullYear(), currentDate.getMonth(), date).getDay();
     const weekday = ["일", "월", "화", "수", "목", "금", "토"][day];
-    return { date, weekday }; // 이렇게 객체 형태로 반환
+    return { date, weekday };
   });
 
   const STATUSES = ["출근", "외근", "휴가", ""];
-  const MOCK_EMPLOYEES = [
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-    {
-      name: "오민택",
-      position: "대리",
-      records: Array.from({ length: daysInMonth }, () => {
-        const randomIdx = Math.floor(Math.random() * STATUSES.length);
-        return STATUSES[randomIdx];
-      }),
-    },
-  ];
+
 
   return (
     <div className="min-h-[630px] w-full p-6">

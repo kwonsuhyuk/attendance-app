@@ -56,7 +56,6 @@ const PeriodAttCalendarDayCard = ({
         >
           {day < 10 ? `0${day}` : day}
         </span>
-
         {variant === "total" && (
           <span className="whitespace-nowrap text-muted-foreground">총원 {summary?.총원 ?? 0}</span>
         )}

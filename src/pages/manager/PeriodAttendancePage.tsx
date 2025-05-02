@@ -31,7 +31,6 @@ const PeriodAttendancePage = () => {
     "data-[state=active]:text-white-text data-[state=inactive]:text-white-nav-text " +
     "dark:border-dark-border-sub dark:data-[state=inactive]:border-b-0 dark:data-[state=active]:border-b-dark-card-bg dark:data-[state=active]:bg-dark-card-bg " +
     "dark:data-[state=inactive]:bg-dark-bg dark:data-[state=active]:text-dark-text dark:data-[state=inactive]:text-dark-nav-text sm:px-6";
-
   return (
     <>
       <Seo
