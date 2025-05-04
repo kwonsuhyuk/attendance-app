@@ -24,7 +24,7 @@ export default function CommutePage() {
   const userId = useUserStore(state => state.currentUser?.uid);
   const { workPlacesList } = useCompanyStore(
     useShallow(state => ({
-      workPlacesList: state.currentCompany?.workPlacesList ?? [],
+      workPlacesList: state.currentCompany?.workPlacesList,
     })),
   );
   const { location: userLocation, isLoading, error } = useUserLocation();
