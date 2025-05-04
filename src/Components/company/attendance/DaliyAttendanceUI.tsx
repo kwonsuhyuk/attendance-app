@@ -90,12 +90,12 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 };
 
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
+
   const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
-
   return (
     <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
       {/* 전체 직원 수 */}

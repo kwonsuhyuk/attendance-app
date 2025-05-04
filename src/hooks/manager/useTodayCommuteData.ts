@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { fetchEmployees } from "@/api/employee.api";
-
 import { TCommuteRecord } from "@/model/types/commute.type";
 import { fetchTodayCommuteDataWithUserInfo } from "@/api/commute.api";
 import { TEmpUserData } from "@/model/types/user.type";
