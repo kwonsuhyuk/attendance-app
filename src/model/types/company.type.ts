@@ -16,6 +16,7 @@ export type TWorkPlace = {
   address: string;
   lat: number;
   lng: number;
+  radius?: number;
 };
 
 export type TworkPlacesList = TWorkPlace[];

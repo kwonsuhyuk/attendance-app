@@ -19,6 +19,11 @@ const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
           <p className="text-xs text-gray-400">
             좌표: ({place.lat}, {place.lng})
           </p>
+          {place.radius && (
+            <p className="text-xs text-gray-400">
+              반경: {place.radius >= 1000 ? `${place.radius / 1000}km` : `${place.radius}m`}
+            </p>
+          )}
         </div>
       </div>
 
