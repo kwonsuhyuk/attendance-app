@@ -9,15 +9,6 @@ import {
   WorkplaceBreakdown,
 } from "@/components/company/attendance/DaliyAttendanceUI";
 import { getKSTFormattedDate } from "@/util/time.util";
-import Seo from "@/components/Seo";
-import {
-  AttendanceHeader,
-  AttendanceStatsCards,
-  FullAttendanceRatioChart,
-  OutworkingBox,
-  WorkplaceBreakdown,
-} from "@/components/company/attendance/DaliyAttendanceUI";
-import { getKSTFormattedDate } from "@/util/time.util";
 
 const TodayAttenancePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -5,7 +5,7 @@ import { TWorkPlace } from "@/model/types/company.type";
 
 interface WorkPlaceItemProps {
   place: TWorkPlace;
-  onRemove: () => void;
+  onRemove?: () => void;
 }
 
 const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
@@ -22,14 +22,16 @@ const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
         </div>
       </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        onClick={onRemove}
-        className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
-      >
-        <X className="h-5 w-5" />
-      </Button>
+      {onRemove && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onRemove}
+          className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
+        >
+          <X className="h-5 w-5" />
+        </Button>
+      )}
     </Card>
   );
 };
