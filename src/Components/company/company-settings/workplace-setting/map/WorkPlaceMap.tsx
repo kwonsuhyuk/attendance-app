@@ -9,6 +9,7 @@ interface WorkPlaceMapProps {
   isLoaded: boolean;
   onLocationSelect: (lat: number, lng: number) => void;
   markerDragAble?: boolean;
+  radius?: number;
 }
 
 const WorkPlaceMap = ({
@@ -17,14 +18,16 @@ const WorkPlaceMap = ({
   isLoaded,
   onLocationSelect,
   markerDragAble = true,
+  radius = 3,
 }: WorkPlaceMapProps) => {
   return (
     <Suspense fallback={<Skeleton className="h-48 w-full animate-pulse rounded-md" />}>
-      {isLoaded ? (
+      {isLoaded && lat && lng && radius ? (
         <NaverMap
           onLocationSelect={onLocationSelect}
           selectedLocation={{ lat, lng }}
           markerDragAble={markerDragAble}
+          radius={radius}
         />
       ) : (
         <Skeleton className="h-48 w-full animate-pulse rounded-md" />

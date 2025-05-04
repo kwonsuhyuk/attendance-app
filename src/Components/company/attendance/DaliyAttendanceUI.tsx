@@ -90,36 +90,12 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 };
 
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
-  const [selectedData, setSelectedData] = useState<any>(null);
+
   const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
-  const { vacationData, rawDetails } = useVacationChartData(
-    {
-      year: dayjs(selectedDate).year(),
-      month: dayjs(selectedDate).month(),
-    },
-    null,
-    "month",
-  );
-  const { todayVacationData, totalTodayVacationCount } = useTodayVacationData({
-    vacationData,
-    selectedDate,
-  });
-  const detailedList = getFilteredDetails({
-    rawDetails,
-    selectedData,
-    mode: "month",
-  });
-
-  const handleClose = () => setSelectedData(null);
-
-  const handleVacationBoxClick = (data: any) => {
-    setSelectedData(data);
-  };
-
   return (
     <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
       {/* 전체 직원 수 */}
@@ -145,27 +121,7 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
           </div>
         </CardContent>
       </Card>
-
-      {/* 휴가 인원 */}
-      <Card
-        className="cursor-pointer transition hover:bg-purple-50 dark:hover:bg-zinc-900"
-        onClick={() => handleVacationBoxClick(todayVacationData || null)}
-      >
-        <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <PlaneTakeoffIcon className="h-5 w-5 text-purple-600 md:h-6 md:w-6" />
-          <div className="text-center md:text-left">
-            <p className="text-[0.65rem] text-muted-foreground md:text-xs">휴가 인원</p>
-            <p className="text-sm font-bold md:text-lg">{totalTodayVacationCount}명</p>
-          </div>
-          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground sm:block md:ml-auto md:mt-0" />
-        </CardContent>
-      </Card>
-      <VacationChartModal
-        open={!!selectedData}
-        onClose={handleClose}
-        label={selectedData?.date}
-        details={detailedList}
-      />
+      <TodayVacationEmployeeCard selectedDate={selectedDate} />
     </div>
   );
 };
@@ -466,12 +422,66 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
               </div>
             ))
           ) : (
-            <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
+            <div className="flex h-full items-center justify-center text-sm text-gray-500 dark:text-gray-400 sm:text-base">
               금일 출근한 직원이 없습니다.
             </div>
           )}
         </div>
       </div>
     </div>
+  );
+};
+
+export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date }) => {
+  const [selectedData, setSelectedData] = useState<any>(null);
+  const { vacationData, rawDetails } = useVacationChartData(
+    {
+      year: dayjs(selectedDate).year(),
+      month: dayjs(selectedDate).month(),
+    },
+    null,
+    "month",
+  );
+  const { todayVacationData, totalTodayVacationCount } = useTodayVacationData({
+    vacationData,
+    selectedDate,
+  });
+  const detailedList = getFilteredDetails({
+    rawDetails,
+    selectedData,
+    mode: "month",
+  });
+
+  const handleModalClose = () => setSelectedData(null);
+
+  const handleVacationBoxClick = (data: any) => {
+    setSelectedData(data);
+  };
+  return (
+    <>
+      <Card
+        className="h-fit cursor-pointer bg-purple-100 transition hover:bg-purple-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+        onClick={() => handleVacationBoxClick(todayVacationData || null)}
+      >
+        <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
+          <PlaneTakeoffIcon className="h-5 w-5 text-purple-600 dark:text-purple-300 md:h-6 md:w-6" />
+          <div className="text-center md:text-left">
+            <p className="text-[0.65rem] text-muted-foreground dark:text-zinc-400 md:text-xs">
+              휴가 인원
+            </p>
+            <p className="text-sm font-bold text-gray-800 dark:text-white md:text-lg">
+              {totalTodayVacationCount}명
+            </p>
+          </div>
+          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground dark:text-zinc-400 sm:block md:ml-auto md:mt-0" />
+        </CardContent>
+      </Card>
+      <VacationChartModal
+        open={!!selectedData}
+        onClose={handleModalClose}
+        label={selectedData?.date}
+        details={detailedList}
+      />
+    </>
   );
 };

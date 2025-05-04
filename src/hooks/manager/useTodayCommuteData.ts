@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { fetchEmployees } from "@/api/employee.api";
-
-import { TCommuteData, TCommuteRecord } from "@/model/types/commute.type";
+import { TCommuteRecord } from "@/model/types/commute.type";
 import { fetchTodayCommuteDataWithUserInfo } from "@/api/commute.api";
-import { TEmployee } from "@/model/types/manager.type";
 import { TEmpUserData } from "@/model/types/user.type";
 
 interface UseTodayCommuteDataProps {
@@ -56,10 +54,18 @@ export function useTodayCommuteData({ year, month, day }: UseTodayCommuteDataPro
     loadCommuteData();
   }, [companyCode, year, month, day]);
 
+  const workingEmployees = commuteData
+    .filter(record => record.startTime && !record.endTime)
+    .map(record => ({
+      user: record.userInfo,
+      startTime: record.startTime,
+    }));
+
   return {
     employeeList,
     commuteData,
     totalEmployeeNumber: employeeList.length,
     commuteEmployeeNumber: commuteData.length,
+    workingEmployees,
   };
 }

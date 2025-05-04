@@ -3,10 +3,12 @@ import { Label } from "@/components/ui/label";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { TWorkPlace } from "@/model/types/company.type";
 import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
 import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
 import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
+import { useState } from "react";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
@@ -33,19 +35,24 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
     handleSelectAddress,
   } = useWorkPlaceModal();
 
+  const [radius, setRadius] = useState(5);
+  const radiusOptions = [1, 3, 5, 10, 20];
+  const [radiusIndex, setRadiusIndex] = useState(1);
+
   const handleAddPlace = () => {
-    onSave({ name, memo, address, lat, lng });
+    onSave({ name, memo, address, lat, lng, radius });
     onClose();
     setName("");
     setMemo("");
     setAddress("");
+    setRadius(5);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="rounded-xl bg-white p-6 shadow-lg">
         <DialogHeader>
-          <DialogTitle className="mb-3">
+          <DialogTitle className="mb-2 flex">
             <MapPin className="mr-2 h-4 w-4" />
             근무지 설정
           </DialogTitle>
@@ -94,12 +101,52 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
               onSelect={handleSelectAddress}
             />
           </div>
+
+          <div className="w-full space-y-2">
+            <div className="flex items-center gap-3">
+              <Label>반경 (100m 단위)</Label>
+              <p className="text-xs text-gray-500">※ 10 = 1km</p>
+            </div>
+
+            <div className="relative w-full">
+              <Slider
+                min={0}
+                max={radiusOptions.length - 1}
+                step={1}
+                value={[radiusIndex]}
+                onValueChange={([val]) => {
+                  setRadiusIndex(val);
+                  setRadius(radiusOptions[val] * 100);
+                }}
+                className="w-full"
+              />
+
+              <div className="pointer-events-none absolute left-0 top-full mt-2 w-full px-2">
+                <div className="relative">
+                  {radiusOptions.map((v, i) => (
+                    <span
+                      key={i}
+                      className="absolute top-0 -translate-x-1/2 text-base text-muted-foreground"
+                      style={{ left: `${(i / (radiusOptions.length - 1)) * 100}%` }}
+                    >
+                      {v}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-1" />
+
           <WorkPlaceMap
             lat={lat}
             lng={lng}
             isLoaded={isLocationLoaded}
+            radius={radius}
             onLocationSelect={() => {}}
           />
+
           <Button onClick={handleAddPlace} disabled={!name || !address} className="w-full">
             저장
           </Button>
