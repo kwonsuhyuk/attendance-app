@@ -47,15 +47,6 @@ const MainPage = () => {
     return () => unsubscribe();
   }, [companyCode, setCompany]);
 
-  // useEffect(() => {
-  //   const tourShown = localStorage.getItem("tourShown");
-  //   if (!tourShown || tourShown === "false") {
-  //     setTimeout(() => {
-  //       setIsOpen(true);
-  //     }, 1000);
-  //   }
-  // }, [setIsOpen]);
-
   if (isLoading) return <Loading />;
 
   return (

@@ -1,43 +1,122 @@
 import { Card } from "@/components/ui/card";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Props {
   day: number;
   isSunday: boolean;
+  isCompanyHoliday?: boolean;
+  variant?: "total" | "employee";
+  summary?: {
+    출근: number;
+    외근: number;
+    휴가: number;
+    총원: number;
+  };
+  checkIn?: {
+    time: string;
+    workplace: string;
+  };
+  checkOut?: {
+    time: string;
+    workplace: string;
+  };
 }
 
-const PeriodAttCalendarDayCard = ({ day, isSunday }: Props) => {
+const PeriodAttCalendarDayCard = ({
+  day,
+  isSunday,
+  isCompanyHoliday,
+  variant = "total",
+  summary,
+  checkIn,
+  checkOut,
+}: Props) => {
+  const navigate = useNavigate();
+  const { companyCode } = useParams();
+
   return (
-    <Card className="flex h-[120px] flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub">
+    <Card
+      onClick={() => {
+        if (variant === "total" && companyCode) {
+          navigate(`/${companyCode}/todayatt`);
+        }
+      }}
+      className="hover:bg-white-hover flex h-[120px] cursor-pointer flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub dark:hover:bg-white-border sm:h-[140px] md:h-[160px] lg:h-[120px]"
+    >
+      {/* 상단 날짜 */}
       <div className="mb-1 flex items-center justify-between text-[15px] font-medium">
         <span
           className={
             isSunday
-              ? "flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-[15px] text-red-500"
-              : "text-muted-foreground"
+              ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[15px] text-dark-text dark:bg-red-500"
+              : isCompanyHoliday
+                ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 text-[15px] text-dark-text dark:bg-yellow-500"
+                : "text-muted-foreground"
           }
         >
           {day < 10 ? `0${day}` : day}
         </span>
-        <span className="text-muted-foreground">총원 12</span>
+        {variant === "total" && (
+          <span className="whitespace-nowrap text-muted-foreground">총원 {summary?.총원 ?? 0}</span>
+        )}
       </div>
 
-      <div className="grid grid-cols-2 gap-1">
-        {[
-          { label: "출근", color: "bg-cyan-300", value: 3 },
-          { label: "휴가", color: "bg-green-400", value: 0 },
-          { label: "외근", color: "bg-lime-300", value: 0 },
-          { label: "미출근", color: "bg-yellow-400", value: 1 },
-        ].map(item => (
-          <div
-            key={item.label}
-            className="flex items-center gap-1 rounded border-2 border-solid border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub"
-          >
-            <span className={`h-3 w-1.5 rounded-full ${item.color}`} />
-            <span>{item.label}</span>
-            <span className="ml-auto font-semibold">{item.value}</span>
-          </div>
-        ))}
-      </div>
+      {/* 총괄 요약 (관리자 탭) */}
+      {variant === "total" ? (
+        <div className="grid grid-cols-1 gap-1 lg:grid-cols-2">
+          {[
+            { label: "출근", color: "bg-green-300 dark:bg-green-500", value: summary?.출근 ?? 0 },
+            { label: "외근", color: "bg-orange-300 dark:bg-orange-500", value: summary?.외근 ?? 0 },
+            { label: "휴가", color: "bg-cyan-300 dark:bg-cyan-500", value: summary?.휴가 ?? 0 },
+          ].map(item => (
+            <div
+              key={item.label}
+              className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded border-2 border-solid border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub"
+            >
+              <span className={`h-3 w-1.5 rounded-full ${item.color}`} />
+              <span className="truncate">{item.label}</span>
+              <span className="ml-auto font-semibold">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        // 직원 탭: 출근/퇴근/휴가 표시
+        <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
+          {summary?.휴가 && !checkIn && !checkOut ? (
+            // 휴가만 있는 경우에만 표시
+            <div className="flex items-center gap-2 text-sm font-semibold text-blue-500">
+              <span>휴가</span>
+            </div>
+          ) : (
+            <>
+              {checkIn && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkIn.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-green-300 dark:bg-green-500"
+                    }`}
+                  />
+                  <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+                </div>
+              )}
+              {checkOut && (
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      checkOut.workplace === "외근"
+                        ? "bg-[#f3c78c]"
+                        : "bg-gray-400 dark:bg-gray-300"
+                    }`}
+                  />
+                  <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </Card>
   );
 };

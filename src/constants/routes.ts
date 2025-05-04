@@ -9,7 +9,7 @@ export const MAIN_ROUTES = {
 };
 
 export const EMPLOYEE_ROUTES = {
-  COMMUTE: "/camera",
+  COMMUTE: "/commute",
   EMPLOYEE_DATE_CHECK: "/calendar",
   MY_VACATION: "/myvacation",
   APP_GUIDE: "/appguide",

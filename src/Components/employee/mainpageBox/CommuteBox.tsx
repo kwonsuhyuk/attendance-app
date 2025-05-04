@@ -1,53 +1,86 @@
-import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import React, { useEffect, useState } from "react";
+import { useCompanyStore } from "@/store/company.store";
+import useCommuteBox from "@/hooks/employee/useCommuteBox";
+import CommuteBoxRenderItem from "./CommuteBoxRenderItem";
+import Clock from "../Clock";
+
+import { DoorOpen, Clock as ClockIcon, CalendarCheck2, Plane, MapPin } from "lucide-react";
+import { TCommuteStatus } from "@/model/types/commute.type";
 
 const CommuteBox = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const { status, commuteData, startWorkplace, endWorkplace, isLoading } = useCommuteBox();
+  const { companyCode } = useParams();
+  const navigate = useNavigate();
 
-  // 실시간 시간 업데이트
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000); // 1초마다 업데이트
-    return () => clearInterval(interval);
-  }, []);
-
-  // 날짜 포맷팅
-  const formatDate = (date: Date) => {
-    const weekDay = ["일", "월", "화", "수", "목", "금", "토"];
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const dayOfWeek = weekDay[date.getDay()];
-    return `${month}월 ${day}일 ${dayOfWeek}요일`;
+  const handleClick = () => {
+    if (!companyCode) return;
+    navigate(`/${companyCode}/commute`);
   };
 
-  // 시간 포맷팅
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  };
+  const { label, icon, colorClass } = getStatusDisplay(status);
 
   return (
-    <Card className="flex flex-col items-center justify-center gap-4 p-4 text-center shadow-md">
-      <div>
-        <p className="text-sm text-muted-foreground">{formatDate(currentTime)}</p>
-        <p className="mt-1 text-xl font-bold">{formatTime(currentTime)}</p>
-      </div>
+    <Card className="flex w-full flex-col justify-center p-6 shadow-md">
+      {!isLoading && (
+        <>
+          <div className="mb-6 flex items-center justify-between">
+            <Clock />
+            <div
+              className={`flex h-10 w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${colorClass}`}
+            >
+              {icon}
+              <span>{label}</span>
+            </div>
+          </div>
 
-      <Button
-        className="mt-3 w-full max-w-xs"
-        onClick={() => {
-          /* 출근 모달 열기 */
-        }}
-      >
-        출근하기
-      </Button>
+          <CommuteBoxRenderItem
+            status={status}
+            commuteData={commuteData}
+            startWorkplace={startWorkplace}
+            endWorkplace={endWorkplace}
+            onButtonClick={handleClick}
+          />
+        </>
+      )}
     </Card>
   );
 };
 
 export default CommuteBox;
+
+const getStatusDisplay = (status: TCommuteStatus) => {
+  switch (status) {
+    case "not-checked-in":
+      return {
+        label: "출근 전",
+        icon: <DoorOpen className="h-5 w-5 text-blue-500" />,
+        colorClass: "bg-blue-50 text-blue-600",
+      };
+    case "checked-in-only":
+      return {
+        label: "근무 중",
+        icon: <ClockIcon className="h-5 w-5 text-green-500" />,
+        colorClass: "bg-green-100 text-green-600",
+      };
+    case "checked-in-and-out":
+      return {
+        label: "근무 완료",
+        icon: <CalendarCheck2 className="h-5 w-5 text-gray-500 dark:text-white" />,
+        colorClass: "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white",
+      };
+    case "out-working":
+      return {
+        label: "외근 중",
+        icon: <Plane className="h-5 w-5 text-orange-500" />,
+        colorClass: "bg-orange-50 text-orange-600",
+      };
+    default:
+      return {
+        label: "상태 없음",
+        icon: <MapPin className="h-5 w-5 text-muted-foreground" />,
+        colorClass: "bg-muted text-muted-foreground",
+      };
+  }
+};
+

@@ -7,19 +7,20 @@ import { useUserStore } from "@/store/user.store";
 import Loading from "@/components/common/Loading";
 import Error from "@/components/Error";
 import EmployeeVacationList from "../vacation/EmployeeVacationList";
+import { Badge } from "@/components/ui/badge";
+import { useNotification } from "@/hooks/employee/useNotification";
+
 
 const VacationBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
-  const userId = useUserStore(state => state.currentUser?.uid);
 
-  if (!companyCode || !userId) return null;
-
-  const { requests, loading, error } = useGetEmployeeVacationList({
+  const { requests, error } = useGetEmployeeVacationList({
     companyCode,
-    userId,
     year: new Date().getFullYear().toString(),
   });
+
+  const { unreadVacationNotifications } = useNotification();
 
   return (
     <Card className="group relative p-4 shadow-md transition hover:bg-accent">
@@ -35,7 +36,17 @@ const VacationBox = () => {
       {/* 헤더 */}
       <CardTitle className="flex items-center gap-2 text-base font-semibold">
         <PlaneTakeoff className="h-5 w-5 text-primary" />
-        <div className="text-base">최근 휴가 내역</div>
+        <div className="flex items-center gap-1 text-base">
+          최근 휴가 내역
+          {unreadVacationNotifications > 0 && (
+            <Badge
+              variant="default"
+              className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 p-0 text-[10px] font-bold text-white"
+            >
+              {unreadVacationNotifications}
+            </Badge>
+          )}
+        </div>
       </CardTitle>
 
       {/* 데이터 상태 처리 */}

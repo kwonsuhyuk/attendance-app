@@ -3,23 +3,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { twMerge } from "tailwind-merge";
 import { useUserStore } from "@/store/user.store";
 import { stat } from "fs";
+import { useCompanyStore } from "@/store/company.store";
 
 interface ICompanySummaryInfoProps {
-  companyLogo: string | undefined;
-  companyName: string | undefined;
   type?: "employee" | "manager";
   className?: string;
 }
 
-const CompanySummaryInfo = ({
-  companyLogo,
-  companyName,
-  type = "manager",
-  className,
-}: ICompanySummaryInfoProps) => {
+const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfoProps) => {
   const name = useUserStore(state => state.currentUser?.name);
   const jobName = useUserStore(state => state.currentUser?.jobName);
   const workType = useUserStore(state => state.currentUser?.employmentType);
+  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
+  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
   return (
     <div

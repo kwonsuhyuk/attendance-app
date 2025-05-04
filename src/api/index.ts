@@ -2,7 +2,7 @@ import { get, set, getDatabase, ref, update, onValue, off } from "firebase/datab
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
 
-const db = getDatabase();
+export const db = getDatabase();
 
 export async function getData<T>(path: string): Promise<T | null> {
   try {
@@ -224,30 +224,30 @@ export async function fetchWorkTimes(companyCode, userId) {
   }
 }
 
-export async function registerOutWork(companyCode, userId) {
-  try {
-    const date = new Date();
-    const offset = date.getTimezoneOffset() * 60000;
-    const now = new Date(Date.now() - offset);
-    const nowStr = now.toISOString().slice(0, 10);
+// export async function registerOutWork(companyCode, userId) {
+//   try {
+//     const date = new Date();
+//     const offset = date.getTimezoneOffset() * 60000;
+//     const now = new Date(Date.now() - offset);
+//     const nowStr = now.toISOString().slice(0, 10);
 
-    await set(ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`), {
-      startTime: "외근",
-      endTime: "외근",
-    });
-    await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), {
-      workHour: "외근",
-    });
+//     await set(ref(db, `companyCode/${companyCode}/users/${userId}/date/${nowStr}`), {
+//       startTime: "외근",
+//       endTime: "외근",
+//     });
+//     await set(ref(db, `companyCode/${companyCode}/users/${userId}/workDates/${nowStr}`), {
+//       workHour: "외근",
+//     });
 
-    return { success: true, message: "외근 등록이 완료되었습니다." };
-  } catch (error) {
-    console.error("Error registering out work:", error);
-    return {
-      success: false,
-      error: "정상적으로 기록되지 않았습니다.",
-    };
-  }
-}
+//     return { success: true, message: "외근 등록이 완료되었습니다." };
+//   } catch (error) {
+//     console.error("Error registering out work:", error);
+//     return {
+//       success: false,
+//       error: "정상적으로 기록되지 않았습니다.",
+//     };
+//   }
+// }
 
 // 급여일 정보와 급여 데이터 조회
 export async function fetchSalaryInfo(companyCode, userId) {

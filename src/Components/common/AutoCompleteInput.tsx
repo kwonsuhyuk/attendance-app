@@ -26,7 +26,6 @@ const AutoCompleteUserInput = ({
     }
   }, [value]);
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
@@ -47,7 +46,7 @@ const AutoCompleteUserInput = ({
     setShowSuggestions(false);
     onSelect(user);
   };
-  
+
   const handleClearClick = () => {
     setInputValue("");
     setFilteredUsers([]);
@@ -62,7 +61,7 @@ const AutoCompleteUserInput = ({
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-full rounded-sm border-none pr-10 placeholder:text-sm focus:outline-none focus:ring-0"
+        className="h-full rounded-sm pr-10 placeholder:text-sm"
       />
       {inputValue && (
         <button
@@ -75,7 +74,7 @@ const AutoCompleteUserInput = ({
         </button>
       )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute left-0 right-0 z-10 mt-2 max-h-72 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white px-2 shadow-lg">
+        <ul className="absolute left-0 right-0 z-10 mt-2 max-h-72 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg">
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}

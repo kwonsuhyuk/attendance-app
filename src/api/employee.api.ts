@@ -1,10 +1,16 @@
-import { EmployeeInfo } from "@/model/types/user.type";
+import { TEmpUserData } from "@/model/types/user.type";
 import { getData, updateData } from ".";
 import { getUserPath } from "@/constants/api.path";
 
-export const fetchEmployees = async (companyCode: string): Promise<EmployeeInfo[]> => {
+export const fetchEmployees = async (companyCode: string): Promise<TEmpUserData[]> => {
   const data = await getData(`companyCode/${companyCode}/users`);
-  return data ? (Object.values(data) as EmployeeInfo[]) : [];
+
+  if (data) {
+    const users = Object.values(data) as TEmpUserData[];
+    return users.filter(user => user.userType === "employee");
+  }
+
+  return [];
 };
 
 export async function updateEmployeeSettings(

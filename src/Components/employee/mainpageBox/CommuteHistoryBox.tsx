@@ -1,9 +1,21 @@
 import { Card, CardTitle } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { CalendarCheck, CircleDot, CircleDashed, ChevronRight } from "lucide-react";
-import React from "react";
-import { addDays, startOfWeek, endOfWeek, format, isSameDay } from "date-fns";
+import { useEffect, useState } from "react";
+import {
+  addDays,
+  startOfWeek,
+  endOfWeek,
+  format,
+  isSameDay,
+  parseISO,
+  eachDayOfInterval,
+} from "date-fns";
 import { ko } from "date-fns/locale";
+import { fetchCommutesByPeriod } from "@/api/commute.api";
+import { useUserStore } from "@/store/user.store";
+import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
+
 
 const CommuteHistoryBox = () => {
   const navigate = useNavigate();
@@ -14,22 +26,72 @@ const CommuteHistoryBox = () => {
   const end = endOfWeek(today, { weekStartsOn: 1 }); // 일요일
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(start, i));
 
-  // 예시 데이터 (출근: true, 연차: false, undefined는 없음)
-  const commuteData: Record<string, boolean | undefined> = {
-    [format(addDays(start, 0), "yyyy-MM-dd")]: true,
-    [format(addDays(start, 1), "yyyy-MM-dd")]: true,
-    [format(addDays(start, 2), "yyyy-MM-dd")]: false,
-    [format(addDays(start, 3), "yyyy-MM-dd")]: true,
-    [format(addDays(start, 4), "yyyy-MM-dd")]: true,
-  };
+  type CommuteStatus = "출근" | "외근" | "휴가" | "기록없음";
+  const [commuteData, setCommuteData] = useState<Record<string, CommuteStatus>>({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = useUserStore.getState().currentUser;
+      const userId = user?.uid;
+      if (!companyCode || !userId) return;
+
+      const year = format(today, "yyyy");
+      const month = format(today, "MM");
+
+      const commuteDataRaw = await fetchCommutesByPeriod(companyCode, userId, year, month);
+      const vacationData = await fetchRegisteredVacationsByMonth(companyCode, year, month);
+
+      const myVacations = vacationData?.[userId] || {};
+
+      // 날짜 목록 생성 (예: "2025-04-23")
+      const vacationRanges = Object.values(myVacations).flatMap(v => {
+        const start = parseISO(v.startDate); // "2025-04-21"
+        const end = parseISO(v.endDate); // "2025-04-23"
+        return eachDayOfInterval({ start, end }).map(d => format(d, "yyyy-MM-dd"));
+      });
+
+      const weekData: Record<string, CommuteStatus> = {};
+
+      weekDates.forEach(date => {
+        const fullKey = format(date, "yyyy-MM-dd");
+        const dayKey = format(date, "d");
+        const commute = commuteDataRaw?.[dayKey];
+
+        if (vacationRanges.includes(fullKey)) {
+          weekData[fullKey] = "휴가";
+        } else if (commute) {
+          if (commute.outworkingMemo || commute.startWorkplaceId === "외근") {
+            weekData[fullKey] = "외근";
+          } else if (commute.startTime) {
+            weekData[fullKey] = "출근";
+          } else {
+            weekData[fullKey] = "기록없음";
+          }
+        } else {
+          weekData[fullKey] = "기록없음";
+        }
+      });
+
+      setCommuteData(weekData);
+    };
+
+    fetchData();
+  }, [companyCode]);
 
   const renderStatusIcon = (date: Date) => {
     const key = format(date, "yyyy-MM-dd");
     const status = commuteData[key];
 
-    if (status === true) return <CircleDot className="h-4 w-4 text-green-500" />;
-    if (status === false) return <CircleDashed className="h-4 w-4 text-yellow-500" />;
-    return <CircleDot className="h-4 w-4 text-gray-400" />;
+    switch (status) {
+      case "출근":
+        return <CircleDot className="h-4 w-4 text-green-500" />;
+      case "휴가":
+        return <CircleDot className="h-4 w-4 text-blue-500" />;
+      case "외근":
+        return <CircleDot className="h-4 w-4 text-yellow-500" />;
+      default:
+        return <CircleDashed className="h-4 w-4 text-gray-400" />;
+    }
   };
 
   return (
@@ -62,18 +124,21 @@ const CommuteHistoryBox = () => {
         ))}
       </div>
 
-      {/* 범례 설명 */}
       <div className="mt-10 flex flex-wrap gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <CircleDot className="h-3 w-3 text-green-500" />
           출근
         </div>
         <div className="flex items-center gap-1">
-          <CircleDashed className="h-3 w-3 text-yellow-500" />
+          <CircleDot className="h-3 w-3 text-blue-500" />
           휴가
         </div>
         <div className="flex items-center gap-1">
-          <CircleDot className="h-3 w-3 text-gray-400" />
+          <CircleDot className="h-3 w-3 text-yellow-500" />
+          외근
+        </div>
+        <div className="flex items-center gap-1">
+          <CircleDashed className="h-3 w-3 text-gray-400" />
           기록 없음
         </div>
       </div>

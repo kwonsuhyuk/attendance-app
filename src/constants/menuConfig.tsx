@@ -2,6 +2,7 @@ import {
   Bell,
   BookOpenCheck,
   Calendar,
+  CheckCheck,
   Clock,
   Home,
   Info,

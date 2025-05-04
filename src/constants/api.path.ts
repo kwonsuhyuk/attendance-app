@@ -40,3 +40,15 @@ export const getRegisteredVacationDetailPath = (
   userId: string,
   registerId: string,
 ) => `vacation/${companyCode}/registered/${year}/${month}/${userId}/${registerId}`;
+
+// 출퇴근 관련 api path
+export const getUserDayCommutePath = (
+  companyCode: string,
+  year: string,
+  month: string,
+  day: string,
+  userId: string,
+) => `attendance/${companyCode}/${year}/${month}/${day}/${userId}`;
+
+export const getDayCommutePath = (companyCode: string, year: string, month: string, day: string) =>
+  `attendance/${companyCode}/${year}/${month}/${day}`;
