@@ -52,6 +52,10 @@ const App = () => {
     return () => unsubscribe();
   }, [setUser, clearUser]);
 
+  if (!isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <Seo title="On & Off" description="출퇴근, 휴가, 근태관리를 쉽고 빠르게." />
