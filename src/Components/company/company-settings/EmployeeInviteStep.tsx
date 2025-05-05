@@ -23,32 +23,28 @@ const EmployeeInviteStep = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
+    <div className="flex w-full max-w-md flex-col items-center space-y-6">
       {/* 초대 코드 섹션 */}
-      <Card className="w-full ">
+      <Card className="w-full">
         <CardHeader className="text-center">
           <CardTitle className="text-lg font-semibold">직원 초대 코드</CardTitle>
-          <p className="text-gray-500 text-sm mt-1">
-            직원들은 아래 초대 코드를 사용하여 가입할 수 있습니다.
+          <p className="mt-1 text-sm text-gray-500">
+            직원들은 아래 초대 코드를 회원가입시 사용하여 가입할 수 있습니다.
           </p>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-3">
-          <div className="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg">
+          <div className="flex items-center space-x-2 rounded-lg border border-gray-300 px-4 py-2">
             <Input
-              className="w-40 text-lg font-bold text-center border-none"
+              className="w-40 border-none text-center text-lg font-bold"
               value={companyCode}
               readOnly
             />
             <Button variant="outline" size="icon" onClick={handleCopy} className="p-2">
-              <Copy className="w-5 h-5 text-gray-500" />
+              <Copy className="h-5 w-5 text-gray-500" />
             </Button>
           </div>
         </CardContent>
       </Card>
-      <NoticeCard
-        title="회사 QR"
-        description={<>회사 QR은 가입 후 다운받아 사용하실 수 있습니다.</>}
-      />
     </div>
   );
 };
