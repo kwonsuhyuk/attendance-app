@@ -60,7 +60,10 @@ export const useSettingEmployee = () => {
         userType: "employee",
       });
       setLoading(false);
-      navigate(`/${companyCode}/appguide`);
+      toast({
+        description: "On&Off 가입이 완료되었습니다.",
+      });
+      navigate(`/${companyCode}/companymain`);
     } catch (e: any) {
       setLoading(false);
       toast({
