@@ -17,7 +17,7 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
   const companyName = useCompanyStore(state => state.currentCompany?.companyName);
   const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
   const user = useUserStore(state => state.currentUser);
-  console.log(user);
+
   return (
     <div
       className={twMerge(
