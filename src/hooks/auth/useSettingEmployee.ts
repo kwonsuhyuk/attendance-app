@@ -5,6 +5,7 @@ import { useShallow } from "zustand/shallow";
 import { useUserStore } from "@/store/user.store";
 import { TEmploymentType } from "@/model/types/position.type";
 import { setEmployeeUser } from "@/api/auth.api";
+import { TEmpUserData } from "@/model/types/user.type";
 
 export const useSettingEmployee = () => {
   const { toast } = useToast();
@@ -21,6 +22,9 @@ export const useSettingEmployee = () => {
       phoneNumber: state.currentUser?.phoneNumber,
     })),
   );
+  const setUser = useUserStore(state => state.setUser);
+  const currentUser = useUserStore(state => state.currentUser);
+
   const handleGoMain = async () => {
     if (!selectJob) {
       toast({
@@ -63,6 +67,13 @@ export const useSettingEmployee = () => {
       toast({
         description: "On&Off 가입이 완료되었습니다.",
       });
+      if (currentUser) {
+        setUser({
+          ...(currentUser as TEmpUserData),
+          jobName: selectJob,
+          employmentType,
+        });
+      }
       navigate(`/${companyCode}/companymain`);
     } catch (e: any) {
       setLoading(false);
