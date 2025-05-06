@@ -27,14 +27,22 @@ export default function CommutePage() {
       workPlacesList: state.currentCompany?.workPlacesList,
     })),
   );
+  if (!workPlacesList)
+    return (
+      <>
+        <CommuteNotFound />
+      </>
+    );
+
   const { location: userLocation, isLoading, error } = useUserLocation();
   const nearbyPlaces = useNearbyWorkplaces(userLocation, workPlacesList);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const selectedPlace = useMemo(
-    () => nearbyPlaces.find(p => p.id === selectedPlaceId),
+    () => nearbyPlaces?.find(p => p.id === selectedPlaceId),
     [selectedPlaceId, nearbyPlaces],
   );
   const { status } = useCommuteStatus();
+
   const isCheckoutMode = status === "checked-in-only";
   const { isConfirmOpen, setIsConfirmOpen, handleCommuteModal, handleConfirmCommute } =
     useCommuteModal({
@@ -51,7 +59,7 @@ export default function CommutePage() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 px-4">
-      {nearbyPlaces.length > 0 ? (
+      {nearbyPlaces?.length > 0 ? (
         <div className="w-full max-w-md space-y-6">
           <CommuteHeader isCheckoutMode={isCheckoutMode} />
           {selectedPlace && (
