@@ -50,6 +50,7 @@ const VacationPieChart = ({ selectedDate, selectedName, mode }: IVacationPieChar
             </PieChart>
           </ResponsiveContainer>
           <CustomLegend
+            className="flex flex-col"
             payload={pieData.map(d => ({ value: d, color: d.color }))}
             total={totalDays}
           />
