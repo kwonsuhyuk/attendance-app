@@ -89,6 +89,7 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
             <div className="text-sm text-white-text dark:text-dark-nav-text">
               회사 지정 공휴일 추가
             </div>
+
             <Popover>
               <PopoverTrigger asChild>
                 <Button className="bg-point-color text-black hover:bg-point-color hover:bg-opacity-80">
