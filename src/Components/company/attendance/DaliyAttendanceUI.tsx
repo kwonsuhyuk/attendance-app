@@ -203,6 +203,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
         <CustomLegend
           payload={coloredData.map(d => ({ value: d, color: d.color }))}
           total={total}
+          className="py-5 sm:px-10"
         />
       </CardContent>
     </Card>
@@ -450,20 +451,20 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
   return (
     <>
       <Card
-        className="h-fit cursor-pointer bg-purple-100 transition hover:bg-purple-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+        className="h-fit cursor-pointer bg-sky-100 transition hover:bg-sky-50 dark:bg-sky-900 dark:hover:bg-sky-800"
         onClick={() => handleVacationBoxClick(todayVacationData || null)}
       >
         <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <PlaneTakeoffIcon className="h-5 w-5 text-purple-600 dark:text-purple-300 md:h-6 md:w-6" />
+          <PlaneTakeoffIcon className="h-5 w-5 text-sky-600 dark:text-sky-300 md:h-6 md:w-6" />
           <div className="text-center md:text-left">
-            <p className="text-[0.65rem] text-muted-foreground dark:text-zinc-400 md:text-xs">
+            <p className="text-[0.65rem] text-muted-foreground dark:text-sky-300 md:text-xs">
               휴가 인원
             </p>
             <p className="text-sm font-bold text-gray-800 dark:text-white md:text-lg">
               {totalTodayVacationCount}명
             </p>
           </div>
-          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground dark:text-zinc-400 sm:block md:ml-auto md:mt-0" />
+          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground dark:text-sky-300 sm:block md:ml-auto md:mt-0" />
         </CardContent>
       </Card>
       <VacationChartModal
