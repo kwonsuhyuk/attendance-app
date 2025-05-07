@@ -17,7 +17,7 @@ interface WorkPlaceModalProps {
   place?: TWorkPlace;
 }
 
-const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
+const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps) => {
   const {
     name,
     setName,
@@ -33,7 +33,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
     noResult,
     handleSearchAddress,
     handleSelectAddress,
-  } = useWorkPlaceModal();
+  } = useWorkPlaceModal(place);
 
   const [radius, setRadius] = useState(5);
   const radiusOptions = [1, 3, 5, 10, 20];

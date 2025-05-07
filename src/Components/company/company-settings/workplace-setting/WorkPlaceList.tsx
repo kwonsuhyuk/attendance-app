@@ -1,18 +1,20 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TworkPlacesList } from "@/model/types/company.type";
+import { TWorkPlace, TworkPlacesList } from "@/model/types/company.type";
 import WorkPlaceItem from "./WorkPlaceItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface WorkPlaceListProps {
   workPlaces: TworkPlacesList;
   onRemove: (index: number) => void;
+  onEdit?: (place: TWorkPlace) => void;
 }
 
-const WorkPlaceList = ({ workPlaces, onRemove }: WorkPlaceListProps) => {
+const WorkPlaceList = ({ workPlaces, onRemove, onEdit }: WorkPlaceListProps) => {
   return (
     <Card className="mt-4 w-full">
       <CardHeader>
         <CardTitle className="text-lg">추가된 근무지</CardTitle>
+        <p className="text-xs">*근무지 선택 시, 수정이 가능합니다.</p>
       </CardHeader>
       <CardContent className="px-6">
         {workPlaces.length === 0 ? (
@@ -22,7 +24,12 @@ const WorkPlaceList = ({ workPlaces, onRemove }: WorkPlaceListProps) => {
         ) : (
           <ScrollArea className="max-h-72 overflow-y-auto rounded-sm border border-solid border-white-border-sub dark:border-dark-border">
             {workPlaces.map((place, index) => (
-              <WorkPlaceItem key={place.id} place={place} onRemove={() => onRemove(index)} />
+              <WorkPlaceItem
+                key={place.id}
+                place={place}
+                onRemove={() => onRemove(index)}
+                onEdit={onEdit} // ✅ 전달
+              />
             ))}
           </ScrollArea>
         )}
