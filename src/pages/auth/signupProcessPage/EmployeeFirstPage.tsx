@@ -11,6 +11,7 @@ import CompanyInfo from "@/components/common/CompanyInfo";
 import AppTitle from "@/components/common/AppTitle";
 import EmployeeJobSelection from "@/components/employee/EmployeeJobSelection";
 import EmploymentTypeSelection from "@/components/employee/EmployeementTypeSelection";
+import { Label } from "@/components/ui/label";
 
 export default function EmployeeFirstPage() {
   const {
@@ -36,8 +37,8 @@ export default function EmployeeFirstPage() {
   if (loading) return <Loading />;
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 bg-gray-50">
-      <div className="flex flex-col gap-6 w-full max-w-md sm:max-w-sm flex-1">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 p-4 sm:p-6">
+      <div className="flex w-full max-w-md flex-1 flex-col gap-6 sm:max-w-sm">
         {/* Title */}
         <AppTitle />
         <CompanyInfo
@@ -46,7 +47,8 @@ export default function EmployeeFirstPage() {
           companyIntro={companyIntro}
         />
         {/* Job Selection Section */}
-        <Card className="p-6 rounded-xl bg-white flex flex-col space-y-6 shadow-md flex-1 mb-10">
+        <Card className="mb-10 flex flex-1 flex-col space-y-6 rounded-xl bg-white p-6 shadow-md">
+          <Label className="text-lg text-black">가입 정보</Label>
           {/* 사용자 정보 */}
           <UserInfoTable
             className="my-4"
@@ -69,12 +71,8 @@ export default function EmployeeFirstPage() {
           />
         </Card>
       </div>
-      <div className="w-full max-w-md sm-max-w-sm pb-6">
-        <Button
-          onClick={handleGoMain}
-          className="w-full py-3 text-lg font-semibold"
-          variant="secondary"
-        >
+      <div className="sm-max-w-sm w-full max-w-md pb-6">
+        <Button onClick={handleGoMain} className="w-full py-3 text-lg font-semibold">
           가입 완료
         </Button>
       </div>
