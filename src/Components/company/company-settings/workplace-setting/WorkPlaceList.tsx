@@ -9,18 +9,24 @@ interface WorkPlaceListProps {
 }
 
 const WorkPlaceList = ({ workPlaces, onRemove }: WorkPlaceListProps) => {
-  if (workPlaces.length === 0) return null;
-
   return (
     <Card className="mt-4 w-full">
       <CardHeader>
         <CardTitle className="text-lg">추가된 근무지</CardTitle>
       </CardHeader>
-      <ScrollArea className="max-h-72 space-y-2 overflow-y-auto">
-        {workPlaces.map((place, index) => (
-          <WorkPlaceItem key={place.id} place={place} onRemove={() => onRemove(index)} />
-        ))}
-      </ScrollArea>
+      <CardContent className="px-6">
+        {workPlaces.length === 0 ? (
+          <div className="rounded-sm border border-solid border-white-border-sub p-12 dark:border-dark-border">
+            <p className="text-center text-sm text-muted-foreground">추가된 근무지가 없습니다.</p>
+          </div>
+        ) : (
+          <ScrollArea className="max-h-72 overflow-y-auto rounded-sm border border-solid border-white-border-sub dark:border-dark-border">
+            {workPlaces.map((place, index) => (
+              <WorkPlaceItem key={place.id} place={place} onRemove={() => onRemove(index)} />
+            ))}
+          </ScrollArea>
+        )}
+      </CardContent>
     </Card>
   );
 };

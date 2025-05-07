@@ -3,7 +3,6 @@ import CompanySettingPageContainer from "@/components/container/manager/CompanyS
 import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
 import { useWorkplacePage } from "@/hooks/company-settings/useWorkplacePage";
-import { useCompanyStore } from "@/store/company.store";
 import { FormProvider } from "react-hook-form";
 
 const WorkplaceManagePage = () => {
