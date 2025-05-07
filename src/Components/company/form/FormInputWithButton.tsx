@@ -27,7 +27,7 @@ const FormInputWithButton = ({
         placeholder={placeholder}
         className="h-10 py-2"
       />
-      <Button type="button" className="h-10 px-4" onClick={onSubmit}>
+      <Button variant="outline" type="button" className="h-10 px-4" onClick={onSubmit}>
         {buttonText}
       </Button>
     </div>

@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { HelpCircle, X } from "lucide-react";
+import { HelpCircle, Info, X } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import TooltipContainer from "@/components/common/TooltipContainer";
+import PopoverHint from "@/components/common/PopoverHint";
 
 interface IHolidaySettingsProps {
   type?: "setting" | "firstpage";
@@ -50,8 +51,8 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
         <div className="flex w-full items-center justify-between">
           <CardTitle className="flex items-center gap-1 text-lg">
             공휴일/주말 추가 급여 적용
-            <TooltipContainer
-              icon={<HelpCircle size={16} />}
+            <PopoverHint
+              icon={<Info size={18} />}
               contentText="토, 일 및 국가 지정 공휴일에 적용됩니다."
             />
           </CardTitle>
@@ -105,14 +106,14 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
             </Popover>
             <div className="flex flex-wrap gap-2">
               {holidays.map((holiday: string, index: number) => (
-                <Badge key={index} className="flex items-center space-x-2 px-3 py-1">
-                  <span>{holiday}</span>
+                <Badge key={index} className="flex items-center gap-1 px-3 py-1">
+                  <span className="text-sm leading-tight">{holiday}</span>
                   <Button
                     type="button"
                     onClick={() => handleRemoveHoliday(holiday)}
-                    className="h-auto border-none bg-transparent p-0"
+                    className="h-4 w-4 bg-transparent p-0 pb-1 hover:text-red-400"
                   >
-                    <X className="h-4 w-4 text-white outline-none hover:text-red-300 dark:text-dark-bg" />
+                    <X className="h-4 w-4 text-white dark:text-dark-bg" />
                   </Button>
                 </Badge>
               ))}
