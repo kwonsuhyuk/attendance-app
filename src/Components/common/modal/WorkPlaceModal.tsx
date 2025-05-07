@@ -50,7 +50,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
+      <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white p-2 px-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
         <DialogHeader>
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center">
@@ -60,8 +60,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
             <Button
               type="button"
               variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-destructive"
+              className="text-muted-foreground hover:bg-white-card-bg hover:text-destructive hover:text-white-nav-selected"
               onClick={onClose}
             >
               <X className="h-5 w-5" />
