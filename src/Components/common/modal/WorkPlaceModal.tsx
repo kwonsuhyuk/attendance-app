@@ -50,7 +50,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
+      <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="mb-2 flex">
             <MapPin className="mr-2 h-4 w-4" />
