@@ -2,9 +2,9 @@ import { ClipLoader } from "react-spinners";
 
 export default function Loading() {
   return (
-    <div className="absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-xl bg-white px-8 py-6 shadow-lg">
-      <ClipLoader color="black" size={80} aria-label="Loading Spinner" data-testid="loader" />
-      <h3 className="mt-4 text-lg font-semibold text-gray-800">로딩 중 입니다.</h3>
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white">
+      <ClipLoader color="#000000" size={60} />
+      <p className="mt-4 animate-pulse text-base text-gray-700">On&Off 로딩 중입니다...</p>
     </div>
   );
 }
