@@ -77,7 +77,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
             placeholder="내용을 입력하세요"
             value={content}
             onChange={e => setContent(e.target.value)}
-            rows={6}
+            rows={10}
           />
         </div>
 
