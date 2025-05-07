@@ -142,7 +142,6 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     employeeList,
   );
 
-  // 기본 데이터 준비
   const totalData = [
     ...workplacePlaces.map(place => ({
       name: place.name,
@@ -303,13 +302,13 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   return (
     <Card className="w-full border bg-white dark:border-zinc-700 dark:bg-zinc-900">
       <CardContent className="p-4">
-        <div className="mb-4 flex items-center gap-2 text-base font-semibold text-blue-800 dark:text-blue-300 sm:text-lg">
-          <BarChart3 className="h-5 w-5" /> 근무지별 출근 인원
+        <div className="mb-4 flex items-center gap-2 text-base font-semibold sm:text-lg">
+          근무지별 출근 인원
         </div>
 
         <div className="relative w-full overflow-hidden">
           <Carousel>
-            <CarouselContent className="mx-4 my-6 h-[450px] w-64 max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]">
+            <CarouselContent className="mx-4 my-6 h-[450px] w-[18rem] max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]">
               {placeList && placeList.length > 0 ? (
                 placeList.map((place, idx) => {
                   const matched = workplacePlaces.find(p => p.id === place.id);
@@ -345,52 +344,57 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
 
 export const PlaceCard = ({ place }: { place: TPlaceData }) => {
   return (
-    <div className="flex h-full flex-col gap-5 rounded-2xl border border-solid border-gray-200 bg-white p-6 shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg dark:border-gray-800 dark:bg-zinc-900">
+    <div className="flex h-full flex-col gap-6 rounded-xl border border-solid border-gray-200 bg-white p-5 shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-          <h3 className="truncate text-lg font-bold text-gray-900 dark:text-white">{place.name}</h3>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{place.name}</h3>
+          </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {place.address || "주소 정보 없음"}
+          </span>
         </div>
-        <p className="ml-7 truncate text-sm text-gray-500 dark:text-gray-400">
-          {place.address || "-"}
-        </p>
-      </div>
 
-      {/* Memo */}
-      <div className="flex items-start gap-2 rounded-md bg-gray-100 p-3 text-sm text-gray-600 dark:bg-zinc-800 dark:text-gray-300">
-        <StickyNote className="h-5 w-5 shrink-0 text-yellow-500 dark:text-yellow-400" />
-        <span className="truncate">{place.memo || "-"}</span>
+        {/* Memo Section */}
+        <div className="flex items-start gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 shadow-sm dark:bg-green-950 dark:text-green-200">
+          <StickyNote className="h-5 w-5 shrink-0 text-green-500 dark:text-green-300" />
+          <span className="line-clamp-2">{place.memo || "-"}</span>
+        </div>
       </div>
 
       {/* Employee List */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <h4 className="mb-2 text-base font-semibold text-gray-800 dark:text-white">
-          출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
+        <h4 className="mb-2 text-sm font-semibold text-gray-800 dark:text-white">
+          금일 출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
         </h4>
-        <div className="scrollbar-thin scrollbar-thumb-blue-300 h-40 flex-1 space-y-2 overflow-y-auto pr-2">
-          {place.employees.length > 0 ? (
-            place.employees.map((emp: TWorkplaceEmployee) => (
-              <div
-                key={emp.userId}
-                className="flex items-start gap-3 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-zinc-700 dark:bg-zinc-800"
-              >
-                {/* 프로필 이니셜 */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-900 dark:bg-blue-600 dark:text-white">
-                  <User />
-                </div>
+        <div className="scrollbar-thin scrollbar-thumb-blue-300 relative h-72 overflow-y-auto rounded-md border border-solid border-white-border-sub py-2 pr-1 dark:border-dark-border-sub">
+          <div className="h-full space-y-2">
+            {place.employees.length > 0 ? (
+              place.employees.map((emp: TWorkplaceEmployee) => (
+                <div
+                  key={emp.userId}
+                  className="flex flex-col justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 sm:flex-row sm:items-center sm:gap-4"
+                >
+                  {/* 직원 프로필 및 정보 */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {emp.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {emp.jobName} · {emp.employmentType}
+                      </p>
+                    </div>
+                  </div>
 
-                {/* 직원 정보 */}
-                <div className="flex flex-col gap-0.5 overflow-hidden">
-                  <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                    {emp.name}
-                  </p>
-                  <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                    {emp.jobName} · {emp.employmentType}
-                  </p>
-
+                  {/* 출근/퇴근 */}
                   {(emp.startTime || emp.endTime) && (
-                    <div className="mt-1 flex flex-col gap-0.5 text-xs">
+                    <div className="flex items-center gap-2 text-xs sm:flex-col sm:items-start">
                       <p className="text-green-600 dark:text-green-300">
                         출근:{" "}
                         <span className="text-gray-600 dark:text-gray-300">
@@ -410,13 +414,13 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
                     </div>
                   )}
                 </div>
+              ))
+            ) : (
+              <div className="flex h-full items-center justify-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+                금일 출근한 직원이 없습니다.
               </div>
-            ))
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-              금일 출근한 직원이 없습니다.
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
