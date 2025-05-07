@@ -33,12 +33,17 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
       </div>
 
       <div
-        className={`my-4 mr-10 cursor-pointer overflow-hidden text-sm text-muted-foreground transition-all duration-500 ease-in-out ${
+        className={`my-4 cursor-pointer overflow-hidden text-sm text-muted-foreground transition-all duration-500 ease-in-out ${
           open ? "max-h-[500px]" : "max-h-[24px]"
         }`}
         onClick={() => setOpen(prev => !prev)}
       >
-        <p className={`${!open ? "line-clamp-1" : ""}`}>{content}</p>
+        <p
+          className={`${!open ? "line-clamp-1" : ""}`}
+          style={{ whiteSpace: "pre-line" }} //
+        >
+          {content}
+        </p>
       </div>
 
       <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
