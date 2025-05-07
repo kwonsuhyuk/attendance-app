@@ -33,6 +33,9 @@ import { TPlaceData, TWorkplaceEmployee, useFilterWork } from "@/hooks/manager/u
 import { useCompanyStore } from "@/store/company.store";
 import { getKSTDateInfo } from "@/util/time.util";
 import { isValid } from "date-fns";
+import { CHART_COLORS, GRAY_COLOR, ORANGE_COLOR } from "@/constants/chartColor";
+import { CustomLegend } from "@/components/common/chart/CustomLegend";
+import { CustomTooltip } from "@/components/common/chart/CustomTooltip";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -90,7 +93,6 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 };
 
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
-
   const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
@@ -132,6 +134,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
+
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { workplacePlaces, outworkingPlace, notCommutePlace } = useFilterWork(
     commuteData,
@@ -139,8 +142,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     employeeList,
   );
 
-  const pieColors = ["#4F46E5", "#22C55E", "#F97316", "#E11D48", "#3B82F6", "#FACC15", "#10B981"];
-
+  // 기본 데이터 준비
   const totalData = [
     ...workplacePlaces.map(place => ({
       name: place.name,
@@ -152,68 +154,56 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
 
   const total = totalData.reduce((acc, cur) => acc + cur.value, 0);
 
+  let colorIndex = 0;
+  const coloredData = totalData.map(item => {
+    let color = "";
+
+    if (item.name === "미출근") {
+      color = GRAY_COLOR;
+    } else if (item.name === "외근") {
+      color = ORANGE_COLOR;
+    } else {
+      color = CHART_COLORS[colorIndex % CHART_COLORS.length];
+      colorIndex++;
+    }
+
+    return { ...item, color };
+  });
+
   return (
     <Card className="border bg-white dark:bg-zinc-900">
       <CardContent className="flex flex-col space-y-2 p-4 sm:space-y-4">
-        {/* 제목 */}
         <h3 className="text-base font-semibold text-gray-800 dark:text-white sm:text-lg">
           전체 출근 분포
         </h3>
 
-        {/* 차트 컨테이너 */}
         <div className="h-48 w-full md:h-64 lg:h-72 xl:h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
               <Pie
-                data={totalData}
+                data={coloredData}
                 cx="50%"
                 cy="50%"
-                innerRadius="20%"
-                outerRadius="65%"
-                paddingAngle={3}
-                cornerRadius={5}
+                innerRadius={10}
+                outerRadius={90}
+                paddingAngle={1}
                 dataKey="value"
+                labelLine={false}
+                label={false}
               >
-                {totalData.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
+                {coloredData.map((entry, idx) => (
+                  <Cell key={`cell-${idx}`} fill={entry.color} />
                 ))}
               </Pie>
-
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                  fontSize: "12px",
-                  padding: "8px",
-                }}
-                formatter={(value: number, name: string) => [`${value}명`, name]}
-              />
+              <Tooltip content={<CustomTooltip />} />
             </RechartPieChart>
           </ResponsiveContainer>
         </div>
 
-        {/* 범례 */}
-        <div className="grid grid-cols-1 gap-2 overflow-y-auto py-2 pr-1 text-xs sm:grid-cols-2 sm:gap-3 sm:text-sm">
-          {totalData.map((item, idx) => {
-            const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : "0.0";
-            return (
-              <div
-                key={idx}
-                className="flex items-center gap-2 rounded bg-gray-50 px-2 py-1 dark:bg-zinc-700"
-              >
-                <span
-                  className="inline-block h-2 w-2 rounded-full"
-                  style={{ backgroundColor: pieColors[idx % pieColors.length] }}
-                />
-                <span className="font-medium text-gray-700 dark:text-white">{item.name}</span>
-                <span className="ml-auto text-gray-500 dark:text-gray-300">
-                  {item.value}명 ({percent}%)
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <CustomLegend
+          payload={coloredData.map(d => ({ value: d, color: d.color }))}
+          total={total}
+        />
       </CardContent>
     </Card>
   );
