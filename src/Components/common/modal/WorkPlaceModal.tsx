@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -52,11 +52,23 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="mb-2 flex">
-            <MapPin className="mr-2 h-4 w-4" />
-            근무지 설정
-          </DialogTitle>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center">
+              <MapPin className="mr-2 h-4 w-4" />
+              <DialogTitle className="text-lg font-medium">근무지 설정</DialogTitle>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </DialogHeader>
+
         <div className="space-y-6">
           <div className="space-y-3">
             <Label>근무지 이름</Label>
