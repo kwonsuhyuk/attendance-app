@@ -5,29 +5,25 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   {
     title: "홈",
-    path: "companymain",
+    path: "employee/companymain",
     icon: <Home className="h-5 w-5" />,
   },
-  // {
-  //   title: "공지사항",
-  //   path: "notice",
-  //   icon: <Megaphone className="h-5 w-5" />,
-  // },
+
   {
     title: "출퇴근기록",
-    path: "calendar",
+    path: "employee/calendar",
     icon: <CalendarClock className="h-5 w-5" />,
   },
 
   {
     title: "휴가",
-    path: "myvacation",
+    path: "employee/myvacation",
     icon: <Plane className="h-5 w-5" />,
   },
 
   {
     title: "메뉴",
-    path: "employeemenu",
+    path: "employee/employeemenu",
     icon: <Menu className="h-5 w-5" />,
   },
 ];

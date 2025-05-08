@@ -12,7 +12,6 @@ import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
 import { useCompanyStore } from "@/store/company.store";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import CompanySummaryInfo from "../CompanySummaryInfo";
 

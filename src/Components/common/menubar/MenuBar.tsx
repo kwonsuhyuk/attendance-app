@@ -3,7 +3,7 @@ import { ManagerMenuBar } from "./ManagerMenuBar";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 
 const MenuBar = () => {
-  const { userType, logout } = useMenuBar();
+  const { userType } = useMenuBar();
 
   return userType === "manager" ? <ManagerMenuBar /> : <EmployeeMenuBar />;
 };

@@ -13,15 +13,15 @@ const EMPLOYMENT_COLORS = ["#60A5FA", "#FACC15", "#34D399", "#9CA3AF"];
 
 const EmployeeListBox = () => {
   const { employeeList } = useEmployeeList();
-  const jobList = useCompanyStore(state => state.currentCompany?.jobList || []);
+  const jobList = useCompanyStore(state => state.currentCompany?.jobList);
 
   const { pieData: jobPieData, total: jobTotal } = useMemo(() => {
     const jobCountMap: Record<string, number> = {};
-    const jobNames = jobList.map(job => job.name);
+    const jobNames = jobList?.map(job => job.name);
 
     employeeList?.forEach(emp => {
       const jobName = emp.jobName;
-      const key = jobNames.includes(jobName) ? jobName : "선택 안함";
+      const key = jobNames?.includes(jobName) ? jobName : "선택 안함";
       jobCountMap[key] = (jobCountMap[key] || 0) + 1;
     });
 

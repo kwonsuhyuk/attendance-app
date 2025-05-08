@@ -22,8 +22,8 @@ const usePeriodAttendance = (employeeList: EmployeeInfo[] = []) => {
 
   const location = useLocation();
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
-  const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
-  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList || []);
+  const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList);
+  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList);
 
   const getVacationDateSet = (
     data: Record<string, Record<string, TRegisteredVacation>> | null,
