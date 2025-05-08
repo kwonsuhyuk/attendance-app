@@ -23,6 +23,8 @@ export function DateRangePicker({
   vacationType: string;
   handleDateChange: (range: DateRange | undefined) => void;
 }) {
+  const isMobile = window.innerWidth <= 640;
+
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -31,7 +33,7 @@ export function DateRangePicker({
             id="date"
             variant="outline"
             className={cn(
-              "w-[400px] justify-start text-left font-normal",
+              "w-full max-w-xs justify-start text-left font-normal sm:max-w-md",
               !date && "text-muted-foreground",
             )}
           >
@@ -71,7 +73,7 @@ export function DateRangePicker({
               defaultMonth={date?.from}
               selected={date}
               onSelect={handleDateChange}
-              numberOfMonths={2}
+              numberOfMonths={isMobile ? 1 : 2}
               toDate={toDate}
             />
           )}
