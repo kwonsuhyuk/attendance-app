@@ -61,7 +61,7 @@ const AutoCompleteUserInput = ({
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-10 w-full min-w-0 rounded-sm pr-10 placeholder:text-sm"
+        className="h-10 w-full min-w-0 rounded-sm pr-10 placeholder:text-sm dark:text-white-text"
       />
       {inputValue && (
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
