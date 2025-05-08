@@ -33,6 +33,9 @@ import { TPlaceData, TWorkplaceEmployee, useFilterWork } from "@/hooks/manager/u
 import { useCompanyStore } from "@/store/company.store";
 import { getKSTDateInfo } from "@/util/time.util";
 import { isValid } from "date-fns";
+import { CHART_COLORS, GRAY_COLOR, ORANGE_COLOR } from "@/constants/chartColor";
+import { CustomLegend } from "@/components/common/chart/CustomLegend";
+import { CustomTooltip } from "@/components/common/chart/CustomTooltip";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -90,7 +93,6 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 };
 
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
-
   const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
@@ -132,14 +134,13 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
+
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { workplacePlaces, outworkingPlace, notCommutePlace } = useFilterWork(
     commuteData,
     placeList ?? [],
     employeeList,
   );
-
-  const pieColors = ["#4F46E5", "#22C55E", "#F97316", "#E11D48", "#3B82F6", "#FACC15", "#10B981"];
 
   const totalData = [
     ...workplacePlaces.map(place => ({
@@ -152,68 +153,57 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
 
   const total = totalData.reduce((acc, cur) => acc + cur.value, 0);
 
+  let colorIndex = 0;
+  const coloredData = totalData.map(item => {
+    let color = "";
+
+    if (item.name === "미출근") {
+      color = GRAY_COLOR;
+    } else if (item.name === "외근") {
+      color = ORANGE_COLOR;
+    } else {
+      color = CHART_COLORS[colorIndex % CHART_COLORS.length];
+      colorIndex++;
+    }
+
+    return { ...item, color };
+  });
+
   return (
     <Card className="border bg-white dark:bg-zinc-900">
       <CardContent className="flex flex-col space-y-2 p-4 sm:space-y-4">
-        {/* 제목 */}
         <h3 className="text-base font-semibold text-gray-800 dark:text-white sm:text-lg">
           전체 출근 분포
         </h3>
 
-        {/* 차트 컨테이너 */}
         <div className="h-48 w-full md:h-64 lg:h-72 xl:h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
               <Pie
-                data={totalData}
+                data={coloredData}
                 cx="50%"
                 cy="50%"
-                innerRadius="20%"
-                outerRadius="65%"
-                paddingAngle={3}
-                cornerRadius={5}
+                innerRadius={10}
+                outerRadius={90}
+                paddingAngle={1}
                 dataKey="value"
+                labelLine={false}
+                label={false}
               >
-                {totalData.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={pieColors[idx % pieColors.length]} />
+                {coloredData.map((entry, idx) => (
+                  <Cell key={`cell-${idx}`} fill={entry.color} />
                 ))}
               </Pie>
-
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                  fontSize: "12px",
-                  padding: "8px",
-                }}
-                formatter={(value: number, name: string) => [`${value}명`, name]}
-              />
+              <Tooltip content={<CustomTooltip />} />
             </RechartPieChart>
           </ResponsiveContainer>
         </div>
 
-        {/* 범례 */}
-        <div className="grid grid-cols-1 gap-2 overflow-y-auto py-2 pr-1 text-xs sm:grid-cols-2 sm:gap-3 sm:text-sm">
-          {totalData.map((item, idx) => {
-            const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : "0.0";
-            return (
-              <div
-                key={idx}
-                className="flex items-center gap-2 rounded bg-gray-50 px-2 py-1 dark:bg-zinc-700"
-              >
-                <span
-                  className="inline-block h-2 w-2 rounded-full"
-                  style={{ backgroundColor: pieColors[idx % pieColors.length] }}
-                />
-                <span className="font-medium text-gray-700 dark:text-white">{item.name}</span>
-                <span className="ml-auto text-gray-500 dark:text-gray-300">
-                  {item.value}명 ({percent}%)
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <CustomLegend
+          payload={coloredData.map(d => ({ value: d, color: d.color }))}
+          total={total}
+          className="py-5 sm:px-10"
+        />
       </CardContent>
     </Card>
   );
@@ -312,13 +302,13 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   return (
     <Card className="w-full border bg-white dark:border-zinc-700 dark:bg-zinc-900">
       <CardContent className="p-4">
-        <div className="mb-4 flex items-center gap-2 text-base font-semibold text-blue-800 dark:text-blue-300 sm:text-lg">
-          <BarChart3 className="h-5 w-5" /> 근무지별 출근 인원
+        <div className="mb-4 flex items-center gap-2 text-base font-semibold sm:text-lg">
+          근무지별 출근 인원
         </div>
 
         <div className="relative w-full overflow-hidden">
           <Carousel>
-            <CarouselContent className="mx-4 my-6 h-[450px] w-64 max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]">
+            <CarouselContent className="mx-4 my-6 h-[450px] w-[18rem] max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]">
               {placeList && placeList.length > 0 ? (
                 placeList.map((place, idx) => {
                   const matched = workplacePlaces.find(p => p.id === place.id);
@@ -354,52 +344,57 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
 
 export const PlaceCard = ({ place }: { place: TPlaceData }) => {
   return (
-    <div className="flex h-full flex-col gap-5 rounded-2xl border border-solid border-gray-200 bg-white p-6 shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg dark:border-gray-800 dark:bg-zinc-900">
+    <div className="flex h-full flex-col gap-6 rounded-xl border border-solid border-gray-200 bg-white p-5 shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-          <h3 className="truncate text-lg font-bold text-gray-900 dark:text-white">{place.name}</h3>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{place.name}</h3>
+          </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {place.address || "주소 정보 없음"}
+          </span>
         </div>
-        <p className="ml-7 truncate text-sm text-gray-500 dark:text-gray-400">
-          {place.address || "-"}
-        </p>
-      </div>
 
-      {/* Memo */}
-      <div className="flex items-start gap-2 rounded-md bg-gray-100 p-3 text-sm text-gray-600 dark:bg-zinc-800 dark:text-gray-300">
-        <StickyNote className="h-5 w-5 shrink-0 text-yellow-500 dark:text-yellow-400" />
-        <span className="truncate">{place.memo || "-"}</span>
+        {/* Memo Section */}
+        <div className="flex items-start gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 shadow-sm dark:bg-green-950 dark:text-green-200">
+          <StickyNote className="h-5 w-5 shrink-0 text-green-500 dark:text-green-300" />
+          <span className="line-clamp-2">{place.memo || "-"}</span>
+        </div>
       </div>
 
       {/* Employee List */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <h4 className="mb-2 text-base font-semibold text-gray-800 dark:text-white">
-          출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
+        <h4 className="mb-2 text-sm font-semibold text-gray-800 dark:text-white">
+          금일 출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
         </h4>
-        <div className="scrollbar-thin scrollbar-thumb-blue-300 h-40 flex-1 space-y-2 overflow-y-auto pr-2">
-          {place.employees.length > 0 ? (
-            place.employees.map((emp: TWorkplaceEmployee) => (
-              <div
-                key={emp.userId}
-                className="flex items-start gap-3 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-zinc-700 dark:bg-zinc-800"
-              >
-                {/* 프로필 이니셜 */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-900 dark:bg-blue-600 dark:text-white">
-                  <User />
-                </div>
+        <div className="scrollbar-thin scrollbar-thumb-blue-300 relative h-72 overflow-y-auto rounded-md border border-solid border-white-border-sub py-2 pr-1 dark:border-dark-border-sub">
+          <div className="h-full space-y-2">
+            {place.employees.length > 0 ? (
+              place.employees.map((emp: TWorkplaceEmployee) => (
+                <div
+                  key={emp.userId}
+                  className="flex flex-col justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 sm:flex-row sm:items-center sm:gap-4"
+                >
+                  {/* 직원 프로필 및 정보 */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {emp.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {emp.jobName} · {emp.employmentType}
+                      </p>
+                    </div>
+                  </div>
 
-                {/* 직원 정보 */}
-                <div className="flex flex-col gap-0.5 overflow-hidden">
-                  <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                    {emp.name}
-                  </p>
-                  <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                    {emp.jobName} · {emp.employmentType}
-                  </p>
-
+                  {/* 출근/퇴근 */}
                   {(emp.startTime || emp.endTime) && (
-                    <div className="mt-1 flex flex-col gap-0.5 text-xs">
+                    <div className="flex items-center gap-2 text-xs sm:flex-col sm:items-start">
                       <p className="text-green-600 dark:text-green-300">
                         출근:{" "}
                         <span className="text-gray-600 dark:text-gray-300">
@@ -419,13 +414,13 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
                     </div>
                   )}
                 </div>
+              ))
+            ) : (
+              <div className="flex h-full items-center justify-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+                금일 출근한 직원이 없습니다.
               </div>
-            ))
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-              금일 출근한 직원이 없습니다.
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -460,20 +455,20 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
   return (
     <>
       <Card
-        className="h-fit cursor-pointer bg-purple-100 transition hover:bg-purple-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+        className="h-fit cursor-pointer bg-sky-100 transition hover:bg-sky-50 dark:bg-sky-900 dark:hover:bg-sky-800"
         onClick={() => handleVacationBoxClick(todayVacationData || null)}
       >
         <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <PlaneTakeoffIcon className="h-5 w-5 text-purple-600 dark:text-purple-300 md:h-6 md:w-6" />
+          <PlaneTakeoffIcon className="h-5 w-5 text-sky-600 dark:text-sky-300 md:h-6 md:w-6" />
           <div className="text-center md:text-left">
-            <p className="text-[0.65rem] text-muted-foreground dark:text-zinc-400 md:text-xs">
+            <p className="text-[0.65rem] text-muted-foreground dark:text-sky-300 md:text-xs">
               휴가 인원
             </p>
             <p className="text-sm font-bold text-gray-800 dark:text-white md:text-lg">
               {totalTodayVacationCount}명
             </p>
           </div>
-          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground dark:text-zinc-400 sm:block md:ml-auto md:mt-0" />
+          <ChevronRight className="mt-1 hidden h-4 w-4 text-muted-foreground dark:text-sky-300 sm:block md:ml-auto md:mt-0" />
         </CardContent>
       </Card>
       <VacationChartModal

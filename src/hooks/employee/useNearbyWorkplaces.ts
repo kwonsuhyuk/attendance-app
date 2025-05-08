@@ -11,17 +11,17 @@ export const useNearbyWorkplaces = (
 
   useEffect(() => {
     if (!location) return;
-    const placesWithDistance = workPlaces.map(place => ({
+    const placesWithDistance = workPlaces?.map(place => ({
       ...place,
       distance: getDistanceFromLatLng(location.lat, location.lng, place.lat, place.lng),
     }));
 
     const filtered = placesWithDistance
-      .filter(p => p.distance <= DISTANCE_THRESHOLD)
-      .sort((a, b) => a.distance - b.distance);
+      ?.filter(p => p.distance <= DISTANCE_THRESHOLD)
+      ?.sort((a, b) => a.distance - b.distance);
 
     setNearby(filtered);
-  }, [location, workPlaces]);
+  }, [workPlaces, location]);
 
   return nearby;
 };

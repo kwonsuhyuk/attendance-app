@@ -29,7 +29,7 @@ export const CommutePlaceItem = ({ place, isSelected, onSelect }: CommutePlaceIt
       className={`relative w-full rounded-xl border px-5 py-4 text-left transition-all duration-200 ease-in-out ${
         isSelected
           ? "dark:bg-dark-accent border-blue-500 bg-blue-50 shadow-md dark:border-blue-400"
-          : "dark:hover:bg-dark-hover border-gray-200 bg-white-card-bg hover:border-blue-200 hover:bg-blue-50 hover:shadow-sm dark:border-gray-700 dark:bg-dark-card-bg dark:hover:border-blue-400"
+          : "dark:hover:bg-dark-hover border-gray-200 bg-white-card-bg hover:border-blue-200 hover:bg-blue-50 hover:shadow-sm dark:border-gray-800 dark:bg-dark-card-bg dark:hover:border-blue-400"
       }`}
     >
       {isSelected && (

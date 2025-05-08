@@ -10,7 +10,6 @@ import { EmployeeInfo } from "@/model/types/user.type";
 interface PieDataItem {
   name: string;
   value: number;
-  days: number;
   color: string;
 }
 
@@ -22,6 +21,7 @@ export const useVacationPieChart = (
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   const [pieData, setPieData] = useState<PieDataItem[]>([]);
   const [rawData, setRawData] = useState<PieDataItem[]>([]);
+  const [totalDays, setTotalDays] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,13 +33,11 @@ export const useVacationPieChart = (
       if (mode === "month") {
         const month = (selectedDate.month + 1).toString().padStart(2, "0");
         const data = await fetchRegisteredVacationsByMonth(companyCode, year, month);
-
         Object.entries(data || {}).forEach(([userId, userData]) => {
           Object.values(userData).forEach((entry: any) => {
             if (selectedName && selectedName.uid !== userId) return;
             const start = parseISO(entry.startDate);
             const end = parseISO(entry.endDate);
-
             eachDayOfInterval({ start, end }).forEach(() => {
               flattened.push({ type: entry.vacationType });
             });
@@ -53,7 +51,6 @@ export const useVacationPieChart = (
               if (selectedName && selectedName.uid !== userId) return;
               const start = parseISO(entry.startDate);
               const end = parseISO(entry.endDate);
-
               eachDayOfInterval({ start, end }).forEach(() => {
                 flattened.push({ type: entry.vacationType });
               });
@@ -69,34 +66,32 @@ export const useVacationPieChart = (
       };
 
       const total = counts["연차"] + counts["반차"] + counts["특별 휴가"];
+      setTotalDays(total);
 
       const allData: PieDataItem[] = [
         {
           name: "연차",
-          value: total ? (counts["연차"] / total) * 100 : 0,
-          days: counts["연차"],
+          value: counts["연차"],
           color: "#0F4C75",
         },
         {
           name: "반차",
-          value: total ? (counts["반차"] / total) * 100 : 0,
-          days: counts["반차"],
+          value: counts["반차"],
           color: "#3282B8",
         },
         {
           name: "특별 휴가",
-          value: total ? (counts["특별 휴가"] / total) * 100 : 0,
-          days: counts["특별 휴가"],
+          value: counts["특별 휴가"],
           color: "#BBE1FA",
         },
       ];
 
       setRawData(allData);
-      setPieData(allData.filter(d => d.days > 0));
+      setPieData(allData.filter(d => d.value > 0));
     };
 
     fetchData();
   }, [selectedDate, selectedName, mode, companyCode]);
 
-  return { pieData, rawData };
+  return { pieData, rawData, totalDays };
 };

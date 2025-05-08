@@ -11,6 +11,8 @@ import {
   TimerIcon,
   MessageSquare,
   StickyNote,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import { calculateWorkDuration, getKSTDateInfo } from "@/util/time.util";
 
@@ -98,7 +100,7 @@ const CommuteBoxRenderItem = ({
 
     case "checked-in-and-out":
       return (
-        <div className="w-full rounded-xl border border-yellow-300 bg-white p-4 shadow-md dark:border-yellow-700 dark:bg-zinc-800">
+        <div className="w-full rounded-xl border border-solid border-yellow-300 bg-white p-4 dark:border-yellow-700 dark:bg-zinc-800">
           {/* 헤더 메시지 */}
           <div className="mb-4 flex items-center gap-2 text-yellow-600 dark:text-yellow-300">
             <Sparkles className="h-5 w-5" />
@@ -108,12 +110,12 @@ const CommuteBoxRenderItem = ({
           {/* 출근 정보 */}
           {commuteData?.startTime && startWorkplace && (
             <div className="mb-2 flex items-start gap-3 rounded-md border border-green-200 bg-green-50 px-4 py-3 dark:border-green-600 dark:bg-green-900">
-              <Clock className="mt-1 h-5 w-5 text-green-600 dark:text-green-300" />
+              <LogIn className="mt-1 h-5 w-5 text-green-600 dark:text-green-300" />
               <div className="flex flex-col text-sm">
                 <span className="font-semibold text-green-800 dark:text-green-100">
                   출근: {getKSTDateInfo(commuteData.startTime)}
                 </span>
-                <span className="mt-1 pl-[2px] text-xs text-gray-700 dark:text-green-300">
+                <span className="mt-1 text-xs text-gray-700 dark:text-green-300">
                   근무지: {startWorkplace.name}
                 </span>
               </div>
@@ -123,12 +125,12 @@ const CommuteBoxRenderItem = ({
           {/* 퇴근 정보 */}
           {commuteData?.endTime && endWorkplace && (
             <div className="mb-2 flex items-start gap-3 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-600 dark:bg-blue-900">
-              <Clock className="mt-1 h-5 w-5 text-blue-600 dark:text-blue-300" />
+              <LogOut className="mt-1 h-5 w-5 text-blue-600 dark:text-blue-300" />
               <div className="flex flex-col text-sm">
                 <span className="font-semibold text-blue-800 dark:text-blue-100">
                   퇴근: {getKSTDateInfo(commuteData.endTime)}
                 </span>
-                <span className="mt-1 pl-[2px] text-xs text-gray-700 dark:text-blue-300">
+                <span className="mt-1 text-xs text-gray-700 dark:text-blue-300">
                   근무지: {endWorkplace.name}
                 </span>
               </div>

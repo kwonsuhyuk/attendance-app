@@ -16,11 +16,13 @@ const JobListCard = ({ jobs, onRemove }: JobListCardProps) => {
       <CardHeader>
         <CardTitle className="text-lg">추가된 직무 목록</CardTitle>
       </CardHeader>
-      <ScrollArea className="max-h-52 space-y-2 overflow-y-auto">
-        {jobs.map((job, index) => (
-          <JobCard key={job.id} job={job} onRemove={() => onRemove(index)} />
-        ))}
-      </ScrollArea>
+      <CardContent className="px-6">
+        <ScrollArea className="max-h-72 overflow-y-auto rounded-lg border border-solid border-white-border-sub dark:border-dark-border">
+          {jobs.map((job, index) => (
+            <JobCard key={job.id} job={job} onRemove={() => onRemove(index)} />
+          ))}
+        </ScrollArea>
+      </CardContent>
     </Card>
   );
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TNotice } from "@/model/types/manager.type";
-import { postNotice, listenNotices } from "@/api/notice.api";
+import { postNotice, listenNotices, deleteNotice } from "@/api/notice.api";
 import { fetchEmployees } from "@/api/employee.api";
 import { useUserStore } from "@/store/user.store";
 import { sendNotification } from "@/api/notification.api";
@@ -34,5 +34,10 @@ export const useNotice = () => {
     }
   };
 
-  return { notices, addNotice };
+  const deleteNoticeItem = async (noticeId: string) => {
+    if (!companyCode) return;
+    await deleteNotice(companyCode, noticeId);
+  };
+
+  return { notices, addNotice, deleteNotice: deleteNoticeItem };
 };

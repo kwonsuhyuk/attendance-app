@@ -16,6 +16,7 @@ import { fetchCommutesByPeriod } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
 import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
 
+type CommuteStatus = "출근" | "외근" | "휴가" | "기록없음";
 
 const CommuteHistoryBox = () => {
   const navigate = useNavigate();
@@ -25,14 +26,12 @@ const CommuteHistoryBox = () => {
   const start = startOfWeek(today, { weekStartsOn: 1 }); // 월요일
   const end = endOfWeek(today, { weekStartsOn: 1 }); // 일요일
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(start, i));
+  const userId = useUserStore(state => state.currentUser?.uid);
 
-  type CommuteStatus = "출근" | "외근" | "휴가" | "기록없음";
   const [commuteData, setCommuteData] = useState<Record<string, CommuteStatus>>({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = useUserStore.getState().currentUser;
-      const userId = user?.uid;
       if (!companyCode || !userId) return;
 
       const year = format(today, "yyyy");
@@ -40,7 +39,6 @@ const CommuteHistoryBox = () => {
 
       const commuteDataRaw = await fetchCommutesByPeriod(companyCode, userId, year, month);
       const vacationData = await fetchRegisteredVacationsByMonth(companyCode, year, month);
-
       const myVacations = vacationData?.[userId] || {};
 
       // 날짜 목록 생성 (예: "2025-04-23")
@@ -54,7 +52,7 @@ const CommuteHistoryBox = () => {
 
       weekDates.forEach(date => {
         const fullKey = format(date, "yyyy-MM-dd");
-        const dayKey = format(date, "d");
+        const dayKey = format(date, "dd");
         const commute = commuteDataRaw?.[dayKey];
 
         if (vacationRanges.includes(fullKey)) {
