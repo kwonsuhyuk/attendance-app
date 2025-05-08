@@ -42,7 +42,7 @@ const CompanyWorkPlaceStep = ({ type = "firstpage" }: ICompanyWorkPlaceStepProps
         title="근무지 추가"
         description="회사에 소속되어 있는 근무지를 추가하세요."
       />
-      <Button type="button" onClick={() => setIsModalOpen(true)}>
+      <Button type="button" onClick={() => setIsModalOpen(true)} variant="outline">
         근무지 추가
       </Button>
       <WorkPlaceList

@@ -12,7 +12,7 @@ interface WorkPlaceItemProps {
 const WorkPlaceItem = ({ place, onRemove, onEdit }: WorkPlaceItemProps) => {
   return (
     <Card
-      className="flex cursor-pointer items-center justify-between rounded-none p-3 transition-colors hover:bg-muted dark:hover:bg-muted"
+      className="flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-muted dark:hover:bg-muted"
       onClick={() => onEdit?.(place)}
     >
       <div className="flex items-center space-x-3">

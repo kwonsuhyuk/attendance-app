@@ -14,7 +14,7 @@ const WorkPlaceList = ({ workPlaces, onRemove, onEdit }: WorkPlaceListProps) => 
     <Card className="mt-4 w-full">
       <CardHeader>
         <CardTitle className="text-lg">추가된 근무지</CardTitle>
-        <p className="text-xs">*추가된 근무지 클릭 시, 수정이 가능합니다.</p>
+        <p className="text-xs">*근무지 선택 시, 수정이 가능합니다.</p>
       </CardHeader>
       <CardContent className="px-6">
         {workPlaces.length === 0 ? (
@@ -22,7 +22,7 @@ const WorkPlaceList = ({ workPlaces, onRemove, onEdit }: WorkPlaceListProps) => 
             <p className="text-center text-sm text-muted-foreground">추가된 근무지가 없습니다.</p>
           </div>
         ) : (
-          <ScrollArea className="max-h-72 overflow-y-auto rounded-lg border border-solid border-white-border-sub dark:border-dark-border">
+          <ScrollArea className="max-h-72 overflow-y-auto rounded-sm border border-solid border-white-border-sub dark:border-dark-border">
             {workPlaces.map((place, index) => (
               <WorkPlaceItem
                 key={place.id}
