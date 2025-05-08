@@ -32,11 +32,14 @@ const VacationChartModal = ({ open, onClose, label, details }: IVacationDetailMo
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md dark:bg-zinc-800 dark:text-white md:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-bold md:text-xl">
-            <CalendarDays className="mr-2 inline-block h-5 w-5" />
-            {label} 휴가 상세 정보
-          </DialogTitle>
+        <DialogHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-2">
+            <CalendarDays className="h-5 w-5 text-blue-500" />
+            <DialogTitle className="flex items-end gap-3 text-lg font-bold text-gray-900 md:text-xl">
+              휴가 상세 정보
+              <span className="text-sm font-semibold text-blue-600 md:text-base">{label}일</span>
+            </DialogTitle>
+          </div>
         </DialogHeader>
 
         <DialogClose asChild>

@@ -35,7 +35,6 @@ const VacationFilter = ({
 
   return (
     <div className="flex w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit">
-      <SlidersHorizontalIcon className="hidden w-10 text-white-nav-text sm:block" />
       <MonthPicker
         value={selectedMonth}
         onChange={setSelectedMonth}
@@ -48,7 +47,6 @@ const VacationFilter = ({
         onSelect={handleNameSelect}
         onClear={handleClear}
       />
-
     </div>
   );
 };
