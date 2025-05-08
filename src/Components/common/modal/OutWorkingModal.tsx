@@ -46,8 +46,8 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="default"
-          className="mb-3 w-full cursor-pointer bg-white px-3 text-center font-baseFont text-sm text-black dark:bg-zinc-800 dark:text-white"
+          variant="outline"
+          className="mb-3 w-full max-w-md cursor-pointer px-3 text-center font-baseFont text-sm text-black"
         >
           외근으로 {isCheckout ? "퇴근" : "출근"} 하시겠습니까?
         </Button>
