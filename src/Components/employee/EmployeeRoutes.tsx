@@ -1,8 +1,5 @@
-// src/routes/EmployeeRoutes.tsx
 import type { RouteObject } from "react-router-dom";
 import { EMPLOYEE_ROUTES, COMMON_ROUTES } from "@/constants/routes";
-
-// Layout & Pages import
 import EmployeeLayout from "@/layout/EmployeeLayout";
 import EmployeeMainContent from "@/components/employee/EmployeeMainContent";
 import ShowCalendarPage from "@/pages/employee/ShowCalendarPage";

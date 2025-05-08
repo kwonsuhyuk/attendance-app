@@ -5,17 +5,20 @@ import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
 import ManagerFirstPage from "@/pages/auth/signupProcessPage/ManagerFirstPage";
 import EmployeeFirstPage from "@/pages/auth/signupProcessPage/EmployeeFirstPage";
-import Notfound from "@/pages/common/Notfound";
+
 import RootLayout from "@/layout/RootLayout";
 import AuthenticatedLayout from "@/layout/AuthenticatedLayout";
 import NotLoginLayout from "@/layout/NotLoginLayout";
 import ManagerRoutes from "@/components/company/\bManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
+import ErrorPage from "@/pages/ErrorPage";
+import Notfound from "@/pages/common/Notfound";
 
 export const MainRoutes = createBrowserRouter([
   {
     path: "/",
     Component: RootLayout,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "",
@@ -35,10 +38,12 @@ export const MainRoutes = createBrowserRouter([
           {
             path: "manager",
             Component: ManagerLayout,
+            errorElement: <ErrorPage />,
             children: ManagerRoutes,
           },
           {
             path: "employee",
+            errorElement: <ErrorPage />,
             children: EmployeeRoutes,
           },
         ],

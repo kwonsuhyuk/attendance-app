@@ -3,14 +3,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import MenuBar from "@/components/common/menubar/MenuBar";
 import Header from "@/components/common/Header";
 import { Outlet } from "react-router-dom";
-import { useUserStore } from "@/store/user.store";
-import { useCompanyStore } from "@/store/company.store";
 
 const Layout = () => {
-  const user = useUserStore(state => state.currentUser);
-  const company = useCompanyStore(state => state.currentCompany);
-  console.log("user", user);
-  console.log("company", company);
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-screen bg-white-bg text-white-text dark:bg-dark-bg dark:text-dark-text">

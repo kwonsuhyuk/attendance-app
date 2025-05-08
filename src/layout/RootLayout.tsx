@@ -8,7 +8,6 @@ import { useUserStore } from "@/store/user.store";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { useShallow } from "zustand/shallow";
 
 const RootLayout = () => {
