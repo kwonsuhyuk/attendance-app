@@ -6,11 +6,15 @@ import { TWorkPlace } from "@/model/types/company.type";
 interface WorkPlaceItemProps {
   place: TWorkPlace;
   onRemove?: () => void;
+  onEdit?: (place: TWorkPlace) => void;
 }
 
-const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
+const WorkPlaceItem = ({ place, onRemove, onEdit }: WorkPlaceItemProps) => {
   return (
-    <Card className="flex items-center justify-between p-3">
+    <Card
+      className="flex cursor-pointer items-center justify-between rounded-none p-3 transition-colors hover:bg-muted dark:hover:bg-muted"
+      onClick={() => onEdit?.(place)}
+    >
       <div className="flex items-center space-x-3">
         <MapPin className="h-5 w-5 text-gray-500" />
         <div>
@@ -31,7 +35,10 @@ const WorkPlaceItem = ({ place, onRemove }: WorkPlaceItemProps) => {
         <Button
           type="button"
           variant="outline"
-          onClick={onRemove}
+          onClick={e => {
+            e.stopPropagation();
+            onRemove();
+          }}
           className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
         >
           <X className="h-5 w-5" />

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -17,7 +17,7 @@ interface WorkPlaceModalProps {
   place?: TWorkPlace;
 }
 
-const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
+const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps) => {
   const {
     name,
     setName,
@@ -33,7 +33,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
     noResult,
     handleSearchAddress,
     handleSelectAddress,
-  } = useWorkPlaceModal();
+  } = useWorkPlaceModal(place);
 
   const [radius, setRadius] = useState(5);
   const radiusOptions = [1, 3, 5, 10, 20];
@@ -50,19 +50,31 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="rounded-xl bg-white p-6 shadow-lg">
+      <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:max-h-[95vh] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="mb-2 flex">
-            <MapPin className="mr-2 h-4 w-4" />
-            근무지 설정
-          </DialogTitle>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center">
+              <MapPin className="mr-2 h-4 w-4" />
+              <DialogTitle className="text-lg font-medium">근무지 설정</DialogTitle>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </DialogHeader>
+
         <div className="space-y-6">
           <div className="space-y-3">
             <Label>근무지 이름</Label>
             <Input
               placeholder="예: 강남 본사"
-              className="h-12 placeholder:text-sm"
+              className="h-10 placeholder:text-sm"
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -71,17 +83,17 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
             <Label>메모</Label>
             <Input
               placeholder="근무지에 대한 메모"
-              className="h-12 placeholder:text-sm"
+              className="h-10 placeholder:text-sm"
               value={memo}
               onChange={e => setMemo(e.target.value)}
             />
           </div>
           <div className="relative space-y-3">
             <Label>주소</Label>
-            <div className="flex h-12 items-center space-x-2">
+            <div className="flex h-10 items-center space-x-2">
               <Input
                 placeholder="도로명 주소를 입력하세요 (예: 기흥구 기흥로 116번길 10)"
-                className="h-12 placeholder:text-sm"
+                className="h-10 placeholder:text-xs sm:placeholder:text-sm"
                 value={address}
                 onChange={e => setAddress(e.target.value)}
                 onKeyDown={e => {
@@ -91,7 +103,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave }: WorkPlaceModalProps) => {
                   }
                 }}
               />
-              <Button onClick={handleSearchAddress} disabled={isSearching} className="h-12">
+              <Button onClick={handleSearchAddress} disabled={isSearching} className="h-10">
                 <Search className="h-5 w-5" />
               </Button>
             </div>

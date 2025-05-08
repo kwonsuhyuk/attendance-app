@@ -1,4 +1,6 @@
+// import { PlaceCard } from './../../Components/company/attendance/DaliyAttendanceUI';
 import { fetchAddressByNaver } from "@/api/map.api";
+import { TWorkPlace } from "@/model/types/company.type";
 import { useState, useEffect } from "react";
 
 export interface IWorkPlace {
@@ -9,7 +11,7 @@ export interface IWorkPlace {
   lng: number;
 }
 
-export const useWorkPlaceModal = () => {
+export const useWorkPlaceModal = (place?: TWorkPlace) => {
   const [name, setName] = useState("");
   const [memo, setMemo] = useState("");
   const [address, setAddress] = useState("");
@@ -79,6 +81,22 @@ export const useWorkPlaceModal = () => {
     setLng(selectedLng);
     setSearchResults([]);
   };
+
+  useEffect(() => {
+    if (place) {
+      setName(place.name);
+      setMemo(place.memo);
+      setAddress(place.address);
+      setLat(place.lat);
+      setLng(place.lng);
+    } else {
+      setName("");
+      setMemo("");
+      setAddress("");
+      setLat(37.5665); // 기본값
+      setLng(126.978);
+    }
+  }, [place]);
 
   return {
     name,
