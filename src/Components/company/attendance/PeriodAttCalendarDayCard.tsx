@@ -77,7 +77,7 @@ const PeriodAttCalendarDayCard = ({
               key={item.label}
               className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded border-2 border-solid border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub"
             >
-              <span className={`h-3 w-1.5 rounded-full ${item.color}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${item.color}`} />
               <span className="truncate">{item.label}</span>
               <span className="ml-auto font-semibold">{item.value}</span>
             </div>
