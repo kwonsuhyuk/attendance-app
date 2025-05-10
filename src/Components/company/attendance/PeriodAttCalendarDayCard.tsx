@@ -1,8 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
 
 interface Props {
   day: number;
+  fullDate: Date;
   isSunday: boolean;
   isCompanyHoliday?: boolean;
   variant?: "total" | "employee";
@@ -24,6 +26,7 @@ interface Props {
 
 const PeriodAttCalendarDayCard = ({
   day,
+  fullDate,
   isSunday,
   isCompanyHoliday,
   variant = "total",
@@ -38,19 +41,20 @@ const PeriodAttCalendarDayCard = ({
     <Card
       onClick={() => {
         if (variant === "total" && companyCode) {
-          navigate(`/${companyCode}/todayatt`);
+          const formattedDate = format(fullDate, "yyyy-MM-dd");
+          navigate(`/${companyCode}/todayatt?date=${formattedDate}`);
         }
       }}
-      className="hover:bg-white-hover flex h-[120px] cursor-pointer flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm dark:border-dark-border-sub dark:hover:bg-white-border sm:h-[140px] md:h-[160px] lg:h-[120px]"
+      className="flex h-[120px] cursor-pointer flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm hover:bg-white-hover dark:border-dark-border-sub dark:hover:bg-white-border sm:h-[140px] md:h-[160px] lg:h-[120px]"
     >
       {/* 상단 날짜 */}
       <div className="mb-1 flex items-center justify-between text-[15px] font-medium">
         <span
           className={
             isSunday
-              ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[15px] text-dark-text dark:bg-red-500"
+              ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 pt-0.5 text-[15px] text-dark-text dark:bg-red-500"
               : isCompanyHoliday
-                ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 text-[15px] text-dark-text dark:bg-yellow-500"
+                ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 pt-0.5 text-[15px] text-dark-text dark:bg-yellow-500"
                 : "text-muted-foreground"
           }
         >
