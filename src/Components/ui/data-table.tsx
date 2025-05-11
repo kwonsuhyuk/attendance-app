@@ -79,7 +79,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
           ) : (
             <TableRow className="h-[500px]">
               <TableCell colSpan={columns.length} className="w-full p-5 text-center text-lg">
-                결과 없음
+                데이터가 없습니다.
               </TableCell>
             </TableRow>
           )}

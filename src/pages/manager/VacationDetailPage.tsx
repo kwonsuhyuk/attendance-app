@@ -9,6 +9,7 @@ import VacationRequestPageContainer from "@/components/container/manager/Vacatio
 import VacationDetailModal from "@/components/common/modal/VacationDetailModal";
 import VacationTabContent from "@/components/company/table/VacationTabContent";
 import Seo from "@/components/Seo";
+import { Plus } from "lucide-react";
 
 const VacationDetailPage = () => {
   const {
@@ -68,10 +69,13 @@ const VacationDetailPage = () => {
             </TabsList>
 
             <Button
-              className="mt-4 cursor-pointer bg-white-bg font-extrabold text-white-text hover:bg-white-bg dark:bg-dark-bg dark:text-dark-text"
+              className="group mt-4 flex cursor-pointer items-center gap-2 bg-white-bg text-sm font-bold text-white-text hover:bg-white-bg hover:font-extrabold dark:bg-dark-bg dark:text-dark-text sm:text-base"
               onClick={toggleModal}
             >
-              휴가 등록 +
+              <span className="flex h-5 w-5 -translate-y-0.5 translate-x-0.5 items-center justify-center rounded-full border-2 border-solid border-white-text text-white-text transition-colors group-hover:bg-dark-card-bg group-hover:font-extrabold group-hover:text-dark-text dark:border-dark-text dark:text-dark-text dark:hover:text-white-text dark:group-hover:bg-white-card-bg dark:group-hover:text-black">
+                <Plus className="h-4 w-4" />
+              </span>
+              <span className="transition-all group-hover:font-extrabold">휴가 등록</span>
             </Button>
           </div>
 
