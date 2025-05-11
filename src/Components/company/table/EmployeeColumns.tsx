@@ -18,7 +18,10 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
     header: column.header,
     cell: ({ row }) => {
       const rawValue = row.getValue(column.key);
-      const value = String(rawValue ?? "");
+      const value =
+        column.key === "salaryAmount"
+          ? String(Number(!rawValue || rawValue === "null" ? 0 : rawValue))
+          : String(rawValue ?? "");
 
       // 컬럼별 최대 길이 설정
       const maxLengths: Record<string, number> = {
