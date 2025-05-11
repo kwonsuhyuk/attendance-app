@@ -40,7 +40,7 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
 
       return (
         <div
-          className={` ${column.key === "email" ? "whitespace-normal break-all" : ""} ${column.key === "salaryAmount" ? "max-x-[80px] whitespace-normal break-words" : ""} ${["name"].includes(column.key) ? "inline-block max-w-[120px] truncate" : ""} `}
+          className={` ${column.key === "email" ? "whitespace-normal break-all" : ""} ${column.key === "salaryAmount" ? "max-x-[80px] whitespace-normal break-words" : ""} ${["name"].includes(column.key) ? "block max-w-[120px] truncate" : ""} `}
           title={value} // 툴팁으로 전체 값 표시
         >
           {column.key === "salaryAmount" ? `${formatMoney(Number(value))} 원` : displayValue}
