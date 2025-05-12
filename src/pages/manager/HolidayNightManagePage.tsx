@@ -4,10 +4,23 @@ import CompanySettingPageContainer from "@/components/container/manager/CompanyS
 import CompanyNightHolidayStep from "@/components/company/company-settings/night-holiday-setting/CompanyNightHolidayStep";
 import { useHolidayNightManagePage } from "@/hooks/company-settings/useHolidayNightManagePage";
 import Seo from "@/components/Seo";
+import { useRef } from "react";
+import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 
 const HolidayNightManagePage = () => {
   const { companyNightHolidayForm, handleSubmit, onSubmit, onInvalid } =
     useHolidayNightManagePage();
+
+  const { formState } = companyNightHolidayForm;
+
+  const allowNavigation = useRef(false);
+
+  const handleValidSubmit = (data: any) => {
+    allowNavigation.current = true;
+    onSubmit(data);
+  };
+
+  useFormBlocker(formState.isDirty && !allowNavigation.current);
 
   return (
     <>
@@ -18,7 +31,7 @@ const HolidayNightManagePage = () => {
       <CompanySettingPageContainer>
         <FormProvider {...companyNightHolidayForm}>
           <form
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
+            onSubmit={handleSubmit(handleValidSubmit, onInvalid)}
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyNightHolidayStep type="setting" />

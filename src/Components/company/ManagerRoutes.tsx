@@ -27,12 +27,12 @@ const ManagerRoutes: RouteObject[] = [
 
   // Employee management
   { path: MANAGER_ROUTES.EMPLOYEE_LIST.substring(1), Component: EmployeeListPage },
-  { path: MANAGER_ROUTES.POSITION_MANAGE.substring(1), Component: PositionManagePage },
-  { path: MANAGER_ROUTES.WORKPLACE_MANAGE.substring(1), Component: WorkplaceManagePage },
 
   // Company settings
   { path: MANAGER_ROUTES.COMPANY_INFO.substring(1), Component: CompanyInfoPage },
   { path: MANAGER_ROUTES.HOLIDAY_MANAGE.substring(1), Component: HolidayNightManagePage },
+  { path: MANAGER_ROUTES.POSITION_MANAGE.substring(1), Component: PositionManagePage },
+  { path: MANAGER_ROUTES.WORKPLACE_MANAGE.substring(1), Component: WorkplaceManagePage },
 
   // Common pages
   { path: COMMON_ROUTES.NOTICE.substring(1), Component: NoticePage },

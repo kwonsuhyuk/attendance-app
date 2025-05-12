@@ -4,9 +4,22 @@ import { Button } from "@/components/ui/button";
 import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import { useCompanyInfoPage } from "@/hooks/company-settings/useCompanyInfoPage";
 import Seo from "@/components/Seo";
+import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
+
+import { useRef } from "react";
 
 const CompanyInfoPage = () => {
   const { companyBasicForm, handleSubmit, onInvalid, onSubmit } = useCompanyInfoPage();
+  const { formState } = companyBasicForm;
+
+  const allowNavigation = useRef(false);
+
+  const handleValidSubmit = (data: any) => {
+    allowNavigation.current = true;
+    onSubmit(data);
+  };
+
+  useFormBlocker(formState.isDirty && !allowNavigation.current);
 
   return (
     <>
@@ -17,7 +30,7 @@ const CompanyInfoPage = () => {
       <CompanySettingPageContainer>
         <FormProvider {...companyBasicForm}>
           <form
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
+            onSubmit={handleSubmit(handleValidSubmit, onInvalid)}
             className="flex h-full flex-col items-center justify-center space-y-12 px-4"
           >
             <CompanyBasicStep type="setting" />
