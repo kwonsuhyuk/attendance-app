@@ -43,7 +43,7 @@ const VacationTabContent = ({
           ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
         </p>
       )}
-      <div className="w-full">
+      <div className="w-full overflow-x-auto">
         <DataTable
           columns={columns}
           data={getCurrentPageData(filteredData, tab.value)}
