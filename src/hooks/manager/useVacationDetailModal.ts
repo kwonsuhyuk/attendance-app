@@ -19,7 +19,8 @@ export const useVacationDetailModal = (
     : request.requestDate;
 
   const detailRows = [
-    { label: "휴가자", value: request.requester.name },
+    { label: "이름", value: request.requester.name },
+    { label: "직무", value: request.requester.jobName },
     { label: "휴가 유형", value: request.requestType },
     { label: "이메일", value: request.email ?? "-" },
     { label: "휴가 일자", value: displayRequestDate },
@@ -49,6 +50,7 @@ export const useVacationDetailModal = (
 
   return {
     isPending,
+    displayRequestDate,
     detailRows,
     handleApproveClick,
     handleRejectClick,

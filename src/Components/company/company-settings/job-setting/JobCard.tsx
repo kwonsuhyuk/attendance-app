@@ -10,7 +10,7 @@ interface JobCardProps {
 
 const JobCard = ({ job, onRemove }: JobCardProps) => {
   return (
-    <Card className="flex items-center justify-between p-3">
+    <Card className="flex items-center justify-between p-4">
       <span className="text-sm font-medium">{job.name}</span>
       <Button
         type="button"

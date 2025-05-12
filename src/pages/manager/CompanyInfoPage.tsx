@@ -31,7 +31,7 @@ const CompanyInfoPage = () => {
         <FormProvider {...companyBasicForm}>
           <form
             onSubmit={handleSubmit(handleValidSubmit, onInvalid)}
-            className="flex h-full flex-col items-center justify-center space-y-12 px-4"
+            className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyBasicStep type="setting" />
             <Button type="submit">저장</Button>

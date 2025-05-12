@@ -13,18 +13,27 @@ interface ICompanyWorkPlaceStepProps {
 const CompanyWorkPlaceStep = ({ type = "firstpage" }: ICompanyWorkPlaceStepProps) => {
   const { control } = useFormContext();
   const prefix = type === "firstpage" ? "companyWorkPlacesList." : "";
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: `${prefix}companyWorkPlaces`,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPlace, setEditingPlace] = useState<TWorkPlace | undefined>(undefined);
 
   const handleSaveWorkPlace = (workPlace: Omit<TWorkPlace, "id">) => {
-    append({
-      id: String(Date.now()),
-      ...workPlace,
-    });
+    if (editingPlace) {
+      const index = fields.findIndex(f => f.id === editingPlace.id);
+      if (index !== -1) {
+        update(index, { id: editingPlace.id, ...workPlace });
+      }
+    } else {
+      append({
+        id: String(Date.now()),
+        ...workPlace,
+      });
+    }
     setIsModalOpen(false);
+    setEditingPlace(undefined);
   };
 
   return (
@@ -33,14 +42,26 @@ const CompanyWorkPlaceStep = ({ type = "firstpage" }: ICompanyWorkPlaceStepProps
         title="근무지 추가"
         description="회사에 소속되어 있는 근무지를 추가하세요."
       />
-      <Button type="button" onClick={() => setIsModalOpen(true)}>
+      <Button type="button" onClick={() => setIsModalOpen(true)} variant="outline">
         근무지 추가
       </Button>
-      <WorkPlaceList workPlaces={fields as TworkPlacesList} onRemove={remove} />
+      <WorkPlaceList
+        workPlaces={fields as TworkPlacesList}
+        onRemove={remove}
+        onEdit={place => {
+          setEditingPlace(place);
+          setIsModalOpen(true);
+        }}
+      />
+
       <WorkPlaceModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingPlace(undefined);
+        }}
         onSave={handleSaveWorkPlace}
+        place={editingPlace}
       />
     </div>
   );

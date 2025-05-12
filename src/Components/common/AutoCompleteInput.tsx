@@ -56,25 +56,26 @@ const AutoCompleteUserInput = ({
   };
 
   return (
-    <div className="relative w-full px-0.5">
+    <div className="relative w-full max-w-xs sm:max-w-md">
       <Input
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-full rounded-sm pr-10 placeholder:text-sm"
+        className="h-10 w-full min-w-0 rounded-sm pr-10 placeholder:text-sm dark:text-white-text"
       />
       {inputValue && (
-        <button
-          type="button"
-          onClick={handleClearClick}
-          title="검색 초기화"
-          className="absolute right-2 top-1/2 -translate-y-1/2 border-none bg-transparent text-gray-400 hover:text-gray-600"
-        >
-          <XIcon size={16} />
-        </button>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <button
+            type="button"
+            onClick={handleClearClick}
+            className="pointer-events-auto border-none bg-transparent text-gray-400 hover:text-gray-600"
+          >
+            <XIcon size={16} />
+          </button>
+        </div>
       )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute left-0 right-0 z-10 mt-2 max-h-72 w-full max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg">
+        <ul className="absolute left-0 z-10 mt-2 max-h-72 w-full max-w-xs overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:max-w-md">
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}

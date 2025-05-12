@@ -47,7 +47,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="dark:border dark:border-dark-border sm:max-w-md">
+      <DialogContent className="w-full max-w-[350px] rounded-xl px-4 py-6 dark:border dark:border-dark-border sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex justify-center dark:text-white-text">휴가 등록</DialogTitle>
           <button
@@ -72,15 +72,15 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-2">
             <span className="font-medium">휴가 유형</span>
             <Select value={vacationType} onValueChange={setVacationType}>
-              <SelectTrigger className="dark:text-white-text">
+              <SelectTrigger className="w-full max-w-xs dark:text-white-text sm:max-w-md">
                 <SelectValue placeholder="휴가 유형 선택" />
               </SelectTrigger>
-              <SelectContent className="dark:border dark:border-dark-border dark:bg-white-card-bg dark:text-white-text">
+              <SelectContent className="w-full min-w-0 dark:border dark:border-dark-border dark:bg-white-card-bg dark:text-white-text">
                 {VACATIONSELECT_TYPES.map(type => (
                   <SelectItem
                     key={type}
                     value={type}
-                    className="dark:text-white-text dark:hover:bg-white-bg"
+                    className="w-full min-w-0 dark:text-white-text dark:hover:bg-white-bg"
                   >
                     {type}
                   </SelectItem>
@@ -114,7 +114,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           <div className="flex flex-col gap-2">
             <span>사유</span>
             <textarea
-              className="h-20 w-full rounded-md text-base"
+              className="h-20 w-full min-w-0 max-w-xs rounded-md border p-1 text-base sm:max-w-md"
               value={reason}
               onChange={e => setReason(e.target.value)}
             ></textarea>

@@ -22,16 +22,13 @@ const WorkPlaceMap = ({
 }: WorkPlaceMapProps) => {
   return (
     <Suspense fallback={<Skeleton className="h-48 w-full animate-pulse rounded-md" />}>
-      {isLoaded && lat && lng && radius ? (
-        <NaverMap
-          onLocationSelect={onLocationSelect}
-          selectedLocation={{ lat, lng }}
-          markerDragAble={markerDragAble}
-          radius={radius}
-        />
-      ) : (
-        <Skeleton className="h-48 w-full animate-pulse rounded-md" />
-      )}
+      <NaverMap
+        onLocationSelect={onLocationSelect}
+        selectedLocation={{ lat, lng }}
+        markerDragAble={markerDragAble}
+        radius={radius}
+        isLoaded={isLoaded}
+      />
     </Suspense>
   );
 };

@@ -3,13 +3,10 @@ import { useCompanyStore } from "@/store/company.store";
 import { Users } from "lucide-react";
 import React, { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { CustomTooltip } from "../common/chart/CustomTooltip";
+import { CustomLegend } from "../common/chart/CustomLegend";
+import { CHART_COLORS, GRAY_COLOR } from "@/constants/chartColor";
 import SummaryCard from "./\bSummaryCard";
-
-// 파스텔톤 직무 색상
-const JOB_COLORS = ["#A5D8FF", "#B9FBC0", "#FFD6A5", "#FFADAD", "#CDB4DB"];
-
-// 깔끔한 고용형태 색상
-const EMPLOYMENT_COLORS = ["#60A5FA", "#FACC15", "#34D399", "#9CA3AF"];
 
 const EmployeeListBox = () => {
   const { employeeList } = useEmployeeList();
@@ -25,17 +22,18 @@ const EmployeeListBox = () => {
       jobCountMap[key] = (jobCountMap[key] || 0) + 1;
     });
 
+    let colorIndex = 0;
     const data = Object.entries(jobCountMap)
-      .sort(([aName], [bName]) => {
-        if (aName === "선택 안함") return 1;
-        if (bName === "선택 안함") return -1;
+      .sort(([a], [b]) => {
+        if (a === "선택 안함") return 1;
+        if (b === "선택 안함") return -1;
         return 0;
       })
-      .map(([name, value], index) => ({
-        name,
-        value,
-        color: JOB_COLORS[index % JOB_COLORS.length],
-      }));
+      .map(([name, value]) => {
+        const color =
+          name === "선택 안함" ? GRAY_COLOR : CHART_COLORS[colorIndex++ % CHART_COLORS.length];
+        return { name, value, color };
+      });
 
     return {
       pieData: data,
@@ -56,11 +54,12 @@ const EmployeeListBox = () => {
       typeCountMap[type] = (typeCountMap[type] || 0) + 1;
     });
 
-    const data = Object.entries(typeCountMap).map(([name, value], index) => ({
-      name,
-      value,
-      color: EMPLOYMENT_COLORS[index],
-    }));
+    let colorIndex = 0;
+    const data = Object.entries(typeCountMap).map(([name, value]) => {
+      const color =
+        name === "선택안함" ? GRAY_COLOR : CHART_COLORS[colorIndex++ % CHART_COLORS.length];
+      return { name, value, color };
+    });
 
     return {
       pieData: data,
@@ -71,8 +70,9 @@ const EmployeeListBox = () => {
   return (
     <div className="space-y-4">
       <SummaryCard title="전체 구성원 수" count={employeeList.length} icon={Users} />
-      {/* 직무 분포도 */}
+
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {/* 직무 분포도 */}
         <div className="rounded-md border border-solid border-white-border-sub p-4 dark:border-dark-border-sub">
           <h2 className="mb-2 text-base font-semibold">직무 분포도</h2>
           <ResponsiveContainer width="100%" height={260}>
@@ -135,35 +135,3 @@ const EmployeeListBox = () => {
 };
 
 export default EmployeeListBox;
-
-const CustomLegend = ({ payload, total }: { payload: any[]; total: number }) => {
-  return (
-    <ul className="mt-4 space-y-1 text-sm">
-      {payload.map((entry, index) => (
-        <li key={index} className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-sm" style={{ backgroundColor: entry.color }} />
-            <span>{entry.value.name}</span>
-          </div>
-          <div className="text-gray-500">{`${entry.value.value} (${((entry.value.value / total) * 100).toFixed(1)}%)`}</div>
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload?.length > 0) {
-    const { name, value, color } = payload[0].payload;
-    return (
-      <div className="rounded-md border bg-white px-3 py-2 text-sm shadow-md">
-        <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-sm" style={{ backgroundColor: color }} />
-          <span className="font-medium text-gray-800">{name}</span>
-        </div>
-        <div className="mt-1 text-gray-500">{value}명</div>
-      </div>
-    );
-  }
-  return null;
-};

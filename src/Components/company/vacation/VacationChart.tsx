@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { EmployeeInfo } from "@/model/types/user.type";
 import VacationChartModal from "@/components/common/modal/VacationChartModal";
 import { useVacationChartData } from "@/hooks/vacation/useVacationChartData";
-import VacationSubTitle from "./\bVacationSubTitle";
 import { getFilteredDetails } from "@/util/vacation.util";
+import VacationSubTitle from "./\bVacationSubTitle";
+import { CustomBarLegend } from "@/components/common/chart/CustomLegend";
+import { CustomBarTooltip } from "@/components/common/chart/CustomTooltip";
 
 interface IVacationChartProps {
   selectedDate: { year: number; month: number };
@@ -67,14 +60,18 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
               allowDecimals={false}
               domain={[0, (dataMax: number) => Math.max(dataMax, 10)]}
             />
-            <Tooltip />
-            <Legend align="right" />
+            <Tooltip content={<CustomBarTooltip />} />
             <Bar dataKey="annual" fill="#0F4C75" name="연차" radius={[4, 4, 0, 0]} />
             <Bar dataKey="half" fill="#3282B8" name="반차" radius={[4, 4, 0, 0]} />
             <Bar dataKey="special" fill="#BBE1FA" name="특별 휴가" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+
+        <div className="mt-4">
+          <CustomBarLegend />
+        </div>
       </Card>
+
       <VacationChartModal
         open={!!selectedData}
         onClose={handleClose}

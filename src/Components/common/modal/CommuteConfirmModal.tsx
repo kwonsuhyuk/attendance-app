@@ -53,33 +53,30 @@ const CommuteConfirmModal = ({
           <DialogTitle className={`text-lg font-bold text-black dark:text-black`}>
             {actionText} 확인
           </DialogTitle>
-          <DialogDescription>
-            <p className="mt-2 text-xs text-red-500">{warningText}</p>
-          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4 text-sm">
-          <div className="rounded-lg border border-gray-300 bg-white p-4 shadow-md">
+          <div className="rounded-lg rounded-md border border-solid border-gray-300 border-white-border-sub bg-white p-4">
             <div className="mb-2">
               <p className="text-xs text-muted-foreground">근무지 이름</p>
-              <p className="text-base font-semibold text-gray-800">{place.name}</p>
+              <p className="text-sm font-semibold text-gray-700">{place.name}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">근무지 주소</p>
-              <p className="text-sm text-gray-700">{place.address}</p>
+              <p className="text-sm font-semibold text-gray-700">{place.address}</p>
             </div>
             {place.memo && (
               <div className="mt-2">
                 <p className="text-xs text-muted-foreground">근무지 메모</p>
-                <p className="text-sm text-gray-500">{place.memo}</p>
+                <p className="text-sm font-semibold text-gray-700">{place.memo}</p>
               </div>
             )}
           </div>
 
           <div className="flex justify-between border-t pt-4 text-sm">
-            <span className="text-gray-500">유저 정보</span>
+            <span className="text-gray-500">출근 직원 정보</span>
             <span className="font-medium text-gray-800">
-              {name}/{jobName}/{employmentType}
+              {name} · {jobName} · {employmentType}
             </span>
           </div>
 
@@ -88,7 +85,7 @@ const CommuteConfirmModal = ({
             <span className="font-medium text-gray-800">{currentTime}</span>
           </div>
         </div>
-
+        <p className="my-5 text-right text-xs text-red-500">{warningText}</p>
         <div className="mt-6 flex justify-end gap-2">
           <Button className="bg-gray-100 text-gray-800 dark:bg-gray-100" onClick={onCancel}>
             취소
