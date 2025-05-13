@@ -1,4 +1,3 @@
-// hooks/employee/useCommuteModal.ts
 import { useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -29,7 +28,7 @@ export const useCommuteModal = ({
     setIsConfirmOpen(true);
   }, [selectedPlace]);
 
-  const handleConfirmCommute = useCallback(async () => {
+  const handleConfirmCommute = async () => {
     if (!selectedPlace || !userLocation || !companyCode || !userId || !status) return;
     const scanTime = new Date().toISOString();
     const res = await processCommute(status, companyCode, userId, scanTime, selectedPlace.id);
@@ -42,7 +41,7 @@ export const useCommuteModal = ({
     } else {
       toast({ title: res.error || "처리 중 오류가 발생했습니다.", variant: "destructive" });
     }
-  }, [selectedPlace, userLocation, companyCode, userId, status, toast, navigate]);
+  };
 
   return {
     isConfirmOpen,

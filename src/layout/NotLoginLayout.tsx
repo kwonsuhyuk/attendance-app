@@ -6,18 +6,19 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const NotLoginLayout = () => {
   const currentUser = useUserStore(state => state.currentUser);
+  const isLoading = useUserStore(state => state.isLoading);
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
 
-  if (userType === undefined || companyCode === undefined) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  return !currentUser ? (
-    <Outlet />
-  ) : (
-    <Navigate to={`${companyCode}/${userType}${COMMON_ROUTES.COMPANY_MAIN}`} replace />
-  );
+  if (currentUser && userType && companyCode) {
+    return <Navigate to={`/${companyCode}/${userType}${COMMON_ROUTES.COMPANY_MAIN}`} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default NotLoginLayout;
