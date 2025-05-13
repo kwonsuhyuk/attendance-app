@@ -3,6 +3,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { PlaneTakeoff, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { calculateVacationDaysByType } from "@/util/vacation.util";
+import { IVacationRequest } from "@/components/company/table/VacationColumns";
 
 interface IEmployeeVacationYearFilterProps {
   setDate: (date: Date) => void;
@@ -17,7 +18,11 @@ const EmployeeVacationYearFilter = ({
   year,
   yearFilteredRequests,
 }: IEmployeeVacationYearFilterProps) => {
-  const stats = calculateVacationDaysByType(yearFilteredRequests);
+  const approvedRequests = yearFilteredRequests.filter(
+    (req: IVacationRequest) => req.status === "승인",
+  );
+  const stats = calculateVacationDaysByType(approvedRequests);
+
   const handleYearChange = (direction: "prev" | "next") => {
     const newDate = new Date();
     newDate.setFullYear(direction === "prev" ? Number(year) - 1 : Number(year) + 1);
@@ -25,7 +30,7 @@ const EmployeeVacationYearFilter = ({
     setCurrentPage(0);
   };
   return (
-    <Card className="bg-vacation-color dark:bg-vacation-color relative cursor-pointer rounded-xl p-4 text-white shadow-md transition">
+    <Card className="relative cursor-pointer rounded-xl bg-vacation-color p-4 text-white shadow-md transition dark:bg-vacation-color">
       <div className="flex items-center justify-center">
         <div className="flex items-center gap-4">
           <Button

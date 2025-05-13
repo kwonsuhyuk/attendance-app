@@ -1,7 +1,6 @@
 import Loading from "@/components/common/Loading";
 import { COMMON_ROUTES } from "@/constants/routes";
 import { useUserStore } from "@/store/user.store";
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const NotLoginLayout = () => {

@@ -37,11 +37,6 @@ const EmployeeVacationDetailModal = ({
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold text-white bg-[${badgeTypeClass}]`}
-              >
-                {request.vacationType}
-              </span>
-              <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold text-white ${badgeStatusClass}`}
               >
                 {label}
@@ -67,6 +62,11 @@ const EmployeeVacationDetailModal = ({
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="font-medium">기간:</span> {isSameDay ? start : `${start} ~ ${end}`}
+            <span
+              className={`rounded-full border-2 border-solid border-blue-500 px-3 text-xs font-extrabold text-blue-500`}
+            >
+              {request.vacationType}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">

@@ -40,7 +40,7 @@ const VacationRequestModal: React.FC<IVacationModalProps> = ({ onClose, onRegist
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="dark:border dark:border-dark-border sm:max-w-md">
+      <DialogContent className="max-w-xs dark:border dark:border-dark-border sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex justify-center dark:text-white-text">휴가 요청</DialogTitle>
           <button
@@ -97,7 +97,7 @@ const VacationRequestModal: React.FC<IVacationModalProps> = ({ onClose, onRegist
           <div className="flex flex-col gap-2">
             <span>사유</span>
             <textarea
-              className="h-20 w-full rounded-md text-base"
+              className="h-20 w-full rounded-md border text-base"
               value={reason}
               onChange={e => setReason(e.target.value)}
             ></textarea>
