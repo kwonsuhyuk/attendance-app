@@ -6,11 +6,7 @@ import Loading from "./components/common/Loading";
 import MainRoutes from "./routes/MainRoutes";
 
 const App = () => {
-  return (
-    <>
-      <RouterProvider router={MainRoutes} fallbackElement={<Loading />} />
-    </>
-  );
+  return <RouterProvider router={MainRoutes} fallbackElement={<Loading />} />;
 };
 
 export default App;

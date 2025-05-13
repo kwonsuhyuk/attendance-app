@@ -13,10 +13,7 @@ const WorkplaceBox = () => {
   return (
     <div className="space-y-4">
       <SummaryCard title="전체 근무지 수" count={workplaces?.length} icon={Building2} />
-      <MaskedScrollableList
-        maxHeight="430px"
-        className="space-y-2 overflow-y-auto rounded-md border border-solid border-white-border-sub p-4 pr-1 dark:border-dark-border-sub"
-      >
+      <ul className="relative max-h-[380px] space-y-2 overflow-y-auto rounded-md border border-solid border-white-border-sub py-3 pr-1 dark:border-dark-border-sub">
         {workplaces && workplaces.length > 0 ? (
           workplaces.map(place => <WorkPlaceItem place={place} key={place.id} />)
         ) : (
@@ -24,7 +21,7 @@ const WorkplaceBox = () => {
             등록된 근무지가 없습니다. 근무지 관리에서 근무지를 추가해주세요.
           </div>
         )}
-      </MaskedScrollableList>
+      </ul>
     </div>
   );
 };

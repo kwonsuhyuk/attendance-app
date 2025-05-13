@@ -9,7 +9,7 @@ const NotLoginLayout = () => {
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
 
-  if (userType === undefined || companyCode === undefined) {
+  if (userType === undefined) {
     return <Loading />;
   }
 
