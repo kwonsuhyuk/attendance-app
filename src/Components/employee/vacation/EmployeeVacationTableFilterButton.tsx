@@ -19,6 +19,7 @@ const VacationFilterButtons = ({ filterStatus, setFilterStatus, resetPage }: Pro
             setFilterStatus(status as any);
             resetPage();
           }}
+          className="w-full"
         >
           {status}
         </Button>
