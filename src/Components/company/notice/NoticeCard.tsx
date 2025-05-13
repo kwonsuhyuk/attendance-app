@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 interface NoticeCardProps {
   title: string;
@@ -47,7 +48,7 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
       </div>
 
       <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-        <span>{createdAt}</span>
+        <span>{createdAt?.split("T")[0] ?? "-"}</span>
         {content.length > 40 && (
           <button
             onClick={() => setOpen(prev => !prev)}

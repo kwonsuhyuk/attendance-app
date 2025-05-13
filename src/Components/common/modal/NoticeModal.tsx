@@ -34,7 +34,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
     onSave({
       title,
       content,
-      createdAt: format(new Date(), "yyyy.MM.dd"),
+      createdAt: new Date().toISOString(),
       noticeType,
     });
     setTitle("");
