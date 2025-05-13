@@ -23,12 +23,13 @@ const MyVacationPage = () => {
   const [date, setDate] = useState(new Date());
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState<"전체" | TVacationStatus>("전체");
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   const year = date.getFullYear().toString();
   const { requests, loading, error } = useGetEmployeeVacationList({
     companyCode: companyCode!,
-    userId: userId!,
     year,
+    reloadKey,
   });
 
   const { paginatedRequests, totalPageCount, yearFilteredRequests } = useFilteredVacationRequests(
@@ -41,8 +42,13 @@ const MyVacationPage = () => {
   const { requests: sendRequest } = useVacationRequests();
   const { register: handleRequest } = sendRequest;
 
-  const handleSubmit = (data: IVacationRequest) => {
-    handleRequest(data);
+  const handleSubmit = async (data: IVacationRequest) => {
+    try {
+      await handleRequest(data);
+      setReloadKey(prev => prev + 1);
+    } catch (err) {
+      // 실패 시 모달 유지
+    }
   };
 
   // const year = date.getFullYear();

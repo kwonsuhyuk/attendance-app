@@ -7,6 +7,7 @@ import { useUserStore } from "@/store/user.store";
 interface IUseGetEmployeeVacationList {
   companyCode: string;
   year?: string; // 선택적으로 연도 지정 가능
+  reloadKey?: number;
 }
 
 interface IEmployeeVacationList {
@@ -19,13 +20,13 @@ interface IEmployeeVacationList {
 export const useGetEmployeeVacationList = ({
   companyCode,
   year,
+  reloadKey,
 }: IUseGetEmployeeVacationList): IEmployeeVacationList => {
   const [requests, setRequests] = useState<TVacationRequest[]>([]);
   const [registered, setRegistered] = useState<TRegisteredVacation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const userId = useUserStore(state => state.currentUser?.uid);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,7 +97,7 @@ export const useGetEmployeeVacationList = ({
     };
 
     if (companyCode && userId) fetchData();
-  }, [companyCode, userId, year]);
+  }, [companyCode, userId, year, reloadKey]);
 
   return { requests, registered: [], loading, error };
 };
