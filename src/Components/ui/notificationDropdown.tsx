@@ -49,7 +49,7 @@ const NotificationDropdown = ({
   };
 
   return (
-    <div className="absolute right-1 mt-2 w-[300px] rounded-md border border-white-border bg-white p-2 shadow-md dark:border-dark-border dark:bg-dark-card-bg">
+    <div className="fixed left-0 right-0 top-12 z-50 w-full rounded-md border border-white-border bg-white p-2 shadow-md dark:border-dark-border dark:bg-dark-card-bg sm:top-14 md:top-16">
       {notifications.length === 0 ? (
         <p className="py-4 text-center text-sm text-muted-foreground">새로운 알림이 없습니다.</p>
       ) : (
@@ -57,7 +57,7 @@ const NotificationDropdown = ({
           {notifications.map(({ id, data }) => (
             <li
               key={id}
-              className="hover:bg-white-hover dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-2 text-sm"
+              className="dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-3 text-sm hover:bg-white-hover"
             >
               <div className="flex items-center justify-between gap-2">
                 <div
