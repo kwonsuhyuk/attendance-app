@@ -1,5 +1,6 @@
 import { getUser } from "@/api";
 import ThemeProvider from "@/components/common/provider/ThemeProvider";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import Seo from "@/components/Seo";
 import { Toaster } from "@/components/ui/toaster";
 import { MAIN_ROUTES } from "@/constants/routes";
@@ -42,6 +43,7 @@ const RootLayout = () => {
       <ThemeProvider excludePaths={["/signin", "/signup"]}>
         {/* <ToastContainer position="bottom-right" theme="light" pauseOnHover autoClose={1500} /> */}
         <Toaster />
+        <ScrollToTop />
         <Outlet />
       </ThemeProvider>
     </>

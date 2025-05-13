@@ -36,6 +36,16 @@ import { isValid } from "date-fns";
 import { CHART_COLORS, GRAY_COLOR, ORANGE_COLOR } from "@/constants/chartColor";
 import { CustomLegend } from "@/components/common/chart/CustomLegend";
 import { CustomTooltip } from "@/components/common/chart/CustomTooltip";
+import SelfCommuteModal from "@/components/common/modal/SelfCommuteModal";
+import { EmployeeInfo } from "@/model/types/user.type";
+import { processCommute } from "@/api/commute.api";
+import { TCommuteStatus } from "@/model/types/commute.type";
+import { toast } from "@/hooks/use-toast";
+
+interface IAttendanceHeaderProps {
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+}
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -43,8 +53,62 @@ interface IAttendanceHeaderProps {
 }
 
 export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceHeaderProps) => {
+  const [openSelfCommute, setOpenSelfCommute] = useState(false);
+  const { companyCode } = useParams();
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const handleSelfCommuteModalOpen = () => {
+    setOpenSelfCommute(true);
+  };
+
+  const handleSelfCommuteModalClose = () => {
+    setOpenSelfCommute(false);
+  };
+
+  const handleSelfCommuteRegister = async (data: {
+    user: EmployeeInfo;
+    date: Date;
+    startTime?: string;
+    mode: "start" | "end";
+    endTime?: string;
+    place: string;
+  }) => {
+    try {
+      const userId = data.user.uid;
+      const time = data.startTime ?? data.endTime;
+
+      if (!time) throw new Error("시간 정보가 없습니다.");
+
+      const scanTime = dayjs(data.date).format("YYYY-MM-DD") + `T${time}`;
+
+      if (!companyCode || !userId) {
+        throw new Error("유저 정보가 없습니다.");
+      }
+
+      const status: TCommuteStatus = data.mode === "start" ? "not-checked-in" : "checked-in-only";
+
+      const result = await processCommute(status, companyCode, userId, scanTime, data.place);
+
+      if (result.success) {
+        toast({
+          description: "출근 등록이 완료되었습니다.",
+        });
+      } else {
+        // 우선 출근기록없을때 퇴근찍었을때 오류만 핸들링해놓음
+        toast({
+          description:
+            "출근 기록을 먼저 등록해주세요. 출근 시간 이전 시간으로 퇴근을 요청할 수 없습니다.",
+          variant: "destructive",
+        });
+      }
+
+      setOpenSelfCommute(false);
+      handleRefresh();
+    } catch (e) {
+      console.error("수동 출퇴근 등록 실패", e);
+    }
   };
 
   return (
@@ -66,7 +130,10 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
-        <Button className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200">
+        <Button
+          className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          onClick={handleSelfCommuteModalOpen}
+        >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
         </Button>
       </div>
@@ -74,7 +141,11 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
       {/* 데스크탑 레이아웃 */}
       <div className="hidden sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <DatePickerDemo pickDate={selectedDate} setPickDate={setSelectedDate} />
+          <DatePickerDemo
+            pickDate={selectedDate}
+            setPickDate={setSelectedDate}
+            className="w-[240px]"
+          />
           <Button
             variant="outline"
             size="sm"
@@ -84,10 +155,21 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
-        <Button className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200">
+        <Button
+          className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          onClick={handleSelfCommuteModalOpen}
+        >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
         </Button>
       </div>
+
+      {/* SelfCommuteModal 연결 */}
+      {openSelfCommute && (
+        <SelfCommuteModal
+          onClose={handleSelfCommuteModalClose}
+          onRegister={handleSelfCommuteRegister}
+        />
+      )}
     </div>
   );
 };
@@ -452,6 +534,7 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
   const handleVacationBoxClick = (data: any) => {
     setSelectedData(data);
   };
+
   return (
     <>
       <Card

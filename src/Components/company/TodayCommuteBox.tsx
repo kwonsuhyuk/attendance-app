@@ -1,5 +1,3 @@
-"use client";
-
 import { useTodayCommuteData } from "@/hooks/manager/useTodayCommuteData";
 import { useCompanyStore } from "@/store/company.store";
 import dayjs from "dayjs";
@@ -8,7 +6,6 @@ import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "
 import { TodayVacationEmployeeCard } from "./attendance/DaliyAttendanceUI";
 import { Copy, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import MaskedScrollableList from "../MaskedScrollableList";
 
 const EmployeeListItem = ({
   name,
@@ -105,7 +102,7 @@ const TodayCommuteBox = () => {
                 data={chartData}
               >
                 <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                <RadialBar dataKey="value" background fill="#34d399" /> {/* emerald-400 */}
+                <RadialBar dataKey="value" background fill="#34d399" />
               </RadialBarChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex items-end justify-center">
@@ -130,69 +127,63 @@ const TodayCommuteBox = () => {
             </span>
             현재 근무 중 ({workingEmployees?.length || 0})
           </h3>
-
-          {workingEmployees?.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              금일 출근 중인 직원이 없습니다.
-            </p>
-          ) : (
-            <MaskedScrollableList maxHeight="400px">
-              {workingEmployees.map(
-                ({ user, startTime }, index) =>
-                  user && (
-                    <EmployeeListItem
-                      key={index}
-                      name={user.name}
-                      jobName={user.jobName}
-                      phoneNumber={user.phoneNumber}
-                      employmentType={user.employmentType}
-                      subText={`출근 ${dayjs(startTime).format("HH:mm")}`}
-                      iconColor="text-emerald-700"
-                      bgColor="bg-emerald-100"
-                      darkBgColor="dark:bg-emerald-800/30"
-                    />
-                  ),
-              )}
-            </MaskedScrollableList>
-          )}
+          <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
+            {workingEmployees?.length > 0 ? (
+              workingEmployees.map(({ user, startTime }, index) =>
+                user ? (
+                  <EmployeeListItem
+                    key={index}
+                    name={user.name}
+                    jobName={user.jobName}
+                    phoneNumber={user.phoneNumber}
+                    employmentType={user.employmentType}
+                    subText={`출근 ${dayjs(startTime).format("HH:mm")}`}
+                    iconColor="text-emerald-700"
+                    bgColor="bg-emerald-100"
+                    darkBgColor="dark:bg-emerald-800/30"
+                  />
+                ) : null,
+              )
+            ) : (
+              <li className="text-sm text-gray-500 dark:text-gray-400">
+                금일 출근 중인 직원이 없습니다.
+              </li>
+            )}
+          </ul>
         </div>
 
         {/* 외근 */}
-        <div className="flex flex-1 flex-col">
-          <div className="flex-grow rounded-xl border border-orange-100 bg-orange-50 p-4 dark:border-orange-700/30 dark:bg-orange-900/10">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-orange-700 dark:text-orange-300">
-                <span className="inline-block rounded bg-orange-200 px-2 py-0.5 text-[11px] font-semibold dark:bg-orange-600 dark:text-white">
-                  OUTWORK
-                </span>
-                금일 외근 ({outworkingPlace?.employees.length || 0})
-              </h3>
-            </div>
+        <div className="flex flex-1 flex-col gap-4 rounded-xl border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-orange-700 dark:text-orange-300">
+            <span className="inline-block rounded bg-orange-200 px-2 py-0.5 text-[11px] font-semibold dark:bg-orange-600 dark:text-white">
+              OUTWORK
+            </span>
+            금일 외근 ({outworkingPlace?.employees?.length || 0})
+          </h3>
 
-            {!outworkingPlace || outworkingPlace.employees.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                금일 외근 중인 직원이 없습니다.
-              </p>
+          <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
+            {outworkingPlace?.employees?.length > 0 ? (
+              outworkingPlace.employees.map((user: any, index: number) =>
+                user ? (
+                  <EmployeeListItem
+                    key={index}
+                    name={user.name}
+                    jobName={user.jobName}
+                    phoneNumber={user.phoneNumber}
+                    employmentType={user.employmentType}
+                    subText={user.memo}
+                    iconColor="text-orange-700"
+                    bgColor="bg-orange-100"
+                    darkBgColor="dark:bg-orange-800/30"
+                  />
+                ) : null,
+              )
             ) : (
-              <MaskedScrollableList maxHeight="400px">
-                {outworkingPlace.employees.map((user: any, index: number) =>
-                  user ? (
-                    <EmployeeListItem
-                      key={index}
-                      name={user.name}
-                      jobName={user.jobName}
-                      phoneNumber={user.phoneNumber}
-                      employmentType={user.employmentType}
-                      subText={user.memo}
-                      iconColor="text-orange-700"
-                      bgColor="bg-orange-100"
-                      darkBgColor="dark:bg-orange-800/30"
-                    />
-                  ) : null,
-                )}
-              </MaskedScrollableList>
+              <li className="text-sm text-gray-500 dark:text-gray-400">
+                금일 외근 중인 직원이 없습니다.
+              </li>
             )}
-          </div>
+          </ul>
         </div>
       </div>
     </div>
