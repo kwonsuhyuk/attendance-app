@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 // react-async-helmet으로 교체 예정
 interface SeoProps {
   title: string;

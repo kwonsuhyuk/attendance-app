@@ -1,7 +1,6 @@
 import Loading from "@/components/common/Loading";
 import { COMMON_ROUTES } from "@/constants/routes";
 import { useUserStore } from "@/store/user.store";
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const NotLoginLayout = () => {
@@ -9,7 +8,7 @@ const NotLoginLayout = () => {
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
 
-  if (userType === undefined || companyCode === undefined) {
+  if (userType === undefined) {
     return <Loading />;
   }
 
