@@ -54,53 +54,58 @@ const NotificationDropdown = ({
         <p className="py-4 text-center text-sm text-muted-foreground">새로운 알림이 없습니다.</p>
       ) : (
         <ul className="max-h-[300px] overflow-y-auto">
-          {notifications.map(({ id, data }) => (
-            <li
-              key={id}
-              className="dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-3 text-sm hover:bg-white-hover"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div
-                  className="flex flex-1 cursor-pointer items-center gap-2"
-                  onClick={async () => {
-                    await onClickNotification(id);
-                    onCloseDropdown();
-                    navigate(getLink(data.type, data.relatedId));
-                  }}
-                >
-                  {getIcon(data.type)}
-                  <span>{data.message}</span>
+          {notifications
+            .filter(({ data }) => data.message) // ✅ message 없는 알림 제거
+            .sort(
+              (a, b) => new Date(b.data.createdAt).getTime() - new Date(a.data.createdAt).getTime(),
+            )
+            .map(({ id, data }) => (
+              <li
+                key={id}
+                className="dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-3 text-sm hover:bg-white-hover"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div
+                    className="flex flex-1 cursor-pointer items-center gap-2"
+                    onClick={async () => {
+                      await onClickNotification(id);
+                      onCloseDropdown();
+                      navigate(getLink(data.type, data.relatedId));
+                    }}
+                  >
+                    {getIcon(data.type)}
+                    <span>{data.message}</span>
+                  </div>
+
+                  <span className="whitespace-nowrap text-[10px] text-muted-foreground">
+                    {formatDistanceToNow(new Date(data.createdAt), {
+                      addSuffix: true,
+                      locale: ko,
+                    })}
+                  </span>
+
+                  <button
+                    className="rounded p-1 text-xs text-gray-400 hover:text-red-500"
+                    onClick={() => onClickNotification(id, false)}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
                 </div>
 
-                <span className="whitespace-nowrap text-[10px] text-muted-foreground">
-                  {formatDistanceToNow(new Date(data.createdAt), {
-                    addSuffix: true,
-                    locale: ko,
-                  })}
-                </span>
+                {data.requestDate &&
+                  (() => {
+                    const [start, end] = data.requestDate.split(" ~ ");
+                    const formattedStart = format(parseISO(start), "yy.MM.dd");
+                    const formattedEnd = format(parseISO(end), "yy.MM.dd");
 
-                <button
-                  className="rounded p-1 text-xs text-gray-400 hover:text-red-500"
-                  onClick={() => onClickNotification(id, false)}
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-
-              {data.requestDate &&
-                (() => {
-                  const [start, end] = data.requestDate.split(" ~ ");
-                  const formattedStart = format(parseISO(start), "yy.MM.dd");
-                  const formattedEnd = format(parseISO(end), "yy.MM.dd");
-
-                  return (
-                    <p className="ml-6 mt-1 text-xs text-dark-nav-text">
-                      요청 일자: {formattedStart} ~ {formattedEnd}
-                    </p>
-                  );
-                })()}
-            </li>
-          ))}
+                    return (
+                      <p className="ml-6 mt-1 text-xs text-dark-nav-text">
+                        요청 일자: {formattedStart} ~ {formattedEnd}
+                      </p>
+                    );
+                  })()}
+              </li>
+            ))}
         </ul>
       )}
     </div>
