@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { useToast } from "@/hooks/use-toast";
 import { EmployeeInfo, EmployeeForm } from "@/model/types/user.type";
 import { useForm } from "react-hook-form";
 import { updateEmployeeSettings } from "@/api/employee.api";
@@ -16,6 +16,8 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
       salary: salaryAmount,
     },
   });
+
+  const { toast } = useToast();
 
   const salary = watch("salary");
   const selectedJob = watch("selectedJob");
@@ -39,7 +41,11 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
       user.employmentType === data.selectedEmploymentType &&
       user.salaryAmount === data.salary
     ) {
-      toast.info("변경된 내용이 없습니다.");
+      toast({
+        title: "안내",
+        description: "변경된 내용이 없습니다.",
+        variant: "default",
+      });
       return;
     }
 
@@ -50,10 +56,18 @@ export const useEmployeeModify = (user: EmployeeInfo, setIsUpdated: (value: bool
     });
 
     if (result.success) {
-      toast.success("정보 수정이 완료되었습니다.");
+      toast({
+        title: "성공",
+        description: "정보 수정이 완료되었습니다.",
+        variant: "success",
+      });
       setIsUpdated(true);
     } else {
-      toast.error("오류가 발생하였습니다. 다시 시도해주세요.");
+      toast({
+        title: "오류",
+        description: "오류가 발생하였습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 

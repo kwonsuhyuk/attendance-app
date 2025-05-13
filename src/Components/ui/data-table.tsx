@@ -29,11 +29,14 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
   });
 
   return (
-    <div className="h-[580px] min-h-[550px] overflow-x-auto rounded-md border">
+    <div className="h-[580px] min-h-[550px] rounded-md border">
       <Table className="min-w-2xl h-full w-full table-auto md:table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="border-white-table-header dark:border-dark-table-header border-y border-solid"
+            >
               {headerGroup.headers.map(header => {
                 const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
                   header.column.id,
@@ -42,7 +45,7 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
                 return (
                   <TableHead
                     key={header.id}
-                    className={`whitespace-nowrap pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`whitespace-nowrap border pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null

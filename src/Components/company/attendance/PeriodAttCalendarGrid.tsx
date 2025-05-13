@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { TCalendarDayInfo } from "@/model/types/commute.type";
 
-
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 interface Props {
@@ -56,7 +55,7 @@ const PeriodAttCalendarGrid = ({
 
   return (
     <div className="overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 dark:border-dark-border-sub">
-      <div className="dark:bg-vacation-dark-color sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text">
+      <div className="sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text dark:bg-vacation-dark-color">
         {variant === "total"
           ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
           : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
@@ -73,18 +72,25 @@ const PeriodAttCalendarGrid = ({
           const isSunday = idx % 7 === 0;
           const isSaturday = idx % 7 === 6;
 
-          return data ? (
-            <PeriodAttCalendarDayCard
-              key={idx}
-              day={data.day}
-              summary={data.summary}
-              checkIn={data.checkIn}
-              checkOut={data.checkOut}
-              isSunday={isSunday}
-              isCompanyHoliday={data.isCompanyHoliday}
-              variant={variant}
-            />
-          ) : (
+          if (data) {
+            const fullDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), data.day); // ✅ 여기서 fullDate 생성
+
+            return (
+              <PeriodAttCalendarDayCard
+                key={idx}
+                day={data.day}
+                fullDate={fullDate}
+                summary={data.summary}
+                checkIn={data.checkIn}
+                checkOut={data.checkOut}
+                isSunday={isSunday}
+                isCompanyHoliday={data.isCompanyHoliday}
+                variant={variant}
+              />
+            );
+          }
+
+          return (
             <Card
               key={idx}
               className="h-[120px] rounded-none border-[0.5px] border-solid border-white-border-sub dark:border-dark-border-sub sm:h-[140px] md:h-[160px] lg:h-[120px]"

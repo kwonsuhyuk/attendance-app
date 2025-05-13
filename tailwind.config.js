@@ -17,6 +17,7 @@ export default {
         "dark-border-sub": "#FFFFFF33",
         "dark-nav-text": "#909090",
         "dark-nav-selected": "#FFFFFF",
+        "dark-table-header": "#4b5563",
         "white-bg": "#EEEEEE",
         "white-card-bg": "#FFFFFF",
         "white-text": "#000000",
@@ -25,6 +26,7 @@ export default {
         "white-nav-text": "#6F6F6F",
         "white-nav-selected": "#000000",
         "white-hover": "#f3f4f6",
+        "white-table-header": "#e5e7eb",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -123,5 +125,3 @@ export default {
   important: true,
   mode: "jit",
 };
-
-

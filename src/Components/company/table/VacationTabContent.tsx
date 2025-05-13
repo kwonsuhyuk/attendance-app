@@ -38,6 +38,11 @@ const VacationTabContent = ({
           ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다.
         </p>
       )}
+      {["pending"].includes(tab.value) && (
+        <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+          ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
+        </p>
+      )}
       <div className="w-full overflow-x-auto">
         <DataTable
           columns={columns}

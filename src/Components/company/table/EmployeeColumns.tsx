@@ -18,7 +18,10 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
     header: column.header,
     cell: ({ row }) => {
       const rawValue = row.getValue(column.key);
-      const value = String(rawValue ?? "");
+      const value =
+        column.key === "salaryAmount"
+          ? String(Number(!rawValue || rawValue === "null" ? 0 : rawValue))
+          : String(rawValue ?? "");
 
       // 컬럼별 최대 길이 설정
       const maxLengths: Record<string, number> = {
@@ -37,7 +40,7 @@ export const getEmployeeColumns = (): ColumnDef<EmployeeInfo>[] => {
 
       return (
         <div
-          className={` ${column.key === "email" ? "whitespace-normal break-all" : ""} ${column.key === "salaryAmount" ? "max-x-[80px] whitespace-normal break-words" : ""} ${["name"].includes(column.key) ? "inline-block max-w-[120px] truncate" : ""} `}
+          className={` ${column.key === "email" ? "whitespace-normal break-all" : ""} ${column.key === "salaryAmount" ? "max-x-[80px] whitespace-normal break-words" : ""} ${["name"].includes(column.key) ? "block max-w-[120px] truncate" : ""} `}
           title={value} // 툴팁으로 전체 값 표시
         >
           {column.key === "salaryAmount" ? `${formatMoney(Number(value))} 원` : displayValue}
