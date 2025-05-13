@@ -47,7 +47,7 @@ export const useSubmitCompanyData = (getValues: () => z.infer<typeof companyForm
       toast({
         description: "회사 설정이 완료되었습니다.",
       });
-      navigate(`/${companyCode}/companymain`);
+      navigate(`/${companyCode}/manager/companymain`);
     } else {
       toast({
         description: "회사 설정 저장에 실패했습니다.",

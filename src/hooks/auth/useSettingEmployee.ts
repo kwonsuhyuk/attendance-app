@@ -74,7 +74,7 @@ export const useSettingEmployee = () => {
           employmentType,
         });
       }
-      navigate(`/${companyCode}/companymain`);
+      navigate(`/${companyCode}/employee/companymain`);
     } catch (e: any) {
       setLoading(false);
       toast({

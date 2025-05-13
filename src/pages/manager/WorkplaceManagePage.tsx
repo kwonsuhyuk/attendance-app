@@ -2,11 +2,24 @@ import CompanyWorkPlaceStep from "@/components/company/company-settings/workplac
 import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
+import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 import { useWorkplacePage } from "@/hooks/company-settings/useWorkplacePage";
+import { useCompanyStore } from "@/store/company.store";
+import { useRef } from "react";
 import { FormProvider } from "react-hook-form";
 
 const WorkplaceManagePage = () => {
   const { handleSubmit, companyWorkPlacesListForm, onSubmit, onInvalid } = useWorkplacePage();
+  const { formState } = companyWorkPlacesListForm;
+
+  const allowNavigation = useRef(false);
+
+  const handleValidSubmit = (data: any) => {
+    allowNavigation.current = true;
+    onSubmit(data);
+  };
+
+  useFormBlocker(formState.isDirty && !allowNavigation.current);
 
   return (
     <>
@@ -17,7 +30,7 @@ const WorkplaceManagePage = () => {
       <CompanySettingPageContainer>
         <FormProvider {...companyWorkPlacesListForm}>
           <form
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
+            onSubmit={handleSubmit(handleValidSubmit, onInvalid)}
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyWorkPlaceStep type="setting" />

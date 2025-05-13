@@ -4,9 +4,22 @@ import { Button } from "@/components/ui/button";
 import CompanyJobListStep from "@/components/company/company-settings/job-setting/CompanyJobListStep";
 import { usePositionManagePage } from "@/hooks/company-settings/usePositionManagePage";
 import Seo from "@/components/Seo";
+import { useRef } from "react";
+import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 
 const PositionManagePage = () => {
   const { companyJobListForm, handleSubmit, onInvalid, onSubmit } = usePositionManagePage();
+  const { formState } = companyJobListForm;
+
+  const allowNavigation = useRef(false);
+
+  const handleValidSubmit = (data: any) => {
+    allowNavigation.current = true;
+    onSubmit(data);
+  };
+
+  useFormBlocker(formState.isDirty && !allowNavigation.current);
+
   return (
     <>
       <Seo
@@ -17,7 +30,7 @@ const PositionManagePage = () => {
         <FormProvider {...companyJobListForm}>
           <form
             onKeyDown={e => e.key === "Enter" && e.preventDefault()}
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
+            onSubmit={handleSubmit(handleValidSubmit, onInvalid)}
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyJobListStep type="setting" />
