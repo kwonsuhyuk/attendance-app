@@ -32,12 +32,16 @@ const MyVacationPage = () => {
     reloadKey,
   });
 
-  const { paginatedRequests, totalPageCount, yearFilteredRequests } = useFilteredVacationRequests(
+  const { paginatedRequests, totalPageCount } = useFilteredVacationRequests(
     requests,
     year,
     filterStatus,
     currentPage,
   );
+
+  const yearOnlyApprovedRequests = requests.filter(req => {
+    return req.status === "승인" && req.startDate?.startsWith(year);
+  });
 
   const { requests: sendRequest } = useVacationRequests();
   const { register: handleRequest } = sendRequest;
@@ -69,7 +73,7 @@ const MyVacationPage = () => {
           setDate={setDate}
           setCurrentPage={setCurrentPage}
           year={year}
-          yearFilteredRequests={yearFilteredRequests}
+          yearFilteredRequests={yearOnlyApprovedRequests}
         />
 
         <Button className="w-full cursor-pointer" onClick={toggleModal}>
