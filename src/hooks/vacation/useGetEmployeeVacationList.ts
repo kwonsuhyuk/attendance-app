@@ -44,6 +44,7 @@ export const useGetEmployeeVacationList = ({
           ? Object.entries(requestData)
               .filter(([, data]) => data.requester?.uid === userId)
               .map(([key, value]) => ({ ...value, requestId: key }))
+              .filter(data => data.status !== "승인")
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
           : [];
 
