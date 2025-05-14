@@ -6,6 +6,8 @@ import { useCompanyStore } from "@/store/company.store";
 import AppTitle from "./AppTitle";
 import NotificationBell from "./NotificationBell";
 import { HelpCircle } from "lucide-react";
+import DarkmodeToggle from "./DarkmodeToggle";
+
 
 interface HeaderProps {
   variant?: "employee" | "manager";
@@ -42,8 +44,9 @@ export default function Header({ variant = "manager" }: HeaderProps) {
           >
             <HelpCircle className="h-5 w-5" />
           </button>
+        <div className="flex items-center gap-3">
+          <DarkmodeToggle />
           <NotificationBell />
-          <DarkmodeSwitch />
         </div>
       </div>
     </div>
