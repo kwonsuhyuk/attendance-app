@@ -4,6 +4,7 @@ import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import { cn } from "@/util/cn.util";
 import { useNavigate } from "react-router-dom";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
+import { useSidebar } from "@/components/ui/sidebar";
 
 interface ManagerMenuItemProps {
   section: {
@@ -21,9 +22,11 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
     requests: { pendingCount },
   } = useVacationRequests();
   const navigate = useNavigate();
+  const { setOpenMobile, isMobile } = useSidebar();
 
   const handleNavigation = (path: string) => {
     navigate(`/${companyCode ?? ""}${path}`);
+    if (isMobile) setOpenMobile(false);
   };
 
   return (
