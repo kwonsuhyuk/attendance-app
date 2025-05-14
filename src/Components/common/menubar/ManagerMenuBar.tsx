@@ -5,8 +5,10 @@ import {
   SidebarHeader,
   SidebarFooter,
   useSidebar,
+  SidebarMenuSubButton,
+  SidebarMenuBadge,
 } from "@/components/ui/sidebar";
-import { LogOut } from "lucide-react";
+import { ClipboardList, LogOut } from "lucide-react";
 
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
@@ -24,7 +26,7 @@ export const ManagerMenuBar = () => {
   return (
     <Sidebar
       side={isMobile ? "right" : "left"}
-      className="h-screen w-64 border-r border-gray-200 bg-white-card-bg dark:border-gray-100 dark:bg-dark-bg"
+      className="h-screen w-64 border-r border-gray-200 bg-red-300 dark:border-gray-100 dark:bg-dark-bg"
     >
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 border-solid border-dark-border bg-dark-card-bg p-4 font-bold dark:bg-dark-bg">
         <AppTitle className="text-white" />
@@ -35,7 +37,17 @@ export const ManagerMenuBar = () => {
         <ManagerMenuBarList />
       </SidebarContent>
 
-      <SidebarFooter className="mt-auto border-t border-gray-200 p-4 dark:border-gray-800 dark:bg-dark-bg">
+      <SidebarFooter className="mt-auto space-y-3 p-4 dark:border-gray-800 dark:bg-dark-bg">
+        <SidebarMenuSubButton
+          href="https://google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center gap-2 rounded-md border border-transparent bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-600 shadow-sm transition-colors duration-200 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900 dark:hover:text-indigo-200"
+        >
+          <ClipboardList className="h-5 w-5 shrink-0 text-indigo-500 dark:text-indigo-300" />
+          <span>서비스 만족도 설문</span>
+        </SidebarMenuSubButton>
+        <Separator />
         <Button
           variant="outline"
           size="sm"
