@@ -15,7 +15,7 @@ const CommuteBox = () => {
 
   const handleClick = () => {
     if (!companyCode) return;
-    navigate(`/${companyCode}/commute`);
+    navigate(`/${companyCode}/employee/commute`);
   };
 
   const { label, icon, colorClass } = getStatusDisplay(status);
@@ -83,4 +83,3 @@ const getStatusDisplay = (status: TCommuteStatus) => {
       };
   }
 };
-

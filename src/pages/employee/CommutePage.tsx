@@ -70,6 +70,7 @@ export default function CommutePage() {
                 isLoaded={!isLoading}
                 markerDragAble={false}
                 onLocationSelect={() => {}}
+                radius={selectedPlace.radius}
               />
             </div>
           )}
