@@ -1,5 +1,5 @@
 import { Power } from "lucide-react";
-import { cn } from "@/util/cn.util";
+import { twMerge } from "tailwind-merge";
 
 interface AppTitleProps {
   className?: string;
@@ -8,7 +8,7 @@ interface AppTitleProps {
 const AppTitle = ({ className }: AppTitleProps) => {
   return (
     <h2
-      className={cn(
+      className={twMerge(
         "flex scroll-m-20 items-center gap-2 text-center text-2xl font-bold tracking-tight",
         className,
       )}
