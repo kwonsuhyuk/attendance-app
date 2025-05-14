@@ -3,7 +3,6 @@ import ThemeProvider from "@/components/common/provider/ThemeProvider";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import Seo from "@/components/Seo";
 import { Toaster } from "@/components/ui/toaster";
-import { MAIN_ROUTES } from "@/constants/routes";
 import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
 import { useUserStore } from "@/store/user.store";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
