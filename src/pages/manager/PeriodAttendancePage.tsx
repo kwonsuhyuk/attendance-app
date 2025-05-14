@@ -34,7 +34,11 @@ const PeriodAttendancePage = () => {
   return (
     <>
       <Seo
-        title="기간 출퇴근 | On & Off"
+        title={
+          tab === "employee" && selectedEmployee
+            ? `${selectedEmployee.name}님의 근태 현황 | On & Off`
+            : "기간 출퇴근 | On & Off"
+        }
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
 
@@ -53,7 +57,7 @@ const PeriodAttendancePage = () => {
                 <TabsTrigger value="employee" className={tabTriggerBaseClass}>
                   직원별 월간 현황
                 </TabsTrigger>
-                <TabsTrigger value="" className={tabTriggerBaseClass}>
+                <TabsTrigger value="salary" className={tabTriggerBaseClass}>
                   직원 정산
                 </TabsTrigger>
               </TabsList>
@@ -96,6 +100,21 @@ const PeriodAttendancePage = () => {
                 currentDate={currentDate}
                 variant="employee"
                 selectedEmployee={selectedEmployee}
+              />
+            </TabsContent>
+
+            {/* 직원 정산 */}
+            <TabsContent value="salary">
+              <PeriodAttFilterSection
+                type="salary"
+                currentDate={currentDate}
+                onChangeDate={setCurrentDate}
+                employeeName={employeeName}
+                setEmployeeName={setEmployeeName}
+                selectedEmployee={selectedEmployee}
+                setSelectedEmployee={setSelectedEmployee}
+                workplaceFilter={workplaceFilter}
+                setWorkplaceFilter={setWorkplaceFilter}
               />
             </TabsContent>
           </Tabs>
