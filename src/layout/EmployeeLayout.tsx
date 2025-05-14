@@ -4,6 +4,7 @@ import Footer from "../components/common/Footer";
 import MenuBar from "../components/common/menubar/MenuBar";
 import { Outlet } from "react-router-dom";
 import EmployeeEtcPageTitle from "@/components/employee/EmployeeEtcPageTitle";
+import { HelpCircle } from "lucide-react";
 
 interface ILayoutProp {
   type: "main" | "sub"; // header, footer 안 보이는 서브 페이지 구분용

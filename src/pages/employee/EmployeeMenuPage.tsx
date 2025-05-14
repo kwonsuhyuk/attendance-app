@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCompanyStore } from "@/store/company.store";
 import { useShallow } from "zustand/shallow";
 import CompanyInfo from "@/components/common/CompanyInfo";
-import { LogOut, ChevronRight } from "lucide-react";
+import { LogOut, ChevronRight, ClipboardList } from "lucide-react";
 import PoweredByFooter from "@/components/common/PoweredByFooter";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import Seo from "@/components/Seo";
@@ -51,6 +51,15 @@ const EmployeeMenuPage = () => {
             </div>
           ))}
         </div>
+        <a
+          href="https://google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 flex items-center gap-3 rounded-md border border-gray-200 bg-white px-4 py-3 py-4 text-sm text-indigo-600 shadow-sm transition hover:bg-gray-100 dark:border-muted dark:bg-muted dark:text-indigo-400 dark:hover:bg-dark-card-bg"
+        >
+          <ClipboardList className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <span className="font-medium">서비스 만족도 설문</span>
+        </a>
         <div
           className="mt-4 flex flex-col divide-y rounded-md border bg-white px-4 py-4 text-red-500 shadow-sm dark:border-muted dark:bg-muted"
           onClick={handleLogout}
