@@ -51,7 +51,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
             <Link
               to={{
-                pathname: `/${companyCode}/periodatt`,
+                pathname: `/${companyCode}/manager/periodatt`,
                 search: `?tab=employee&userId=${user.uid}`,
               }}
             >

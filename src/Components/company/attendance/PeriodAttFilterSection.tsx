@@ -14,9 +14,8 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { useCompanyStore } from "@/store/company.store";
 
-
 interface Props {
-  type: "total" | "employee";
+  type: "total" | "employee" | "salary";
   currentDate: Date;
   onChangeDate: (date: Date) => void;
   workplaceFilter: string;
@@ -27,7 +26,6 @@ interface Props {
   setEmployeeName?: (v: string) => void;
   selectedEmployee?: EmployeeInfo | null;
   setSelectedEmployee?: (emp: EmployeeInfo | null) => void;
-
 }
 
 const PeriodAttFilterSection = ({
@@ -137,7 +135,23 @@ const PeriodAttFilterSection = ({
             <span className="h-3 w-3 rounded-full bg-orange-300" />
             <span>외근</span>
           </div>
-
+        </div>
+      )}
+      {type === "salary" && (
+        <div className="flex flex-col py-1 sm:flex-row sm:items-center sm:gap-3">
+          <label className="mb-1 whitespace-nowrap text-sm font-medium text-muted-foreground sm:mb-0">
+            직원 검색
+          </label>
+          <div className="w-full min-w-[260px] sm:w-[260px]">
+            <AutoCompleteUserInput
+              users={employeeList}
+              onSelect={(emp: EmployeeInfo | null) => {
+                setSelectedEmployee?.(emp);
+                setInputValue(`${emp?.name} (${emp?.email})`);
+                setEmployeeName?.(emp?.name || "");
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

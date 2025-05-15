@@ -8,7 +8,7 @@ import { TWorkPlace } from "@/model/types/company.type";
 import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
 import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
 import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
@@ -35,9 +35,19 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
     handleSelectAddress,
   } = useWorkPlaceModal(place);
 
-  const [radius, setRadius] = useState(5);
   const radiusOptions = [1, 3, 5, 10, 20];
   const [radiusIndex, setRadiusIndex] = useState(1);
+
+  const radius = radiusOptions[radiusIndex] * 100;
+
+  useEffect(() => {
+    if (place) {
+      const index = radiusOptions.findIndex(v => v * 100 === place.radius);
+      if (index !== -1) {
+        setRadiusIndex(index);
+      }
+    }
+  }, [place]);
 
   const handleAddPlace = () => {
     onSave({ name, memo, address, lat, lng, radius });
@@ -45,7 +55,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
     setName("");
     setMemo("");
     setAddress("");
-    setRadius(5);
+    setRadiusIndex(1);
   };
 
   return (
@@ -127,7 +137,6 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
                 value={[radiusIndex]}
                 onValueChange={([val]) => {
                   setRadiusIndex(val);
-                  setRadius(radiusOptions[val] * 100);
                 }}
                 className="w-full"
               />
