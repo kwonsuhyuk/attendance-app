@@ -7,6 +7,7 @@ import { hasSeenTour, markTourAsSeen } from "@/util/tourStorage.util";
 export const useTour = (pageKey: string, steps: Step[], dependencyReady: boolean = true) => {
   const [runTour, setRunTour] = useState(false);
   const userId = useUserStore(state => state.currentUser?.uid);
+  const setRun = useTourStore(state => state.setRun);
 
   // steps 등록 (공통)
   useEffect(() => {
@@ -18,8 +19,10 @@ export const useTour = (pageKey: string, steps: Step[], dependencyReady: boolean
     if (!userId || !dependencyReady) return;
 
     const hasSeen = hasSeenTour(pageKey, userId);
+    console.log(`[투어] hasSeen: ${hasSeen}, uid: ${userId}, pageKey: ${pageKey}`);
     if (!hasSeen) {
-      setRunTour(true);
+      console.log("[투어] 자동 실행 시작!");
+      setRun(true);
       markTourAsSeen(pageKey, userId);
     }
   }, [userId, dependencyReady]);

@@ -8,8 +8,9 @@ import TourController from "@/components/common/TourController";
 import { useTourStore } from "@/store/tour.store";
 
 const Layout = () => {
-  const [runTour, setRunTour] = useState(false);
   const steps = useTourStore(state => state.steps);
+  const runTour = useTourStore(state => state.run);
+  const setRunTour = useTourStore(state => state.setRun);
 
   const handleStartTour = () => {
     const target = document.querySelector('[data-tour="step-1"]');

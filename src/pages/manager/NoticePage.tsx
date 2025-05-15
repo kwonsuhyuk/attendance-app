@@ -10,7 +10,6 @@ import { deleteNotice } from "@/api/notice.api";
 import { ChevronUp, Megaphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { noticeTourSteps } from "@/constants/managerTourSteps";
-import TourController from "@/components/common/TourController";
 import { useTour } from "@/hooks/use-tour";
 
 const NoticePage = () => {
@@ -21,7 +20,8 @@ const NoticePage = () => {
   const { toast } = useToast();
 
   // 투어관련 커스텀 훅
-  const { runTour, setRunTour } = useTour("notice", noticeTourSteps, notices.length > 0);
+  console.log("[투어] useTour 호출됨");
+  useTour("notice", noticeTourSteps);
 
   const [page, setPage] = useState(1);
   const noticesPerPage = 6;
@@ -74,8 +74,6 @@ const NoticePage = () => {
 
   return (
     <>
-      <TourController steps={noticeTourSteps} run={runTour} onClose={() => setRunTour(false)} />
-
       <Seo title="공지사항 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
 
       <div className="flex w-full flex-col gap-4 sm:py-2">
