@@ -26,25 +26,6 @@ const Layout = () => {
   return (
     <SidebarProvider>
       <TourController steps={steps} run={runTour} onClose={() => setRunTour(false)} />
-      {/* <Joyride
-        steps={steps}
-        run={runTour}
-        continuous
-        showSkipButton
-        showProgress
-        scrollToFirstStep
-        styles={{
-          options: {
-            zIndex: 10000,
-            primaryColor: "#6366f1",
-          },
-        }}
-        callback={({ status }) => {
-          if (["finished", "skipped"].includes(status)) {
-            setRunTour(false);
-          }
-        }}
-      /> */}
 
       <div className="relative flex min-h-screen w-screen bg-white-bg text-white-text dark:bg-dark-bg dark:text-dark-text">
         <MenuBar />
