@@ -8,6 +8,7 @@ import WorkplaceBox from "./WorkplaceBox";
 import EmployeeListBox from "./EmployeeListBox";
 import ManagerVacationBox from "./ManagerVacationBox";
 import TodayCommuteBox from "./TodayCommuteBox";
+import BasicGuideStepBox from "./BasicGuideStepBox";
 
 const ManagerMainContent = () => {
   return (
@@ -16,7 +17,7 @@ const ManagerMainContent = () => {
         <Clock />
         <CompanyCodeCopy />
       </div>
-
+      <BasicGuideStepBox />
       {/* 금일 출퇴근 박스 */}
       <ManagerHomeBoxLayout boxName="금일 출퇴근" toNavigate="todayatt">
         <TodayCommuteBox />
