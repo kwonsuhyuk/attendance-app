@@ -9,6 +9,8 @@ import { useUserStore } from "@/store/user.store";
 import { deleteNotice } from "@/api/notice.api";
 import { ChevronUp, Megaphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { noticeTourSteps } from "@/constants/managerTourSteps";
+import { useTour } from "@/hooks/use-tour";
 
 const NoticePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +18,10 @@ const NoticePage = () => {
   const userType = useUserStore(state => state.currentUser?.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const { toast } = useToast();
+
+  // 투어관련 커스텀 훅
+  console.log("[투어] useTour 호출됨");
+  useTour("notice", noticeTourSteps);
 
   const [page, setPage] = useState(1);
   const noticesPerPage = 6;
@@ -69,15 +75,21 @@ const NoticePage = () => {
   return (
     <>
       <Seo title="공지사항 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
+
       <div className="flex w-full flex-col gap-4 sm:py-2">
         <div className="flex max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3" data-tour="step-1">
             <Megaphone className="mb-1 h-6 w-6 text-white-text dark:text-dark-text" />
             <h2 className="text-lg font-bold text-white-text dark:text-dark-text">공지사항</h2>
             <span className="text-sm text-muted-foreground">총 {notices.length}개</span>
           </div>
+
           {userType === "manager" && (
-            <Button onClick={() => setIsModalOpen(true)} className="text-sm font-semibold">
+            <Button
+              data-tour="step-2"
+              onClick={() => setIsModalOpen(true)}
+              className="text-sm font-semibold"
+            >
               작성
             </Button>
           )}
