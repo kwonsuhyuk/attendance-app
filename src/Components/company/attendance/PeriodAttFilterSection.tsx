@@ -46,11 +46,11 @@ const PeriodAttFilterSection = ({
 
   return (
     <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
-      <div className="flex justify-center py-2 sm:justify-start">
+      <div className="flex justify-center py-2 sm:justify-start" data-tour="period-2">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-6" data-tour="period-3">
         {/* 근무지 필터 - total */}
         {type === "total" && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">

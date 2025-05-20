@@ -6,6 +6,9 @@ import { Card } from "@/components/ui/card";
 import AttendancePageContainer from "@/components/container/manager/AttendancePageContainer";
 import usePeriodAttendance from "@/hooks/manager/usePeriodAttendance";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
+import { periodAttTourSteps } from "@/constants/managerTourSteps";
+import { useTour } from "@/hooks/use-tour";
+import { useTourStore } from "@/store/tour.store";
 
 const PeriodAttendancePage = () => {
   const { employeeList } = useEmployeeList();
@@ -24,6 +27,25 @@ const PeriodAttendancePage = () => {
     setSelectedEmployee,
     calendar,
   } = usePeriodAttendance(employeeList);
+
+  useTour("period_att", periodAttTourSteps);
+
+  const handleTabClick = (tab: "total" | "employee") => {
+    setTab(tab);
+
+    if (tab === "employee") {
+      setTimeout(() => {
+        useTourStore.getState().setSteps([
+          {
+            target: '[data-tour="period-5"]',
+            content: "이 탭은 특정 직원의 이름을 검색하면 근태 현황이 나옵니다.",
+            disableBeacon: true,
+          },
+        ]);
+        useTourStore.getState().setRun(true);
+      }, 200);
+    }
+  };
 
   const tabTriggerBaseClass =
     "rounded-t-md border border-b-0 border-white-border-sub px-1 py-2 text-base font-semibold " +
@@ -50,16 +72,23 @@ const PeriodAttendancePage = () => {
               <div className="absolute bottom-1 left-0 z-0 hidden h-[1px] w-full translate-y-[0.5px] bg-white-bg dark:bg-dark-border-sub sm:block" />
 
               {/* 반응형 탭 리스트 */}
-              <TabsList className="relative z-10 flex w-full flex-wrap gap-2 bg-transparent sm:w-fit sm:flex-nowrap sm:gap-5">
+              <TabsList
+                className="relative z-10 flex w-full flex-wrap gap-2 bg-transparent sm:w-fit sm:flex-nowrap sm:gap-5"
+                data-tour="period-1"
+              >
                 <TabsTrigger value="total" className={tabTriggerBaseClass}>
                   전체 근태 현황
                 </TabsTrigger>
-                <TabsTrigger value="employee" className={tabTriggerBaseClass}>
+                <TabsTrigger
+                  value="employee"
+                  className={tabTriggerBaseClass}
+                  onClick={() => handleTabClick("employee")}
+                >
                   직원별 월간 현황
                 </TabsTrigger>
-                <TabsTrigger value="salary" className={tabTriggerBaseClass}>
+                {/* <TabsTrigger value="salary" className={tabTriggerBaseClass}>
                   직원 정산
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
             </div>
 
@@ -83,7 +112,7 @@ const PeriodAttendancePage = () => {
             </TabsContent>
 
             {/* 직원 상세 현황 */}
-            <TabsContent value="employee">
+            <TabsContent value="employee" data-tour="period-5">
               <PeriodAttFilterSection
                 type="employee"
                 currentDate={currentDate}
@@ -100,21 +129,6 @@ const PeriodAttendancePage = () => {
                 currentDate={currentDate}
                 variant="employee"
                 selectedEmployee={selectedEmployee}
-              />
-            </TabsContent>
-
-            {/* 직원 정산 */}
-            <TabsContent value="salary">
-              <PeriodAttFilterSection
-                type="salary"
-                currentDate={currentDate}
-                onChangeDate={setCurrentDate}
-                employeeName={employeeName}
-                setEmployeeName={setEmployeeName}
-                selectedEmployee={selectedEmployee}
-                setSelectedEmployee={setSelectedEmployee}
-                workplaceFilter={workplaceFilter}
-                setWorkplaceFilter={setWorkplaceFilter}
               />
             </TabsContent>
           </Tabs>
