@@ -26,7 +26,7 @@ const TourController = ({ steps, run, onClose }: TourControllerProps) => {
       showSkipButton
       scrollToFirstStep
       disableScrolling={true}
-      spotlightClicks={false}
+      spotlightClicks={true}
       disableOverlayClose={true}
       styles={{
         options: {

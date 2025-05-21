@@ -7,6 +7,8 @@ import Seo from "@/components/Seo";
 import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 
 import { useRef } from "react";
+import { useTour } from "@/hooks/use-tour";
+import { companyBasicSetStep } from "@/constants/managerTourSteps";
 
 const CompanyInfoPage = () => {
   const { companyBasicForm, handleSubmit, onInvalid, onSubmit } = useCompanyInfoPage();
@@ -20,6 +22,7 @@ const CompanyInfoPage = () => {
   };
 
   useFormBlocker(formState.isDirty && !allowNavigation.current);
+  useTour("company_basic_set", companyBasicSetStep);
 
   return (
     <>

@@ -96,7 +96,10 @@ const TodayCommuteBox = () => {
   const chartData = [{ name: "출근율", value: percentage, fill: "#10b981" }];
 
   return (
-    <div className="flex min-h-[250px] flex-col gap-4 md:flex-row md:p-3">
+    <div
+      className="flex min-h-[250px] flex-col gap-4 md:flex-row md:p-3"
+      data-tour="manager_home-2"
+    >
       {/* 출근율 박스 */}
       <div className="w-full dark:text-white md:max-w-sm">
         <div className="rounded-md border border-solid border-white-border-sub bg-white p-4 py-6 text-gray-800 transition-all duration-300 hover:shadow-xl dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">

@@ -41,6 +41,8 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { processCommute } from "@/api/commute.api";
 import { TCommuteStatus } from "@/model/types/commute.type";
 import { toast } from "@/hooks/use-toast";
+import { useTour } from "@/hooks/use-tour";
+import { todayAttSteps } from "@/constants/managerTourSteps";
 import { EmployeeListItem } from "../TodayCommuteBox";
 
 interface IAttendanceHeaderProps {
@@ -132,6 +134,7 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          data-tour="today-2"
           className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200"
           onClick={handleSelfCommuteModalOpen}
         >
@@ -157,6 +160,7 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          data-tour="today-2"
           className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200"
           onClick={handleSelfCommuteModalOpen}
         >
@@ -182,7 +186,7 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
     day: dayjs(selectedDate).format("DD"),
   });
   return (
-    <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
+    <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4" data-tour="today-3">
       {/* 전체 직원 수 */}
       <Card>
         <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
@@ -253,7 +257,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
   });
 
   return (
-    <Card className="border bg-white dark:bg-zinc-900">
+    <Card className="border bg-white dark:bg-zinc-900" data-tour="today-5">
       <CardContent className="flex flex-col space-y-2 p-4 sm:space-y-4">
         <h3 className="text-base font-semibold text-gray-800 dark:text-white sm:text-lg">
           전체 출근 분포
@@ -303,7 +307,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   const outworkingEmployees = outworkingPlace.employees;
 
   return (
-    <div className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10">
+    <div className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"  data-tour="today-6">
       <h3 className="text-base font-semibold text-yellow-700 dark:text-orange-300 sm:text-lg">
         외근 인원{" "}
         <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-orange-300">
@@ -392,7 +396,8 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   const { companyCode } = useParams();
 
   return (
-    <Card className="w-full bg-white">
+    <Card className="w-full bg-white"  data-tour="today-7">
+
       <CardContent className="p-4">
         <div className="mb-4 flex items-center gap-2 text-base font-semibold text-zinc-800 dark:text-white sm:text-lg">
           근무지별 출근 인원
@@ -540,6 +545,7 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
       <Card
         className="h-fit cursor-pointer bg-sky-100 transition hover:bg-sky-50 dark:bg-sky-900 dark:hover:bg-sky-800"
         onClick={() => handleVacationBoxClick(todayVacationData || null)}
+        data-tour="today-4"
       >
         <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
           <PlaneTakeoffIcon className="h-5 w-5 text-sky-600 dark:text-sky-300 md:h-6 md:w-6" />

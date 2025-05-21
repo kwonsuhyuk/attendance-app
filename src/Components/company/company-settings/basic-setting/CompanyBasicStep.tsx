@@ -17,7 +17,10 @@ const CompanyBasicStep = ({ type = "firstpage" }: ICompanyBasicStepProps) => {
   const prefix = type === "firstpage" ? "companyBasic." : "";
 
   return (
-    <Card className="my-10 flex w-full max-w-md flex-col items-center space-y-6">
+    <Card
+      className="my-10 flex w-full max-w-md flex-col items-center space-y-6"
+      data-tour="basic_set-1"
+    >
       <CompanySettingTitle
         title="회사 기본 설정"
         description="회사의 기본 정보에 관한 설정 입니다."

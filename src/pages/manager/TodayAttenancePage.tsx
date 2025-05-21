@@ -1,4 +1,3 @@
-
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Seo from "@/components/Seo";
@@ -10,6 +9,8 @@ import {
   WorkplaceBreakdown,
 } from "@/components/company/attendance/DaliyAttendanceUI";
 import { getKSTFormattedDate } from "@/util/time.util";
+import { useTour } from "@/hooks/use-tour";
+import { todayAttSteps } from "@/constants/managerTourSteps";
 
 const TodayAttenancePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +22,8 @@ const TodayAttenancePage = () => {
     const formattedDate = getKSTFormattedDate(selectedDate);
     setSearchParams({ date: formattedDate });
   }, [selectedDate, setSearchParams]);
+
+  useTour("today_att", todayAttSteps);
 
   return (
     <>

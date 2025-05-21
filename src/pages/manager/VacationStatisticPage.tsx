@@ -10,6 +10,8 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { useSearchParams } from "react-router-dom";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import Seo from "@/components/Seo";
+import { useTour } from "@/hooks/use-tour";
+import { vacationStatisticSteps } from "@/constants/managerTourSteps";
 
 const VacationStatisticPage = () => {
   const today = new Date();
@@ -43,6 +45,7 @@ const VacationStatisticPage = () => {
       setSearchParams(params);
     }
   };
+  useTour("v_static", vacationStatisticSteps);
 
   return (
     <>

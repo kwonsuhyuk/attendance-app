@@ -18,7 +18,7 @@ const PayCheckDaySelect = ({ type = "firstpage" }: IPayCheckDaySelectProps) => {
   const payCheckDay = watch(`${prefix}payCheckDay`);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" data-tour="holiday_set-1">
       <CardHeader>
         <CardTitle className="text-lg">급여 정산일</CardTitle>
       </CardHeader>
