@@ -52,7 +52,7 @@ const VacationRequestBox = () => {
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" data-tour="manager_home-3">
       {/* 요청 목록 */}
       <SummaryCard
         title="처리되지 않은 휴가 요청 목록"

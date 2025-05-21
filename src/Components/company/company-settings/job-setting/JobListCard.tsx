@@ -12,7 +12,7 @@ const JobListCard = ({ jobs, onRemove }: JobListCardProps) => {
   if (jobs.length === 0) return null;
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" data-tour="joblist_set-2">
       <CardHeader>
         <CardTitle className="text-lg">추가된 직무 목록</CardTitle>
       </CardHeader>

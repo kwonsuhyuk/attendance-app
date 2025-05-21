@@ -27,7 +27,7 @@ const VacationStatisticTable = ({
   const updatedList = useVacationStatisticTableData(employeeList, selectedDate, mode);
 
   return (
-    <Card className="relative p-4 md:w-2/3">
+    <Card className="relative p-4 md:w-2/3" data-tour="vstatic-5">
       <p className="absolute right-2 top-2 text-xs text-gray-500">(사용횟수 : 일)</p>
       <div className="w-full overflow-x-auto pt-4">
         <DataTable

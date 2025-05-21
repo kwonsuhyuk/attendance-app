@@ -68,7 +68,7 @@ const EmployeeListBox = () => {
   }, [employeeList]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-tour="manager_home-4">
       <SummaryCard title="전체 구성원 수" count={employeeList.length} icon={Users} />
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">

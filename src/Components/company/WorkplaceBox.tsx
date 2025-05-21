@@ -11,7 +11,7 @@ const WorkplaceBox = () => {
   const workplaces = useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-tour="manager_home-5">
       <SummaryCard title="전체 근무지 수" count={workplaces?.length} icon={Building2} />
       <ul className="relative max-h-[380px] space-y-2 overflow-y-auto rounded-md border border-solid border-white-border-sub py-3 pr-1 dark:border-dark-border-sub">
         {workplaces && workplaces.length > 0 ? (

@@ -31,7 +31,7 @@ const NightPaySettings = ({ type = "firstpage" }: INightPaySettingsProps) => {
   const nightPay = watch(`${prefix}nightPay`);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" data-tour="holiday_set-2">
       <CardHeader className="flex flex-col items-start space-y-2">
         <div className="flex w-full items-center justify-between">
           <CardTitle className="text-lg">주간/야간 급여 구분</CardTitle>

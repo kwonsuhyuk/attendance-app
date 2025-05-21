@@ -6,6 +6,8 @@ import { useHolidayNightManagePage } from "@/hooks/company-settings/useHolidayNi
 import Seo from "@/components/Seo";
 import { useRef } from "react";
 import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
+import { useTour } from "@/hooks/use-tour";
+import { companyHolidaySetStep } from "@/constants/managerTourSteps";
 
 const HolidayNightManagePage = () => {
   const { companyNightHolidayForm, handleSubmit, onSubmit, onInvalid } =
@@ -21,6 +23,7 @@ const HolidayNightManagePage = () => {
   };
 
   useFormBlocker(formState.isDirty && !allowNavigation.current);
+  useTour("company_holiday_set", companyHolidaySetStep);
 
   return (
     <>
@@ -35,7 +38,9 @@ const HolidayNightManagePage = () => {
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyNightHolidayStep type="setting" />
-            <Button type="submit">저장</Button>
+            <Button type="submit" data-tour="holiday_set-5">
+              저장
+            </Button>
           </form>
         </FormProvider>
       </CompanySettingPageContainer>

@@ -18,7 +18,7 @@ const VacationPieChart = ({ selectedDate, selectedName, mode }: IVacationPieChar
   const { pieData, rawData, totalDays } = useVacationPieChart(selectedDate, selectedName, mode);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center" data-tour="vstatic-4">
       <VacationSubTitle
         selectedDate={selectedDate}
         selectedName={selectedName}

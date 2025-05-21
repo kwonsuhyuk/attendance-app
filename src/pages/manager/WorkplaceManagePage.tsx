@@ -2,8 +2,10 @@ import CompanyWorkPlaceStep from "@/components/company/company-settings/workplac
 import CompanySettingPageContainer from "@/components/container/manager/CompanySettingPageContainer";
 import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
+import { companyWorkPlaceSetStep } from "@/constants/managerTourSteps";
 import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 import { useWorkplacePage } from "@/hooks/company-settings/useWorkplacePage";
+import { useTour } from "@/hooks/use-tour";
 import { useCompanyStore } from "@/store/company.store";
 import { useRef } from "react";
 import { FormProvider } from "react-hook-form";
@@ -20,6 +22,7 @@ const WorkplaceManagePage = () => {
   };
 
   useFormBlocker(formState.isDirty && !allowNavigation.current);
+  useTour("company_workplace_set", companyWorkPlaceSetStep);
 
   return (
     <>
@@ -34,7 +37,9 @@ const WorkplaceManagePage = () => {
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyWorkPlaceStep type="setting" />
-            <Button type="submit">저장</Button>
+            <Button type="submit" data-tour="workplace_set-3">
+              저장
+            </Button>
           </form>
         </FormProvider>
       </CompanySettingPageContainer>

@@ -33,7 +33,7 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
 
   return (
     <>
-      <Card className="p-4">
+      <Card className="p-4" data-tour="vstatic-2">
         <VacationSubTitle
           selectedDate={selectedDate}
           selectedName={selectedName}
@@ -67,7 +67,7 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
           </BarChart>
         </ResponsiveContainer>
 
-        <div className="mt-4">
+        <div className="mt-4" data-tour="vstatic-3">
           <CustomBarLegend />
         </div>
       </Card>

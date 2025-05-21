@@ -46,7 +46,7 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" data-tour="holiday_set-3">
       <CardHeader className="flex flex-col items-start space-y-2">
         <div className="flex w-full items-center justify-between">
           <CardTitle className="flex items-center gap-1 text-lg">
@@ -92,7 +92,7 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
             </div>
 
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild data-tour="holiday_set-4">
                 <Button className="bg-point-color text-black hover:bg-point-color hover:bg-opacity-80">
                   날짜 선택
                 </Button>
