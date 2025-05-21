@@ -28,7 +28,7 @@ const NoticeBox = () => {
   return (
     <Card
       className="relative cursor-pointer p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg"
-      onClick={() => navigate(`/${companyCode}/notice`)}
+      onClick={() => navigate(`/${companyCode}/employee/notice`)}
     >
       <ChevronRight className="absolute right-4 top-4 h-5 w-5 text-muted-foreground group-hover:text-foreground" />
       <CardTitle className="flex items-center gap-2 text-base">

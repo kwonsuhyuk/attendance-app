@@ -46,10 +46,10 @@ const PeriodAttCalendarList = ({
     <Card
       onClick={() => {
         if (variant === "total" && companyCode) {
-          navigate(`/${companyCode}/todayatt`);
+          navigate(`/${companyCode}/manager/todayatt`);
         }
       }}
-      className="hover:bg-white-hover cursor-pointer rounded-none border border-solid border-white-border-sub p-4 text-sm dark:border-dark-border-sub dark:hover:bg-white-border"
+      className="cursor-pointer rounded-none border border-solid border-white-border-sub p-4 text-sm hover:bg-white-hover dark:border-dark-border-sub dark:hover:bg-white-border"
     >
       {/* 날짜 + 총원 */}
       <div className="mb-2 flex justify-between text-base font-semibold">

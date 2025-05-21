@@ -419,7 +419,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
               ) : (
                 <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm text-zinc-600 dark:text-zinc-400">
                   등록된 근무지가 없습니다. 근무지를 등록해주세요.
-                  <Button onClick={() => navigate(`/${companyCode}/workplacemanage`)}>
+                  <Button onClick={() => navigate(`/${companyCode}/manager/workplacemanage`)}>
                     근무지 등록하러 가기
                   </Button>
                 </div>
@@ -481,7 +481,7 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-right text-xs">
+                  <div className="flex-start flex flex-col gap-1 text-xs">
                     <p className="text-green-600 dark:text-green-400">
                       출근:{" "}
                       {emp.startTime && isValid(new Date(emp.startTime))

@@ -32,7 +32,7 @@ export default function useOutWorkingModal() {
     if (result.success) {
       setOpen(false);
       toast({ title: "외근이 성공적으로 등록되었습니다." });
-      navigate(`/${companyCode}/companymain`);
+      navigate(`/${companyCode}/employee/companymain`);
     } else {
       toast({ title: "외근이 성공적으로 등록되었습니다.", variant: "destructive" });
     }
