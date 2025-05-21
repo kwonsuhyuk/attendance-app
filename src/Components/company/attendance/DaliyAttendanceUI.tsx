@@ -41,6 +41,7 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { processCommute } from "@/api/commute.api";
 import { TCommuteStatus } from "@/model/types/commute.type";
 import { toast } from "@/hooks/use-toast";
+import { EmployeeListItem } from "../TodayCommuteBox";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -302,29 +303,38 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   const outworkingEmployees = outworkingPlace.employees;
 
   return (
-    <Card className="h-[450px] border border-yellow-100 bg-yellow-50 dark:border-yellow-300 dark:bg-zinc-800 sm:h-[550px]">
-      <CardContent className="flex h-full flex-col p-4">
-        {/* 헤더 */}
-        <div className="mb-2 flex items-center justify-between sm:mb-4">
-          <h3 className="text-base font-semibold text-yellow-700 dark:text-yellow-300 sm:text-lg">
-            외근 인원{" "}
-            <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-yellow-400">
-              ({outworkingEmployees.length}명)
-            </span>
-          </h3>
-        </div>
+    <div className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10">
+      <h3 className="text-base font-semibold text-yellow-700 dark:text-orange-300 sm:text-lg">
+        외근 인원{" "}
+        <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-orange-300">
+          ({outworkingEmployees.length}명)
+        </span>
+      </h3>
 
-        <div className="flex-1 space-y-2 overflow-y-auto pb-2 pr-1 sm:space-y-3">
-          {outworkingEmployees.length > 0 ? (
-            outworkingEmployees.map((item, i) => <OutworkerItem key={i} {...item} />)
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-yellow-600 dark:text-yellow-300">
-              금일 외근 인원이 없습니다.
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
+        {outworkingEmployees.length > 0 ? (
+          outworkingEmployees.map((user: any, index: number) =>
+            user ? (
+              <EmployeeListItem
+                key={index}
+                name={user.name}
+                jobName={user.jobName}
+                phoneNumber={user.phoneNumber}
+                employmentType={user.employmentType}
+                subText={user.memo}
+                iconColor="text-orange-700"
+                bgColor="bg-orange-100"
+                darkBgColor="dark:bg-orange-800/30"
+              />
+            ) : null,
+          )
+        ) : (
+          <li className="text-sm text-gray-500 dark:text-gray-400">
+            금일 외근 중인 직원이 없습니다.
+          </li>
+        )}
+      </ul>
+    </div>
   );
 };
 
@@ -382,9 +392,9 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   const { companyCode } = useParams();
 
   return (
-    <Card className="w-full border bg-white dark:border-zinc-700 dark:bg-zinc-900">
+    <Card className="w-full bg-white">
       <CardContent className="p-4">
-        <div className="mb-4 flex items-center gap-2 text-base font-semibold sm:text-lg">
+        <div className="mb-4 flex items-center gap-2 text-base font-semibold text-zinc-800 dark:text-white sm:text-lg">
           근무지별 출근 인원
         </div>
 
@@ -407,7 +417,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
                   );
                 })
               ) : (
-                <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm">
+                <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm text-zinc-600 dark:text-zinc-400">
                   등록된 근무지가 없습니다. 근무지를 등록해주세요.
                   <Button onClick={() => navigate(`/${companyCode}/workplacemanage`)}>
                     근무지 등록하러 가기
@@ -426,83 +436,73 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
 
 export const PlaceCard = ({ place }: { place: TPlaceData }) => {
   return (
-    <div className="flex h-full flex-col gap-6 rounded-xl border border-solid border-gray-200 bg-white p-5 shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
-      {/* Header */}
+    <div className="flex h-full flex-col justify-between gap-5 rounded-xl border border-solid border-zinc-200 bg-white p-5 shadow-sm transition-transform hover:scale-[1.01] hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900">
+      {/* 헤더 */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{place.name}</h3>
+            <MapPin className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
+            <h3 className="text-lg font-semibold text-zinc-800 dark:text-white">{place.name}</h3>
           </div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {place.address || "주소 정보 없음"}
           </span>
         </div>
 
-        {/* Memo Section */}
-        <div className="flex items-start gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 shadow-sm dark:bg-green-950 dark:text-green-200">
-          <StickyNote className="h-5 w-5 shrink-0 text-green-500 dark:text-green-300" />
-          <span className="line-clamp-2">{place.memo || "-"}</span>
-        </div>
+        {/* 메모 새 디자인 */}
+        {place.memo && (
+          <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            {place.memo}
+          </div>
+        )}
       </div>
 
-      {/* Employee List */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <h4 className="mb-2 text-sm font-semibold text-gray-800 dark:text-white">
-          금일 출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
+      {/* 직원 목록 */}
+      <div className="flex-1">
+        <h4 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-white">
+          출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
         </h4>
-        <div className="scrollbar-thin scrollbar-thumb-blue-300 relative h-72 overflow-y-auto rounded-md border border-solid border-white-border-sub py-2 pr-1 dark:border-dark-border-sub">
-          <div className="h-full space-y-2">
-            {place.employees.length > 0 ? (
-              place.employees.map((emp: TWorkplaceEmployee) => (
-                <div
+        <div className="scrollbar-thin scrollbar-thumb-zinc-300 relative h-64 overflow-y-auto rounded-md border border-zinc-100 bg-zinc-50 p-2 dark:border-zinc-700 dark:bg-zinc-800">
+          {place.employees.length > 0 ? (
+            <ul className="space-y-2">
+              {place.employees.map(emp => (
+                <li
                   key={emp.userId}
-                  className="flex flex-col justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 sm:flex-row sm:items-center sm:gap-4"
+                  className="flex items-center justify-between rounded-md bg-white px-3 py-2 shadow-sm dark:bg-zinc-700"
                 >
-                  {/* 직원 프로필 및 정보 */}
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white">
-                      <User className="h-5 w-5" />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-white">
+                      <User className="h-4 w-4" />
                     </div>
-                    <div className="flex flex-col">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                        {emp.name}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-sm">
+                      <div className="font-medium text-zinc-800 dark:text-white">{emp.name}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">
                         {emp.jobName} · {emp.employmentType}
-                      </p>
+                      </div>
                     </div>
                   </div>
-
-                  {/* 출근/퇴근 */}
-                  {(emp.startTime || emp.endTime) && (
-                    <div className="flex items-center gap-2 text-xs sm:flex-col sm:items-start">
-                      <p className="text-green-600 dark:text-green-300">
-                        출근:{" "}
-                        <span className="text-gray-600 dark:text-gray-300">
-                          {emp.startTime && isValid(new Date(emp.startTime))
-                            ? getKSTDateInfo(emp.startTime)
-                            : "-"}
-                        </span>
-                      </p>
-                      <p className="text-rose-500 dark:text-rose-400">
-                        퇴근:{" "}
-                        <span className="text-gray-600 dark:text-gray-300">
-                          {emp.endTime && isValid(new Date(emp.endTime))
-                            ? getKSTDateInfo(emp.endTime)
-                            : "-"}
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="flex h-full items-center justify-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-                금일 출근한 직원이 없습니다.
-              </div>
-            )}
-          </div>
+                  <div className="text-right text-xs">
+                    <p className="text-green-600 dark:text-green-400">
+                      출근:{" "}
+                      {emp.startTime && isValid(new Date(emp.startTime))
+                        ? getKSTDateInfo(emp.startTime)
+                        : "-"}
+                    </p>
+                    <p className="text-rose-500 dark:text-rose-400">
+                      퇴근:{" "}
+                      {emp.endTime && isValid(new Date(emp.endTime))
+                        ? getKSTDateInfo(emp.endTime)
+                        : "-"}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
+              금일 출근한 직원이 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </div>
