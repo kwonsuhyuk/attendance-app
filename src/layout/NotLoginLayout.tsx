@@ -8,7 +8,7 @@ const NotLoginLayout = () => {
   const isLoading = useUserStore(state => state.isLoading);
   const userType = useUserStore(state => state.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
-  console.log(currentUser);
+
   if (isLoading) {
     return <Loading />;
   }
