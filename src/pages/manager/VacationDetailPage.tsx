@@ -59,9 +59,9 @@ const VacationDetailPage = () => {
                   <span className="flex items-center justify-center gap-1 pt-2">
                     {tab.label}
                     {tab.value === "pending" && pendingCount > 0 && (
-                      <Badge className="mb-0.5 ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
                         {pendingCount}
-                      </Badge>
+                      </span>
                     )}
                   </span>
                 </TabsTrigger>

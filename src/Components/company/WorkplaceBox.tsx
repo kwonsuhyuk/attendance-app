@@ -1,11 +1,7 @@
 import { useCompanyStore } from "@/store/company.store";
-import React, { useState } from "react";
-import { Building2, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2 } from "lucide-react";
 import WorkPlaceItem from "./company-settings/workplace-setting/WorkPlaceItem";
-import { Button } from "@/components/ui/button";
-import ShowMoreButton from "../\bShowMoreButton";
 import SummaryCard from "./\bSummaryCard";
-import MaskedScrollableList from "../MaskedScrollableList";
 
 const WorkplaceBox = () => {
   const workplaces = useCompanyStore(state => state.currentCompany?.workPlacesList);
@@ -17,7 +13,7 @@ const WorkplaceBox = () => {
         {workplaces && workplaces.length > 0 ? (
           workplaces.map(place => <WorkPlaceItem place={place} key={place.id} />)
         ) : (
-          <div className="rounded-md border bg-muted px-4 py-4 text-sm text-muted-foreground">
+          <div className="rounded-md px-4 py-4 text-sm text-muted-foreground">
             등록된 근무지가 없습니다. 근무지 관리에서 근무지를 추가해주세요.
           </div>
         )}

@@ -10,7 +10,6 @@ import EmployeeVacationList from "../vacation/EmployeeVacationList";
 import { Badge } from "@/components/ui/badge";
 import { useNotification } from "@/hooks/employee/useNotification";
 
-
 const VacationBox = () => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
@@ -29,7 +28,7 @@ const VacationBox = () => {
         className="absolute right-4 top-4 h-5 w-5 cursor-pointer text-muted-foreground group-hover:text-foreground"
         onClick={e => {
           e.stopPropagation(); // 중요!
-          navigate(`/${companyCode}/myvacation`);
+          navigate(`/${companyCode}/employee/myvacation`);
         }}
       />
 

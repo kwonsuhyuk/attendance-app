@@ -6,8 +6,9 @@ import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "
 import { TodayVacationEmployeeCard } from "./attendance/DaliyAttendanceUI";
 import { Copy, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useFilterWork } from "@/hooks/manager/useFilterWork";
 
-const EmployeeListItem = ({
+export const EmployeeListItem = ({
   name,
   jobName,
   phoneNumber,
@@ -37,9 +38,9 @@ const EmployeeListItem = ({
   return (
     <li className={`flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-sm ${darkBgColor}`}>
       <div
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${bgColor} text-sm font-bold text-blue-900 dark:${darkBgColor} dark:text-white`}
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${bgColor} text-sm font-bold text-blue-900 dark:${bgColor} dark:text-white`}
       >
-        <User className={iconColor} />
+        <User className={`${iconColor} dark:text-black`} />
       </div>
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
@@ -47,7 +48,17 @@ const EmployeeListItem = ({
           {jobName} {employmentType && `· ${employmentType}`}
         </p>
         {phoneNumber && <p className="text-xs text-gray-500 dark:text-gray-400">{phoneNumber}</p>}
-        {subText && <p className={`text-xs ${iconColor} dark:text-green-300`}>{subText}</p>}
+        {subText && (
+          <p
+            className={`text-xs ${iconColor} ${
+              iconColor.includes("text-")
+                ? iconColor.replace("text-", "dark:text-")
+                : "dark:text-green-300"
+            }`}
+          >
+            {subText}
+          </p>
+        )}
       </div>
       {phoneNumber && (
         <button
@@ -62,12 +73,19 @@ const EmployeeListItem = ({
 };
 
 const TodayCommuteBox = () => {
-  const { totalEmployeeNumber, commuteEmployeeNumber, workingEmployees, outworkingPlace } =
-    useTodayCommuteData({
-      year: dayjs().format("YYYY"),
-      month: dayjs().format("MM"),
-      day: dayjs().format("DD"),
-    });
+  const { totalEmployeeNumber, commuteEmployeeNumber, workingEmployees } = useTodayCommuteData({
+    year: dayjs().format("YYYY"),
+    month: dayjs().format("MM"),
+    day: dayjs().format("DD"),
+  });
+  const { commuteData, employeeList } = useTodayCommuteData({
+    year: dayjs(new Date()).format("YYYY"),
+    month: dayjs(new Date()).format("MM"),
+    day: dayjs(new Date()).format("DD"),
+  });
+  const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
+  const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
+  const outworkingEmployees = outworkingPlace.employees;
 
   useCompanyStore(state => state.currentCompany?.workPlacesList);
 
@@ -165,8 +183,8 @@ const TodayCommuteBox = () => {
           </h3>
 
           <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
-            {outworkingPlace?.employees?.length > 0 ? (
-              outworkingPlace.employees.map((user: any, index: number) =>
+            {outworkingEmployees.length > 0 ? (
+              outworkingEmployees.map((user: any, index: number) =>
                 user ? (
                   <EmployeeListItem
                     key={index}

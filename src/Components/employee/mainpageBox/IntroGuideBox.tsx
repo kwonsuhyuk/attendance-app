@@ -23,7 +23,7 @@ const IntroGuideBox = () => {
 
   const handleNavigate = () => {
     if (companyCode) {
-      navigate(`/${companyCode}/appguide`);
+      navigate(`/${companyCode}/employee/appguide`);
     } else {
       console.warn("companycode가 없습니다.");
     }

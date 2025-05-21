@@ -42,9 +42,9 @@ export const ManagerMenuBar = () => {
           href="https://google.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center gap-2 rounded-md border border-transparent bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-600 shadow-sm transition-colors duration-200 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900 dark:hover:text-indigo-200"
+          className="group flex w-full items-center gap-2 rounded-md border border-transparent px-4 py-2 text-sm font-medium text-zinc-700 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
         >
-          <ClipboardList className="h-5 w-5 shrink-0 text-indigo-500 dark:text-indigo-300" />
+          <ClipboardList className="h-5 w-5 shrink-0 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-white" />
           <span>서비스 만족도 설문</span>
         </SidebarMenuSubButton>
         <Separator />
