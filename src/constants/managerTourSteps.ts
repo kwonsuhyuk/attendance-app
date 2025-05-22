@@ -47,3 +47,67 @@ export const periodAttTourSteps: Step[] = [
     disableBeacon: true,
   },
 ];
+
+export const vacationRegisterAndRequestTourSteps: Step[] = [
+  {
+    target: '[data-tour="body"]',
+    content: "이곳은 휴가를 등록하고 요청을 처리하는 페이지 입니다.",
+    disableBeacon: true,
+    placement: "center",
+  },
+  {
+    target: '[data-tour="register-modal"]',
+    content: "이곳을 클릭하면 직원의 휴가를 수동으로 등록할 수 있습니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="pending-1"]',
+    content: "직원의 휴가 요청을 처리하는 부분입니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="pending-2"]',
+    content: "해당 데이터를 클릭하면 승인 혹은 거절 버튼을 눌러 처리할 수 있습니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="process-1"]',
+    content: "처리 내역 탭으로 이동하면 휴가 요청을 처리한 내역이 나옵니다.",
+    disableBeacon: true,
+  },
+  // {
+  //   target: '[data-tour="process-2"]',
+  //   content: "이 부분 또한 데이터를 클릭하면 처리된 상세 휴가 정보를 보실 수 있습니다.",
+  //   disableBeacon: true,
+  // },
+  {
+    target: '[data-tour="register-1"]',
+    content: "등록 내역 탭으로 이동하면 수동으로 휴가를 등록한 내역이 나옵니다.",
+    disableBeacon: true,
+  },
+  // {
+  //   target: '[data-tour="register-2"]',
+  //   content: "이 부분 또한 데이터를 클릭하면 등록된 휴가의 상세 내용을 확인할 수 있습니다.",
+  //   disableBeacon: true,
+  // },
+];
+
+export const employeeManageTourSteps: Step[] = [
+  {
+    target: '[data-tour="body"]',
+    content: "이 곳은 직원을 관리하는 페이지입니다.",
+    disableBeacon: true,
+    placement: "center",
+  },
+  {
+    target: '[data-tour="empManage-filter"]',
+    content: "직원의 이름과 직무, 그리고 고용 형태까지 검색할 수 있습니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="empManage-table"]',
+    content:
+      "해당 직원의 데이터를 클릭하면 정보들이 나오고 수정 및 근태 페이지로 이동이 가능합니다.",
+    disableBeacon: true,
+  },
+];
