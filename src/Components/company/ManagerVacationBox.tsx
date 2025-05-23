@@ -52,13 +52,13 @@ const VacationRequestBox = () => {
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" data-tour="manager_home-3">
       {/* 요청 목록 */}
       <SummaryCard
         title="처리되지 않은 휴가 요청 목록"
         count={allRequests.length}
         icon={CalendarClock}
-        link={`/${companyCode}/vacationdetail`}
+        link={`/${companyCode}/manager/vacationdetail`}
       />
       {/* 차트 섹션 */}
       <div className="hidden rounded-md border border-solid border-white-border-sub p-4 dark:border-dark-border-sub sm:block">

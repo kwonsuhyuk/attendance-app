@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import IndexPage from "@/pages/common/IndexPage";
+
 import ManagerLayout from "@/layout/ManagerLayout";
 import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
@@ -13,6 +13,7 @@ import ManagerRoutes from "@/components/company/\bManagerRoutes";
 import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
 import ErrorPage from "@/pages/ErrorPage";
 import Notfound from "@/pages/common/Notfound";
+import IndexPage from "@/pages/common/IndexPage";
 
 export const MainRoutes = createBrowserRouter([
   {

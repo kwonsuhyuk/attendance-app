@@ -38,11 +38,11 @@ const NotificationDropdown = ({
       case "vacation_approved":
       case "vacation_rejected":
       case "vacation_registered":
-        return `/${companyCode}/myvacation`;
+        return `/${companyCode}/employee/myvacation`;
       case "notice_posted":
-        return `/${companyCode}/notice`;
+        return `/${companyCode}/employee/notice`;
       case "holiday_update":
-        return `/${companyCode}/holiday`;
+        return `/${companyCode}/employee/holiday`;
       default:
         return `/${companyCode}`;
     }

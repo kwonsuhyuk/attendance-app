@@ -37,7 +37,7 @@ export const useCommuteModal = ({
       toast({
         title: `${status === "checked-in-only" ? "퇴근" : "출근"}이 성공적으로 완료되었습니다.`,
       });
-      navigate(`/${companyCode}/companyMain`);
+      navigate(`/${companyCode}/employee/companymain`);
     } else {
       toast({ title: res.error || "처리 중 오류가 발생했습니다.", variant: "destructive" });
     }

@@ -9,8 +9,12 @@ import EmployeeListBox from "./EmployeeListBox";
 import ManagerVacationBox from "./ManagerVacationBox";
 import TodayCommuteBox from "./TodayCommuteBox";
 import BasicGuideStepBox from "./BasicGuideStepBox";
+import { useTour } from "@/hooks/use-tour";
+import { homeSteps } from "@/constants/managerTourSteps";
 
 const ManagerMainContent = () => {
+  useTour("manager_home", homeSteps);
+
   return (
     <div className="flex w-full flex-col gap-4 sm:py-5">
       <div className="flex w-full items-center justify-between px-2">

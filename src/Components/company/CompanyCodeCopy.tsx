@@ -21,7 +21,7 @@ const CompanyCodeCopy = () => {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-tour="manager_home-1">
       <Card className="flex items-center bg-muted px-4 py-2 text-sm font-medium text-muted-foreground">
         {companyCode}
       </Card>

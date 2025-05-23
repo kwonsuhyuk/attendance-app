@@ -42,7 +42,7 @@ const PeriodAttCalendarDayCard = ({
       onClick={() => {
         if (variant === "total" && companyCode) {
           const formattedDate = format(fullDate, "yyyy-MM-dd");
-          navigate(`/${companyCode}/todayatt?date=${formattedDate}`);
+          navigate(`/${companyCode}/manager/todayatt?date=${formattedDate}`);
         }
       }}
       className="flex h-[120px] cursor-pointer flex-col justify-between rounded-none border-[0.5px] border-solid border-white-border-sub p-2 text-sm hover:bg-white-hover dark:border-dark-border-sub dark:hover:bg-white-border sm:h-[140px] md:h-[160px] lg:h-[120px]"

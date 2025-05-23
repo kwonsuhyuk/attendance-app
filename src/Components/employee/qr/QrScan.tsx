@@ -36,7 +36,7 @@ const QrScan = () => {
 
             if (scanResult.success && scanResult.message) {
               toast.success(scanResult.message);
-              navigate(`/${companyCode}/companymain`);
+              navigate(`/${companyCode}/employee/companymain`);
             } else {
               toast.error(scanResult.error);
               qrScanner.start();

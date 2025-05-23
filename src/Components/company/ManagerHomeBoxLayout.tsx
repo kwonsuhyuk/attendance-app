@@ -19,7 +19,7 @@ const ManagerHomeBoxLayout = ({ children, boxName, toNavigate }: Props) => {
       </CardTitle>
       {/* 이동 아이콘 */}
       <ChevronRight
-        onClick={() => navigate(`/${companyCode}/${toNavigate}`)}
+        onClick={() => navigate(`/${companyCode}/manager/${toNavigate}`)}
         className="absolute right-4 top-4 h-6 w-6 cursor-pointer text-muted-foreground transition hover:bg-muted/50 group-hover:text-foreground"
       />
       <CardContent className="px-6">{children}</CardContent>

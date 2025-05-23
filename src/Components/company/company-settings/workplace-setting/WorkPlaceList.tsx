@@ -11,7 +11,7 @@ interface WorkPlaceListProps {
 
 const WorkPlaceList = ({ workPlaces, onRemove, onEdit }: WorkPlaceListProps) => {
   return (
-    <Card className="mt-4 w-full">
+    <Card className="mt-4 w-full" data-tour="workplace_set-2">
       <CardHeader>
         <CardTitle className="text-lg">추가된 근무지</CardTitle>
         <p className="text-xs">*근무지 선택 시, 수정이 가능합니다.</p>

@@ -6,6 +6,8 @@ import { usePositionManagePage } from "@/hooks/company-settings/usePositionManag
 import Seo from "@/components/Seo";
 import { useRef } from "react";
 import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
+import { useTour } from "@/hooks/use-tour";
+import { companyJobSetStep } from "@/constants/managerTourSteps";
 
 const PositionManagePage = () => {
   const { companyJobListForm, handleSubmit, onInvalid, onSubmit } = usePositionManagePage();
@@ -19,6 +21,7 @@ const PositionManagePage = () => {
   };
 
   useFormBlocker(formState.isDirty && !allowNavigation.current);
+  useTour("company_joblist_set", companyJobSetStep);
 
   return (
     <>
@@ -34,7 +37,9 @@ const PositionManagePage = () => {
             className="flex h-full flex-col items-center justify-center space-y-12 px-4 py-10"
           >
             <CompanyJobListStep type="setting" />
-            <Button type="submit">저장</Button>
+            <Button type="submit" data-tour="joblist_set-3">
+              저장
+            </Button>
           </form>
         </FormProvider>
       </CompanySettingPageContainer>

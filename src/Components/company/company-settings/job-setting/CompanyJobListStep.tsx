@@ -43,7 +43,7 @@ const CompanyJobListStep = ({ type = "firstpage" }: ICompanyJobListStepProps) =>
           </>
         }
       />
-      <Card className="w-full p-4">
+      <Card className="w-full p-4" data-tour="joblist_set-1">
         <FormInputWithButton
           value={newJob}
           onChange={e => setNewJob(e.target.value)}

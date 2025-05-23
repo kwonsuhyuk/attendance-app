@@ -43,7 +43,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
               <div className="flex items-center gap-1">
                 <span className="text-base">{section.label}</span>
                 {section.label === "휴가" && pendingCount > 0 && (
-                  <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
                     {pendingCount}
                   </span>
                 )}
@@ -73,7 +73,7 @@ const ManagerMenuBarItem = ({ section }: ManagerMenuItemProps) => {
                     <div className="flex items-center gap-2">
                       <span>{item.label}</span>
                       {item.label === "휴가 등록/요청" && pendingCount > 0 && (
-                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                        <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
                           {pendingCount}
                         </span>
                       )}

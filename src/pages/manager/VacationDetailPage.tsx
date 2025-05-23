@@ -69,32 +69,23 @@ const VacationDetailPage = () => {
         >
           <div className="flex justify-between bg-white-bg dark:bg-dark-bg">
             <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
-              {TAB_ITEMS.map(tab => {
-                const tourTargetMap: Record<string, string> = {
-                  pending: "pending-1",
-                  processed: "process-1",
-                  registered: "register-1",
-                };
 
-                return (
-                  <TabsTrigger
-                    key={tab.value}
-                    value={tab.value}
-                    data-tour={tourTargetMap[tab.value]}
-                    onClick={() => handleTabClick(tab.value)}
-                    className="relative mt-4 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
-                  >
-                    <span className="flex items-center justify-center gap-1 pt-2">
-                      {tab.label}
-                      {tab.value === "pending" && pendingCount > 0 && (
-                        <Badge className="mb-0.5 ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                          {pendingCount}
-                        </Badge>
-                      )}
-                    </span>
-                  </TabsTrigger>
-                );
-              })}
+              {TAB_ITEMS.map(tab => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="relative mt-4 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
+                >
+                  <span className="flex items-center justify-center gap-1 pt-2">
+                    {tab.label}
+                    {tab.value === "pending" && pendingCount > 0 && (
+                      <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
+                        {pendingCount}
+                      </span>
+                    )}
+                  </span>
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             <Button
