@@ -54,7 +54,10 @@ const PeriodAttCalendarGrid = ({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 dark:border-dark-border-sub">
+    <div
+      className="overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 dark:border-dark-border-sub"
+      data-tour="period-4"
+    >
       <div className="sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text dark:bg-vacation-dark-color">
         {variant === "total"
           ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
@@ -73,7 +76,7 @@ const PeriodAttCalendarGrid = ({
           const isSaturday = idx % 7 === 6;
 
           if (data) {
-            const fullDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), data.day); // ✅ 여기서 fullDate 생성
+            const fullDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), data.day);
 
             return (
               <PeriodAttCalendarDayCard
