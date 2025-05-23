@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import AttendancePageContainer from "@/components/container/manager/AttendancePageContainer";
 import usePeriodAttendance from "@/hooks/manager/usePeriodAttendance";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
+import Settlement from "@/components/company/attendance/Settlement";
 
 const PeriodAttendancePage = () => {
   const { employeeList } = useEmployeeList();
@@ -57,9 +58,9 @@ const PeriodAttendancePage = () => {
                 <TabsTrigger value="employee" className={tabTriggerBaseClass}>
                   직원별 월간 현황
                 </TabsTrigger>
-                <TabsTrigger value="salary" className={tabTriggerBaseClass}>
+                {/* <TabsTrigger value="salary" className={tabTriggerBaseClass}>
                   직원 정산
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
             </div>
 
@@ -97,15 +98,15 @@ const PeriodAttendancePage = () => {
               />
               <PeriodAttCalendarGrid
                 calendar={calendar}
-                currentDate={currentDate}
                 variant="employee"
+                currentDate={currentDate}
                 selectedEmployee={selectedEmployee}
               />
             </TabsContent>
 
             {/* 직원 정산 */}
             <TabsContent value="salary">
-              <PeriodAttFilterSection
+              {/* <PeriodAttFilterSection
                 type="salary"
                 currentDate={currentDate}
                 onChangeDate={setCurrentDate}
@@ -116,6 +117,7 @@ const PeriodAttendancePage = () => {
                 workplaceFilter={workplaceFilter}
                 setWorkplaceFilter={setWorkplaceFilter}
               />
+              <Settlement currentDate={currentDate} selectedEmployee={selectedEmployee} /> */}
             </TabsContent>
           </Tabs>
         </Card>

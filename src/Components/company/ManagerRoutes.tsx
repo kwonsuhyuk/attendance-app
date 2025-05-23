@@ -14,6 +14,7 @@ import CompanyInfoPage from "@/pages/manager/CompanyInfoPage";
 import HolidayNightManagePage from "@/pages/manager/HolidayNightManagePage";
 import NoticePage from "@/pages/manager/NoticePage";
 import AboutPage from "@/pages/common/AboutPage";
+import SettlementPage from "@/pages/manager/SettlementPage";
 
 const ManagerRoutes: RouteObject[] = [
   // Company main dashboard
@@ -22,6 +23,7 @@ const ManagerRoutes: RouteObject[] = [
   // Attendance and statistics
   { path: MANAGER_ROUTES.TODAY_ATT.substring(1), Component: TodayAttendancePage },
   { path: MANAGER_ROUTES.PERIOD_ATT.substring(1), Component: PeriodAttendancePage },
+  { path: MANAGER_ROUTES.SETTLEMENT.substring(1), Component: SettlementPage },
   { path: MANAGER_ROUTES.VACATION_STATISTIC.substring(1), Component: VacationStatisticPage },
   { path: MANAGER_ROUTES.VACATION_DETAIL.substring(1), Component: VacationDetailPage },
 

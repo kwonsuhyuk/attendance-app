@@ -8,6 +8,7 @@ interface IAutoCompleteUserInputProps {
   onSelect: (user: EmployeeInfo | null) => void;
   value?: string;
   onClear?: () => void;
+  maxHeight?: number;
 }
 
 const AutoCompleteUserInput = ({
@@ -15,6 +16,7 @@ const AutoCompleteUserInput = ({
   onSelect,
   value,
   onClear,
+  maxHeight = 72,
 }: IAutoCompleteUserInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<EmployeeInfo[]>([]);
@@ -75,7 +77,9 @@ const AutoCompleteUserInput = ({
         </div>
       )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute left-0 z-10 mt-2 max-h-72 w-full max-w-xs overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:max-w-md">
+        <ul
+          className={`absolute left-0 z-10 mt-2 max-h-${maxHeight} w-full max-w-xs overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:max-w-md`}
+        >
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}

@@ -21,6 +21,7 @@ export const MANAGER_ROUTES = {
   EMPLOYEE_LIST: "/employeelist",
   POSITION_MANAGE: "/positionmanage",
   WORKPLACE_MANAGE: "/workplacemanage",
+  SETTLEMENT: "/settlement",
   CALENDAR: "/datecheck/:id",
   TODAY_ATT: "/todayatt",
   PERIOD_ATT: "/periodatt",

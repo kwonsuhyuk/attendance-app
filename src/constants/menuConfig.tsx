@@ -4,6 +4,7 @@ import {
   Calendar,
   CheckCheck,
   Clock,
+  CreditCard,
   Home,
   Info,
   Megaphone,
@@ -30,6 +31,12 @@ export const MENU_STRUCTURE = [
     highlight: true,
   },
   {
+    label: "정산",
+    icon: CreditCard,
+    path: "/manager/settlement",
+    highlight: true,
+  },
+  {
     label: "출퇴근",
     icon: Clock,
     children: [
@@ -40,6 +47,7 @@ export const MENU_STRUCTURE = [
       },
     ],
   },
+
   {
     label: "휴가",
     icon: Calendar,
