@@ -28,10 +28,11 @@ const TourController = ({ steps, run, onClose }: TourControllerProps) => {
       disableScrolling={true}
       spotlightClicks={false}
       disableOverlayClose={true}
+      hideCloseButton={true}
       styles={{
         options: {
           zIndex: 10000,
-          primaryColor: "#6366f1",
+          primaryColor: "#FFD369",
         },
       }}
     />
