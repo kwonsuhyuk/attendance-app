@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import MenuBar from "@/components/common/menubar/MenuBar";
 import Header from "@/components/common/Header";
@@ -11,22 +10,38 @@ const Layout = () => {
   const steps = useTourStore(state => state.steps);
   const runTour = useTourStore(state => state.run);
   const setRunTour = useTourStore(state => state.setRun);
+  const stepIndex = useTourStore(state => state.stepIndex);
+  const setStepIndex = useTourStore(state => state.setStepIndex);
 
   const handleStartTour = () => {
-    const target = document.querySelector('[data-tour="step-1"]');
+    const { setRun, setStepIndex } = useTourStore.getState();
 
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    // 상태 초기화 (중요)
+    setRun(false);
+    setStepIndex(0);
 
     setTimeout(() => {
-      setRunTour(true);
-    }, 300);
+      const firstStep = useTourStore.getState().steps[0]?.target;
+      if (typeof firstStep === "string") {
+        const target = document.querySelector(firstStep);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      setRun(true); // 반드시 마지막에 실행
+    }, 200);
   };
 
   return (
     <SidebarProvider>
-      <TourController steps={steps} run={runTour} onClose={() => setRunTour(false)} />
+      <TourController
+        steps={steps}
+        run={runTour}
+        onClose={() => setRunTour(false)}
+        stepIndex={stepIndex}
+        onStepChange={setStepIndex}
+      />
 
       <div className="relative flex min-h-screen w-screen bg-white-bg text-white-text dark:bg-dark-bg dark:text-dark-text">
         <MenuBar />

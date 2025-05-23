@@ -1,34 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Step } from "react-joyride";
 import { useUserStore } from "@/store/user.store";
 import { useTourStore } from "@/store/tour.store";
 import { hasSeenTour, markTourAsSeen } from "@/util/tourStorage.util";
 
-export const useTour = (pageKey: string, steps: Step[], dependencyReady: boolean = true) => {
-  const [runTour, setRunTour] = useState(false);
+export const useTour = (
+  pageKey: string,
+  steps: Step[],
+  controlledSteps: number[] = [],
+  dependencyReady: boolean = true,
+) => {
   const userId = useUserStore(state => state.currentUser?.uid);
-  const setRun = useTourStore(state => state.setRun);
+  const { setSteps, setRun, setControlledSteps } = useTourStore.getState();
 
-  // steps 등록 (공통)
   useEffect(() => {
-    useTourStore.getState().setSteps(steps);
-  }, [steps]);
+    setSteps(steps);
+    setControlledSteps(controlledSteps);
+  }, [steps, controlledSteps]);
 
-  // 최초 페이지 진입 시 투어 실행
   useEffect(() => {
     if (!userId || !dependencyReady) return;
-
-    const hasSeen = hasSeenTour(pageKey, userId);
-    console.log(`[투어] hasSeen: ${hasSeen}, uid: ${userId}, pageKey: ${pageKey}`);
-    if (!hasSeen) {
-      console.log("[투어] 자동 실행 시작!");
-      setRun(true);
+    if (!hasSeenTour(pageKey, userId)) {
       markTourAsSeen(pageKey, userId);
+      setRun(true);
     }
   }, [userId, dependencyReady]);
-
-  return {
-    runTour,
-    setRunTour,
-  };
 };

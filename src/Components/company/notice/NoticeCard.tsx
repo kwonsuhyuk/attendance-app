@@ -13,7 +13,10 @@ interface NoticeCardProps {
 const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeCardProps) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="self-start rounded-md border border-white-border bg-white-card-bg p-5 shadow-md transition-all duration-200 dark:border-dark-border dark:bg-dark-card-bg">
+    <div
+      className="self-start rounded-md border border-white-border bg-white-card-bg p-5 shadow-md transition-all duration-200 dark:border-dark-border dark:bg-dark-card-bg"
+      data-tour="notice-2"
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           {noticeType === "중요" && (
@@ -53,7 +56,6 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
           <button
             onClick={() => setOpen(prev => !prev)}
             className="text-[13px] underline underline-offset-2 hover:text-white-text dark:hover:text-dark-text"
-            data-tour="notice-2"
           >
             {open ? "간략히" : "자세히"}
           </button>

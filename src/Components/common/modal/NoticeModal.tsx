@@ -43,7 +43,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg" data-tour="notice-modal">
         <DialogHeader>
           <DialogTitle>공지사항 작성</DialogTitle>
         </DialogHeader>

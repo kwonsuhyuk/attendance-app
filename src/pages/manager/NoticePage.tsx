@@ -11,6 +11,7 @@ import { ChevronUp, Megaphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { noticeTourSteps } from "@/constants/managerTourSteps";
 import { useTour } from "@/hooks/use-tour";
+import { useTourStore } from "@/store/tour.store";
 
 const NoticePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,9 +20,42 @@ const NoticePage = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const { toast } = useToast();
 
-  // 투어관련 커스텀 훅
-  console.log("[투어] useTour 호출됨");
-  useTour("notice", noticeTourSteps);
+  useTour("notice", noticeTourSteps, [1]);
+
+  const run = useTourStore(state => state.run);
+  const steps = useTourStore(state => state.steps);
+  const stepIndex = useTourStore(state => state.stepIndex);
+  const setStepIndex = useTourStore(state => state.setStepIndex);
+
+  const handleClickWriteButton = () => {
+    setIsModalOpen(true);
+
+    const currentStep = steps[stepIndex];
+    if (run && currentStep?.target === '[data-tour="notice-1"]') {
+      setTimeout(() => {
+        const target = document.querySelector('[data-tour="notice-2"]');
+        if (target) {
+          setStepIndex(stepIndex + 1);
+        }
+      }, 300);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+
+    // body에 Dialog가 추가한 스타일 제거
+    document.body.classList.remove("overflow-hidden");
+    document.body.style.removeProperty("padding-right");
+
+    // 모달 투어 스텝 처리 (현재 notice-2가 열린 상태라면 다음 스텝으로)
+    const currentStep = steps[stepIndex];
+    if (run && currentStep?.target === '[data-tour="notice-modal"]') {
+      setTimeout(() => {
+        setStepIndex(stepIndex + 1);
+      }, 300);
+    }
+  };
 
   const [page, setPage] = useState(1);
   const noticesPerPage = 6;
@@ -87,7 +121,7 @@ const NoticePage = () => {
           {userType === "manager" && (
             <Button
               data-tour="notice-1"
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleClickWriteButton}
               className="text-sm font-semibold"
             >
               작성
@@ -121,7 +155,10 @@ const NoticePage = () => {
       )}
 
       {isModalOpen && (
-        <NoticeModal onClose={() => setIsModalOpen(false)} onSave={handleSaveNotice} />
+        <NoticeModal
+          onClose={handleCloseModal} // 기존 onClose에 handleCloseModal 연결
+          onSave={handleSaveNotice}
+        />
       )}
     </>
   );

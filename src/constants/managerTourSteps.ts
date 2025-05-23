@@ -9,7 +9,14 @@ export const noticeTourSteps: Step[] = [
   },
   {
     target: '[data-tour="notice-1"]',
-    content: "새로운 공지사항을 작성할 수 있어요.",
+    content: "새로운 공지사항을 작성할 수 있어요. 클릭해주세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="notice-modal"]',
+    content: "게시물 유형을 설정하고 작성하면 공지가 업로드됩니다.",
     disableBeacon: true,
   },
   {
