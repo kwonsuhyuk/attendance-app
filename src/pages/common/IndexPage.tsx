@@ -68,39 +68,43 @@ function IndexPage() {
         <FeatureSection
           bgColor="bg-white"
           image="/images/금일출퇴근.png"
-          title="직원 출퇴근 · 휴가 한눈에 관리"
+          title="직원 근태 현황을 한눈에"
           reverse
           description={
             <>
               <p>
-                <span className="font-semibold text-point-color">관리자</span>는 모든 직원의 출퇴근
-                기록과 휴가 현황을 <strong>실시간</strong>으로 확인할 수 있어요.
+                <span className="font-semibold text-point-color">관리자</span>는 모든 직원의{" "}
+                <strong>출퇴근 기록</strong>은 물론, <br />
+                <strong>근무지별 출근 현황</strong>과 <strong>외근 여부</strong>까지 실시간으로
+                파악할 수 있어요.
               </p>
               <p>
-                <strong>효율적인 조직 운영</strong>을 위해 필요한 정보를 한눈에 볼 수 있습니다.
+                복잡한 리스트 없이 <strong>하루 근태 상태를 한눈에 확인</strong>하고, 효율적인 인사
+                관리를 시작해보세요.
               </p>
             </>
           }
-          imageStyle="w-[90%] max-w-[1000px]"
+          imageStyle="w-full max-w-[1000px]"
         />
 
         <FeatureSection
           bgColor="bg-[#f8f9fb]"
           image="/images/출근하기.png"
-          title="근태관리 자동화"
+          title="직원의 출근, 더 쉽고 정확하게"
           description={
             <>
               <p>
-                <span className="font-semibold text-point-color">근무지 등록</span>은 몇 번의
-                클릭만으로 완료되며, 직원은 <strong>GPS 기반</strong>으로 출퇴근을 기록할 수 있어요.
+                직원은 복잡한 절차 없이, <strong>모바일에서 GPS 기반</strong>으로 간편하게 <br />
+                출근을 기록할 수 있어요.
               </p>
               <p>
-                관리자의 <span className="font-semibold">대시보드</span>에는 모든 기록이{" "}
-                <strong>실시간 반영</strong>됩니다.
+                모든 출근 기록은 <span className="font-semibold">관리자 대시보드</span>에{" "}
+                <strong>실시간으로 반영</strong>되어,
+                <br /> 언제 어디서든 정확한 근태 관리가 가능합니다.
               </p>
             </>
           }
-          imageStyle="w-[45%] max-w-[400px]"
+          imageStyle="w-full max-w-[350px]"
         />
         <FeatureSection
           bgColor="bg-white"
@@ -110,13 +114,15 @@ function IndexPage() {
           description={
             <>
               <p>
-                원하는 <span className="font-semibold text-point-color">기간</span>을 설정해 출퇴근
-                내역을 한눈에 확인하세요.
+                원하는 <span className="font-semibold text-point-color">기간</span>을 설정하면, 해당
+                기간 동안의 직원 출퇴근 내역을
+                <strong> 달력 형태로 정리된 화면에서 한눈에 확인</strong>할 수 있어요.
               </p>
               <p>
-                <strong>근무 패턴</strong>이나 <strong>이상 출근 여부</strong>도 손쉽게 분석할 수
-                있어,
-                <br /> <span className="font-semibold">인사 관리의 정확도</span>가 높아집니다.
+                <strong>직원별 근무 패턴</strong>을 빠르게 파악할 수 있어
+                <br />
+                <span className="font-semibold">정확하고 체계적인 인사 관리</span>에 큰 도움이
+                됩니다.
               </p>
             </>
           }
@@ -126,18 +132,21 @@ function IndexPage() {
         <FeatureSection
           bgColor="bg-[#f8f9fb]"
           image="/images/휴가통계.png"
-          title="휴가 통계로 한눈에 확인"
+          title="휴가 통계, 더 정밀하게 한눈에"
           description={
             <>
               <p>
-                부서별 · 개인별{" "}
-                <span className="font-semibold text-point-color">휴가 사용 현황</span>을
-                <strong>그래프와 표</strong>로 직관적으로 확인할 수 있어요.
+                <span className="font-semibold text-point-color">날짜별 휴가 사용 현황</span>을{" "}
+                <strong>차트로 시각화</strong>해 쉽게 파악할 수 있어요.
               </p>
               <p>
-                <strong>연차 사용률</strong>을 분석하여{" "}
-                <span className="font-semibold">휴가 관리의 투명성</span>과
-                <span className="font-semibold">공정성</span>을 높일 수 있습니다.
+                <strong>휴가 유형별 통계</strong>와 <strong>직원 전체 리스트</strong>도 표 형태로
+                제공되어, <br />
+                개인별로 세부 분석이 가능합니다.
+              </p>
+              <p>
+                휴가 사용 데이터를 다양한 관점에서 확인하고,{" "}
+                <span className="font-semibold">투명한 휴가 관리</span>를 실현하세요.
               </p>
             </>
           }
@@ -167,12 +176,17 @@ function IndexPage() {
 
         <FeatureSection
           bgColor="bg-white"
-          image="/images/휴가내역.png"
-          title="엑셀파일로 직원 근태정보를 한번에"
+          image="/images/정산.png"
+          title="근태부터 휴가까지, 엑셀로 한 번에 정산"
           description={
             <>
               <p className="mb-2">
-                관리자는 전체 직원의 출퇴근, 휴가 데이터를 엑셀 파일로 간편하게 저장할 수 있어요.
+                관리자는 직원의 출퇴근 기록, 연차·휴가 사용 현황 등 다양한 근태 데이터를 한눈에
+                확인하고, 자동으로 계산된 결과를 엑셀 파일로 손쉽게 내려받을 수 있어요.
+              </p>
+              <p>
+                정산 기준일에 맞춰 근무 시간과 수당까지 자동 집계되어, 복잡한 수기 작업 없이
+                간편하게 정산 업무를 처리할 수 있습니다.
               </p>
             </>
           }
