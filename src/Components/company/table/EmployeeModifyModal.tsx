@@ -4,7 +4,7 @@ import { useEmployeeModify } from "@/hooks/manager/useEmployeeModify";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { EMPLOYMENT_TYPE } from "@/constants/employmentType";
 import { EMPLOYEE_FIELDS } from "@/constants/empIoyeeFields";
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import PopoverHint from "@/components/common/PopoverHint";
 
 interface IEmployeeInfoProps {
   user: EmployeeInfo;
@@ -49,19 +50,33 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
         <DialogHeader className="relative flex justify-between">
           <div className="flex items-center gap-4">
             <DialogTitle className="dark:text-white-text">직원 정보 수정</DialogTitle>
-            <Link
-              to={{
-                pathname: `/${companyCode}/manager/periodatt`,
-                search: `?tab=employee&userId=${user.uid}`,
-              }}
-            >
-              <Button
-                variant="outline"
-                className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
+            <div className="flex gap-2">
+              <Link
+                to={{
+                  pathname: `/${companyCode}/manager/periodatt`,
+                  search: `?tab=employee&userId=${user.uid}`,
+                }}
               >
-                상세보기 & 정산 {">"}
-              </Button>
-            </Link>
+                <Button
+                  variant="outline"
+                  className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
+                >
+                  상세보기
+                </Button>
+              </Link>
+              <Link
+                to={{
+                  pathname: `/${companyCode}/manager/settlement`,
+                }}
+              >
+                <Button
+                  variant="outline"
+                  className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
+                >
+                  정산
+                </Button>
+              </Link>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -118,7 +133,15 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
           ))}
 
           <div className="flex flex-col gap-3">
-            <span className="font-medium">급여</span>
+            <div className="flex items-center gap-2">
+              <span className="mt-1 font-medium">급여</span>
+              <PopoverHint
+                icon={<Info size={18} />}
+                contentText="직원 정산에 쓰이기 위한 정보이며, 시급으로 환산되어 정산에
+              사용됩니다. 정산에 사용하실려면 반드시 시급 정보를 입력해주세요."
+              />
+            </div>
+
             <Input
               type="text"
               value={salary ? formatMoney(salary) : ""}

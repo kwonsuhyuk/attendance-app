@@ -2,7 +2,6 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { twMerge } from "tailwind-merge";
 import { useUserStore } from "@/store/user.store";
-import { stat } from "fs";
 import { useCompanyStore } from "@/store/company.store";
 
 interface ICompanySummaryInfoProps {

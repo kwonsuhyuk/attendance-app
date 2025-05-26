@@ -134,8 +134,8 @@ export const useSignup = () => {
           salaryAmount: 0,
           salaryType: "",
           userType: "employee",
-          date: undefined,
-          workDates: undefined,
+          // date: undefined,
+          // workDates: undefined,
         } as TEmpUserData;
       }
 

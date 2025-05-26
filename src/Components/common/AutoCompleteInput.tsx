@@ -61,7 +61,7 @@ const AutoCompleteUserInput = ({
         value={inputValue}
         onChange={handleChange}
         placeholder="이름 검색"
-        className="h-10 w-full min-w-0 rounded-sm pr-10 placeholder:text-sm dark:text-white-text"
+        className="h-10 w-full min-w-0 rounded-sm pr-10 placeholder:text-sm dark:text-white"
       />
       {inputValue && (
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -75,7 +75,9 @@ const AutoCompleteUserInput = ({
         </div>
       )}
       {showSuggestions && filteredUsers.length > 0 && (
-        <ul className="absolute left-0 z-10 mt-2 max-h-72 w-full max-w-xs overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:max-w-md">
+        <ul
+          className={`absolute left-0 z-10 mt-2 max-h-72 w-full max-w-xs overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:max-w-md`}
+        >
           {filteredUsers.map((user, idx) => (
             <li
               key={idx}

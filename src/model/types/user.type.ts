@@ -36,8 +36,8 @@ export type TEmpUserData<T extends TJobList = TJobList> = Omit<TUserBase, "userT
   jobName: TSelectableJobName<T>;
   salaryAmount?: number;
   salaryType?: string;
-  date?: DateMap<WorkTime>;
-  workDates?: DateMap<WorkData>;
+  // date?: DateMap<WorkTime>;
+  // workDates?: DateMap<WorkData>;
   employmentType: TEmploymentType;
 };
 

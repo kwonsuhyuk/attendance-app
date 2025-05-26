@@ -86,9 +86,7 @@ const PeriodAttendancePage = () => {
                 >
                   직원별 월간 현황
                 </TabsTrigger>
-                {/* <TabsTrigger value="salary" className={tabTriggerBaseClass}>
-                  직원 정산
-                </TabsTrigger> */}
+           
               </TabsList>
             </div>
 
@@ -126,8 +124,8 @@ const PeriodAttendancePage = () => {
               />
               <PeriodAttCalendarGrid
                 calendar={calendar}
-                currentDate={currentDate}
                 variant="employee"
+                currentDate={currentDate}
                 selectedEmployee={selectedEmployee}
               />
             </TabsContent>
