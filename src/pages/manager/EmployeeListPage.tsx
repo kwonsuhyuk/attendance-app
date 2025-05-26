@@ -6,6 +6,8 @@ import EmployeeListPageContainer from "@/components/container/manager/EmployeeLi
 import Pagination from "@/components/ui/pagination";
 import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
 import Seo from "@/components/Seo";
+import { useTour } from "@/hooks/use-tour";
+import { employeeManageTourSteps } from "@/constants/managerTourSteps";
 
 const EmployeeListPage = () => {
   const {
@@ -28,6 +30,8 @@ const EmployeeListPage = () => {
 
   const columns = getEmployeeColumns();
 
+  useTour("employee-manage", employeeManageTourSteps);
+
   return (
     <>
       <Seo
@@ -35,7 +39,7 @@ const EmployeeListPage = () => {
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
       <EmployeeListPageContainer>
-        <div className="flex flex-col">
+        <div className="flex flex-col" data-tour="body">
           <div className="p-6">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
@@ -48,7 +52,7 @@ const EmployeeListPage = () => {
             />
           </div>
 
-          <div className="flex-1 px-2">
+          <div className="flex-1 px-2" data-tour="empManage-table">
             <DataTable
               columns={columns}
               data={paginatedEmployees}
