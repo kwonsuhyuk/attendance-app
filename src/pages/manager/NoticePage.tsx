@@ -44,10 +44,6 @@ const NoticePage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
 
-    // body에 Dialog가 추가한 스타일 제거
-    document.body.classList.remove("overflow-hidden");
-    document.body.style.removeProperty("padding-right");
-
     // 모달 투어 스텝 처리 (현재 notice-2가 열린 상태라면 다음 스텝으로)
     const currentStep = steps[stepIndex];
     if (run && currentStep?.target === '[data-tour="notice-modal"]') {

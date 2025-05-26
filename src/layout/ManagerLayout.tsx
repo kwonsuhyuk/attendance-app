@@ -9,15 +9,13 @@ import { useTourStore } from "@/store/tour.store";
 const Layout = () => {
   const steps = useTourStore(state => state.steps);
   const runTour = useTourStore(state => state.run);
-  const setRunTour = useTourStore(state => state.setRun);
   const stepIndex = useTourStore(state => state.stepIndex);
+  const setRunTour = useTourStore(state => state.setRun);
   const setStepIndex = useTourStore(state => state.setStepIndex);
 
   const handleStartTour = () => {
-    const { setRun, setStepIndex } = useTourStore.getState();
-
     // 상태 초기화 (중요)
-    setRun(false);
+    setRunTour(false);
     setStepIndex(0);
 
     setTimeout(() => {
@@ -29,7 +27,7 @@ const Layout = () => {
         }
       }
 
-      setRun(true); // 반드시 마지막에 실행
+      setRunTour(true); // 반드시 마지막에 실행
     }, 200);
   };
 
