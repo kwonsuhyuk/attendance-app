@@ -48,7 +48,11 @@ const EmployeeFilter = ({ register, setValue, handleSubmit, onSubmit }: IEmploye
   ];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+      data-tour="empManage-filter"
+    >
       <div className="relative w-full sm:col-span-1">
         <Input
           className="h-[40px] w-full px-3 pr-10 dark:bg-dark-border-sub dark:text-white-bg dark:placeholder-dark-border"

@@ -53,6 +53,7 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
           <button
             onClick={() => setOpen(prev => !prev)}
             className="text-[13px] underline underline-offset-2 hover:text-white-text dark:hover:text-dark-text"
+            data-tour="notice-2"
           >
             {open ? "간략히" : "자세히"}
           </button>

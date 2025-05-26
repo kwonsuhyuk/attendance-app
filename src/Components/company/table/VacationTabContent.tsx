@@ -32,7 +32,7 @@ const VacationTabContent = ({
   columns,
 }: IVacationTabContentProps) => {
   return (
-    <TabsContent value={tab.value} className="mt-6 w-full">
+    <TabsContent value={tab.value} className="mt-6 w-full" data-tour={`${tab.value}-1`}>
       {["registered", "processed"].includes(tab.value) && (
         <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
           ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다.
@@ -43,7 +43,7 @@ const VacationTabContent = ({
           ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
         </p>
       )}
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto" data-tour={`${tab.value}-2`}>
         <DataTable
           columns={columns}
           data={getCurrentPageData(filteredData, tab.value)}
