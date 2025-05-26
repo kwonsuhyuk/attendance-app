@@ -11,7 +11,7 @@ interface ICompanyInfo {
 }
 const CompanyInfo = ({ companyLogo, companyName, companyIntro, className }: ICompanyInfo) => {
   return (
-    <Card className={twMerge("rounded-xl bg-white p-6 shadow-md", className)}>
+    <Card className={twMerge("rounded-xl bg-white p-6 shadow-md", className)} data-tour="guide-1">
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
           <AvatarFallback>

@@ -96,6 +96,7 @@ const CommuteHistoryBox = () => {
     <Card
       className="group relative cursor-pointer p-4 shadow-md transition hover:bg-muted/50"
       onClick={() => navigate(`/${companyCode}/employee/calendar`)}
+      data-tour="home-3"
     >
       {/* 헤더 */}
       <div className="flex items-center gap-2 text-base font-semibold">

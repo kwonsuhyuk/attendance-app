@@ -24,6 +24,7 @@ export const useWorkplacePage = () => {
       });
       return;
     }
+
     const response = await updateCompanyWorkPlacesList(companyCode, data.companyWorkPlaces);
     if (response.success) {
       toast({

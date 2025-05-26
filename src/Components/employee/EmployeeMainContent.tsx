@@ -10,8 +10,11 @@ import CommuteBox from "./mainpageBox/CommuteBox";
 import NoticeBox from "./mainpageBox/NoticeBox";
 import CommuteHistoryBox from "./mainpageBox/CommuteHistoryBox";
 import VacationBox from "./mainpageBox/VacationBox";
+import { useTour } from "@/hooks/use-tour";
+import { employeeHomeTourSteps } from "@/constants/employeeTourSteps";
 
 const EmployeeMainContent = () => {
+  useTour("employee_home", employeeHomeTourSteps);
   return (
     <div className="flex w-full flex-col gap-4 sm:py-5">
       {/* 서비스 이용 가이드 바로가기 */}
