@@ -31,18 +31,18 @@ export const ManagerMenuBar = () => {
       <SidebarHeader className="flex h-16 items-center justify-center gap-2 border-solid border-dark-border bg-dark-card-bg p-4 font-bold dark:bg-dark-bg">
         <AppTitle className="text-white" />
       </SidebarHeader>
-      <SidebarContent className="overflow-y-auto dark:bg-dark-bg">
-        <CompanySummaryInfo companyLogo={companyLogo} companyName={companyName} />
+      <SidebarContent className="overflow-y-auto border border-b border-solid dark:bg-dark-bg">
+        <CompanySummaryInfo />
         <Separator className="bg-border dark:bg-dark-border" />
         <ManagerMenuBarList />
       </SidebarContent>
 
-      <SidebarFooter className="mt-auto space-y-3 p-4 dark:border-gray-800 dark:bg-dark-bg">
+      <SidebarFooter className="mt-auto space-y-3 border border-t border-solid p-4 dark:border-gray-800 dark:bg-dark-bg">
         <SidebarMenuSubButton
           href="https://google.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex w-full items-center gap-2 rounded-md border border-transparent px-4 py-2 text-sm font-medium text-zinc-700 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+          className="group flex w-full items-center gap-2 rounded-md border border-t border-solid px-4 py-2 text-sm font-medium text-zinc-700 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
         >
           <ClipboardList className="h-5 w-5 shrink-0 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-white" />
           <span>서비스 만족도 설문</span>

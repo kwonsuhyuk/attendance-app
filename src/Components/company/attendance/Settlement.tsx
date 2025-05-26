@@ -8,7 +8,7 @@ import { useCompanyStore } from "@/store/company.store";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import AutoCompleteUserInput from "@/components/common/AutoCompleteInput";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { AlertTriangle, Loader2, FileDown, TriangleAlert, RefreshCcw } from "lucide-react";
+import { AlertTriangle, Loader2, FileDown, TriangleAlert, RefreshCcw, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -118,7 +118,6 @@ const Settlement = ({
           수당 정산 데이터를 계산합니다.
         </p>
         <AutoCompleteUserInput
-          maxHeight={48}
           users={employeeList}
           onSelect={emp => {
             setSelectedEmployee(emp);
@@ -129,24 +128,33 @@ const Settlement = ({
       </section>
 
       {selectedEmployee && (
-        <section className="rounded-xl border bg-gray-50 p-5 shadow-sm">
-          <h3 className="mb-3 text-lg font-semibold text-gray-800">직원 정보</h3>
-          <dl className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
-            <div>
-              <dt className="font-bold">이름</dt>
-              <dd>{selectedEmployee.name}</dd>
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-colors dark:border-gray-700 dark:bg-slate-700">
+          <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
+            <User className="h-5 w-5" />
+            직원 정보
+          </h3>
+          <dl className="grid grid-cols-2 gap-y-4 text-sm text-gray-800 dark:text-gray-200 sm:text-base">
+            <div className="space-y-1">
+              <dt className="font-medium text-gray-500 dark:text-gray-400">이름</dt>
+              <dd className="font-semibold text-gray-900 dark:text-white">
+                {selectedEmployee.name}
+              </dd>
             </div>
-            <div>
-              <dt className="font-bold">시급</dt>
-              <dd className="font-semibold text-blue-600">{salaryAmount.toLocaleString()}원</dd>
+            <div className="space-y-1">
+              <dt className="font-medium text-gray-500 dark:text-gray-400">시급</dt>
+              <dd className="font-bold text-blue-600 dark:text-blue-400">
+                {salaryAmount.toLocaleString()}원
+              </dd>
             </div>
-            <div>
-              <dt className="font-bold">직책</dt>
-              <dd>{selectedEmployee.jobName ?? "-"}</dd>
+            <div className="space-y-1">
+              <dt className="font-medium text-gray-500 dark:text-gray-400">직책</dt>
+              <dd className="text-gray-900 dark:text-white">{selectedEmployee.jobName ?? "-"}</dd>
             </div>
-            <div>
-              <dt className="font-bold">고용형태</dt>
-              <dd>{selectedEmployee.employmentType ?? "-"}</dd>
+            <div className="space-y-1">
+              <dt className="font-medium text-gray-500 dark:text-gray-400">고용형태</dt>
+              <dd className="text-gray-900 dark:text-white">
+                {selectedEmployee.employmentType ?? "-"}
+              </dd>
             </div>
           </dl>
         </section>
@@ -154,33 +162,28 @@ const Settlement = ({
 
       {selectedEmployee && (
         <section className="flex items-center gap-3">
-          <div className="flex flex-1 items-center justify-between gap-3 rounded-md border border-solid border-blue-200 bg-blue-50 px-4 py-3">
+          <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
             <div className="flex items-start gap-3">
               <Checkbox
                 id="salaryCheck"
                 checked={includeSalary}
                 disabled={!!summary.length}
                 onCheckedChange={v => setIncludeSalary(!!v)}
+                className="mt-0.5"
               />
-              <Label htmlFor="salaryCheck" className="text-sm text-gray-800">
-                <strong>급여 기반 수당 포함하기</strong> –{" "}
-                <span className="text-gray-600">시급 환산 기준으로 수당을 계산합니다.</span>
+              <Label
+                htmlFor="salaryCheck"
+                className="text-sm leading-snug text-gray-800 dark:text-gray-100"
+              >
+                <strong className="font-semibold text-gray-900 dark:text-white">
+                  급여 기반 수당 포함하기
+                </strong>
+                <span className="mt-0.5 block text-sm text-gray-600 dark:text-gray-400">
+                  시급 환산 기준으로 수당을 계산합니다.
+                </span>
               </Label>
             </div>
           </div>
-          <Button
-            variant="outline"
-            className="h-full"
-            size="sm"
-            onClick={() => {
-              setSelectedEmployee(null);
-              setEmployeeName("");
-              setIncludeSalary(false);
-              setSummary([]);
-            }}
-          >
-            검색 초기화
-          </Button>
         </section>
       )}
 
