@@ -45,6 +45,9 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
 
   if (!run || steps.length === 0) return null;
 
+  const pathname = window.location.pathname;
+  const isEmployeePage = pathname.includes("/employee");
+
   return (
     <Joyride
       steps={steps}
@@ -52,11 +55,11 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
       stepIndex={controlled ? stepIndex : internalStepIndex}
       callback={handleCallback}
       continuous
-      scrollToFirstStep
+      scrollToFirstStep={false}
       showProgress={false}
       showSkipButton
-      disableOverlayClose
-      disableScrolling
+      disableOverlayClose={true}
+      disableScrolling={true}
       spotlightClicks={false}
       hideCloseButton={true}
       spotlightPadding={10}
@@ -65,8 +68,13 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
       }}
       styles={{
         options: {
-          zIndex: 10000,
           primaryColor: "#FFD369",
+          zIndex: 10000,
+          width: isEmployeePage ? 280 : 380,
+        },
+        tooltip: {
+          fontSize: isEmployeePage ? "14px" : "17px",
+          padding: "10px 14px",
         },
       }}
     />

@@ -1,6 +1,6 @@
 // import { useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useTour } from "@reactour/tour";
+import { useTour } from "@/hooks/use-tour";
 import { CALENDAR_STEPS } from "@/constants/tourStep";
 // import { useUserStore } from "@/store/user.store";
 import MyCalendar from "@/components/common/calendar/MyCalendar";
@@ -17,6 +17,7 @@ import {
 import Seo from "@/components/Seo";
 import { useShowCalendar } from "@/hooks/employee/useShowCalendar";
 import CommuteDetailModal from "@/components/common/modal/ShowCalendarDetailModal";
+import { attRecordTourSteps } from "@/constants/employeeTourSteps";
 
 const ShowCalendarPage = () => {
   const {
@@ -32,12 +33,14 @@ const ShowCalendarPage = () => {
     formatMinutesToHourText,
   } = useShowCalendar();
 
+  useTour("attendace-record", attRecordTourSteps);
+
   return (
     <>
       <Seo title="출퇴근 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
       <div className="flex w-full flex-col items-center">
         {/* 캘린더 */}
-        <Card className="m-4 w-full shadow-md">
+        <Card className="m-4 w-full shadow-md" data-tour="record-1">
           <CardContent className="p-8">
             <MyCalendar
               data={commuteData}
@@ -63,7 +66,7 @@ const ShowCalendarPage = () => {
           </div>
         </div>
 
-        <div className="max-w2xl mb-4 w-full">
+        <div className="max-w2xl mb-4 w-full" data-tour="record-2">
           <Table className="w-full">
             <TableHeader>
               <TableRow className="border-b border-solid border-white-border dark:border-dark-border">

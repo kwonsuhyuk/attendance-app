@@ -7,6 +7,8 @@ import PoweredByFooter from "@/components/common/PoweredByFooter";
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import Seo from "@/components/Seo";
 import { EMPLOYEE_SUB_MENUS } from "@/constants/menuConfig";
+import { useTour } from "@/hooks/use-tour";
+import { empMenuTourSteps } from "@/constants/employeeTourSteps";
 
 const EmployeeMenuPage = () => {
   const navigate = useNavigate();
@@ -25,6 +27,8 @@ const EmployeeMenuPage = () => {
     logout();
   };
 
+  useTour("employee-menu", empMenuTourSteps);
+
   return (
     <>
       <Seo title="메뉴 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
@@ -37,7 +41,10 @@ const EmployeeMenuPage = () => {
           className="shadow-sm"
         />
 
-        <div className="mt-4 flex flex-col divide-y rounded-md border bg-white shadow-sm dark:border-muted dark:bg-muted">
+        <div
+          className="mt-4 flex flex-col divide-y rounded-md border bg-white shadow-sm dark:border-muted dark:bg-muted"
+          data-tour="guide-2"
+        >
           {EMPLOYEE_SUB_MENUS(companyCode!).map((menu, idx) => (
             <div
               key={idx}

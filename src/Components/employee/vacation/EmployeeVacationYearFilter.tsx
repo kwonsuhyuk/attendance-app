@@ -30,7 +30,10 @@ const EmployeeVacationYearFilter = ({
     setCurrentPage(0);
   };
   return (
-    <Card className="relative cursor-pointer rounded-xl bg-vacation-color p-4 text-white shadow-md transition dark:bg-vacation-color">
+    <Card
+      className="relative cursor-pointer rounded-xl bg-vacation-color p-4 text-white shadow-md transition dark:bg-vacation-color"
+      data-tour="vacation-1"
+    >
       <div className="flex items-center justify-center">
         <div className="flex items-center gap-4">
           <Button

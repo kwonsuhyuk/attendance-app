@@ -21,7 +21,7 @@ const CommuteBox = () => {
   const { label, icon, colorClass } = getStatusDisplay(status);
 
   return (
-    <Card className="flex w-full flex-col justify-center p-6 shadow-md">
+    <Card className="flex w-full flex-col justify-center p-6 shadow-md" data-tour="home-2">
       {!isLoading && (
         <>
           <div className="mb-6 flex items-center justify-between">

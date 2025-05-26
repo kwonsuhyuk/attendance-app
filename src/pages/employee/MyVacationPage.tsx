@@ -15,6 +15,8 @@ import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import VacationFilterButtons from "@/components/employee/vacation/EmployeeVacationTableFilterButton";
 import VacationListSection from "@/components/employee/vacation/EmployeeVacationListSection";
 import Seo from "@/components/Seo";
+import { useTour } from "@/hooks/use-tour";
+import { vacationTourSteps } from "@/constants/employeeTourSteps";
 
 const MyVacationPage = () => {
   const { companyCode } = useParams();
@@ -24,6 +26,8 @@ const MyVacationPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState<"전체" | TVacationStatus>("전체");
   const [reloadKey, setReloadKey] = useState<number>(0);
+
+  useTour("vacation", vacationTourSteps);
 
   const year = date.getFullYear().toString();
   const { requests, loading, error } = useGetEmployeeVacationList({
@@ -76,11 +80,14 @@ const MyVacationPage = () => {
           yearFilteredRequests={yearOnlyApprovedRequests}
         />
 
-        <Button className="w-full cursor-pointer" onClick={toggleModal}>
+        <Button className="w-full cursor-pointer" onClick={toggleModal} data-tour="vacation-2">
           휴가 요청
         </Button>
 
-        <Card className="relative flex flex-col gap-5 p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg">
+        <Card
+          className="relative flex flex-col gap-5 p-4 shadow-md transition hover:bg-gray-50 dark:hover:bg-dark-card-bg"
+          data-tour="vacation-3"
+        >
           <div className="flex items-center gap-2 text-base font-semibold">
             <PlaneTakeoff className="h-5 w-5 text-primary" />
             <CardTitle className="text-base">휴가 내역</CardTitle>
