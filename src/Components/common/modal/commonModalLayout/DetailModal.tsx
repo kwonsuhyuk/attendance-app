@@ -29,7 +29,7 @@ const DetailModal = ({
 }: IDetailModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className={`dark:bg-zinc-800 dark:text-white ${maxWidthClass}`}>
+      <DialogContent className={`w-[80vw] dark:bg-zinc-800 dark:text-white 사용${maxWidthClass}`}>
         <DialogHeader className="flex flex-col gap-2 pt-0 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             {icon}
