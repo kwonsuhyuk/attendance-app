@@ -70,36 +70,36 @@ const ShowCalendarPage = () => {
         {summary && (
           <div className="mt-4 flex w-full flex-col gap-3" data-tour="record-2">
             <div className="flex items-center justify-between rounded-md bg-green-100 px-4 py-5 shadow-md dark:bg-green-950">
-              <div className="flex items-center gap-2 text-green-800 dark:text-green-100">
+              <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
                 <LogIn className="h-4 w-4" />
                 <span className="text-base font-medium">출근</span>
               </div>
               <div className="flex gap-3">
-                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800">
+                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800 dark:bg-black/30 dark:text-green-200">
                   {formatMinutesToHourText(summary.work.time)}
                 </span>
-                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800">
+                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800 dark:bg-black/30 dark:text-green-200">
                   {summary.work.count}일
                 </span>
               </div>
             </div>
 
             <div className="flex items-center justify-between rounded-md bg-orange-100 px-4 py-5 shadow-md dark:bg-yellow-950">
-              <div className="flex items-center gap-2 text-orange-800 dark:text-orange-100">
+              <div className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
                 <Briefcase className="h-4 w-4" />
                 <span className="text-base font-medium">외근</span>
               </div>
-              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-orange-800">
+              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-orange-800 dark:bg-black/30 dark:text-orange-200">
                 {summary.out.count}일
               </span>
             </div>
 
             <div className="flex items-center justify-between rounded-md bg-blue-100 px-4 py-5 shadow-md dark:bg-blue-950">
-              <div className="flex items-center gap-2 text-blue-800 dark:text-blue-100">
+              <div className="flex items-center gap-2 text-blue-800 dark:text-blue-200">
                 <PlaneTakeoff className="h-4 w-4" />
                 <span className="text-base font-medium">휴가</span>
               </div>
-              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-blue-800">
+              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-blue-800 dark:bg-black/30 dark:text-blue-200">
                 {summary.vacation.count}일
               </span>
             </div>
