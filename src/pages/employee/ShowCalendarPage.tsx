@@ -18,6 +18,7 @@ import Seo from "@/components/Seo";
 import { useShowCalendar } from "@/hooks/employee/useShowCalendar";
 import CommuteDetailModal from "@/components/common/modal/ShowCalendarDetailModal";
 import { attRecordTourSteps } from "@/constants/employeeTourSteps";
+import { Briefcase, LogIn, PlaneTakeoff } from "lucide-react";
 
 const ShowCalendarPage = () => {
   const {
@@ -57,45 +58,53 @@ const ShowCalendarPage = () => {
             <span className="text-sm">출근</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded-full bg-blue-500" />
-            <span className="text-sm">휴가</span>
-          </div>
-          <div className="flex items-center gap-1">
             <div className="h-3 w-3 rounded-full bg-yellow-500" />
             <span className="text-sm">외근</span>
           </div>
+          <div className="flex items-center gap-1">
+            <div className="h-3 w-3 rounded-full bg-blue-500" />
+            <span className="text-sm">휴가</span>
+          </div>
         </div>
 
-        <div className="max-w2xl mb-4 w-full" data-tour="record-2">
-          <Table className="w-full">
-            <TableHeader>
-              <TableRow className="border-b border-solid border-white-border dark:border-dark-border">
-                <TableHead>WORK</TableHead>
-                <TableHead>COUNT</TableHead>
-                <TableHead>TIME</TableHead>
-              </TableRow>
-            </TableHeader>
-            {summary && (
-              <TableBody>
-                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                  <TableCell>출근</TableCell>
-                  <TableCell>{summary.work.count} 일</TableCell>
-                  <TableCell>{formatMinutesToHourText(summary.work.time)}</TableCell>
-                </TableRow>
-                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                  <TableCell>외근</TableCell>
-                  <TableCell>{summary.out.count} 일</TableCell>
-                  <TableCell>{formatMinutesToHourText(summary.out.time)}</TableCell>
-                </TableRow>
-                <TableRow className="border-b border-solid border-white-border-sub dark:border-dark-border-sub">
-                  <TableCell>휴가</TableCell>
-                  <TableCell>{summary.vacation.count} 일</TableCell>
-                  <TableCell>-</TableCell>
-                </TableRow>
-              </TableBody>
-            )}
-          </Table>
-        </div>
+        {summary && (
+          <div className="mt-4 flex w-full flex-col gap-3" data-tour="record-2">
+            <div className="flex items-center justify-between rounded-md bg-green-100 px-4 py-5 shadow-md dark:bg-green-950">
+              <div className="flex items-center gap-2 text-green-800 dark:text-green-100">
+                <LogIn className="h-4 w-4" />
+                <span className="text-base font-medium">출근</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800">
+                  {formatMinutesToHourText(summary.work.time)}
+                </span>
+                <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-green-800">
+                  {summary.work.count}일
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-md bg-orange-100 px-4 py-5 shadow-md dark:bg-yellow-950">
+              <div className="flex items-center gap-2 text-orange-800 dark:text-orange-100">
+                <Briefcase className="h-4 w-4" />
+                <span className="text-base font-medium">외근</span>
+              </div>
+              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-orange-800">
+                {summary.out.count}일
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between rounded-md bg-blue-100 px-4 py-5 shadow-md dark:bg-blue-950">
+              <div className="flex items-center gap-2 text-blue-800 dark:text-blue-100">
+                <PlaneTakeoff className="h-4 w-4" />
+                <span className="text-base font-medium">휴가</span>
+              </div>
+              <span className="rounded-md bg-white/60 px-3 py-1 text-base font-bold text-blue-800">
+                {summary.vacation.count}일
+              </span>
+            </div>
+          </div>
+        )}
 
         <CommuteDetailModal
           open={openModal}
