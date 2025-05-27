@@ -96,21 +96,24 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 
       if (result.success) {
         toast({
-          description: "출근 등록이 완료되었습니다.",
+          description: "출퇴근 등록이 완료되었습니다.",
         });
+
+        setOpenSelfCommute(false);
+        handleRefresh();
       } else {
-        // 우선 출근기록없을때 퇴근찍었을때 오류만 핸들링해놓음
         toast({
           description:
             "출근 기록을 먼저 등록해주세요. 출근 시간 이전 시간으로 퇴근을 요청할 수 없습니다.",
           variant: "destructive",
         });
       }
-
-      setOpenSelfCommute(false);
-      handleRefresh();
     } catch (e) {
       console.error("수동 출퇴근 등록 실패", e);
+      toast({
+        description: "등록 중 오류가 발생했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -134,8 +137,9 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          variant="outline"
           data-tour="today-2"
-          className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          className="flex w-full items-center gap-2"
           onClick={handleSelfCommuteModalOpen}
         >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
@@ -160,8 +164,9 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          variant="outline"
           data-tour="today-2"
-          className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          className="flex items-center gap-2"
           onClick={handleSelfCommuteModalOpen}
         >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
@@ -307,7 +312,10 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   const outworkingEmployees = outworkingPlace.employees;
 
   return (
-    <div className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"  data-tour="today-6">
+    <div
+      className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"
+      data-tour="today-6"
+    >
       <h3 className="text-base font-semibold text-yellow-700 dark:text-orange-300 sm:text-lg">
         외근 인원{" "}
         <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-orange-300">
@@ -396,8 +404,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   const { companyCode } = useParams();
 
   return (
-    <Card className="w-full bg-white"  data-tour="today-7">
-
+    <Card className="w-full bg-white" data-tour="today-7">
       <CardContent className="p-4">
         <div className="mb-4 flex items-center gap-2 text-base font-semibold text-zinc-800 dark:text-white sm:text-lg">
           근무지별 출근 인원

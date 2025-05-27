@@ -41,7 +41,6 @@ const MINUTES = ["00", "15", "30", "45"];
 const SelfCommuteModal: React.FC<ISelfCommuteModalProps> = ({ onClose, onRegister }) => {
   const { employeeList } = useEmployeeList();
   const workPlaces = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
-
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeInfo | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
