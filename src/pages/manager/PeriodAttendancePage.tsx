@@ -9,6 +9,7 @@ import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import { periodAttTourSteps } from "@/constants/managerTourSteps";
 import { useTour } from "@/hooks/use-tour";
 import { useTourStore } from "@/store/tour.store";
+import { Separator } from "@/components/ui/separator";
 
 const PeriodAttendancePage = () => {
   const { employeeList } = useEmployeeList();
@@ -48,7 +49,7 @@ const PeriodAttendancePage = () => {
   };
 
   const tabTriggerBaseClass =
-    "rounded-t-md border border-b-0 border-white-border-sub px-1 py-2 text-base font-semibold " +
+    "rounded-t-md border border-b-0 flex flex-1 border-white-border-sub px-1 py-2 text-base font-semibold " +
     "data-[state=inactive]:border-b-0 data-[state=active]:border-b-white-card-bg data-[state=active]:bg-white-card-bg data-[state=inactive]:bg-white-bg " +
     "data-[state=active]:text-white-text data-[state=inactive]:text-white-nav-text " +
     "dark:border-dark-border-sub dark:data-[state=inactive]:border-b-0 dark:data-[state=active]:border-b-dark-card-bg dark:data-[state=active]:bg-dark-card-bg " +
@@ -86,7 +87,6 @@ const PeriodAttendancePage = () => {
                 >
                   직원별 월간 현황
                 </TabsTrigger>
-           
               </TabsList>
             </div>
 
@@ -101,6 +101,7 @@ const PeriodAttendancePage = () => {
                 workTypeFilter={workTypeFilter}
                 setWorkTypeFilter={setWorkTypeFilter}
               />
+              <Separator />
               <PeriodAttCalendarGrid
                 calendar={calendar}
                 currentDate={currentDate}
@@ -122,6 +123,7 @@ const PeriodAttendancePage = () => {
                 selectedEmployee={selectedEmployee}
                 setSelectedEmployee={setSelectedEmployee}
               />
+              <Separator />
               <PeriodAttCalendarGrid
                 calendar={calendar}
                 variant="employee"

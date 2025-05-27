@@ -61,7 +61,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
                   variant="outline"
                   className="dark:border-bg-dark-border h-[30px] p-2 text-xs dark:bg-dark-border dark:text-white-text dark:hover:bg-white-bg"
                 >
-                  상세보기
+                  근태현황
                 </Button>
               </Link>
               <Link
@@ -134,7 +134,7 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
 
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="mt-1 font-medium">급여</span>
+              <span className="mt-1 font-medium">급여(시급 설정시)</span>
               <PopoverHint
                 icon={<Info size={18} />}
                 contentText="직원 정산에 쓰이기 위한 정보이며, 시급으로 환산되어 정산에
