@@ -30,10 +30,22 @@ const PeriodAttCalendarGrid = ({
 
     return (
       <div className="p-2">
-        <CardTitle className="flex items-center gap-2 p-4 text-lg font-semibold md:text-xl">
-          {variant === "total"
-            ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
-            : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
+        <CardTitle className="flex w-fit flex-wrap items-center gap-2 rounded-md p-4 py-5 text-base font-semibold">
+          {variant === "total" ? (
+            <>
+              <span className="text-xl font-bold text-zinc-900">
+                {workplace === "전체" ? "전체" : workplace}
+              </span>
+              <span className="text-sm font-medium text-zinc-500">근태 현황</span>
+            </>
+          ) : selectedEmployee ? (
+            <>
+              <span className="text-xl font-bold text-zinc-900">{selectedEmployee.name}</span>
+              <span className="text-sm font-medium text-zinc-500">님의 근태 현황</span>
+            </>
+          ) : (
+            <span className="text-xl font-medium text-zinc-500">직원을 선택해주세요.</span>
+          )}
         </CardTitle>
         {calendar
           .filter(day => day !== null)
