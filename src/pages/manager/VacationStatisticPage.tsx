@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import VacationStatisticLayout from "@/layout/VacationStatisticLayout";
 import VacationStatisticContainer from "@/components/container/manager/VacationStatisticContainer";
 import VacationChart from "@/components/company/vacation/VacationChart";
@@ -30,6 +30,7 @@ const VacationStatisticPage = () => {
     handleNextPage,
     handlePreviousPage,
   } = useEmployeeList();
+  const tableTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const uid = searchParams.get("user");
@@ -43,6 +44,10 @@ const VacationStatisticPage = () => {
       const params = new URLSearchParams(searchParams);
       params.set("user", user.uid);
       setSearchParams(params);
+
+      setTimeout(() => {
+        tableTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     }
   };
   useTour("v_static", vacationStatisticSteps);
@@ -53,20 +58,21 @@ const VacationStatisticPage = () => {
         title="휴가 통계 | On & Off"
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
+      <div ref={tableTopRef} />
       <VacationStatisticLayout>
         <VacationFilter
-          selectedName={selectedName}
           selectedMonth={selectedDate}
           setSelectedMonth={setSelectedDate}
           selectedMode={mode}
           setSelectedMode={setMode}
+          selectedName={selectedName}
           handleNameSelect={handleNameSelect}
           employeeList={employeeList}
         />
         <VacationStatisticContainer>
           <VacationChart selectedDate={selectedDate} selectedName={selectedName} mode={mode} />
           <div className="flex min-h-[680px] flex-col gap-3 md:flex-row">
-            <Card className="hidden h-full items-center justify-center px-4 py-10 md:block md:min-h-[680px] md:w-1/3">
+            <Card className="hidden h-full items-center justify-center px-4 py-10 md:min-h-[680px] lg:block lg:w-1/2">
               <VacationPieChart
                 selectedDate={selectedDate}
                 selectedName={selectedName}
@@ -80,6 +86,8 @@ const VacationStatisticPage = () => {
               handleNextPage={handleNextPage}
               handlePreviousPage={handlePreviousPage}
               selectedDate={selectedDate}
+              selectedName={selectedName}
+              handleNameSelect={handleNameSelect}
               mode={mode}
             />
           </div>

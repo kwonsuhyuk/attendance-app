@@ -35,7 +35,7 @@ const VacationFilter = ({
 
   return (
     <div
-      className="flex w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit"
+      className="hidden w-full flex-col items-center gap-3 py-3 sm:flex-row md:w-fit lg:flex"
       data-tour="vstatic-1"
     >
       <MonthPicker

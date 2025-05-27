@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { EmployeeInfo } from "@/model/types/user.type";
 import VacationChartModal from "@/components/common/modal/VacationChartModal";
@@ -33,7 +33,12 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
 
   return (
     <>
-      <Card className="p-4" data-tour="vstatic-2">
+      <Card className="block p-4 text-center text-sm text-gray-500 dark:text-gray-400 lg:hidden">
+        자세한 차트는{" "}
+        <span className="font-semibold text-gray-700 dark:text-white-text">데스크탑 환경</span>
+        에서 확인하실 수 있습니다.
+      </Card>
+      <Card className="hidden p-4 lg:block" data-tour="vstatic-2">
         <VacationSubTitle
           selectedDate={selectedDate}
           selectedName={selectedName}
@@ -41,6 +46,7 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
           className="mb-10 ml-3 text-left text-lg font-semibold"
           title="휴가 현황"
         />
+
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={vacationData}

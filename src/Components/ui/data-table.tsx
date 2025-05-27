@@ -13,14 +13,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { twMerge } from "tailwind-merge";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   onRowClick?: (row: TData) => void;
+  selectedItem?: TData | null;
 }
 
-export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  columns,
+  data,
+  onRowClick,
+  selectedItem,
+}: DataTableProps<TData>) {
   const table = useReactTable({
     data,
     columns,
@@ -29,13 +36,13 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
   });
 
   return (
-    <div className="h-[580px] min-h-[550px] rounded-md border">
+    <div className="h-[500px] rounded-md border">
       <Table className="min-w-2xl h-full w-full table-auto md:table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow
               key={headerGroup.id}
-              className="border-white-table-header dark:border-dark-table-header border-y border-solid"
+              className="border-y border-solid border-white-table-header dark:border-dark-table-header"
             >
               {headerGroup.headers.map(header => {
                 const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
@@ -61,7 +68,12 @@ export function DataTable<TData>({ columns, data, onRowClick }: DataTableProps<T
             table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
-                className="cursor-pointer hover:bg-white-bg dark:hover:bg-dark-border-sub"
+                className={twMerge(
+                  "cursor-pointer hover:bg-white-bg dark:hover:bg-dark-border-sub",
+                  selectedItem?.email === (row.original as any).email
+                    ? "border border-solid border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-900/30"
+                    : "",
+                )}
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {
