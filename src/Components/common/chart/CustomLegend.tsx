@@ -20,7 +20,7 @@ export const CustomLegend = ({ payload, total, className }: CustomLegendProps) =
           <li key={index} className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-sm" style={{ backgroundColor: entry.color }} />
             <span className="text-gray-700 dark:text-white">{name}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-300">{`${value}명 (${percent}%)`}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-300">{`${value} (${percent}%)`}</span>
           </li>
         );
       })}

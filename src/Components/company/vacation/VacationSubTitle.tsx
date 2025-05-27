@@ -21,12 +21,13 @@ const VacationSubTitle = ({
   return (
     <h3
       className={twMerge(
-        "mb-3 text-center text-lg font-semibold leading-relaxed text-white-text dark:text-dark-text",
+        "flex items-center gap-2 text-lg font-semibold text-white-text dark:text-dark-text md:text-xl",
         className,
       )}
     >
-      {selectedDate.year}년{mode === "month" && ` ${selectedDate.month + 1}월 `}
-      {selectedName ? `${selectedName.name}님의` : "전체"} {br && <br />}
+      {selectedDate.year}년{mode === "month" && ` ${selectedDate.month + 1}월`}
+      {selectedName ? ` ${selectedName.name}님의` : " 전체"}
+      {br && <br />}
       {title}
     </h3>
   );

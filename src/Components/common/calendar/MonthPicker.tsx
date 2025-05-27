@@ -41,7 +41,7 @@ const MonthPicker = ({ value, onChange, mode, setMode }: IMonthPickerProps) => {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("h-full w-full justify-start text-left font-normal sm:w-56", "text-sm")}
+          className={cn("h-11 w-full justify-start text-left font-normal sm:w-56", "text-sm")}
         >
           {label}
         </Button>

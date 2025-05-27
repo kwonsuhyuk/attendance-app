@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { Building2, CalendarClock } from "lucide-react";
 import { useVacationRequests } from "@/hooks/manager/useVacationRequests";
 import { IVacationRequest } from "./table/VacationColumns";
-import ShowMoreButton from "../\bShowMoreButton";
 import VacationChart from "./vacation/VacationChart";
-import VacationDetailModal from "../common/modal/VacationDetailModal";
 import SummaryCard from "./\bSummaryCard";
 import { useParams } from "react-router-dom";
 
