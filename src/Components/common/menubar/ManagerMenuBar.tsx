@@ -6,22 +6,18 @@ import {
   SidebarFooter,
   useSidebar,
   SidebarMenuSubButton,
-  SidebarMenuBadge,
 } from "@/components/ui/sidebar";
 import { ClipboardList, LogOut } from "lucide-react";
 
 import { useMenuBar } from "@/hooks/menu/useMenuBar";
 import ManagerMenuBarList from "./manager/ManagerMenuBarList";
 import AppTitle from "../AppTitle";
-import { useCompanyStore } from "@/store/company.store";
 import { Separator } from "@/components/ui/separator";
 import CompanySummaryInfo from "../CompanySummaryInfo";
 
 export const ManagerMenuBar = () => {
   const { logout } = useMenuBar();
   const { isMobile } = useSidebar();
-  const companyName = useCompanyStore(state => state.currentCompany?.companyName);
-  const companyLogo = useCompanyStore(state => state.currentCompany?.companyLogo);
 
   return (
     <Sidebar
