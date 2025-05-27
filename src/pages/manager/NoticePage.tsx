@@ -108,7 +108,8 @@ const NoticePage = () => {
       <Seo title="공지사항 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
 
       <div className="flex w-full flex-col gap-4 sm:py-2">
-        <div className="flex max-w-7xl items-center justify-end px-4 sm:px-6">
+        <div className="flex max-w-7xl items-center justify-between px-4 sm:px-6">
+          {/* <p className="text-sm">※ 자세한 공지 내용은 박스를 클릭해주세요.</p> */}
           {userType === "manager" && (
             <Button
               data-tour="notice-1"
