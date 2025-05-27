@@ -45,7 +45,7 @@ const PeriodAttFilterSection = ({
   const workPlacesList = useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   return (
-    <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
+    <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start md:shadow-md">
       <div className="flex justify-center py-2 sm:justify-start" data-tour="period-2">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>

@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import PeriodAttCalendarDayCard from "./PeriodAttCalendarDayCard";
 import PeriodAttCalendarList from "./PeriodAttCalendarList";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -30,11 +30,11 @@ const PeriodAttCalendarGrid = ({
 
     return (
       <div className="p-2">
-        <div className="rounded-t-lg bg-vacation-color py-4 pl-4 text-left text-base font-semibold text-dark-text">
+        <CardTitle className="flex items-center gap-2 p-4 text-lg font-semibold md:text-xl">
           {variant === "total"
             ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
             : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
-        </div>
+        </CardTitle>
         {calendar
           .filter(day => day !== null)
           .map((day, idx) => (
@@ -55,16 +55,28 @@ const PeriodAttCalendarGrid = ({
 
   return (
     <div
-      className="overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 dark:border-dark-border-sub"
+      className="mb-12 overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 shadow-md dark:border-dark-border-sub"
       data-tour="period-4"
     >
-      <div className="sticky top-0 rounded-t-lg bg-vacation-color py-4 pl-6 text-left text-base font-semibold text-dark-text dark:bg-vacation-dark-color">
-        {variant === "total"
-          ? `${workplace === "전체" ? "전체" : workplace} 근태 현황`
-          : `${selectedEmployee?.name ?? "직원"}님의 근태 현황`}
-      </div>
+      <CardTitle className="my-3 flex w-fit flex-wrap items-center gap-2 rounded-md p-4 py-5 text-base font-semibold">
+        {variant === "total" ? (
+          <>
+            <span className="text-xl font-bold text-zinc-900">
+              {workplace === "전체" ? "전체" : workplace}
+            </span>
+            <span className="text-sm font-medium text-zinc-500">근태 현황</span>
+          </>
+        ) : selectedEmployee ? (
+          <>
+            <span className="text-xl font-bold text-zinc-900">{selectedEmployee.name}</span>
+            <span className="text-sm font-medium text-zinc-500">님의 근태 현황</span>
+          </>
+        ) : (
+          <span className="text-xl font-medium text-zinc-500">직원을 선택해주세요.</span>
+        )}
+      </CardTitle>
 
-      <div className="grid grid-cols-7 border-b border-t border-solid border-white-border-sub bg-white-bg pb-2 pt-2 text-center font-medium text-white-text dark:border-dark-border-sub dark:bg-dark-bg dark:text-dark-text">
+      <div className="grid grid-cols-7 border border-solid border-white-border-sub bg-white pb-2 pt-2 text-center font-medium text-white-text dark:border-dark-border-sub dark:bg-dark-bg dark:text-dark-text">
         {DAYS.map(day => (
           <div key={day}>{day}</div>
         ))}
