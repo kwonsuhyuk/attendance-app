@@ -7,14 +7,16 @@ import { TNotice } from "@/model/types/manager.type";
 import { useNotice } from "@/hooks/manager/useNotice";
 import { useUserStore } from "@/store/user.store";
 import { deleteNotice } from "@/api/notice.api";
-import { ChevronUp, Megaphone } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { noticeTourSteps } from "@/constants/managerTourSteps";
 import { useTour } from "@/hooks/use-tour";
 import { useTourStore } from "@/store/tour.store";
+import NoticeDetailModal from "@/components/company/notice/NoticeDetailModal";
 
 const NoticePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState<TNotice | null>(null);
   const { notices, addNotice } = useNotice();
   const userType = useUserStore(state => state.currentUser?.userType);
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
@@ -44,7 +46,6 @@ const NoticePage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
 
-    // 모달 투어 스텝 처리 (현재 notice-2가 열린 상태라면 다음 스텝으로)
     const currentStep = steps[stepIndex];
     if (run && currentStep?.target === '[data-tour="notice-modal"]') {
       setTimeout(() => {
@@ -107,13 +108,7 @@ const NoticePage = () => {
       <Seo title="공지사항 | On & Off" description="On & Off에서 근태관리 서비스를 이용해보세요." />
 
       <div className="flex w-full flex-col gap-4 sm:py-2">
-        <div className="flex max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center justify-between gap-3">
-            <Megaphone className="mb-1 h-6 w-6 text-white-text dark:text-dark-text" />
-            <h2 className="text-lg font-bold text-white-text dark:text-dark-text">공지사항</h2>
-            <span className="text-sm text-muted-foreground">총 {notices.length}개</span>
-          </div>
-
+        <div className="flex max-w-7xl items-center justify-end px-4 sm:px-6">
           {userType === "manager" && (
             <Button
               data-tour="notice-1"
@@ -129,9 +124,14 @@ const NoticePage = () => {
           {sortedNotices.length === 0 ? (
             <p className="text-sm text-muted-foreground">등록된 공지사항이 없습니다.</p>
           ) : (
-            sortedNotices.map((notice, idx) =>
+            sortedNotices.map(notice =>
               notice.id ? (
-                <NoticeCard key={notice.id} {...notice} onDelete={() => handleDelete(notice.id!)} />
+                <NoticeCard
+                  key={notice.id}
+                  {...notice}
+                  onClick={() => setSelectedNotice(notice)}
+                  onDelete={userType === "manager" ? () => handleDelete(notice.id!) : undefined}
+                />
               ) : null,
             )
           )}
@@ -150,10 +150,13 @@ const NoticePage = () => {
         </div>
       )}
 
-      {isModalOpen && (
-        <NoticeModal
-          onClose={handleCloseModal} // 기존 onClose에 handleCloseModal 연결
-          onSave={handleSaveNotice}
+      {isModalOpen && <NoticeModal onClose={handleCloseModal} onSave={handleSaveNotice} />}
+
+      {selectedNotice && (
+        <NoticeDetailModal
+          notice={selectedNotice}
+          onClose={() => setSelectedNotice(null)}
+          readOnly
         />
       )}
     </>
