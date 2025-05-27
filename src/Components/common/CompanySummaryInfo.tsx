@@ -33,7 +33,7 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
           <>
             <span className="text-base font-bold">{name}</span>
             <span className="max-w-[160px] truncate text-xs text-gray-700">
-              {jobName} ・ {workType} ・ {companyName}
+              <span className="font-bold">{companyName}</span> ・ {jobName} ・ {workType}
             </span>
           </>
         ) : (

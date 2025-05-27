@@ -25,7 +25,7 @@ const EmployeeVacationItem = ({ request, label, start, end, isSameDay }: Props) 
   return (
     <>
       <div
-        className="group flex cursor-pointer flex-col gap-2 rounded-lg border bg-white p-4 shadow-sm transition hover:bg-accent dark:border-gray-700 dark:bg-dark-card-bg"
+        className="group flex flex-col gap-2 rounded-lg border bg-white p-4 shadow-sm transition dark:border-gray-700 dark:bg-dark-card-bg"
         onClick={e => {
           e.stopPropagation();
           setModalOpen(true);
