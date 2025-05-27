@@ -29,11 +29,19 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
       </Avatar>
 
       <div className="flex flex-col text-sm text-white-text">
-        <span className="max-w-[160px] truncate text-base font-bold">{companyName}</span>
-
-        <span className="text-xs text-gray-700">
-          {name} ・ {type === "manager" ? "관리자" : `${jobName} ・ ${workType}`}
-        </span>
+        {type === "employee" ? (
+          <>
+            <span className="text-base font-bold">{name}</span>
+            <span className="max-w-[160px] truncate text-xs text-gray-700">
+              {jobName} ・ {workType} ・ {companyName}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="max-w-[160px] truncate text-base font-bold">{companyName}</span>
+            <span className="text-xs text-gray-700">{name} ・ 관리자</span>
+          </>
+        )}
       </div>
     </div>
   );

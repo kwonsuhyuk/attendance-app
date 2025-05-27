@@ -62,7 +62,7 @@ const NotificationDropdown = ({
             .map(({ id, data }) => (
               <li
                 key={id}
-                className="dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-3 text-sm hover:bg-white-hover"
+                className="dark:hover:bg-dark-hover group flex flex-col rounded-md px-2 py-4 text-sm hover:bg-white-hover"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div
