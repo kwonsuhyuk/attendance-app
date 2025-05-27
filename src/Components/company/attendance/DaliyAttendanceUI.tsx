@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  BarChart3,
   UserCheck,
   Users,
   Plus,
@@ -41,9 +40,8 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { processCommute } from "@/api/commute.api";
 import { TCommuteStatus } from "@/model/types/commute.type";
 import { toast } from "@/hooks/use-toast";
-import { useTour } from "@/hooks/use-tour";
-import { todayAttSteps } from "@/constants/managerTourSteps";
 import { EmployeeListItem } from "../TodayCommuteBox";
+import WorkplaceDetailModal from "@/components/common/modal/WorkplaceDetailModal";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -96,21 +94,24 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 
       if (result.success) {
         toast({
-          description: "출근 등록이 완료되었습니다.",
+          description: "출퇴근 등록이 완료되었습니다.",
         });
+
+        setOpenSelfCommute(false);
+        handleRefresh();
       } else {
-        // 우선 출근기록없을때 퇴근찍었을때 오류만 핸들링해놓음
         toast({
           description:
             "출근 기록을 먼저 등록해주세요. 출근 시간 이전 시간으로 퇴근을 요청할 수 없습니다.",
           variant: "destructive",
         });
       }
-
-      setOpenSelfCommute(false);
-      handleRefresh();
     } catch (e) {
       console.error("수동 출퇴근 등록 실패", e);
+      toast({
+        description: "등록 중 오류가 발생했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -134,8 +135,9 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          variant="outline"
           data-tour="today-2"
-          className="flex w-full items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          className="flex w-full items-center gap-2"
           onClick={handleSelfCommuteModalOpen}
         >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
@@ -160,8 +162,9 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
           </Button>
         </div>
         <Button
+          variant="outline"
           data-tour="today-2"
-          className="flex items-center gap-2 bg-point-color text-black hover:bg-orange-200"
+          className="flex items-center gap-2"
           onClick={handleSelfCommuteModalOpen}
         >
           <Plus className="h-4 w-4" /> 수동 출퇴근 등록
@@ -307,7 +310,10 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   const outworkingEmployees = outworkingPlace.employees;
 
   return (
-    <div className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"  data-tour="today-6">
+    <div
+      className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"
+      data-tour="today-6"
+    >
       <h3 className="text-base font-semibold text-yellow-700 dark:text-orange-300 sm:text-lg">
         외근 인원{" "}
         <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-orange-300">
@@ -396,8 +402,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   const { companyCode } = useParams();
 
   return (
-    <Card className="w-full bg-white"  data-tour="today-7">
-
+    <Card className="w-full bg-white" data-tour="today-7">
       <CardContent className="p-4">
         <div className="mb-4 flex items-center gap-2 text-base font-semibold text-zinc-800 dark:text-white sm:text-lg">
           근무지별 출근 인원
@@ -407,20 +412,26 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
           <Carousel>
             <CarouselContent className="mx-4 my-6 h-[450px] w-[18rem] max-w-[500px] sm:mx-12 sm:w-96 sm:max-w-[640px] md:w-[48rem] md:max-w-[976px] lg:w-[100rem]">
               {placeList && placeList.length > 0 ? (
-                placeList.map((place, idx) => {
-                  const matched = workplacePlaces.find(p => p.id === place.id);
+                [...placeList]
+                  .sort((a, b) => {
+                    const aCount = workplacePlaces.find(p => p.id === a.id)?.employees.length ?? 0;
+                    const bCount = workplacePlaces.find(p => p.id === b.id)?.employees.length ?? 0;
+                    return bCount - aCount;
+                  })
+                  .map((place, idx) => {
+                    const matched = workplacePlaces.find(p => p.id === place.id);
 
-                  return (
-                    <CarouselItem key={idx} className="flex-none basis-full sm:basis-1/2">
-                      <PlaceCard
-                        place={{
-                          ...place,
-                          employees: matched?.employees || [],
-                        }}
-                      />
-                    </CarouselItem>
-                  );
-                })
+                    return (
+                      <CarouselItem key={idx} className="flex-none basis-full sm:basis-1/2">
+                        <PlaceCard
+                          place={{
+                            ...place,
+                            employees: matched?.employees || [],
+                          }}
+                        />
+                      </CarouselItem>
+                    );
+                  })
               ) : (
                 <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm text-zinc-600 dark:text-zinc-400">
                   등록된 근무지가 없습니다. 근무지를 등록해주세요.
@@ -440,77 +451,85 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
 };
 
 export const PlaceCard = ({ place }: { place: TPlaceData }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="flex h-full flex-col justify-between gap-5 rounded-xl border border-solid border-zinc-200 bg-white p-5 shadow-sm transition-transform hover:scale-[1.01] hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900">
-      {/* 헤더 */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
-            <h3 className="text-lg font-semibold text-zinc-800 dark:text-white">{place.name}</h3>
+    <>
+      <div
+        onClick={() => setOpen(true)}
+        className="flex h-full flex-col justify-between gap-5 rounded-xl border border-solid border-zinc-200 bg-white p-5 shadow-sm transition-transform hover:scale-[1.01] hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900"
+      >
+        {/* 헤더 */}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-nowrap items-start justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <MapPin className="h-5 w-5 shrink-0 text-zinc-500 dark:text-zinc-400" />
+              <h3 className="max-w-[60vw] truncate text-lg font-semibold text-zinc-800 dark:text-white">
+                {place.name}
+              </h3>
+            </div>
+            <div className="mt-1 max-w-[30vw] truncate text-right text-xs text-zinc-400 dark:text-zinc-500">
+              {place.address || "주소 정보 없음"}
+            </div>
           </div>
-          <span className="text-xs text-zinc-400 dark:text-zinc-500">
-            {place.address || "주소 정보 없음"}
-          </span>
-        </div>
 
-        {/* 메모 새 디자인 */}
-        {place.memo && (
-          <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-            {place.memo}
-          </div>
-        )}
-      </div>
-
-      {/* 직원 목록 */}
-      <div className="flex-1">
-        <h4 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-white">
-          출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
-        </h4>
-        <div className="scrollbar-thin scrollbar-thumb-zinc-300 relative h-64 overflow-y-auto rounded-md border border-zinc-100 bg-zinc-50 p-2 dark:border-zinc-700 dark:bg-zinc-800">
-          {place.employees.length > 0 ? (
-            <ul className="space-y-2">
-              {place.employees.map(emp => (
-                <li
-                  key={emp.userId}
-                  className="flex items-center justify-between rounded-md bg-white px-3 py-2 shadow-sm dark:bg-zinc-700"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-white">
-                      <User className="h-4 w-4" />
-                    </div>
-                    <div className="text-sm">
-                      <div className="font-medium text-zinc-800 dark:text-white">{emp.name}</div>
-                      <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {emp.jobName} · {emp.employmentType}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-start flex flex-col gap-1 text-xs">
-                    <p className="text-green-600 dark:text-green-400">
-                      출근:{" "}
-                      {emp.startTime && isValid(new Date(emp.startTime))
-                        ? getKSTDateInfo(emp.startTime)
-                        : "-"}
-                    </p>
-                    <p className="text-rose-500 dark:text-rose-400">
-                      퇴근:{" "}
-                      {emp.endTime && isValid(new Date(emp.endTime))
-                        ? getKSTDateInfo(emp.endTime)
-                        : "-"}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
-              금일 출근한 직원이 없습니다.
+          {place.memo && (
+            <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+              {place.memo}
             </div>
           )}
         </div>
+
+        {/* 직원 목록 */}
+        <div className="flex-1">
+          <h4 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-white">
+            출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
+          </h4>
+          <div className="scrollbar-thin scrollbar-thumb-zinc-300 relative h-64 overflow-y-auto rounded-md border border-solid border-zinc-100 p-2 dark:border-zinc-700 dark:bg-zinc-800">
+            {place.employees.length > 0 ? (
+              <ul className="space-y-2">
+                {place.employees.map(emp => (
+                  <li
+                    key={emp.userId}
+                    className="flex items-center justify-between rounded-md bg-white px-3 py-2 shadow-sm dark:bg-zinc-700"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-white">
+                        <User className="h-4 w-4" />
+                      </div>
+                      <div className="text-sm">
+                        <div className="font-medium text-zinc-800 dark:text-white">{emp.name}</div>
+                        <div className="text-xs text-zinc-500 dark:text-zinc-400">
+                          {emp.jobName} · {emp.employmentType}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex-start flex flex-col gap-1 text-xs">
+                      <p className="text-green-600 dark:text-green-400">
+                        출근:{" "}
+                        {emp.startTime && isValid(new Date(emp.startTime))
+                          ? getKSTDateInfo(emp.startTime)
+                          : "-"}
+                      </p>
+                      <p className="text-rose-500 dark:text-rose-400">
+                        퇴근:{" "}
+                        {emp.endTime && isValid(new Date(emp.endTime))
+                          ? getKSTDateInfo(emp.endTime)
+                          : "-"}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
+                금일 출근한 직원이 없습니다.
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+      <WorkplaceDetailModal open={open} onClose={() => setOpen(false)} place={place} />
+    </>
   );
 };
 

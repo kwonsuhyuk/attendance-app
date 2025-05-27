@@ -79,7 +79,9 @@ const ImageModal = ({ open, handleClose, companyCode, setImageUrl }: IImageModal
         </div>
 
         <DialogFooter className="flex justify-end gap-2">
-          <Button onClick={handleClose}>취소</Button>
+          <Button onClick={handleClose} variant="outline">
+            취소
+          </Button>
           {previewImage && <Button onClick={uploadImage}>로고 저장</Button>}
         </DialogFooter>
       </DialogContent>

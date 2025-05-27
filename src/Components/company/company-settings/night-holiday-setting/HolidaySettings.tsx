@@ -47,13 +47,13 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
 
   return (
     <Card className="w-full" data-tour="holiday_set-3">
-      <CardHeader className="flex flex-col items-start space-y-2">
+      <CardHeader className="flex flex-col items-start space-y-2 px-0">
         <div className="flex w-full items-center justify-between">
           <CardTitle className="flex items-center gap-1 text-lg">
             공휴일/주말 추가 급여 적용
             <PopoverHint
               icon={<Info size={18} />}
-              contentText="토, 일 및 국가 지정 공휴일에 적용됩니다."
+              contentText="토, 일 및 회사 지정 공휴일에만 적용됩니다. 국가 지정공휴일은 따로 적용되지 않습니다."
             />
           </CardTitle>
           <Switch
@@ -64,7 +64,7 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
         </div>
       </CardHeader>
       {isHoliday && (
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-0">
           <div className="text-sm text-white-text dark:text-dark-nav-text">공휴일 급여 배율</div>
           <div className="flex items-center space-x-4">
             <Slider

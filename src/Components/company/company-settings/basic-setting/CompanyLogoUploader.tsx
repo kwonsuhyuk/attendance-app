@@ -12,7 +12,7 @@ const CompanyLogoUploader = ({ imageUrl, companyCode, setImageUrl }: CompanyLogo
   const [imageOpenModal, setImageOpenModal] = useState(false);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center pt-5">
       <p className="mb-1 text-sm font-medium text-gray-600 dark:text-dark-text">회사 로고</p>
       <p className="mb-3 text-xs text-gray-500 dark:text-dark-nav-text">
         (JPEG, JPG, PNG 형식만 지원됩니다.)
