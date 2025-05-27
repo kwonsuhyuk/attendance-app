@@ -19,10 +19,10 @@ const PayCheckDaySelect = ({ type = "firstpage" }: IPayCheckDaySelectProps) => {
 
   return (
     <Card className="w-full" data-tour="holiday_set-1">
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle className="text-lg">급여 정산일</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-0">
         <Select
           value={payCheckDay?.toString()}
           onValueChange={val => setValue(`${prefix}payCheckDay`, val.toString())}

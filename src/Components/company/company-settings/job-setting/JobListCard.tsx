@@ -13,10 +13,10 @@ const JobListCard = ({ jobs, onRemove }: JobListCardProps) => {
 
   return (
     <Card className="w-full" data-tour="joblist_set-2">
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle className="text-lg">추가된 직무 목록</CardTitle>
       </CardHeader>
-      <CardContent className="px-6">
+      <CardContent className="px-0">
         <ScrollArea className="max-h-72 overflow-y-auto rounded-lg border border-solid border-white-border-sub dark:border-dark-border">
           {jobs.map((job, index) => (
             <JobCard key={job.id} job={job} onRemove={() => onRemove(index)} />

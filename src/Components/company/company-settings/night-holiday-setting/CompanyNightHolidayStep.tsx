@@ -25,7 +25,7 @@ const CompanyNightHolidayStep = ({ type = "firstpage" }: ICompanyNightHolidaySte
 
       <PayCheckDaySelect type={type} />
       <NightPaySettings type={type} />
-      <Separator />
+      <Separator className="px-0" />
       <HolidaySettings type={type} />
     </div>
   );

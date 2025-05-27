@@ -32,7 +32,7 @@ const NightPaySettings = ({ type = "firstpage" }: INightPaySettingsProps) => {
 
   return (
     <Card className="w-full" data-tour="holiday_set-2">
-      <CardHeader className="flex flex-col items-start space-y-2">
+      <CardHeader className="flex flex-col items-start space-y-2 px-0">
         <div className="flex w-full items-center justify-between">
           <CardTitle className="text-lg">주간/야간 급여 구분</CardTitle>
           <Switch
@@ -43,7 +43,7 @@ const NightPaySettings = ({ type = "firstpage" }: INightPaySettingsProps) => {
         </div>
       </CardHeader>
       {isDayNight && (
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-0">
           <div className="text-sm text-white-text dark:text-dark-nav-text">야간 급여 배율</div>
           <div className="flex items-center space-x-4">
             <Slider
