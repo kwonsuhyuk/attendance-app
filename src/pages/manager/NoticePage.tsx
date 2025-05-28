@@ -154,11 +154,7 @@ const NoticePage = () => {
       {isModalOpen && <NoticeModal onClose={handleCloseModal} onSave={handleSaveNotice} />}
 
       {selectedNotice && (
-        <NoticeDetailModal
-          notice={selectedNotice}
-          onClose={() => setSelectedNotice(null)}
-          readOnly
-        />
+        <NoticeDetailModal notice={selectedNotice} onClose={() => setSelectedNotice(null)} />
       )}
     </>
   );
