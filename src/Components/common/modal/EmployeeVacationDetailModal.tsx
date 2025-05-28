@@ -37,7 +37,7 @@ const EmployeeVacationDetailModal = ({
           <PlaneTakeoff className="h-5 w-5 text-primary dark:text-white" />
           <span className="text-base font-bold">휴가 상세 정보</span>
           <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold text-white ${badgeStatusClass}`}
+            className={`mb-0.5 rounded-full px-3 py-0.5 text-xs font-semibold text-white ${badgeStatusClass}`}
           >
             {label}
           </span>
@@ -47,20 +47,20 @@ const EmployeeVacationDetailModal = ({
       <div className="mt-6 space-y-4 text-sm text-foreground dark:text-gray-900">
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">이름:</span> {request.requester.name}
+          <span className="font-medium">이름 : </span> {request.requester.name}
         </div>
 
         <div className="flex items-center gap-2">
           <BadgeCheck className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">직무:</span> {request.requester.jobName}
+          <span className="font-medium">직무 : </span> {request.requester.jobName}
         </div>
 
         <div className="text-sm">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 break-words">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-4 break-words">
             <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">기간:</span>
+            <span className="font-medium">기간 : </span>
 
-            <div className="flex flex-wrap items-center gap-x-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span>{isSameDay ? start : `${start} ~ ${end}`}</span>
               <span className="rounded-full border-2 border-solid border-blue-500 px-3 text-xs font-extrabold text-blue-500">
                 {request.vacationType}
@@ -69,10 +69,10 @@ const EmployeeVacationDetailModal = ({
           </div>
         </div>
 
-        <div className="flex items-start gap-2">
-          <FileText className="mt-1 h-4 w-4 text-muted-foreground" />
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
           <div>
-            <span className="font-medium">사유:</span> {request.reason}
+            <span className="font-medium">사유 : </span> {request.reason}
           </div>
         </div>
       </div>

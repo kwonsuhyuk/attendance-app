@@ -8,6 +8,8 @@ interface RegisterModalProps {
   title: string;
   icon?: ReactNode;
   children: ReactNode;
+  onSubmit: () => void | Promise<void>;
+  submitLabel?: string;
   maxWidthClass?: string;
 }
 
