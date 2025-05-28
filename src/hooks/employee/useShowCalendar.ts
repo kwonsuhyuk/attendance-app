@@ -9,6 +9,7 @@ import { useUserStore } from "@/store/user.store";
 import { useCompanyStore } from "@/store/company.store";
 import { getToday } from "@/util/date.util";
 import { calculateCommuteSummaryByType } from "@/util/commute.util";
+import { TRegisteredVacation } from "@/model/types/vacation.type";
 
 export const useShowCalendar = () => {
   const { isOpen, setCurrentStep, setSteps, setIsOpen } = useTour();
@@ -22,6 +23,7 @@ export const useShowCalendar = () => {
   const [summary, setSummary] = useState<ReturnType<typeof calculateCommuteSummaryByType> | null>(
     null,
   );
+  const [vacationList, setVacationList] = useState<Record<string, TRegisteredVacation>>({});
 
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userId = useUserStore(state => state.currentUser?.uid);
@@ -71,6 +73,7 @@ export const useShowCalendar = () => {
 
     const snapshot = await fetchRegisteredVacationsByMonth(companyCode, newYear, monthStr);
     const vacationList = snapshot?.[userId] ?? {};
+    setVacationList(vacationList);
     const vacationDateList = Object.values(vacationList).flatMap(vac =>
       getVacationDateRange(vac.startDate, vac.endDate),
     );
@@ -103,5 +106,6 @@ export const useShowCalendar = () => {
     handleDateClick,
     summary,
     formatMinutesToHourText,
+    vacationList,
   };
 };

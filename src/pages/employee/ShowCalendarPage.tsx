@@ -32,6 +32,7 @@ const ShowCalendarPage = () => {
     vacationDates,
     summary,
     formatMinutesToHourText,
+    vacationList,
   } = useShowCalendar();
 
   useTour("attendace-record", attRecordTourSteps);
@@ -111,7 +112,7 @@ const ShowCalendarPage = () => {
           onOpenChange={setOpenModal}
           selectedDate={selectedDate}
           commuteData={commuteData}
-          vacationDates={vacationDates}
+          vacationList={Object.values(vacationList)}
         />
       </div>
     </>
