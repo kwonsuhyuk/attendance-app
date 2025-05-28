@@ -31,9 +31,9 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
       <div className="flex flex-col text-sm text-white-text">
         {type === "employee" ? (
           <>
-            <span className="text-base font-bold">{name}</span>
+            <span className="text-base font-bold">{companyName}</span>
             <span className="max-w-[160px] truncate text-xs text-gray-700">
-              <span className="font-bold">{companyName}</span> ・ {jobName} ・ {workType}
+              <span className="font-bold">{name}</span> ・ {jobName} ・ {workType}
             </span>
           </>
         ) : (
