@@ -22,7 +22,7 @@ const VacationBox = () => {
   const { unreadVacationNotifications } = useNotification();
 
   return (
-    <Card className="group relative p-4 shadow-md transition hover:bg-accent" data-tour="home-4">
+    <Card className="group relative p-4 shadow-md transition" data-tour="home-4">
       {/* 우측 이동 아이콘 */}
       <ChevronRight
         className="absolute right-4 top-4 h-5 w-5 cursor-pointer text-muted-foreground group-hover:text-foreground"

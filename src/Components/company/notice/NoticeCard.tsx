@@ -1,20 +1,26 @@
-import { useState } from "react";
 import { X } from "lucide-react";
-import { format, parseISO } from "date-fns";
 
 interface NoticeCardProps {
   title: string;
   content: string;
   createdAt: string;
   onDelete?: () => void;
+  onClick?: () => void;
   noticeType?: "중요" | "일반";
 }
 
-const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeCardProps) => {
-  const [open, setOpen] = useState(false);
+const NoticeCard = ({
+  title,
+  content,
+  createdAt,
+  onDelete,
+  onClick,
+  noticeType,
+}: NoticeCardProps) => {
   return (
     <div
-      className="self-start rounded-md border border-white-border bg-white-card-bg p-5 shadow-md transition-all duration-200 dark:border-dark-border dark:bg-dark-card-bg"
+      onClick={onClick}
+      className="cursor-pointer self-start rounded-md border border-white-border bg-white-card-bg p-5 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-xl dark:border-dark-border dark:bg-dark-card-bg"
       data-tour="notice-2"
     >
       <div className="flex items-start justify-between">
@@ -27,7 +33,10 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
 
         {onDelete && (
           <button
-            onClick={onDelete}
+            onClick={e => {
+              e.stopPropagation();
+              onDelete();
+            }}
             className="text-muted-foreground hover:text-destructive"
             aria-label="삭제"
           >
@@ -36,30 +45,15 @@ const NoticeCard = ({ title, content, createdAt, onDelete, noticeType }: NoticeC
         )}
       </div>
 
-      <div
-        className={`my-4 cursor-pointer overflow-hidden text-sm text-muted-foreground transition-all duration-500 ease-in-out ${
-          open ? "max-h-[500px]" : "max-h-[24px]"
-        }`}
-        onClick={() => setOpen(prev => !prev)}
+      <p
+        className="my-4 line-clamp-1 pr-5 text-sm text-muted-foreground"
+        style={{ whiteSpace: "pre-line" }}
       >
-        <p
-          className={`${!open ? "line-clamp-1" : ""}`}
-          style={{ whiteSpace: "pre-line" }} //
-        >
-          {content}
-        </p>
-      </div>
+        {content}
+      </p>
 
-      <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+      <div className="mt-2 flex items-center text-xs text-muted-foreground">
         <span>{createdAt?.split("T")[0] ?? "-"}</span>
-        {content.length > 40 && (
-          <button
-            onClick={() => setOpen(prev => !prev)}
-            className="text-[13px] underline underline-offset-2 hover:text-white-text dark:hover:text-dark-text"
-          >
-            {open ? "간략히" : "자세히"}
-          </button>
-        )}
       </div>
     </div>
   );
