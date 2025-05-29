@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        "point-color": "#FFD369",
+        "point-color": "#9EBC8A",
+        "point-color-sub": "#ECFAE5",
         "vacation-color": "#609966",
         "vacation-dark-color": "#325834",
         "dark-bg": "#09090B",

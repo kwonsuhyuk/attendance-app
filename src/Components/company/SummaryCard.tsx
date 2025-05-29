@@ -1,17 +1,16 @@
-import React from "react";
 import { LucideIcon, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
 
-type SummaryCardProps = {
+interface SummaryCardProps {
   title: string;
   count?: number | string;
   subtitle?: string;
   icon: LucideIcon;
   iconColor?: string;
   bgColor?: string;
-  borderColor?: string;
   link?: string;
-};
+}
 
 const SummaryCard = ({
   title,
@@ -20,11 +19,9 @@ const SummaryCard = ({
   icon: Icon,
   iconColor = "text-white",
   bgColor = "bg-point-color",
-  borderColor = "border-point-color",
   link,
 }: SummaryCardProps) => {
   const navigate = useNavigate();
-
   const handleClick = () => {
     if (link) navigate(link);
   };
@@ -32,22 +29,37 @@ const SummaryCard = ({
   return (
     <div
       onClick={handleClick}
-      className={`group flex items-center gap-4 rounded-xl border border-solid ${borderColor} bg-white px-5 py-4 shadow-sm transition hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900 ${
-        link ? "cursor-pointer" : ""
-      }`}
+      className={clsx(
+        "group relative flex flex-col justify-between rounded-xl border border-transparent bg-gradient-to-br from-white to-gray-100 p-4 shadow-sm transition hover:shadow-md hover:ring-1 hover:ring-point-color/30",
+        "dark:from-zinc-900 dark:to-zinc-800 dark:hover:ring-zinc-600",
+        link && "cursor-pointer",
+      )}
     >
-      <div className={`flex h-12 w-12 items-center justify-center rounded-full ${bgColor}`}>
-        <Icon className={`h-5 w-5 ${iconColor}`} />
+      {/* 데코 배경 요소 */}
+      <div className="absolute inset-0 z-0 rounded-xl bg-point-color/5 transition group-hover:opacity-60" />
+
+      {/* 상단 아이콘 */}
+      <div
+        className={clsx(
+          "relative z-10 mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg",
+          bgColor,
+        )}
+      >
+        <Icon className={clsx("h-5 w-5", iconColor)} />
       </div>
-      <div className="flex flex-1 flex-col justify-center">
-        <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</h2>
+
+      {/* 메인 콘텐츠 */}
+      <div className="relative z-10 flex flex-col gap-0.5">
         <p className="text-xl font-bold text-gray-900 dark:text-white">
           {count !== undefined ? count : "-"}
         </p>
-        {subtitle && <span className="text-xs text-gray-400 dark:text-gray-500">{subtitle}</span>}
+        <h2 className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</h2>
+        {subtitle && <p className="text-xs text-gray-400 dark:text-gray-500">{subtitle}</p>}
       </div>
+
+      {/* 화살표 아이콘 */}
       {link && (
-        <ArrowRight className="h-4 w-4 text-gray-400 transition group-hover:translate-x-1 group-hover:text-gray-600 dark:text-zinc-400 dark:group-hover:text-white" />
+        <ArrowRight className="absolute bottom-3 right-3 z-10 h-4 w-4 text-gray-300 transition-transform group-hover:translate-x-1 group-hover:text-point-color dark:text-zinc-500 dark:group-hover:text-white" />
       )}
     </div>
   );

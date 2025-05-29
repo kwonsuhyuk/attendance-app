@@ -71,9 +71,9 @@ const EmployeeListBox = () => {
     <div className="space-y-4" data-tour="manager_home-4">
       <SummaryCard title="전체 구성원 수" count={employeeList.length} icon={Users} />
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="grid h-[28rem] grid-cols-1 gap-5 md:grid-cols-2">
         {/* 직무 분포도 */}
-        <div className="rounded-md border border-solid border-white-border-sub p-4 dark:border-dark-border-sub">
+        <div className="rounded-xl p-6 shadow-md">
           <h2 className="mb-2 text-base font-semibold">직무 분포도</h2>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
@@ -102,7 +102,7 @@ const EmployeeListBox = () => {
         </div>
 
         {/* 고용형태 분포도 */}
-        <div className="rounded-md border border-solid border-white-border-sub p-4 dark:border-dark-border-sub">
+        <div className="rounded-xl p-6 shadow-md">
           <h2 className="mb-2 text-base font-semibold">고용형태 분포도</h2>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>

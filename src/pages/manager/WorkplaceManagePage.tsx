@@ -6,7 +6,6 @@ import { companyWorkPlaceSetStep } from "@/constants/managerTourSteps";
 import { useFormBlocker } from "@/hooks/company-settings/useFormBlocker";
 import { useWorkplacePage } from "@/hooks/company-settings/useWorkplacePage";
 import { useTour } from "@/hooks/use-tour";
-import { useCompanyStore } from "@/store/company.store";
 import { useRef } from "react";
 import { FormProvider } from "react-hook-form";
 
