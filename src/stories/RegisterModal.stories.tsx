@@ -25,6 +25,8 @@ export const Default: Story = {
     open: true,
     onClose: () => alert("닫기"),
     title: "휴가 요청",
+    submitLabel: "등록",
+    onSubmit: () => alert("등록"),
     children: (
       <div className="space-y-4">
         <div>
@@ -45,8 +47,6 @@ export const Default: Story = {
           <p className="mb-1 text-sm font-medium">사유</p>
           <textarea className="min-h-[200px] w-full border p-2" />
         </div>
-
-        <Button className="w-full">등록</Button>
       </div>
     ),
   },

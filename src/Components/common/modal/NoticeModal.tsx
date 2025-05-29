@@ -37,7 +37,13 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
   };
 
   return (
-    <RegisterModal open onClose={onClose} title="공지사항 작성">
+    <RegisterModal
+      open
+      onClose={onClose}
+      title="공지사항 작성"
+      onSubmit={handleSave}
+      submitLabel="저장"
+    >
       <div className="space-y-5">
         <RadioGroup
           value={noticeType}
@@ -66,10 +72,6 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
           />
           <ReactQuill value={content} onChange={setContent} style={{ height: "200px" }} />
         </div>
-
-        <Button className="w-full" onClick={handleSave}>
-          저장
-        </Button>
       </div>
     </RegisterModal>
   );

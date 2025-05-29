@@ -91,14 +91,6 @@ const VacationRequestModal: React.FC<IVacationModalProps> = ({ onClose, onRegist
           onChange={e => setReason(e.target.value)}
         />
       </div>
-
-      <Button
-        type="submit"
-        className="w-full dark:bg-dark-bg dark:text-dark-text"
-        onClick={handleRegister}
-      >
-        등록
-      </Button>
     </RegisterModal>
   );
 };

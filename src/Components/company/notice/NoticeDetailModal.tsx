@@ -42,9 +42,10 @@ const NoticeModal = ({ onClose, notice }: NoticeModalProps) => {
 
         <hr className="mb-3 border-gray-300" />
 
-        <div className="whitespace-pre-line text-sm text-gray-700 dark:text-gray-200">
-          {content}
-        </div>
+        <div
+          className="ql-editor p-0 text-sm text-gray-700 dark:text-gray-200"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
       </div>
     </DetailModal>
   );

@@ -62,7 +62,13 @@ const SelfCommuteModal: React.FC<ISelfCommuteModalProps> = ({ onClose, onRegiste
   };
 
   return (
-    <RegisterModal open onClose={onClose} title="출퇴근 수동 등록">
+    <RegisterModal
+      open
+      onClose={onClose}
+      title="출퇴근 수동 등록"
+      onSubmit={handleSubmit}
+      submitLabel="등록"
+    >
       <div className="flex flex-col gap-2">
         <span className="font-medium">직원 선택</span>
         <AutoCompleteUserInput
@@ -156,14 +162,6 @@ const SelfCommuteModal: React.FC<ISelfCommuteModalProps> = ({ onClose, onRegiste
           </SelectContent>
         </Select>
       </div>
-
-      <Button
-        type="submit"
-        className="w-full dark:bg-dark-bg dark:text-dark-text"
-        onClick={handleSubmit}
-      >
-        등록
-      </Button>
     </RegisterModal>
   );
 };

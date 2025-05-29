@@ -17,6 +17,15 @@ const NoticeCard = ({
   onClick,
   noticeType,
 }: NoticeCardProps) => {
+  const extractFirstLine = (html: string) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+
+    // 블록 요소 중 첫 번째 요소 찾기
+    const firstBlock = div.querySelector("p, div, h1, h2, h3, h4, h5, h6, li");
+    return firstBlock?.textContent?.trim() ?? "";
+  };
+
   return (
     <div
       onClick={onClick}
@@ -49,7 +58,7 @@ const NoticeCard = ({
         className="my-4 line-clamp-1 pr-5 text-sm text-muted-foreground"
         style={{ whiteSpace: "pre-line" }}
       >
-        {content}
+        {extractFirstLine(content)}
       </p>
 
       <div className="mt-2 flex items-center text-xs text-muted-foreground">

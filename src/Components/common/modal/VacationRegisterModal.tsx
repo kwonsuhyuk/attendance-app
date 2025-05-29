@@ -39,7 +39,13 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
   const { employeeList } = useEmployeeList();
 
   return (
-    <RegisterModal open onClose={onClose} title="휴가 등록">
+    <RegisterModal
+      open
+      onClose={onClose}
+      title="휴가 등록"
+      onSubmit={handleRegister}
+      submitLabel="등록"
+    >
       {/* 휴가 대상 */}
       <div className="flex flex-col gap-2">
         <span className="font-medium">휴가 대상</span>
@@ -107,15 +113,6 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
           onChange={e => setReason(e.target.value)}
         />
       </div>
-
-      {/* 등록 버튼 */}
-      <Button
-        type="submit"
-        className="w-full dark:bg-dark-bg dark:text-dark-text"
-        onClick={handleRegister}
-      >
-        등록
-      </Button>
     </RegisterModal>
   );
 };
