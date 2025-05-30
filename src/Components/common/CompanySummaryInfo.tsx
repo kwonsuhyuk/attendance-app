@@ -28,7 +28,7 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
         <AvatarFallback className="text-sm">{companyName?.charAt(0) ?? "C"}</AvatarFallback>
       </Avatar>
 
-      <div className="flex flex-col text-sm text-white-text">
+      <div className="flex flex-col text-sm text-white">
         {type === "employee" ? (
           <>
             <span className="text-base font-bold">{companyName}</span>
@@ -39,7 +39,7 @@ const CompanySummaryInfo = ({ type = "manager", className }: ICompanySummaryInfo
         ) : (
           <>
             <span className="max-w-[160px] truncate text-base font-bold">{companyName}</span>
-            <span className="text-xs text-gray-700">{name} ・ 관리자</span>
+            <span className="text-point-color-sub text-xs">{name} ・ 관리자</span>
           </>
         )}
       </div>

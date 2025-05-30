@@ -1,18 +1,15 @@
 export const CHART_COLORS = [
-  "#60A5FA", // 파란색 (blue-400)
-  "#FACC15", // 노란색 (yellow-400)
-  "#34D399", // 녹색 (green-400)
-  "#A78BFA", // 보라색 (purple-400)
-  "#F472B6", // 핑크색 (pink-400)
-  "#818CF8", // 인디고 (indigo-400)
+  "#9EBC8A", // 밝고 선명한 그린 (기본)
+  "#609966", // 짙은 초록
+  "#325834", // 밝은 민트 계열
+  "#388E3C", // 클래식 그린
 ];
 
 export const VACATION_TYPE_COLOR_MAP = {
-  연차: "#0F4C75",
-  반차: "#3282B8",
-  "특별 휴가": "#BBE1FA",
+  연차: "#2E7D32", // 짙은 청록 녹색 (Deep Green)
+  반차: "#66BB6A", // 밝은 그린 (Light Green)
+  "특별 휴가": "#A5D6A7", // 연한 민트계 그린 (Minty Green)
 };
+export const GRAY_COLOR = "#D1D5DB";
 
-export const GRAY_COLOR = "#9CA3AF";
-
-export const ORANGE_COLOR = "#FB923C"; // 외근
+export const ORANGE_COLOR = "#DDEB9D"; // 외근

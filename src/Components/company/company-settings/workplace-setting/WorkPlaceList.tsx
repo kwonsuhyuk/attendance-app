@@ -22,14 +22,12 @@ const WorkPlaceList = ({ workPlaces, onRemove, onEdit }: WorkPlaceListProps) => 
             <p className="text-center text-sm text-muted-foreground">추가된 근무지가 없습니다.</p>
           </div>
         ) : (
-          <ScrollArea className="max-h-72 overflow-y-auto rounded-sm border border-solid border-white-border-sub dark:border-dark-border">
+          <ScrollArea className="max-h-80 overflow-y-auto rounded-xl shadow-md">
             {workPlaces.map((place, index) => (
-              <WorkPlaceItem
-                key={place.id}
-                place={place}
-                onRemove={() => onRemove(index)}
-                onEdit={onEdit}
-              />
+              <div key={place.id}>
+                <WorkPlaceItem place={place} onRemove={() => onRemove(index)} onEdit={onEdit} />
+                {/* {index !== workPlaces.length - 1 && <Separator />} */}
+              </div>
             ))}
           </ScrollArea>
         )}

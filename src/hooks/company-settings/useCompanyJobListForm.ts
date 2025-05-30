@@ -15,7 +15,7 @@ export const useCompanyJobListForm = () => {
     resolver: zodResolver(companyJobListSchema),
     mode: "onChange",
     defaultValues: {
-      companyJobs: jobList,
+      companyJobs: jobList ?? [],
     },
   });
   return formMethods;

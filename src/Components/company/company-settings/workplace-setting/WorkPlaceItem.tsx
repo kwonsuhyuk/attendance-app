@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MapPin, X } from "lucide-react";
 import { TWorkPlace } from "@/model/types/company.type";
+import clsx from "clsx";
 
 interface WorkPlaceItemProps {
   place: TWorkPlace;
@@ -10,23 +11,39 @@ interface WorkPlaceItemProps {
 }
 
 const WorkPlaceItem = ({ place, onRemove, onEdit }: WorkPlaceItemProps) => {
+  const clickable = !!onEdit;
+
   return (
     <Card
-      className="flex cursor-pointer items-center justify-between p-3 transition-colors hover:bg-muted dark:hover:bg-muted"
       onClick={() => onEdit?.(place)}
+      className={clsx(
+        "group relative flex items-start gap-4 rounded-lg border border-gray-200 p-4 shadow-sm transition",
+        clickable ? "cursor-pointer hover:border-gray-300 hover:bg-muted dark:hover:bg-muted" : "",
+      )}
     >
-      <div className="flex items-center space-x-3">
-        <MapPin className="h-5 w-5 text-gray-500" />
-        <div>
-          <p className="text-sm font-medium">{place.name}</p>
-          <p className="text-xs text-gray-500">{place.address}</p>
-          <p className="text-xs text-gray-400">
-            좌표: ({place.lat}, {place.lng})
-          </p>
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-point-color/10 text-point-color dark:bg-point-color/20 dark:text-point-color">
+        <MapPin className="h-5 w-5" />
+      </div>
+
+      <div className="flex flex-1 flex-col space-y-1">
+        <p className="text-sm font-semibold text-gray-900 dark:text-white">{place.name}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-400">{place.address}</p>
+
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            className="hover:bg-point-color-sub/80 dark:bg-point-color-sub/20 dark:hover:bg-point-color-sub/30 text-point-color-sub relative z-10 flex items-center gap-1 rounded-full bg-point-color px-3 py-0.5 text-[10px] font-medium transition hover:text-point-color dark:text-point-color"
+          >
+            지도에서 보기
+          </a>
+
           {place.radius && (
-            <p className="text-xs text-gray-400">
+            <div className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-700 dark:bg-gray-700 dark:text-gray-300">
               반경: {place.radius >= 1000 ? `${place.radius / 1000}km` : `${place.radius}m`}
-            </p>
+            </div>
           )}
         </div>
       </div>
@@ -34,14 +51,18 @@ const WorkPlaceItem = ({ place, onRemove, onEdit }: WorkPlaceItemProps) => {
       {onRemove && (
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
+          size="icon"
+          className={clsx(
+            "absolute right-2 top-2 h-7 w-7 rounded-full p-0 text-gray-400 hover:bg-transparent hover:text-red-500",
+            "opacity-0 transition group-hover:opacity-100",
+          )}
           onClick={e => {
             e.stopPropagation();
             onRemove();
           }}
-          className="h-auto bg-transparent p-0 hover:bg-transparent hover:text-red-500"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </Button>
       )}
     </Card>
