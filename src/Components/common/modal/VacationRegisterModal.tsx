@@ -1,11 +1,5 @@
+import RegisterModal from "@/components/common/modal/commonModalLayout/RegisterModal";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -13,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { useVacationRegister } from "@/hooks/manager/useVacationRegisterModal";
@@ -46,92 +39,81 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
   const { employeeList } = useEmployeeList();
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-[350px] rounded-xl px-4 py-6 dark:border dark:border-dark-border sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex justify-center dark:text-white-text">휴가 등록</DialogTitle>
-          <button
-            onClick={onClose}
-            className="absolute right-4 top-7 rounded-md border-none bg-transparent text-gray-500 hover:text-gray-700 dark:text-white-text dark:hover:bg-dark-border dark:hover:bg-white-bg"
-          >
-            <X size={20} strokeWidth={3} />
-          </button>
-        </DialogHeader>
+    <RegisterModal
+      open
+      onClose={onClose}
+      title="휴가 등록"
+      onSubmit={handleRegister}
+      submitLabel="등록"
+    >
+      {/* 휴가 대상 */}
+      <div className="flex flex-col gap-2">
+        <span className="font-medium">휴가 대상</span>
+        <AutoCompleteUserInput
+          users={employeeList as EmployeeInfo[]}
+          onSelect={(emp: EmployeeInfo | null) => {
+            setSelectedEmployee(emp);
+            setInputValue(`${emp?.name} (${emp?.email})`);
+          }}
+        />
+      </div>
 
-        <div className="grid gap-8 py-6">
-          <div className="flex flex-col gap-2">
-            <span className="font-medium">휴가 대상</span>
-            <AutoCompleteUserInput
-              users={employeeList as EmployeeInfo[]}
-              onSelect={(emp: EmployeeInfo | null) => {
-                setSelectedEmployee(emp);
-                setInputValue(`${emp?.name} (${emp?.email})`);
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-medium">휴가 유형</span>
-            <Select value={vacationType} onValueChange={setVacationType}>
-              <SelectTrigger className="w-full max-w-xs dark:text-white-text sm:max-w-md">
-                <SelectValue placeholder="휴가 유형 선택" />
-              </SelectTrigger>
-              <SelectContent className="w-full min-w-0 dark:border dark:border-dark-border dark:bg-white-card-bg dark:text-white-text">
-                {VACATIONSELECT_TYPES.map(type => (
-                  <SelectItem
-                    key={type}
-                    value={type}
-                    className="w-full min-w-0 dark:text-white-text dark:hover:bg-white-bg"
-                  >
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {vacationType === "반차" && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                ※ 반차는 하루만 선택할 수 있으며, 오전/오후 선택은 별도 설정 없이 처리됩니다.
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-3">
-              <span className="font-medium">사용 기간 :</span>
-              <div className="rounded-md border dark:border-dark-border dark:bg-white-bg">
-                {vacationDays > 0 ? `${vacationDays}일` : ""}
-              </div>
-            </div>
-            <DateRangePicker
-              date={dateRange}
-              setDate={handleDateChange}
-              toDate={maxDate}
-              vacationType={vacationType}
-              handleDateChange={handleDateChange}
-            />
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              ※ 휴가 등록은 <strong>최대 3개월</strong> 이후까지만 가능합니다.
-            </p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <span>사유</span>
-            <textarea
-              className="h-20 w-full min-w-0 max-w-xs rounded-md border p-1 text-base sm:max-w-md"
-              value={reason}
-              onChange={e => setReason(e.target.value)}
-            ></textarea>
+      {/* 휴가 유형 */}
+      <div className="flex flex-col gap-2">
+        <span className="font-medium">휴가 유형</span>
+        <Select value={vacationType} onValueChange={setVacationType}>
+          <SelectTrigger className="w-full dark:text-white-text">
+            <SelectValue placeholder="휴가 유형 선택" />
+          </SelectTrigger>
+          <SelectContent className="dark:border dark:border-dark-border dark:bg-white-card-bg dark:text-white-text">
+            {VACATIONSELECT_TYPES.map(type => (
+              <SelectItem
+                key={type}
+                value={type}
+                className="dark:text-white-text dark:hover:bg-white-bg"
+              >
+                {type}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {vacationType === "반차" && (
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            ※ 반차는 하루만 선택할 수 있으며, 오전/오후 선택은 별도 설정 없이 처리됩니다.
+          </p>
+        )}
+      </div>
+
+      {/* 사용 기간 */}
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-3">
+          <span className="font-medium">사용 기간 :</span>
+          <div className="rounded-md border px-2 py-1 text-sm dark:border-dark-border dark:bg-white-bg">
+            {vacationDays > 0 ? `${vacationDays}일` : ""}
           </div>
         </div>
+        <DateRangePicker
+          date={dateRange}
+          setDate={handleDateChange}
+          toDate={maxDate}
+          vacationType={vacationType}
+          handleDateChange={handleDateChange}
+        />
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          ※ 휴가 등록은 <strong>최대 3개월</strong> 이후까지만 가능합니다.
+        </p>
+      </div>
 
-        <DialogFooter>
-          <Button
-            type="submit"
-            className="w-full dark:bg-dark-bg dark:text-dark-text"
-            onClick={handleRegister}
-          >
-            등록
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      {/* 사유 */}
+      <div className="flex flex-col gap-2">
+        <span>사유</span>
+        <textarea
+          className="h-20 w-full rounded-md border p-2 text-base"
+          value={reason}
+          onChange={e => setReason(e.target.value)}
+        />
+      </div>
+    </RegisterModal>
   );
 };
 

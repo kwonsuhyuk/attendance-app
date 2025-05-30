@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 interface IDetailModalProps {
   open: boolean;
   onClose: () => void;
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   icon?: ReactNode;
   children: ReactNode;

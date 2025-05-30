@@ -9,6 +9,7 @@ import { useWorkPlaceModal } from "@/hooks/company-settings/useWorkPlaceModal";
 import SearchResults from "@/components/company/company-settings/workplace-setting/SearchResults";
 import WorkPlaceMap from "@/components/company/company-settings/workplace-setting/map/WorkPlaceMap";
 import { useEffect, useState } from "react";
+import RegisterModal from "./commonModalLayout/RegisterModal";
 
 interface WorkPlaceModalProps {
   isOpen: boolean;
@@ -59,120 +60,104 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] w-full overflow-y-auto rounded-xl bg-white px-6 py-5 shadow-lg sm:max-h-[95vh] sm:max-w-md">
-        <DialogHeader className="mb-1 py-1">
-          <div className="flex w-full items-center justify-between">
-            <div className="flex items-center">
-              <MapPin className="mr-2 h-4 w-4" />
-              <DialogTitle className="text-lg font-medium">근무지 설정</DialogTitle>
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              className="p-1 text-muted-foreground hover:bg-white-card-bg hover:text-destructive hover:text-white-nav-selected"
-              onClick={onClose}
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </DialogHeader>
+    <RegisterModal
+      open={isOpen}
+      onClose={onClose}
+      title="근무지 설정"
+      icon={<MapPin className="h-5 w-5" />}
+      onSubmit={handleAddPlace}
+      submitLabel="저장"
+      titleAlign="left"
+    >
+      {/* 근무지 이름 */}
+      <div className="space-y-2">
+        <Label>근무지 이름</Label>
+        <Input
+          placeholder="예: 강남 본사"
+          className="h-10 placeholder:text-sm"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+      </div>
 
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <Label>근무지 이름</Label>
-            <Input
-              placeholder="예: 강남 본사"
-              className="h-10 placeholder:text-sm"
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-3">
-            <Label>메모</Label>
-            <Input
-              placeholder="근무지에 대한 메모"
-              className="h-10 placeholder:text-sm"
-              value={memo}
-              onChange={e => setMemo(e.target.value)}
-            />
-          </div>
-          <div className="relative space-y-3">
-            <Label>주소</Label>
-            <div className="flex h-10 items-center space-x-2">
-              <Input
-                placeholder="도로명 주소를 입력하세요 (예: 기흥구 기흥로 116번길 10)"
-                className="h-10 placeholder:text-xs sm:placeholder:text-sm"
-                value={address}
-                onChange={e => setAddress(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleSearchAddress();
-                  }
-                }}
-              />
-              <Button onClick={handleSearchAddress} disabled={isSearching} className="h-10">
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-            <SearchResults
-              searchResults={searchResults}
-              noResult={noResult}
-              onSelect={handleSelectAddress}
-            />
-          </div>
+      {/* 메모 */}
+      <div className="space-y-2">
+        <Label>메모</Label>
+        <Input
+          placeholder="근무지에 대한 메모"
+          className="h-10 placeholder:text-sm"
+          value={memo}
+          onChange={e => setMemo(e.target.value)}
+        />
+      </div>
 
-          <div className="w-full space-y-2">
-            <div className="flex items-center gap-3">
-              <Label>반경 (100m 단위)</Label>
-              <p className="text-xs text-gray-500">※ 10 = 1km</p>
-            </div>
-
-            <div className="relative w-full">
-              <Slider
-                min={0}
-                max={radiusOptions.length - 1}
-                step={1}
-                value={[radiusIndex]}
-                onValueChange={([val]) => {
-                  setRadiusIndex(val);
-                }}
-                className="w-full"
-              />
-
-              <div className="pointer-events-none absolute left-0 top-full mt-2 w-full px-2">
-                <div className="relative">
-                  {radiusOptions.map((v, i) => (
-                    <span
-                      key={i}
-                      className="absolute top-0 -translate-x-1/2 text-base text-muted-foreground"
-                      style={{ left: `${(i / (radiusOptions.length - 1)) * 100}%` }}
-                    >
-                      {v}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="h-1" />
-
-          <WorkPlaceMap
-            lat={lat}
-            lng={lng}
-            isLoaded={isLocationLoaded}
-            radius={radius}
-            onLocationSelect={() => {}}
+      {/* 주소 */}
+      <div className="relative space-y-2">
+        <Label>주소</Label>
+        <div className="flex h-10 items-center space-x-2">
+          <Input
+            placeholder="도로명 주소를 입력하세요 (예: 기흥구 기흥로 116번길 10)"
+            className="h-10 placeholder:text-xs sm:placeholder:text-sm"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSearchAddress();
+              }
+            }}
           />
-
-          <Button onClick={handleAddPlace} disabled={!name || !address} className="w-full">
-            저장
+          <Button onClick={handleSearchAddress} disabled={isSearching} className="h-10">
+            <Search className="h-5 w-5" />
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+        <SearchResults
+          searchResults={searchResults}
+          noResult={noResult}
+          onSelect={handleSelectAddress}
+        />
+      </div>
+
+      {/* 반경 슬라이더 */}
+      <div className="mb-4 w-full space-y-3">
+        <div className="flex items-center gap-3">
+          <Label>반경 (100m 단위)</Label>
+          <p className="text-xs text-gray-500">※ 10 = 1km</p>
+        </div>
+        <div className="relative w-full">
+          <Slider
+            min={0}
+            max={radiusOptions.length - 1}
+            step={1}
+            value={[radiusIndex]}
+            onValueChange={([val]) => setRadiusIndex(val)}
+            className="w-full"
+          />
+          <div className="pointer-events-none absolute left-0 top-full mt-2 w-full px-2">
+            <div className="relative">
+              {radiusOptions.map((v, i) => (
+                <span
+                  key={i}
+                  className="absolute top-0 -translate-x-1/2 text-base text-muted-foreground"
+                  style={{ left: `${(i / (radiusOptions.length - 1)) * 100}%` }}
+                >
+                  {v}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 지도 */}
+      <WorkPlaceMap
+        lat={lat}
+        lng={lng}
+        isLoaded={isLocationLoaded}
+        radius={radius}
+        onLocationSelect={() => {}}
+      />
+    </RegisterModal>
   );
 };
 

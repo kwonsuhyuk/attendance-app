@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { StickyNote } from "lucide-react";
+import DetailModal from "@/components/common/modal/commonModalLayout/DetailModal";
 import { TNotice } from "@/model/types/manager.type";
 
 interface NoticeModalProps {
   onClose: () => void;
-  onSave?: (notice: TNotice) => void;
-  notice?: TNotice;
-  readOnly?: boolean;
+  notice: TNotice;
 }
 
-const NoticeModal = ({ onClose, onSave, notice, readOnly = false }: NoticeModalProps) => {
+const NoticeModal = ({ onClose, notice }: NoticeModalProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -23,65 +19,35 @@ const NoticeModal = ({ onClose, onSave, notice, readOnly = false }: NoticeModalP
     }
   }, [notice]);
 
-  const handleSave = () => {
-    if (!title || !content || !onSave) return;
-    const newNotice: TNotice = {
-      ...notice,
-      title,
-      content,
-      createdAt: new Date().toISOString(),
-      noticeType: "일반", // or "중요"
-      id: notice?.id ?? `${Date.now()}`,
-    };
-    onSave(newNotice);
-  };
-
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-md rounded-md">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-bold">
-            {readOnly ? "공지사항 상세" : "공지사항 작성"}
-          </DialogTitle>
-        </DialogHeader>
+    <DetailModal
+      open
+      onClose={onClose}
+      title="공지사항 상세"
+      icon={<StickyNote className="h-5 w-5" />}
+      maxWidthClass="max-w-md"
+    >
+      <div className="min-h-[300px] rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="mb-3 flex items-start justify-between">
+          <p className="text-md flex items-center gap-2 font-semibold text-gray-900 dark:text-white">
+            {notice.noticeType === "중요" && (
+              <span className="font-semibold text-red-500">[중요]</span>
+            )}
+            {title}
+          </p>
+          <span className="text-xs text-muted-foreground">
+            {notice.createdAt?.split("T")[0] || "-"}
+          </span>
+        </div>
 
-        {readOnly ? (
-          <div className="flex flex-col gap-4 py-2 text-sm text-muted-foreground">
-            <div>
-              <p className="mb-1 font-semibold text-white-text dark:text-dark-text">제목</p>
-              <p className="whitespace-pre-line">{title}</p>
-            </div>
-            <div>
-              <p className="mb-1 font-semibold text-white-text dark:text-dark-text">내용</p>
-              <p className="whitespace-pre-line">{content}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4 py-2">
-            <Input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="제목을 입력하세요"
-            />
-            <Textarea
-              value={content}
-              onChange={e => setContent(e.target.value)}
-              placeholder="내용을 입력하세요"
-              rows={8}
-            />
-          </div>
-        )}
+        <hr className="mb-3 border-gray-300" />
 
-        {!readOnly && (
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={onClose}>
-              취소
-            </Button>
-            <Button onClick={handleSave}>저장</Button>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        <div
+          className="ql-editor p-0 text-sm text-gray-700 dark:text-gray-200"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </div>
+    </DetailModal>
   );
 };
 
