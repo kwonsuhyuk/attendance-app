@@ -42,6 +42,7 @@ import { TCommuteStatus } from "@/model/types/commute.type";
 import { toast } from "@/hooks/use-toast";
 import { EmployeeListItem } from "../TodayCommuteBox";
 import WorkplaceDetailModal from "@/components/common/modal/WorkplaceDetailModal";
+import clsx from "clsx";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -117,9 +118,12 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold sm:text-2xl">
-        {selectedDate.getMonth() + 1}/{selectedDate.getDate()} 출퇴근 현황
-      </h1>
+      <div className="flex items-end gap-1 sm:gap-2">
+        <h1 className="text-2xl font-extrabold sm:text-3xl">
+          {selectedDate.getMonth() + 1}월 {selectedDate.getDate()}일
+        </h1>
+        <p className="text-sm text-muted-foreground sm:text-base">출퇴근 현황</p>
+      </div>
 
       {/* 모바일 레이아웃 */}
       <div className="flex flex-wrap items-center justify-between gap-2 sm:hidden">
@@ -182,37 +186,83 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
   );
 };
 
+interface StatCardProps {
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+  title: string;
+  count: string | number;
+  subtitle?: string;
+  onClick?: () => void;
+  rightIcon?: React.ReactNode;
+  className?: string;
+}
+
+const StatCard = ({
+  icon: Icon,
+  iconColor,
+  bgColor,
+  title,
+  count,
+  subtitle,
+  onClick,
+  rightIcon,
+  className,
+}: StatCardProps) => (
+  <div
+    onClick={onClick}
+    className={clsx(
+      "group relative flex items-center gap-4 rounded-2xl border border-solid border-point-color bg-white p-4 shadow-sm transition hover:shadow-md hover:ring-1 hover:ring-point-color/30",
+      "dark:bg-[#1f2b26] dark:hover:ring-white/20",
+      onClick && "cursor-pointer",
+      className,
+    )}
+  >
+    <div
+      className={clsx("flex h-12 w-12 shrink-0 items-center justify-center rounded-xl", bgColor)}
+    >
+      <Icon className={clsx("h-5 w-5", iconColor)} />
+    </div>
+
+    <div className="flex flex-col justify-center">
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+      {subtitle && <p className="text-xs text-gray-400 dark:text-gray-500">{subtitle}</p>}
+      <p className="text-xl font-bold text-gray-900 dark:text-white">{count}</p>
+    </div>
+
+    {rightIcon && <div className="ml-auto">{rightIcon}</div>}
+  </div>
+);
+
 export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) => {
   const { totalEmployeeNumber, commuteEmployeeNumber } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
-  return (
-    <div className="grid w-full grid-cols-3 gap-2 md:grid-cols-3 md:gap-4" data-tour="today-3">
-      {/* 전체 직원 수 */}
-      <Card>
-        <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <Users className="h-5 w-5 text-blue-600 md:h-6 md:w-6" />
-          <div className="text-center md:text-left">
-            <p className="text-[0.65rem] text-muted-foreground md:text-xs">전체 직원 수</p>
-            <p className="text-sm font-bold md:text-lg">{totalEmployeeNumber}명</p>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* 출근 현황 */}
-      <Card className="border border-green-200 bg-green-100 dark:bg-green-800">
-        <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <UserCheck className="h-5 w-5 text-green-800 dark:text-green-300 md:h-6 md:w-6" />
-          <div className="text-center md:text-left">
-            <p className="text-[0.65rem] dark:text-dark-text md:text-xs">출근 현황</p>
-            <p className="text-sm font-bold text-green-800 dark:text-green-300 md:text-lg">
-              {commuteEmployeeNumber}명 / {totalEmployeeNumber}명
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+  return (
+    <div
+      className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      data-tour="today-3"
+    >
+      <StatCard
+        icon={Users}
+        iconColor="text-point-color"
+        bgColor="bg-point-color-sub"
+        title="전체 직원 수"
+        count={`${totalEmployeeNumber}명`}
+      />
+
+      <StatCard
+        icon={UserCheck}
+        iconColor="text-point-color-sub"
+        bgColor="bg-point-color"
+        title="출근 현황"
+        count={`${commuteEmployeeNumber}명 / ${totalEmployeeNumber}명`}
+        className="bg-point-color-sub border-point-color"
+      />
+
       <TodayVacationEmployeeCard selectedDate={selectedDate} />
     </div>
   );
@@ -561,22 +611,16 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
 
   return (
     <>
-      <Card
-        className="h-fit cursor-pointer rounded-xl border border-solid border-point-color bg-white transition hover:bg-gray-50 dark:border-white/20 dark:bg-[#1f2b26] dark:hover:bg-[#2a3c35]"
+      {/* 휴가자 카드 */}
+      <StatCard
+        icon={PlaneTakeoffIcon}
+        iconColor="text-point-color"
+        bgColor="bg-point-color-sub"
+        title="휴가 인원"
+        count={`${totalTodayVacationCount}명`}
         onClick={() => handleVacationBoxClick(todayVacationData || null)}
-        data-tour="today-4"
-      >
-        <CardContent className="flex flex-col items-center gap-1 p-2 md:flex-row md:items-center md:gap-4 md:p-4">
-          <PlaneTakeoffIcon className="h-5 w-5 text-point-color md:h-6 md:w-6" />
-          <div className="text-center md:text-left">
-            <p className="text-[0.65rem] text-gray-500 dark:text-gray-400 md:text-xs">휴가 인원</p>
-            <p className="text-sm font-bold text-gray-900 dark:text-white md:text-lg">
-              {totalTodayVacationCount}명
-            </p>
-          </div>
-          <ChevronRight className="mt-1 hidden h-4 w-4 text-gray-400 dark:text-white/60 sm:block md:ml-auto md:mt-0" />
-        </CardContent>
-      </Card>
+        rightIcon={<ChevronRight className="h-4 w-4 text-gray-400 dark:text-white/60" />}
+      />
 
       <VacationChartModal
         open={!!selectedData}
