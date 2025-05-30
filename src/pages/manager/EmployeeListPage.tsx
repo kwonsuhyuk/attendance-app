@@ -8,8 +8,19 @@ import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
 import Seo from "@/components/Seo";
 import { useTour } from "@/hooks/use-tour";
 import { employeeManageTourSteps } from "@/constants/managerTourSteps";
+import { useEffect, useState } from "react";
 
 const EmployeeListPage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const {
     selectedEmployee,
     setSelectedEmployee,
@@ -40,7 +51,7 @@ const EmployeeListPage = () => {
       />
       <EmployeeListPageContainer>
         <div className="flex flex-col" data-tour="body">
-          <div className="p-6">
+          <div className="p-4">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
             </div>
@@ -52,15 +63,16 @@ const EmployeeListPage = () => {
             />
           </div>
 
-          <div className="flex-1 px-2" data-tour="empManage-table">
+          <div className="flex-1" data-tour="empManage-table">
             <DataTable
               columns={columns}
               data={paginatedEmployees}
               onRowClick={setSelectedEmployee}
+              hiddenColumnIdsOnMobile={isMobile ? ["email", "phoneNumber", "salaryAmount"] : []}
             />
           </div>
 
-          <div className="w-full p-2">
+          <div className="w-full p-10">
             <Pagination
               page={page}
               totalPageCount={totalPageCount}

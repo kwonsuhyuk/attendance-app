@@ -20,6 +20,7 @@ interface DataTableProps<TData> {
   data: TData[];
   onRowClick?: (row: TData) => void;
   selectedItem?: TData | null;
+  hiddenColumnIdsOnMobile?: string[];
 }
 
 export function DataTable<TData>({
@@ -27,6 +28,7 @@ export function DataTable<TData>({
   data,
   onRowClick,
   selectedItem,
+  hiddenColumnIdsOnMobile,
 }: DataTableProps<TData>) {
   const table = useReactTable({
     data,
@@ -45,14 +47,12 @@ export function DataTable<TData>({
               className="border-y border-solid border-white-table-header dark:border-dark-table-header"
             >
               {headerGroup.headers.map(header => {
-                const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
-                  header.column.id,
-                );
+                const isHiddenOnMobile = hiddenColumnIdsOnMobile?.includes(header.column.id);
 
                 return (
                   <TableHead
                     key={header.id}
-                    className={`whitespace-nowrap border pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`whitespace-nowrap border text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null
@@ -77,13 +77,12 @@ export function DataTable<TData>({
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {
-                  const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
-                    cell.column.id,
-                  );
+                  const isHiddenOnMobile = hiddenColumnIdsOnMobile?.includes(cell.column.id);
+
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`break-words p-3 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                      className={`break-words text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

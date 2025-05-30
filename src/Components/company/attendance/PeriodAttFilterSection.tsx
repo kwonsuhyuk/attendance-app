@@ -46,24 +46,31 @@ const PeriodAttFilterSection = ({
 
   return (
     <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-start md:shadow-md">
-      <div className="flex justify-center py-2 sm:justify-start" data-tour="period-2">
+      <div className="flex justify-center py-1.5 sm:justify-start" data-tour="period-2">
         <CustomCalendarHeader onChangeMonth={onChangeDate} />
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-6" data-tour="period-3">
         {/* 근무지 필터 - total */}
         {type === "total" && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-            <label className="mb-1 text-sm font-medium text-muted-foreground">근무지</label>
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <span className="font-medium text-muted-foreground">근무지 선택</span>
             <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>
-              <SelectTrigger className="w-full min-w-[140px] sm:w-[180px]">
-                <SelectValue placeholder="근무지 선택" />
+              <SelectTrigger className="w-full min-w-[140px] sm:w-[320px]">
+                <SelectValue placeholder="근무지를 선택하세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="전체">전체</SelectItem>
+                <SelectItem value="전체">
+                  <div className="flex flex-col items-start text-left">
+                    <span className="text-sm font-semibold">전체</span>
+                  </div>
+                </SelectItem>
                 {workPlacesList?.map(place => (
                   <SelectItem key={place.id} value={place.name}>
-                    {place.name}
+                    <div className="flex flex-col items-start text-left">
+                      <span className="text-sm font-semibold">{place.name}</span>
+                      <span className="text-xs text-muted-foreground">{place.address}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -73,11 +80,11 @@ const PeriodAttFilterSection = ({
 
         {/* 직원 이름 필터 - employee */}
         {type === "employee" && employeeName !== undefined && setEmployeeName && (
-          <div className="flex flex-col py-1 sm:flex-row sm:items-center sm:gap-3">
-            <label className="mb-1 whitespace-nowrap text-sm font-medium text-muted-foreground sm:mb-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+            <label className="whitespace-nowrap font-medium text-muted-foreground sm:mb-0">
               직원 검색
             </label>
-            <div className="w-full min-w-[160px] sm:w-[260px]">
+            <div className="w-full min-w-[160px] sm:w-[320px]">
               <AutoCompleteUserInput
                 users={employeeList}
                 onSelect={(emp: EmployeeInfo | null) => {

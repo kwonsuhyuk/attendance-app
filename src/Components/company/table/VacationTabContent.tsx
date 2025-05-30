@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { DataTable } from "@/components/ui/data-table";
 import Pagination from "@/components/ui/pagination";
@@ -18,6 +19,8 @@ interface IVacationTabContentProps {
   onPrevious: () => void;
   onRowClick: (row: IVacationRequest) => void;
   columns: ColumnDef<IVacationRequest>[];
+  isMobile: boolean;
+  hiddenColumnIdsOnMobile?: string[];
 }
 
 const VacationTabContent = ({
@@ -30,27 +33,32 @@ const VacationTabContent = ({
   onPrevious,
   onRowClick,
   columns,
+  isMobile,
+  hiddenColumnIdsOnMobile,
 }: IVacationTabContentProps) => {
+  const currentPageData = getCurrentPageData(filteredData, tab.value);
+
   return (
-    <TabsContent value={tab.value} className="mt-6 w-full" data-tour={`${tab.value}-1`}>
+    <TabsContent value={tab.value} className="mt-4 w-full" data-tour={`${tab.value}-1`}>
       {["registered", "processed"].includes(tab.value) && (
-        <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+        <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
           ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다.
         </p>
       )}
       {["pending"].includes(tab.value) && (
-        <p className="mb-2 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+        <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
           ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
         </p>
       )}
-      <div className="w-full overflow-x-auto" data-tour={`${tab.value}-2`}>
+      <div className="min-h-[510px] w-full overflow-auto" data-tour={`${tab.value}-2`}>
         <DataTable
           columns={columns}
-          data={getCurrentPageData(filteredData, tab.value)}
+          data={currentPageData}
           onRowClick={onRowClick}
+          hiddenColumnIdsOnMobile={hiddenColumnIdsOnMobile}
         />
       </div>
-      <div className="p-5">
+      <div className="-translate-y-8 sm:translate-y-0">
         {filteredData.length > 0 && (
           <Pagination
             page={page}
