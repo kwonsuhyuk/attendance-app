@@ -63,7 +63,7 @@ const BasicGuideStepBox = () => {
   if (!visible || progress === 1000) return null;
 
   return (
-    <Card className="relative overflow-hidden rounded-2xl bg-point-color p-6 shadow-xl dark:bg-[#b4c8bb]">
+    <Card className="relative overflow-hidden rounded-2xl border border-solid border-point-color bg-white p-4 shadow-md dark:bg-white">
       <button
         className="absolute right-4 top-4 text-black/60 hover:text-black"
         onClick={handleClose}
@@ -73,7 +73,7 @@ const BasicGuideStepBox = () => {
       </button>
 
       <CardTitle className="mb-2 text-xl font-extrabold text-black">서비스 시작하기</CardTitle>
-      <p className="mb-4 text-sm text-black/70">
+      <p className="mb-4 text-sm text-gray-600">
         On&Off를 완벽하게 사용하기 위한 설정을 완료해주세요!
       </p>
 
@@ -87,19 +87,19 @@ const BasicGuideStepBox = () => {
                 if (step.link) navigate(`/${companyCode}${step.link}`);
                 else if (step.action) step.action();
               }}
-              className={`group relative flex w-full items-center justify-between gap-3 rounded-xl bg-white px-5 py-4 shadow transition hover:-translate-y-[2px] hover:shadow-lg ${
+              className={`group relative flex w-full items-center justify-between gap-3 rounded-xl bg-point-color/10 px-5 py-4 shadow transition duration-200 hover:-translate-y-[2px] hover:ring-2 hover:ring-point-color ${
                 step.checked ? "cursor-default opacity-50" : "cursor-pointer"
               }`}
             >
               <div className="flex items-center gap-3 text-black">
-                <div className="bg-point-color-sub/20 rounded-full p-2 transition group-hover:scale-110">
+                <div className="rounded-full bg-point-color p-2 text-white transition group-hover:scale-110">
                   {step.icon}
                 </div>
                 <span className="text-sm font-semibold">{step.label}</span>
               </div>
               <div>
                 {step.checked ? (
-                  <CheckCircle2 className="text-green-600" size={22} />
+                  <CheckCircle2 className="text-point-color" size={22} />
                 ) : step.action ? (
                   <Copy className="h-5 w-5 text-gray-400" />
                 ) : (
@@ -111,13 +111,13 @@ const BasicGuideStepBox = () => {
         </div>
 
         <div className="mt-4">
-          <div className="mb-1 flex justify-between text-xs text-black/70">
+          <div className="mb-1 flex justify-between text-xs text-gray-600">
             <span>진행률</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <Progress
             value={progress}
-            className="h-[8px] rounded-full bg-white [&>div]:bg-vacation-dark-color"
+            className="h-[8px] rounded-full bg-gray-200 [&>div]:bg-vacation-dark-color"
           />
         </div>
       </CardContent>
