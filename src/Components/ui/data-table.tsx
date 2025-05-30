@@ -52,7 +52,7 @@ export function DataTable<TData>({
                 return (
                   <TableHead
                     key={header.id}
-                    className={`whitespace-nowrap border pl-5 pr-5 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                    className={`whitespace-nowrap border text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                   >
                     {header.isPlaceholder
                       ? null
@@ -83,7 +83,7 @@ export function DataTable<TData>({
                   return (
                     <TableCell
                       key={cell.id}
-                      className={`break-words p-3 text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
+                      className={`break-words text-center ${isHiddenOnMobile ? "hidden sm:table-cell" : ""}`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

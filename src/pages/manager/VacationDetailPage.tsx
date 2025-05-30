@@ -69,7 +69,6 @@ const VacationDetailPage = () => {
         >
           <div className="flex justify-between bg-white-bg dark:bg-dark-bg">
             <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
-
               {TAB_ITEMS.map(tab => (
                 <TabsTrigger
                   key={tab.value}

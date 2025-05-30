@@ -40,7 +40,7 @@ const EmployeeListPage = () => {
       />
       <EmployeeListPageContainer>
         <div className="flex flex-col" data-tour="body">
-          <div className="p-6">
+          <div className="p-4">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
             </div>
@@ -52,7 +52,7 @@ const EmployeeListPage = () => {
             />
           </div>
 
-          <div className="flex-1 px-2" data-tour="empManage-table">
+          <div className="flex-1" data-tour="empManage-table">
             <DataTable
               columns={columns}
               data={paginatedEmployees}
@@ -60,7 +60,7 @@ const EmployeeListPage = () => {
             />
           </div>
 
-          <div className="w-full p-2">
+          <div className="w-full p-10">
             <Pagination
               page={page}
               totalPageCount={totalPageCount}
