@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { getVacationColumns } from "@/components/company/table/VacationColumns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +16,17 @@ import { useTour } from "@/hooks/use-tour";
 import { vacationRegisterAndRequestTourSteps } from "@/constants/managerTourSteps";
 
 const VacationDetailPage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const {
     modal: { isOpen: isModalOpen, toggle: toggleModal },
     requests: {
@@ -40,8 +52,6 @@ const VacationDetailPage = () => {
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-
-    // 특정 스텝에서 탭을 눌렀다면 다음 step으로
     const { run } = useTourStore.getState();
     if (run) {
       const joyrideContainer = document.querySelector(".react-joyride__tooltip");
@@ -67,36 +77,66 @@ const VacationDetailPage = () => {
             setPage(prev => ({ ...prev, [tab]: 0 }));
           }}
         >
-          <div className="flex justify-between bg-white-bg dark:bg-dark-bg">
-            <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
-              {TAB_ITEMS.map(tab => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="relative mt-4 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
-                >
-                  <span className="flex items-center justify-center gap-1 pt-2">
+          <div className="flex flex-col gap-2 bg-white-bg pt-1 dark:bg-dark-bg sm:flex-row sm:items-center sm:justify-between sm:px-0 sm:pt-0">
+            {isMobile ? (
+              <div className="flex w-full overflow-x-auto">
+                {TAB_ITEMS.map(tab => (
+                  <button
+                    key={tab.value}
+                    onClick={() => handleTabClick(tab.value)}
+                    className={`min-w-[80px] flex-1 rounded-md px-3 py-2 text-sm font-semibold ${
+                      activeTab === tab.value
+                        ? "bg-black text-white"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
                     {tab.label}
                     {tab.value === "pending" && pendingCount > 0 && (
-                      <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
-                        {pendingCount}
-                      </span>
+                      <Badge className="ml-1 bg-red-500 px-1.5 text-white">{pendingCount}</Badge>
                     )}
-                  </span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <TabsList className="flex h-12 w-full justify-start bg-white-bg py-1 dark:bg-dark-bg">
+                {TAB_ITEMS.map(tab => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="relative mt-2 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
+                  >
+                    <span className="flex items-center justify-center gap-1 pt-2">
+                      {tab.label}
+                      {tab.value === "pending" && pendingCount > 0 && (
+                        <span className="inline-flex h-[18px] min-w-[16px] items-center justify-center rounded-[9px] bg-red-500 px-1.5 text-[11px] font-semibold leading-none text-white">
+                          {pendingCount}
+                        </span>
+                      )}
+                    </span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            )}
 
-            <Button
-              className="group mt-4 flex cursor-pointer items-center gap-2 bg-white-bg text-sm font-bold text-white-text hover:bg-white-bg hover:font-extrabold dark:bg-dark-bg dark:text-dark-text sm:text-base"
-              onClick={toggleModal}
-              data-tour="register-modal"
-            >
-              <span className="flex h-5 w-5 -translate-y-0.5 translate-x-0.5 items-center justify-center rounded-full border-2 border-solid border-white-text text-white-text transition-colors group-hover:bg-dark-card-bg group-hover:font-extrabold group-hover:text-dark-text dark:border-dark-text dark:text-dark-text dark:hover:text-white-text dark:group-hover:bg-white-card-bg dark:group-hover:text-black">
-                <Plus className="h-4 w-4" />
-              </span>
-              <span className="transition-all group-hover:font-extrabold">휴가 등록</span>
-            </Button>
+            {isMobile ? (
+              <Button
+                className="mt-2 w-full rounded-md rounded-b-none text-base font-bold"
+                onClick={toggleModal}
+              >
+                휴가 등록
+              </Button>
+            ) : (
+              <Button
+                className="group mt-4 flex cursor-pointer items-center gap-2 bg-white-bg text-sm font-bold text-white-text hover:bg-white-bg hover:font-extrabold dark:bg-dark-bg dark:text-dark-text sm:text-base"
+                onClick={toggleModal}
+                data-tour="register-modal"
+              >
+                <span className="flex h-5 w-5 -translate-y-0.5 translate-x-0.5 items-center justify-center rounded-full border-2 border-solid border-white-text text-white-text transition-colors group-hover:bg-dark-card-bg group-hover:font-extrabold group-hover:text-dark-text dark:border-dark-text dark:text-dark-text dark:hover:text-white-text dark:group-hover:bg-white-card-bg dark:group-hover:text-black">
+                  <Plus className="h-4 w-4" />
+                </span>
+                <span className="transition-all group-hover:font-extrabold">휴가 등록</span>
+              </Button>
+            )}
           </div>
 
           {isModalOpen && (
@@ -108,6 +148,25 @@ const VacationDetailPage = () => {
 
           {TAB_CONTENTS.map(tab => {
             const filteredData = getFilteredVacationData(tab.value, tab.filter);
+            const vacationColumns = getVacationColumns({
+              onApprove: tab.value === "registered" ? undefined : handleApprove,
+              onReject: tab.value === "registered" ? undefined : handleReject,
+              includeActions: tab.includeActions,
+              isRegistered: tab.isRegistered ?? false,
+            });
+
+            const visibleMobileColumns = ["requestType", "requester", "status"];
+
+            const hiddenColumnIdsOnMobile = isMobile
+              ? vacationColumns
+                  .map(col => {
+                    if ("accessorKey" in col && typeof col.accessorKey === "string")
+                      return col.accessorKey;
+                    if ("id" in col && typeof col.id === "string") return col.id;
+                    return null;
+                  })
+                  .filter((key): key is string => !!key && !visibleMobileColumns.includes(key))
+              : [];
 
             return (
               <VacationTabContent
@@ -120,16 +179,19 @@ const VacationDetailPage = () => {
                 onNext={() => onNext(tab.value, getTotalPages(filteredData))}
                 onPrevious={() => onPrevious(tab.value)}
                 onRowClick={handleRowClick}
+                isMobile={isMobile}
                 columns={getVacationColumns({
                   onApprove: tab.value === "registered" ? undefined : handleApprove,
                   onReject: tab.value === "registered" ? undefined : handleReject,
                   includeActions: tab.includeActions,
                   isRegistered: tab.isRegistered ?? false,
                 })}
+                hiddenColumnIdsOnMobile={hiddenColumnIdsOnMobile}
               />
             );
           })}
         </Tabs>
+
         {selectedRequest && (
           <VacationDetailModal
             request={selectedRequest}

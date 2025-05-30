@@ -8,8 +8,19 @@ import { getEmployeeColumns } from "@/components/company/table/EmployeeColumns";
 import Seo from "@/components/Seo";
 import { useTour } from "@/hooks/use-tour";
 import { employeeManageTourSteps } from "@/constants/managerTourSteps";
+import { useEffect, useState } from "react";
 
 const EmployeeListPage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const {
     selectedEmployee,
     setSelectedEmployee,
@@ -57,6 +68,7 @@ const EmployeeListPage = () => {
               columns={columns}
               data={paginatedEmployees}
               onRowClick={setSelectedEmployee}
+              hiddenColumnIdsOnMobile={isMobile ? ["email", "phoneNumber", "salaryAmount"] : []}
             />
           </div>
 

@@ -53,7 +53,7 @@ const PeriodAttFilterSection = ({
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-6" data-tour="period-3">
         {/* 근무지 필터 - total */}
         {type === "total" && (
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <span className="font-medium text-muted-foreground">근무지 선택</span>
             <Select value={workplaceFilter} onValueChange={setWorkplaceFilter}>
               <SelectTrigger className="w-full min-w-[140px] sm:w-[320px]">

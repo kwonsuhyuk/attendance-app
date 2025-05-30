@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { DataTable } from "@/components/ui/data-table";
 import Pagination from "@/components/ui/pagination";
@@ -18,6 +19,8 @@ interface IVacationTabContentProps {
   onPrevious: () => void;
   onRowClick: (row: IVacationRequest) => void;
   columns: ColumnDef<IVacationRequest>[];
+  isMobile: boolean;
+  hiddenColumnIdsOnMobile?: string[];
 }
 
 const VacationTabContent = ({
@@ -30,7 +33,11 @@ const VacationTabContent = ({
   onPrevious,
   onRowClick,
   columns,
+  isMobile,
+  hiddenColumnIdsOnMobile,
 }: IVacationTabContentProps) => {
+  const currentPageData = getCurrentPageData(filteredData, tab.value);
+
   return (
     <TabsContent value={tab.value} className="mt-4 w-full" data-tour={`${tab.value}-1`}>
       {["registered", "processed"].includes(tab.value) && (
@@ -46,11 +53,12 @@ const VacationTabContent = ({
       <div className="min-h-[510px] w-full overflow-auto" data-tour={`${tab.value}-2`}>
         <DataTable
           columns={columns}
-          data={getCurrentPageData(filteredData, tab.value)}
+          data={currentPageData}
           onRowClick={onRowClick}
+          hiddenColumnIdsOnMobile={hiddenColumnIdsOnMobile}
         />
       </div>
-      <div>
+      <div className="-translate-y-8 sm:translate-y-0">
         {filteredData.length > 0 && (
           <Pagination
             page={page}

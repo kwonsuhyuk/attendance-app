@@ -20,6 +20,7 @@ interface DataTableProps<TData> {
   data: TData[];
   onRowClick?: (row: TData) => void;
   selectedItem?: TData | null;
+  hiddenColumnIdsOnMobile?: string[];
 }
 
 export function DataTable<TData>({
@@ -27,6 +28,7 @@ export function DataTable<TData>({
   data,
   onRowClick,
   selectedItem,
+  hiddenColumnIdsOnMobile,
 }: DataTableProps<TData>) {
   const table = useReactTable({
     data,
@@ -45,9 +47,7 @@ export function DataTable<TData>({
               className="border-y border-solid border-white-table-header dark:border-dark-table-header"
             >
               {headerGroup.headers.map(header => {
-                const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
-                  header.column.id,
-                );
+                const isHiddenOnMobile = hiddenColumnIdsOnMobile?.includes(header.column.id);
 
                 return (
                   <TableHead
@@ -77,9 +77,8 @@ export function DataTable<TData>({
                 onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map(cell => {
-                  const isHiddenOnMobile = ["email", "phoneNumber", "salaryAmount"].includes(
-                    cell.column.id,
-                  );
+                  const isHiddenOnMobile = hiddenColumnIdsOnMobile?.includes(cell.column.id);
+
                   return (
                     <TableCell
                       key={cell.id}

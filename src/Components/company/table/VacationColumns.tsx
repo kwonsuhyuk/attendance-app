@@ -50,6 +50,7 @@ export const getVacationColumns = ({
   const columns: ColumnDef<IVacationRequest>[] = [
     {
       accessorKey: "requestType",
+      id: "requestType",
       header: "휴가 유형",
       cell: ({ getValue }) => <span>{getValue() as string}</span>,
     },
@@ -61,6 +62,7 @@ export const getVacationColumns = ({
     },
     {
       accessorKey: "requestDate",
+      id: "requestDate",
       header: "휴가 일자",
       cell: ({ getValue }) => {
         const value = getValue() as string;
@@ -75,6 +77,7 @@ export const getVacationColumns = ({
     },
     {
       accessorKey: "reason",
+      id: "reason",
       header: "사유",
       cell: ({ getValue }) => {
         const value = getValue() as string;
@@ -94,6 +97,7 @@ export const getVacationColumns = ({
     },
     {
       accessorKey: "status",
+      id: "status",
       header: "상태",
       cell: ({ row }) => (
         <StatusBadge
