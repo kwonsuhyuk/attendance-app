@@ -3,8 +3,7 @@ import { fetchCommutesByPeriod } from "@/api/commute.api";
 import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
 import * as XLSX from "xlsx";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-dayjs.extend(isSameOrBefore);
+import { ISettlementRow } from "@/components/company/attendance/Settlement";
 
 interface GenerateOptions {
   employee: EmployeeInfo;
@@ -16,6 +15,8 @@ export default function useSettlement() {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   const holidayList = useCompanyStore(state => state.currentCompany?.holidayList ?? []);
   const payCheckDay = useCompanyStore(state => state.currentCompany?.payCheckDay);
+  const holidayPay = useCompanyStore(state => state.currentCompany?.holidayPay ?? 1);
+  const nightPay = useCompanyStore(state => state.currentCompany?.nightPay ?? 1);
 
   const generateSettlement = async ({ employee, currentDate, includeSalary }: GenerateOptions) => {
     if (!companyCode || !payCheckDay) return [];
@@ -32,7 +33,6 @@ export default function useSettlement() {
     }
 
     const commuteMap: Record<string, any> = {};
-
     for (const date of dates) {
       const year = date.format("YYYY");
       const month = date.format("MM");
@@ -67,19 +67,24 @@ export default function useSettlement() {
         nightMinutes = Math.min(nightMinutes, totalMinutes);
       }
 
-      const isHoliday = holidayList.includes(dateStr);
-      let extraPay = 0;
+      const isWeekend = [0, 6].includes(date.day());
+      const isHoliday = holidayList.includes(dateStr) || isWeekend;
 
-      if (includeSalary && salaryAmount > 0 && totalMinutes > 0) {
+      let workType: "정상출근" | "외근" | "" = "";
+      if (record?.startWorkplaceId === "외근") workType = "외근";
+      else if (start && end) workType = "정상출근";
+
+      let extraPay = 0;
+      if (includeSalary && salaryAmount > 0 && totalMinutes > 0 && workType === "정상출근") {
         const basePayPerMinute = salaryAmount / 60;
         const normalMinutes = totalMinutes - nightMinutes;
 
         if (isHoliday) {
-          extraPay += basePayPerMinute * normalMinutes * 1.5;
-          extraPay += basePayPerMinute * nightMinutes * 2;
+          extraPay += basePayPerMinute * normalMinutes * holidayPay;
+          extraPay += basePayPerMinute * nightMinutes * nightPay * holidayPay;
         } else {
-          extraPay += basePayPerMinute * normalMinutes * 1;
-          extraPay += basePayPerMinute * nightMinutes * 1.5;
+          extraPay += basePayPerMinute * normalMinutes;
+          extraPay += basePayPerMinute * nightMinutes * nightPay;
         }
       }
 
@@ -90,6 +95,8 @@ export default function useSettlement() {
         총근무시간: `${Math.floor(totalMinutes / 60)}시간 ${totalMinutes % 60}분`,
         야간근무: `${Math.floor(nightMinutes / 60)}시간 ${nightMinutes % 60}분`,
         휴일근무: isHoliday ? "✅" : "",
+        외근: workType === "외근" ? "✅" : "",
+        근무유형: workType,
         ...(includeSalary && {
           추가수당: extraPay > 0 ? `${Math.round(extraPay).toLocaleString()}원` : "-",
         }),
@@ -98,7 +105,7 @@ export default function useSettlement() {
   };
 
   const downloadExcel = (
-    summary: any[],
+    summary: ISettlementRow[],
     employee: EmployeeInfo,
     currentDate: Date,
     includeSalary: boolean,
@@ -114,6 +121,9 @@ export default function useSettlement() {
     }, 0);
 
     const holidayCount = summary.filter(row => row.휴일근무 === "✅").length;
+    const totalWorkDays = summary.filter(row => row.근무유형 === "정상출근").length;
+    const totalOutworkDays = summary.filter(row => row.근무유형 === "외근").length;
+
     const totalPay = includeSalary
       ? summary.reduce((acc, cur) => {
           const num = Number(cur.추가수당?.replace(/[^\d]/g, ""));
@@ -121,13 +131,15 @@ export default function useSettlement() {
         }, 0)
       : undefined;
 
-    const totalRow = {
+    const totalRow: any = {
       날짜: "총 합계",
       출근: "-",
       퇴근: "-",
       총근무시간: `${Math.floor(totalMinutes / 60)}시간 ${totalMinutes % 60}분`,
       야간근무: `${Math.floor(totalNight / 60)}시간 ${totalNight % 60}분`,
       휴일근무: `${holidayCount}일`,
+      근무일: `${totalWorkDays}일`,
+      외근: `${totalOutworkDays}일`,
       ...(includeSalary && { 추가수당: `${totalPay?.toLocaleString()}원` }),
     };
 

@@ -2,22 +2,32 @@ import { useCompanyStore } from "@/store/company.store";
 import { Building2 } from "lucide-react";
 import WorkPlaceItem from "./company-settings/workplace-setting/WorkPlaceItem";
 import SummaryCard from "./\bSummaryCard";
+import { CardContent } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
 
 const WorkplaceBox = () => {
-  const workplaces = useCompanyStore(state => state.currentCompany?.workPlacesList);
-
+  const workPlaces = useCompanyStore(state => state.currentCompany?.workPlacesList);
   return (
     <div className="space-y-4" data-tour="manager_home-5">
-      <SummaryCard title="전체 근무지 수" count={workplaces?.length} icon={Building2} />
-      <ul className="relative max-h-[380px] space-y-2 overflow-y-auto rounded-md border border-solid border-white-border-sub py-3 pr-1 dark:border-dark-border-sub">
-        {workplaces && workplaces.length > 0 ? (
-          workplaces.map(place => <WorkPlaceItem place={place} key={place.id} />)
-        ) : (
-          <div className="rounded-md px-4 py-4 text-sm text-muted-foreground">
-            등록된 근무지가 없습니다. 근무지 관리에서 근무지를 추가해주세요.
+      <SummaryCard title="전체 근무지 수" count={workPlaces?.length} icon={Building2} />
+
+      <CardContent className="flex h-[28rem] items-center justify-center rounded-xl p-2 shadow-md">
+        {!workPlaces || workPlaces?.length === 0 ? (
+          <div className="p-12">
+            <p className="text-center text-sm text-muted-foreground">추가된 근무지가 없습니다.</p>
           </div>
+        ) : (
+          <ScrollArea className="h-full w-full overflow-y-auto rounded-xl dark:border-dark-border">
+            {workPlaces &&
+              workPlaces.map((place, index) => (
+                <div key={place.id}>
+                  <WorkPlaceItem place={place} />
+                  {/* {index !== workPlaces.length - 1 && <Separator />} */}
+                </div>
+              ))}
+          </ScrollArea>
         )}
-      </ul>
+      </CardContent>
     </div>
   );
 };

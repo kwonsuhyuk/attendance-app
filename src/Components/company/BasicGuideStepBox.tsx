@@ -63,51 +63,63 @@ const BasicGuideStepBox = () => {
   if (!visible || progress === 1000) return null;
 
   return (
-    <Card className="relative rounded-xl bg-sky-100 p-4 shadow-md dark:bg-sky-950">
+    <Card className="relative overflow-hidden rounded-2xl border border-solid border-point-color bg-white p-4 shadow-md dark:bg-white">
       <button
-        className="absolute right-4 top-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+        className="absolute right-4 top-4 text-black/60 hover:text-black"
         onClick={handleClose}
         aria-label="닫기"
       >
         <X size={20} />
       </button>
-      <CardTitle className="mb-3 text-base font-bold text-sky-800 dark:text-white">
-        서비스 시작하기
-      </CardTitle>
+
+      <CardTitle className="mb-2 text-xl font-extrabold text-black">서비스 시작하기</CardTitle>
+      <p className="mb-4 text-sm text-gray-600">
+        On&Off를 완벽하게 사용하기 위한 설정을 완료해주세요!
+      </p>
+
       <CardContent className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {steps.map((step, idx) => {
-            return (
-              <div
-                key={idx}
-                onClick={() => {
-                  if (step.checked) return;
-                  if (step.link) {
-                    navigate(`/${companyCode}${step.link}`);
-                  } else if (step.action) {
-                    step.action();
-                  }
-                }}
-                className={`relative flex cursor-pointer items-center justify-between gap-3 rounded-lg bg-white px-4 py-5 shadow-sm transition hover:bg-sky-50 dark:bg-slate-800 dark:hover:bg-gray-700 ${
-                  step.checked ? "cursor-default hover:bg-white dark:hover:bg-gray-800" : ""
-                }`}
-              >
-                <div className="flex items-center gap-2 text-sky-700 dark:text-sky-300">
+          {steps.map((step, idx) => (
+            <div
+              key={idx}
+              onClick={() => {
+                if (step.checked) return;
+                if (step.link) navigate(`/${companyCode}${step.link}`);
+                else if (step.action) step.action();
+              }}
+              className={`group relative flex w-full items-center justify-between gap-3 rounded-xl bg-point-color/10 px-5 py-4 shadow transition duration-200 hover:-translate-y-[2px] hover:ring-2 hover:ring-point-color ${
+                step.checked ? "cursor-default opacity-50" : "cursor-pointer"
+              }`}
+            >
+              <div className="flex items-center gap-3 text-black">
+                <div className="rounded-full bg-point-color p-2 text-white transition group-hover:scale-110">
                   {step.icon}
-                  <span className="text-sm font-semibold">{step.label}</span>
                 </div>
+                <span className="text-sm font-semibold">{step.label}</span>
+              </div>
+              <div>
                 {step.checked ? (
-                  <CheckCircle2 className="text-green-500" size={22} />
+                  <CheckCircle2 className="text-point-color" size={22} />
                 ) : step.action ? (
-                  <Copy className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                  <Copy className="h-5 w-5 text-gray-400" />
                 ) : (
-                  <ChevronRight className="h-6 w-6 text-gray-400 dark:text-gray-500" />
+                  <ChevronRight className="h-6 w-6 text-gray-400" />
                 )}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-        <Progress value={progress} className="h-[6px] [&>div]:bg-sky-600" />
+
+        <div className="mt-4">
+          <div className="mb-1 flex justify-between text-xs text-gray-600">
+            <span>진행률</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <Progress
+            value={progress}
+            className="h-[8px] rounded-full bg-gray-200 [&>div]:bg-vacation-dark-color"
+          />
+        </div>
       </CardContent>
     </Card>
   );

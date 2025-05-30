@@ -59,7 +59,7 @@ const VacationRequestBox = () => {
         link={`/${companyCode}/manager/vacationdetail`}
       />
       {/* 차트 섹션 */}
-      <div className="hidden rounded-md border border-solid border-white-border-sub p-4 dark:border-dark-border-sub sm:block">
+      <div className="rounded-xl p-4 shadow-md">
         <VacationChart mode="month" selectedDate={selectedDate} selectedName={null} />
       </div>
     </div>
