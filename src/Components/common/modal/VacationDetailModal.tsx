@@ -50,7 +50,10 @@ const VacationDetailModal = ({
 
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">기간:</span> {displayRequestDate}
+          <span className="font-medium">기간</span>
+        </div>
+        <div className="flex items-center gap-1 pl-5">
+          <span>{displayRequestDate}</span>
           <span className="rounded-full border-2 border-solid border-blue-500 px-3 text-xs font-extrabold text-blue-500">
             {request.requestType}
           </span>

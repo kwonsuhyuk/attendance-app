@@ -38,13 +38,15 @@ const VacationStatisticTable = ({
       </CardTitle>
       <p className="absolute right-2 top-2 text-xs text-gray-500">(사용횟수 : 일)</p>
 
-      <div className="w-full overflow-x-auto pt-4">
+      <div className="max-h-[480px] w-full overflow-x-auto pt-4">
         <DataTable
           columns={generateColumns(selectedDate.year, selectedDate.month, mode)}
           data={updatedList}
           selectedItem={selectedName}
           onRowClick={handleNameSelect}
         />
+      </div>
+      <div className="-translate-y-3">
         <Pagination
           page={page}
           totalPageCount={totalPages}

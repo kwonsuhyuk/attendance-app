@@ -117,7 +117,11 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
         ].map(({ label, value, onChange, options }) => (
           <div key={label} className="flex flex-col gap-3">
             <span className="font-medium">{label}</span>
-            <Select defaultValue={value} onValueChange={onChange} disabled={!isEditing}>
+            <Select
+              value={options.some(opt => opt.value === value) ? value : undefined}
+              onValueChange={onChange}
+              disabled={!isEditing}
+            >
               <SelectTrigger className="disabled:text-dark-bg dark:text-white-text dark:disabled:text-dark-bg">
                 <SelectValue placeholder={`${label} 선택`} />
               </SelectTrigger>
@@ -154,7 +158,9 @@ const EmployeeModifyModal = ({ user, onClose, setIsUpdated }: IEmployeeInfoProps
             className="h-10 placeholder:text-sm disabled:text-dark-bg dark:bg-white-bg dark:text-white-text dark:disabled:text-dark-bg"
             disabled={!isEditing}
           />
-          <span className="text-xs text-white-nav-text">= {numToKorean(salary)} 원</span>
+          <span className="text-xs text-white-nav-text">
+            {salary ? `= ${numToKorean(salary)} 원` : ""}
+          </span>
         </div>
       </div>
     </RegisterModal>
