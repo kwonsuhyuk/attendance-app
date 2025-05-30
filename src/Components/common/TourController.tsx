@@ -56,10 +56,11 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
       callback={handleCallback}
       continuous
       scrollToFirstStep={false}
+      scrollOffset={100}
       showProgress={false}
       showSkipButton
       disableOverlayClose={true}
-      disableScrolling={true}
+      disableScrolling={false}
       spotlightClicks={false}
       hideCloseButton={true}
       spotlightPadding={10}

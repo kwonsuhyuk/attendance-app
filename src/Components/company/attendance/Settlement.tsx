@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { useCompanyStore } from "@/store/company.store";
-
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import AutoCompleteUserInput from "@/components/common/AutoCompleteInput";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
-import { AlertTriangle, Loader2, FileDown, TriangleAlert, RefreshCcw, User } from "lucide-react";
+import { AlertTriangle, Loader2, FileDown, TriangleAlert, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Table,
   TableBody,
@@ -23,6 +21,12 @@ import CustomCalendarHeader from "./CustomCalendarHeader";
 import dayjs from "dayjs";
 import useSettlement from "@/hooks/manager/useSettlement";
 import { Card, CardTitle } from "@/components/ui/card";
+import { useTour } from "@/hooks/use-tour";
+import { useTourStore } from "@/store/tour.store";
+import { settlementTourStep } from "@/constants/managerTourSteps";
+import { useShallow } from "zustand/shallow";
+
+dayjs.extend(isSameOrBefore);
 
 export interface ISettlementRow {
   날짜: string;
@@ -31,7 +35,7 @@ export interface ISettlementRow {
   총근무시간: string;
   야간근무: string;
   휴일근무: string;
-  추가수당?: string; // 옵셔널
+  추가수당?: string;
 }
 
 interface SettlementProps {
@@ -41,8 +45,6 @@ interface SettlementProps {
   setSelectedEmployee: (user: EmployeeInfo | null) => void;
   setEmployeeName: (name: string) => void;
 }
-
-dayjs.extend(isSameOrBefore);
 
 const Settlement = ({
   currentDate,
@@ -56,30 +58,22 @@ const Settlement = ({
   const [summary, setSummary] = useState<ISettlementRow[]>([]);
   const { generateSettlement, downloadExcel } = useSettlement();
   const [loading, setLoading] = useState(false);
-
-  const handleGenerate = async () => {
-    if (!selectedEmployee) return;
-    setLoading(true);
-    const data = await generateSettlement({
-      employee: selectedEmployee,
-      currentDate,
-      includeSalary,
-    });
-    setSummary(data);
-    setLoading(false);
-  };
-
-  const handleDownload = () => {
-    if (!selectedEmployee) return;
-    downloadExcel(summary, selectedEmployee, currentDate, includeSalary);
-  };
-  const navigate = useNavigate();
   const [includeSalary, setIncludeSalary] = useState(false);
   const salaryAmount = selectedEmployee?.salaryAmount ?? 0;
   const isSalaryInvalid = includeSalary && salaryAmount === 0;
+  const navigate = useNavigate();
+
+  useTour("settlement", settlementTourStep, [1, 3]);
+  const { run, stepIndex, setStepIndex, steps } = useTourStore(
+    useShallow(state => ({
+      run: state.run,
+      stepIndex: state.stepIndex,
+      setStepIndex: state.setStepIndex,
+      steps: state.steps,
+    })),
+  );
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
   if (isMobile) {
     return (
       <div className="mx-auto mt-10 flex w-full max-w-md flex-col justify-center gap-5 rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm">
@@ -91,8 +85,35 @@ const Settlement = ({
     );
   }
 
+  const handleGenerate = async () => {
+    if (!selectedEmployee) return;
+    setLoading(true);
+    const data = await generateSettlement({
+      employee: selectedEmployee,
+      currentDate,
+      includeSalary,
+    });
+    setSummary(data);
+    setLoading(false);
+
+    const currentStep = steps[stepIndex];
+    if (run && currentStep?.target === '[data-tour="settlement-3"]') {
+      setTimeout(() => {
+        setStepIndex(stepIndex + 1);
+      }, 300);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!selectedEmployee) return;
+    downloadExcel(summary, selectedEmployee, currentDate, includeSalary);
+  };
+
   return (
-    <Card className="relative mx-auto flex w-full max-w-4xl flex-col justify-between space-y-10 rounded-2xl border bg-white px-8 py-8">
+    <Card
+      className="relative mx-auto flex w-full max-w-4xl flex-col justify-between space-y-10 rounded-2xl border bg-white px-8 py-8"
+      data-tour="settlement-1"
+    >
       <CardTitle className="flex justify-between space-y-3">
         <h1 className="text-2xl font-bold">이번달 직원 정산</h1>
         <div className="flex items-center gap-2 text-xs leading-relaxed text-gray-600">
@@ -123,68 +144,77 @@ const Settlement = ({
             setSelectedEmployee(emp);
             setEmployeeName(emp?.name || "");
             setSummary([]);
+
+            const currentStep = steps[stepIndex];
+            if (run && currentStep?.target === '[data-tour="settlement-1"]') {
+              setTimeout(() => {
+                setStepIndex(stepIndex + 1);
+              }, 300);
+            }
           }}
         />
       </section>
 
       {selectedEmployee && (
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-colors dark:border-gray-700 dark:bg-slate-700">
-          <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
-            <User className="h-5 w-5" />
-            직원 정보
-          </h3>
-          <dl className="grid grid-cols-2 gap-y-4 text-sm text-gray-800 dark:text-gray-200 sm:text-base">
-            <div className="space-y-1">
-              <dt className="font-medium text-gray-500 dark:text-gray-400">이름</dt>
-              <dd className="font-semibold text-gray-900 dark:text-white">
-                {selectedEmployee.name}
-              </dd>
-            </div>
-            <div className="space-y-1">
-              <dt className="font-medium text-gray-500 dark:text-gray-400">시급</dt>
-              <dd className="font-bold text-blue-600 dark:text-blue-400">
-                {salaryAmount.toLocaleString()}원
-              </dd>
-            </div>
-            <div className="space-y-1">
-              <dt className="font-medium text-gray-500 dark:text-gray-400">직책</dt>
-              <dd className="text-gray-900 dark:text-white">{selectedEmployee.jobName ?? "-"}</dd>
-            </div>
-            <div className="space-y-1">
-              <dt className="font-medium text-gray-500 dark:text-gray-400">고용형태</dt>
-              <dd className="text-gray-900 dark:text-white">
-                {selectedEmployee.employmentType ?? "-"}
-              </dd>
-            </div>
-          </dl>
-        </section>
-      )}
+        <>
+          <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-colors dark:border-gray-700 dark:bg-slate-700">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
+              <User className="h-5 w-5" />
+              직원 정보
+            </h3>
+            <dl className="grid grid-cols-2 gap-y-4 text-sm text-gray-800 dark:text-gray-200 sm:text-base">
+              <div className="space-y-1">
+                <dt className="font-medium text-gray-500 dark:text-gray-400">이름</dt>
+                <dd className="font-semibold text-gray-900 dark:text-white">
+                  {selectedEmployee.name}
+                </dd>
+              </div>
+              <div className="space-y-1">
+                <dt className="font-medium text-gray-500 dark:text-gray-400">시급</dt>
+                <dd className="font-bold text-blue-600 dark:text-blue-400">
+                  {salaryAmount.toLocaleString()}원
+                </dd>
+              </div>
+              <div className="space-y-1">
+                <dt className="font-medium text-gray-500 dark:text-gray-400">직책</dt>
+                <dd className="text-gray-900 dark:text-white">{selectedEmployee.jobName ?? "-"}</dd>
+              </div>
+              <div className="space-y-1">
+                <dt className="font-medium text-gray-500 dark:text-gray-400">고용형태</dt>
+                <dd className="text-gray-900 dark:text-white">
+                  {selectedEmployee.employmentType ?? "-"}
+                </dd>
+              </div>
+            </dl>
+          </section>
 
-      {selectedEmployee && (
-        <section className="flex items-center gap-3">
-          <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
-            <div className="flex items-start gap-3">
-              <Checkbox
-                id="salaryCheck"
-                checked={includeSalary}
-                disabled={!!summary.length}
-                onCheckedChange={v => setIncludeSalary(!!v)}
-                className="mt-0.5"
-              />
-              <Label
-                htmlFor="salaryCheck"
-                className="text-sm leading-snug text-gray-800 dark:text-gray-100"
-              >
-                <strong className="font-semibold text-gray-900 dark:text-white">
-                  급여 기반 수당 포함하기
-                </strong>
-                <span className="mt-0.5 block text-sm text-gray-600 dark:text-gray-400">
-                  시급 환산 기준으로 수당을 계산합니다.
-                </span>
-              </Label>
+          <section className="flex items-center gap-3" data-tour="settlement-2">
+            <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-blue-50 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="salaryCheck"
+                  checked={includeSalary}
+                  disabled={!!summary.length}
+                  onCheckedChange={v => {
+                    setIncludeSalary(!!v);
+                  }}
+                  className="mt-0.5"
+                />
+                <Label
+                  htmlFor="salaryCheck"
+                  className="text-sm leading-snug text-gray-800 dark:text-gray-100"
+                >
+                  <strong className="font-semibold text-gray-900 dark:text-white">
+                    급여 기반 수당 포함하기
+                  </strong>
+                  <span className="mt-0.5 block text-sm text-gray-600 dark:text-gray-400">
+                    시급 환산 기준으로 수당을 계산합니다.
+                  </span>
+                </Label>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </>
       )}
 
       {isSalaryInvalid && (
@@ -206,7 +236,10 @@ const Settlement = ({
       )}
 
       {summary.length > 0 && (
-        <section className="rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
+        <section
+          className="rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800"
+          data-tour="settlement-4"
+        >
           <Table>
             <TableHeader>
               <TableRow>
@@ -275,6 +308,7 @@ const Settlement = ({
             onClick={handleGenerate}
             disabled={!selectedEmployee || loading}
             className="flex w-full items-center justify-center py-4 text-base font-semibold"
+            data-tour="settlement-3"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -288,6 +322,7 @@ const Settlement = ({
           <Button
             onClick={handleDownload}
             className="flex w-full items-center justify-center py-4 text-base font-semibold"
+            data-tour="settlement-5"
           >
             <FileDown className="mr-2 h-5 w-5" /> 엑셀 다운로드
           </Button>

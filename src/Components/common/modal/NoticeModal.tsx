@@ -44,7 +44,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
       onSubmit={handleSave}
       submitLabel="저장"
     >
-      <div className="space-y-5">
+      <div className="space-y-5" data-tour="notice-modal">
         <RadioGroup
           value={noticeType}
           onValueChange={val => setNoticeType(val as TNoticeType)}

@@ -14,21 +14,15 @@ const Layout = () => {
   const setStepIndex = useTourStore(state => state.setStepIndex);
 
   const handleStartTour = () => {
-    // 상태 초기화 (중요)
-    setRunTour(false);
+    const { steps } = useTourStore.getState();
+    if (steps.length === 0) return; // 💡 steps가 준비되었는지 확인
+
+    setRunTour(false); // 1. 강제 초기화
     setStepIndex(0);
 
     setTimeout(() => {
-      const firstStep = useTourStore.getState().steps[0]?.target;
-      if (typeof firstStep === "string") {
-        const target = document.querySelector(firstStep);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }
-
-      setRunTour(true); // 반드시 마지막에 실행
-    }, 200);
+      setRunTour(true); // 2. 실행
+    }, 50);
   };
 
   return (

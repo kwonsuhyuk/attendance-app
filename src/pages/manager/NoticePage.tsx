@@ -13,6 +13,7 @@ import { noticeTourSteps } from "@/constants/managerTourSteps";
 import { useTour } from "@/hooks/use-tour";
 import { useTourStore } from "@/store/tour.store";
 import NoticeDetailModal from "@/components/company/notice/NoticeDetailModal";
+import { useShallow } from "zustand/shallow";
 
 const NoticePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +23,15 @@ const NoticePage = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const { toast } = useToast();
 
-  useTour("notice", noticeTourSteps, [1]);
-
-  const run = useTourStore(state => state.run);
-  const steps = useTourStore(state => state.steps);
-  const stepIndex = useTourStore(state => state.stepIndex);
-  const setStepIndex = useTourStore(state => state.setStepIndex);
+  useTour("notice", noticeTourSteps, [1, 2]);
+  const { run, stepIndex, setStepIndex, steps } = useTourStore(
+    useShallow(state => ({
+      run: state.run,
+      stepIndex: state.stepIndex,
+      setStepIndex: state.setStepIndex,
+      steps: state.steps,
+    })),
+  );
 
   const handleClickWriteButton = () => {
     setIsModalOpen(true);
@@ -37,7 +41,7 @@ const NoticePage = () => {
       setTimeout(() => {
         const target = document.querySelector('[data-tour="notice-2"]');
         if (target) {
-          setStepIndex(stepIndex + 1);
+          setStepIndex(stepIndex + 1); // 수동으로 다음 step 이동
         }
       }, 300);
     }
@@ -109,7 +113,6 @@ const NoticePage = () => {
 
       <div className="flex w-full flex-col gap-4 sm:py-2">
         <div className="flex max-w-7xl items-center justify-between px-4 sm:px-6">
-          {/* <p className="text-sm">※ 자세한 공지 내용은 박스를 클릭해주세요.</p> */}
           {userType === "manager" && (
             <Button
               data-tour="notice-1"
@@ -140,10 +143,10 @@ const NoticePage = () => {
       </div>
 
       {visibleNotices.length > noticesPerPage && (
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-20 right-7 z-50 -translate-y-2">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="dark:hover:bg-dark-hover flex h-10 w-10 items-center justify-center rounded-full bg-dark-bg shadow-md transition dark:bg-white-bg"
+            className="dark:hover:bg-dark-hover flex h-12 w-12 items-center justify-center rounded-full bg-dark-bg shadow-md transition dark:bg-white-bg"
             aria-label="맨 위로"
           >
             <ChevronUp className="h-7 w-7 text-dark-text dark:text-white-text" />

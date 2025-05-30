@@ -16,7 +16,8 @@ export const noticeTourSteps: Step[] = [
   },
   {
     target: '[data-tour="notice-modal"]',
-    content: "게시물 유형을 설정하고 작성하면 공지가 업로드됩니다.",
+    content: "게시물 유형을 설정하고 작성하시면 공지가 업로드됩니다.",
+    placement: "top",
     disableBeacon: true,
   },
   {
@@ -332,6 +333,46 @@ export const companyHolidaySetStep: Step[] = [
   {
     target: '[data-tour="holiday_set-5"]',
     content: "설정을 완료하셨으면 꼭 저장 버튼을 눌러주세요.",
+    disableBeacon: true,
+  },
+];
+
+export const settlementTourStep: Step[] = [
+  {
+    target: "body",
+    content: "이번달 특정 직원 급여를 계산하는 정산 페이지입니다.",
+    disableBeacon: true,
+    placement: "center",
+  },
+  {
+    target: '[data-tour="settlement-1"]',
+    content:
+      "정산하려는 날짜를 선택하고, 직원의 이름을 검색하시면 직원 정보가 나옵니다. 직원을 선택하세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="settlement-2"]',
+    content: "직원 정보가 나왔다면 수당 체크 여부를 확인하세요.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-3"]',
+    content: "정산 데이터를 생성해주세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="settlement-4"]',
+    content: "이번달 근태 현황과 체크 여부에 따른 수당이 자료 형태로 나옵니다.",
+    placement: "top",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-5"]',
+    content: "엑셀을 원하시면 다운로드를 눌러주세요!",
     disableBeacon: true,
   },
 ];
