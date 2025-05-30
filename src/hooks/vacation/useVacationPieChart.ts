@@ -6,6 +6,7 @@ import {
 } from "@/api/vacation.api";
 import { useCompanyStore } from "@/store/company.store";
 import { EmployeeInfo } from "@/model/types/user.type";
+import { VACATION_TYPE_COLOR_MAP } from "@/constants/chartColor";
 
 interface PieDataItem {
   name: string;
@@ -72,17 +73,17 @@ export const useVacationPieChart = (
         {
           name: "연차",
           value: counts["연차"],
-          color: "#0F4C75",
+          color: VACATION_TYPE_COLOR_MAP["연차"],
         },
         {
           name: "반차",
           value: counts["반차"],
-          color: "#3282B8",
+          color: VACATION_TYPE_COLOR_MAP["반차"],
         },
         {
           name: "특별 휴가",
           value: counts["특별 휴가"],
-          color: "#BBE1FA",
+          color: VACATION_TYPE_COLOR_MAP["특별 휴가"],
         },
       ];
 

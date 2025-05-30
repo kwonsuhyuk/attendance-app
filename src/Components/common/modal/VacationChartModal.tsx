@@ -1,7 +1,7 @@
 import { CalendarDays, StickyNote } from "lucide-react";
 import { format } from "date-fns";
-import clsx from "clsx";
 import DetailModal from "./commonModalLayout/DetailModal";
+import { VACATION_TYPE_COLOR_MAP } from "@/constants/chartColor";
 
 interface IVacationDetailModalProps {
   open: boolean;
@@ -16,10 +16,10 @@ interface IVacationDetailModalProps {
   }[];
 }
 
-const typeColorMap: Record<string, string> = {
-  연차: "bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200",
-  반차: "bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100",
-  "특별 휴가": "bg-purple-100 text-purple-700 dark:bg-purple-700 dark:text-purple-100",
+export const VACATION_TYPE_CLASS_MAP: Record<string, string> = {
+  연차: "bg-[#2e7d32] text-white dark:bg-[#2e7d32] dark:text-white",
+  반차: "bg-[#66bb6a] text-white dark:bg-[#66bb6a] dark:text-white",
+  "특별 휴가": "bg-[#a5d6a7] text-gray-800 dark:bg-[#a5d6a7] dark:text-white",
 };
 
 const VacationChartModal = ({ open, onClose, label, details }: IVacationDetailModalProps) => {
@@ -29,7 +29,7 @@ const VacationChartModal = ({ open, onClose, label, details }: IVacationDetailMo
       onClose={onClose}
       title="휴가 상세 정보"
       subtitle={`${label}일`}
-      icon={<CalendarDays className="h-5 w-5 text-blue-500" />}
+      icon={<CalendarDays className="h-5 w-5 text-gray-900 dark:text-white" />}
     >
       {details.length > 0 ? (
         details.map((item, idx) => (
@@ -40,11 +40,10 @@ const VacationChartModal = ({ open, onClose, label, details }: IVacationDetailMo
             <div className="mb-2 flex items-center justify-between">
               <p className="text-base font-medium text-gray-800 dark:text-white">{item.name}</p>
               <span
-                className={clsx(
-                  "rounded-full px-3 py-1 text-xs font-semibold",
-                  typeColorMap[item.vacationType] ||
-                    "bg-gray-100 text-gray-700 dark:bg-zinc-600 dark:text-gray-200",
-                )}
+                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                  VACATION_TYPE_CLASS_MAP[item.vacationType] ??
+                  "bg-gray-100 text-gray-700 dark:bg-zinc-600 dark:text-gray-200"
+                }`}
               >
                 {item.vacationType}
               </span>

@@ -36,7 +36,7 @@ const DetailModal = ({
             <DialogTitle className="flex items-center gap-3 text-lg font-bold text-gray-900 dark:text-white md:text-xl">
               {title}
               {subtitle && (
-                <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 md:text-base">
+                <span className="text-sm font-semibold text-vacation-dark-color dark:text-blue-400 md:text-base">
                   {subtitle}
                 </span>
               )}

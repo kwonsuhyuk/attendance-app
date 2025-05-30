@@ -11,6 +11,7 @@ export default {
         "point-color-sub": "#ECFAE5",
         "vacation-color": "#609966",
         "vacation-dark-color": "#325834",
+        "outwork-color": "#DDEB9D",
         "dark-bg": "#09090B",
         "dark-card-bg": "#202020",
         "dark-text": "#FFFFFF",

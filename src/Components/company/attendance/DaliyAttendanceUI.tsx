@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   UserCheck,
@@ -9,8 +9,9 @@ import {
   User,
   PlaneTakeoffIcon,
   StickyNote,
+  Copy,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ResponsiveContainer, Pie, PieChart as RechartPieChart, Cell, Tooltip } from "recharts";
 import {
   Carousel,
@@ -39,7 +40,7 @@ import SelfCommuteModal from "@/components/common/modal/SelfCommuteModal";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { processCommute } from "@/api/commute.api";
 import { TCommuteStatus } from "@/model/types/commute.type";
-import { toast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import { EmployeeListItem } from "../TodayCommuteBox";
 import WorkplaceDetailModal from "@/components/common/modal/WorkplaceDetailModal";
 import clsx from "clsx";
@@ -126,7 +127,7 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
       </div>
 
       {/* 모바일 레이아웃 */}
-      <div className="flex flex-wrap items-center justify-between gap-2 sm:hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1 sm:hidden">
         <div className="flex w-full items-center justify-between gap-2">
           <DatePickerDemo pickDate={selectedDate} setPickDate={setSelectedDate} />
           <Button
@@ -282,53 +283,62 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     employeeList,
   );
 
-  const totalData = [
-    ...workplacePlaces.map(place => ({
-      name: place.name,
-      value: place.employees.length,
-    })),
-    { name: "외근", value: outworkingPlace.employees.length },
-    { name: "미출근", value: notCommutePlace.employees.length },
-  ];
+  const { coloredData, total } = useMemo(() => {
+    const baseData = [
+      ...workplacePlaces.map(place => ({
+        name: place.name,
+        value: place.employees.length,
+      })),
+      { name: "외근", value: outworkingPlace.employees.length },
+      { name: "미출근", value: notCommutePlace.employees.length },
+    ];
 
-  const total = totalData.reduce((acc, cur) => acc + cur.value, 0);
+    const totalValue = baseData.reduce((acc, cur) => acc + cur.value, 0);
 
-  let colorIndex = 0;
-  const coloredData = totalData.map(item => {
-    let color = "";
+    let colorIndex = 0;
+    const chartData = baseData.map(item => {
+      let color = "";
 
-    if (item.name === "미출근") {
-      color = GRAY_COLOR;
-    } else if (item.name === "외근") {
-      color = ORANGE_COLOR;
-    } else {
-      color = CHART_COLORS[colorIndex % CHART_COLORS.length];
-      colorIndex++;
-    }
+      if (item.name === "미출근") {
+        color = GRAY_COLOR;
+      } else if (item.name === "외근") {
+        color = ORANGE_COLOR;
+      } else {
+        color = CHART_COLORS[colorIndex % CHART_COLORS.length];
+        colorIndex++;
+      }
 
-    return { ...item, color };
-  });
+      return { ...item, color };
+    });
+
+    return { coloredData: chartData, total: totalValue };
+  }, [workplacePlaces, outworkingPlace, notCommutePlace]);
 
   return (
-    <Card className="border bg-white dark:bg-zinc-900" data-tour="today-5">
-      <CardContent className="flex flex-col space-y-2 p-4 sm:space-y-4">
-        <h3 className="text-base font-semibold text-gray-800 dark:text-white sm:text-lg">
-          전체 출근 분포
-        </h3>
-
-        <div className="h-48 w-full md:h-64 lg:h-72 xl:h-[320px]">
+    <Card
+      className="bg-point-color-sub rounded-xl border shadow-lg dark:bg-zinc-900"
+      data-tour="today-5"
+    >
+      <CardContent className="flex flex-col gap-4 p-4 sm:p-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold text-vacation-dark-color dark:text-white">
+            금일 출근 분포
+          </h3>
+          <span className="text-sm text-point-color">{dayjs(selectedDate).format("M월 D일")}</span>
+        </div>
+        <div className="relative h-48 w-full sm:h-64 md:h-72">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
               <Pie
                 data={coloredData}
                 cx="50%"
                 cy="50%"
-                innerRadius={10}
-                outerRadius={90}
+                innerRadius="55%"
+                outerRadius="95%"
                 paddingAngle={1}
                 dataKey="value"
-                labelLine={false}
-                label={false}
+                stroke="none"
+                isAnimationActive={false}
               >
                 {coloredData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={entry.color} />
@@ -337,12 +347,21 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
               <Tooltip content={<CustomTooltip />} />
             </RechartPieChart>
           </ResponsiveContainer>
+
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="text-3xl font-bold text-vacation-dark-color">
+              {(() => {
+                const notCommute = coloredData.find(d => d.name === "미출근")?.value || 0;
+                return total === 0 ? "0%" : `${~~((1 - notCommute / total) * 100)}%`;
+              })()}
+            </span>
+          </div>
         </div>
 
         <CustomLegend
           payload={coloredData.map(d => ({ value: d, color: d.color }))}
           total={total}
-          className="py-5 sm:px-10"
+          className="pt-4 sm:px-8"
         />
       </CardContent>
     </Card>
@@ -355,38 +374,27 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
+
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
 
   return (
     <div
-      className="flex flex-1 flex-col gap-4 rounded-lg border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10"
+      className="border-outwork-color dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl border border-solid bg-white p-4 shadow-lg"
       data-tour="today-6"
     >
-      <h3 className="text-base font-semibold text-yellow-700 dark:text-orange-300 sm:text-lg">
-        외근 인원{" "}
-        <span className="ml-1 text-xs font-normal text-yellow-600 dark:text-orange-300">
-          ({outworkingEmployees.length}명)
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-bold text-gray-800 dark:text-white sm:text-lg">외근 인원</h3>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {outworkingEmployees.length}명
         </span>
-      </h3>
+      </div>
 
       <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
         {outworkingEmployees.length > 0 ? (
           outworkingEmployees.map((user: any, index: number) =>
-            user ? (
-              <EmployeeListItem
-                key={index}
-                name={user.name}
-                jobName={user.jobName}
-                phoneNumber={user.phoneNumber}
-                employmentType={user.employmentType}
-                subText={user.memo}
-                iconColor="text-orange-700"
-                bgColor="bg-orange-100"
-                darkBgColor="dark:bg-orange-800/30"
-              />
-            ) : null,
+            user ? <OutworkerItem key={index} {...user} /> : null,
           )
         ) : (
           <li className="text-sm text-gray-500 dark:text-gray-400">
@@ -411,30 +419,47 @@ export const OutworkerItem = ({
   phoneNumber: string;
   memo?: string;
 }) => {
+  const { toast } = useToast();
+
+  const handleCopy = () => {
+    if (!phoneNumber) return;
+    navigator.clipboard.writeText(phoneNumber);
+    toast({ title: "전화번호가 복사되었습니다." });
+  };
+
   return (
-    <div className="flex items-start gap-2 rounded-lg border border-gray-200 bg-white p-4 dark:border-zinc-600 dark:bg-zinc-700">
+    <li className="flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none dark:bg-[#1f2b26]">
       {/* 아이콘 */}
-      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-yellow-900 dark:bg-yellow-500 dark:text-white sm:h-9 sm:w-9">
-        <User className="h-4 w-4 sm:h-5 sm:w-5" />
+      <div className="bg-point-color-sub dark:bg-point-color-sub/30 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-vacation-color dark:text-white">
+        <User className="h-5 w-5" />
       </div>
 
-      {/* 내용 */}
-      <div className="flex-1">
-        <h4 className="text-sm font-medium text-gray-900 dark:text-white sm:text-base">{name}</h4>
-        <p className="text-xs text-gray-600 dark:text-gray-300 sm:text-sm">
-          {jobName} · {employmentType}
+      {/* 정보 */}
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
+        <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+          {jobName} {employmentType && `· ${employmentType}`}
         </p>
-        <p className="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-          <Phone className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> {phoneNumber}
+        {phoneNumber && (
+          <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+            <Phone className="h-3 w-3" />
+            {phoneNumber}
+          </p>
+        )}
+        <p className="flex items-center gap-1 text-xs text-vacation-color dark:text-point-color">
+          {memo?.trim() ? memo : "외근 중"}
         </p>
-        <div className="mt-2 flex items-center gap-1 text-xs sm:text-sm">
-          <StickyNote className="h-3 w-3 text-yellow-600 dark:text-yellow-400 sm:h-4 sm:w-4" />
-          <span className="rounded bg-yellow-50 px-1 py-0.5 font-medium text-yellow-800 dark:bg-transparent dark:text-yellow-400">
-            {memo?.trim() ? memo : "-"}
-          </span>
-        </div>
       </div>
-    </div>
+
+      {phoneNumber && (
+        <button
+          onClick={handleCopy}
+          className="ml-auto text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
+        >
+          <Copy className="h-4 w-4" />
+        </button>
+      )}
+    </li>
   );
 };
 
@@ -483,7 +508,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
                     );
                   })
               ) : (
-                <div className="flex h-[300px] w-full flex-col items-center justify-center gap-5 text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-5 text-sm text-zinc-600 dark:text-zinc-400 sm:ml-40">
                   등록된 근무지가 없습니다. 근무지를 등록해주세요.
                   <Button onClick={() => navigate(`/${companyCode}/manager/workplacemanage`)}>
                     근무지 등록하러 가기
@@ -502,82 +527,103 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
 
 export const PlaceCard = ({ place }: { place: TPlaceData }) => {
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleCopy = (phone: string) => {
+    navigator.clipboard.writeText(phone);
+    toast({ title: "전화번호가 복사되었습니다." });
+  };
+
   return (
     <>
       <div
         onClick={() => setOpen(true)}
-        className="flex h-full flex-col justify-between gap-5 rounded-xl border border-solid border-zinc-200 bg-white p-5 shadow-sm transition-transform hover:scale-[1.01] hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900"
+        className="border-point-color-sub flex h-full flex-col gap-4 rounded-2xl border bg-white p-4 pb-0 shadow-md transition-transform hover:scale-[1.01] hover:shadow-lg dark:border-white/10 dark:bg-[#f6f8f7]"
       >
         {/* 헤더 */}
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-nowrap items-start justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-2">
-              <MapPin className="h-5 w-5 shrink-0 text-zinc-500 dark:text-zinc-400" />
-              <h3 className="max-w-[60vw] truncate text-lg font-semibold text-zinc-800 dark:text-white">
-                {place.name}
-              </h3>
-            </div>
-            <div className="mt-1 max-w-[30vw] truncate text-right text-xs text-zinc-400 dark:text-zinc-500">
-              {place.address || "주소 정보 없음"}
-            </div>
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-vacation-dark-color" />
+            <h3 className="text-lg font-bold text-vacation-dark-color">{place.name}</h3>
           </div>
-
-          {place.memo && (
-            <div className="rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-              {place.memo}
-            </div>
-          )}
+          <div className="text-xs text-gray-400 dark:text-gray-500">
+            {place.address || "주소 정보 없음"}
+          </div>
         </div>
 
+        {place.memo && (
+          <div className="border-point-color-sub bg-point-color-sub/10 dark:border-point-color-sub rounded-md border border-dashed px-4 py-3 text-sm text-point-color dark:text-point-color">
+            {place.memo}
+          </div>
+        )}
+
         {/* 직원 목록 */}
-        <div className="flex-1">
-          <h4 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-white">
-            출근 직원 {place.employees.length > 0 ? `(${place.employees.length})` : ""}
+        <div>
+          <h4 className="mb-2 flex justify-between text-sm font-semibold text-vacation-dark-color">
+            출근 직원{" "}
+            <span className="text-sm font-medium text-vacation-dark-color dark:text-gray-300">
+              {place.employees.length > 0 ? `${place.employees.length}명` : ""}
+            </span>
           </h4>
-          <div className="scrollbar-thin scrollbar-thumb-zinc-300 relative h-64 overflow-y-auto rounded-md border border-solid border-zinc-100 p-2 dark:border-zinc-700 dark:bg-zinc-800">
+          <ul className="scrollbar-thin scrollbar-thumb-zinc-200 relative max-h-72 space-y-2 overflow-y-auto pr-1 pt-3">
             {place.employees.length > 0 ? (
-              <ul className="space-y-2">
-                {place.employees.map(emp => (
-                  <li
-                    key={emp.userId}
-                    className="flex items-center justify-between rounded-md bg-white px-3 py-2 shadow-sm dark:bg-zinc-700"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-white">
-                        <User className="h-4 w-4" />
-                      </div>
-                      <div className="text-sm">
-                        <div className="font-medium text-zinc-800 dark:text-white">{emp.name}</div>
-                        <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                          {emp.jobName} · {emp.employmentType}
-                        </div>
-                      </div>
+              place.employees.map(emp => (
+                <li
+                  key={emp.userId}
+                  className="flex items-start justify-between gap-2 rounded-md bg-white px-3 py-2 dark:bg-zinc-800"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="bg-point-color-sub dark:bg-point-color-sub/40 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-vacation-color dark:text-white">
+                      <User className="h-5 w-5" />
                     </div>
-                    <div className="flex-start flex flex-col gap-1 text-xs">
-                      <p className="text-green-600 dark:text-green-400">
-                        출근:{" "}
+                    <div className="flex flex-col gap-0.5">
+                      <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                        {emp.name}
+                      </p>
+                      <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                        {emp.jobName} · {emp.employmentType}
+                      </p>
+                      {emp.phoneNumber && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {emp.phoneNumber}
+                        </p>
+                      )}
+                      <p className="text-xs text-vacation-color">
+                        출근{" "}
                         {emp.startTime && isValid(new Date(emp.startTime))
                           ? getKSTDateInfo(emp.startTime)
                           : "-"}
                       </p>
-                      <p className="text-rose-500 dark:text-rose-400">
+                      <p className="text-xs text-vacation-dark-color">
                         퇴근:{" "}
                         {emp.endTime && isValid(new Date(emp.endTime))
                           ? getKSTDateInfo(emp.endTime)
                           : "-"}
                       </p>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                  {emp.phoneNumber && (
+                    <button
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleCopy(emp.phoneNumber);
+                      }}
+                      className="mt-1 text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </button>
+                  )}
+                </li>
+              ))
             ) : (
-              <div className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
+              <li className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
                 금일 출근한 직원이 없습니다.
-              </div>
+              </li>
             )}
-          </div>
+          </ul>
         </div>
       </div>
+
       <WorkplaceDetailModal open={open} onClose={() => setOpen(false)} place={place} />
     </>
   );
@@ -611,7 +657,6 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
 
   return (
     <>
-      {/* 휴가자 카드 */}
       <StatCard
         icon={PlaneTakeoffIcon}
         iconColor="text-point-color"
