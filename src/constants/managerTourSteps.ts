@@ -110,7 +110,7 @@ export const vacationDetailTourSteps: Step[] = [
 
 export const employeeManageTourSteps: Step[] = [
   {
-    target: '[data-tour="body"]',
+    target: "body",
     content: "이 곳은 직원을 관리하는 페이지입니다.",
     disableBeacon: true,
     placement: "center",

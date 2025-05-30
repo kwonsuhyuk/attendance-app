@@ -50,7 +50,7 @@ const EmployeeListPage = () => {
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
       <EmployeeListPageContainer>
-        <div className="flex flex-col" data-tour="body">
+        <div className="flex flex-col">
           <div className="p-4">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="text-lg font-bold">직원 수: {filteredEmployees.length}명</div>
