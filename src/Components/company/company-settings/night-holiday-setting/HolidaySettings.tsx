@@ -93,9 +93,7 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
 
             <Popover>
               <PopoverTrigger asChild data-tour="holiday_set-4">
-                <Button className="bg-point-color text-black hover:bg-point-color hover:bg-opacity-80">
-                  날짜 선택
-                </Button>
+                <Button variant="outline">날짜 선택</Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-3">
                 <Calendar mode="single" selected={date} onSelect={setDate} />
@@ -106,7 +104,10 @@ const HolidaySettings = ({ type = "firstpage" }: IHolidaySettingsProps) => {
             </Popover>
             <div className="flex flex-wrap gap-2">
               {holidays.map((holiday: string, index: number) => (
-                <Badge key={index} className="flex items-center gap-1 px-3 py-1">
+                <Badge
+                  key={index}
+                  className="text-point-color-sub flex items-center gap-1 bg-point-color px-3 py-1"
+                >
                   <span className="text-sm leading-tight">{holiday}</span>
                   <Button
                     type="button"
