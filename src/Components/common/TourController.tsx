@@ -55,7 +55,7 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
       stepIndex={controlled ? stepIndex : internalStepIndex}
       callback={handleCallback}
       continuous
-      scrollToFirstStep={false}
+      scrollToFirstStep={true}
       scrollOffset={100}
       showProgress={false}
       showSkipButton
@@ -69,7 +69,7 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
       }}
       styles={{
         options: {
-          primaryColor: "#FFD369",
+          primaryColor: "#9EBC8A",
           zIndex: 10000,
           width: isEmployeePage ? 280 : 380,
         },

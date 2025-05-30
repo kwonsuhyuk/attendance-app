@@ -127,16 +127,17 @@ export const todayAttSteps: Step[] = [
     disableBeacon: true,
     placement: "center",
   },
-  // {
-  //   target: '[data-tour="today-1"]',
-  //   content: "날짜를 클릭해서 해당 날짜의 출퇴근 정보를 볼 수 있습니다.",
-  //   disableBeacon: true,
-  // },
-  // {
-  //   target: '[data-tour="today-2"]',
-  //   content: "직원들이 불가피하게 출퇴근을 등록하지 못할경우 수동으로 등록해줄 수 있는 기능입니다.",
-  //   disableBeacon: true,
-  // },
+  {
+    target: '[data-tour="today-1"]',
+    content: "날짜를 클릭해서 해당 날짜의 출퇴근 정보를 볼 수 있습니다.",
+    disableBeacon: true,
+    placement: "top",
+  },
+  {
+    target: '[data-tour="today-2"]',
+    content: "직원들이 불가피하게 출퇴근을 등록하지 못할경우 수동으로 등록해줄 수 있는 기능입니다.",
+    disableBeacon: true,
+  },
   {
     target: '[data-tour="today-3"]',
     content: "금일 근태 정보를 간단하게 볼 수 있습니다.",
@@ -182,7 +183,6 @@ export const homeSteps: Step[] = [
     content:
       "금일 출퇴근 정보를 한눈에 볼 수 있는 박스입니다. 클릭하셔서 상세페이지로 이동할 수 있습니다.",
     disableBeacon: true,
-    placement: "left",
   },
   {
     target: '[data-tour="manager_home-3"]',
@@ -196,14 +196,14 @@ export const homeSteps: Step[] = [
     disableScrolling: false,
     content: "회사의 설정된 직무를 볼 수 있는 박스입니다.",
     disableBeacon: true,
-    placement: "bottom",
+    placement: "top",
   },
   {
     target: '[data-tour="manager_home-5"]',
     disableScrolling: false,
     content: "회사의 설정된 근무지를 볼 수 있는 박스입니다.",
     disableBeacon: true,
-    placement: "bottom",
+    placement: "top",
   },
 ];
 
