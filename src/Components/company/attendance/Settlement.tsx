@@ -101,7 +101,6 @@ const Settlement = ({
   const [includeSalary, setIncludeSalary] = useState(false);
   const salaryAmount = selectedEmployee?.salaryAmount ?? 0;
   const isSalaryInvalid = includeSalary && salaryAmount === 0;
-  console.log(summary);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
@@ -186,7 +185,7 @@ const Settlement = ({
 
       {selectedEmployee && (
         <section className="flex items-center gap-3">
-          <div className="bg-point-color-sub flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
+          <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-point-color-sub px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
             <div className="flex items-start gap-3">
               <Checkbox
                 id="salaryCheck"
@@ -211,16 +210,16 @@ const Settlement = ({
         </section>
       )}
       {selectedEmployee && (
-        <div className="dark:border-point-color-sub dark:bg-point-color-sub/10 rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:backdrop-blur">
+        <div className="rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:border-point-color-sub dark:bg-point-color-sub/10 dark:backdrop-blur">
           <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-vacation-dark-color dark:text-point-color">
             <AlertCircle className="h-5 w-5" />
             회사 정산 정책 안내
           </div>
-          <div className="bg-point-color-sub/20 dark:border-point-color-sub dark:bg-point-color-sub/10 my-5 flex items-start gap-3 rounded-md border border-solid border-point-color p-4 text-sm text-point-color dark:text-point-color">
+          <div className="my-5 flex items-start gap-3 rounded-md border border-solid border-point-color bg-point-color-sub/20 p-4 text-sm text-point-color dark:border-point-color-sub dark:bg-point-color-sub/10 dark:text-point-color">
             <AlertTriangle className="mt-1 h-5 w-5 text-point-color" />
             <div>
               <span className="font-semibold">외근은 수당 계산에서 제외됩니다.</span>
-              <div className="dark:text-point-color-sub mt-1 text-xs text-point-color/80">
+              <div className="mt-1 text-xs text-point-color/80 dark:text-point-color-sub">
                 출퇴근 기록 및 수당 계산 없이 외근 횟수만 정산됩니다.
               </div>
             </div>

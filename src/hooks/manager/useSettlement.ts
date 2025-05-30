@@ -3,6 +3,7 @@ import { fetchCommutesByPeriod } from "@/api/commute.api";
 import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
 import * as XLSX from "xlsx";
+import { ISettlementRow } from "@/components/company/attendance/Settlement";
 
 interface GenerateOptions {
   employee: EmployeeInfo;
@@ -10,22 +11,12 @@ interface GenerateOptions {
   includeSalary: boolean;
 }
 
-export interface ISettlementRow {
-  날짜: string;
-  출근: string;
-  퇴근: string;
-  총근무시간: string;
-  야간근무: string;
-  휴일근무: string;
-  외근: string;
-  근무유형: "정상출근" | "외근" | "";
-  추가수당?: string;
-}
-
 export default function useSettlement() {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
   const holidayList = useCompanyStore(state => state.currentCompany?.holidayList ?? []);
   const payCheckDay = useCompanyStore(state => state.currentCompany?.payCheckDay);
+  const holidayPay = useCompanyStore(state => state.currentCompany?.holidayPay ?? 1);
+  const nightPay = useCompanyStore(state => state.currentCompany?.nightPay ?? 1);
 
   const generateSettlement = async ({ employee, currentDate, includeSalary }: GenerateOptions) => {
     if (!companyCode || !payCheckDay) return [];
@@ -84,21 +75,16 @@ export default function useSettlement() {
       else if (start && end) workType = "정상출근";
 
       let extraPay = 0;
-      if (
-        includeSalary &&
-        salaryAmount > 0 &&
-        totalMinutes > 0 &&
-        (workType === "정상출근" || workType === "외근")
-      ) {
+      if (includeSalary && salaryAmount > 0 && totalMinutes > 0 && workType === "정상출근") {
         const basePayPerMinute = salaryAmount / 60;
         const normalMinutes = totalMinutes - nightMinutes;
 
         if (isHoliday) {
-          extraPay += basePayPerMinute * normalMinutes * 1.5;
-          extraPay += basePayPerMinute * nightMinutes * 2;
+          extraPay += basePayPerMinute * normalMinutes * holidayPay;
+          extraPay += basePayPerMinute * nightMinutes * nightPay * holidayPay;
         } else {
-          extraPay += basePayPerMinute * normalMinutes * 1;
-          extraPay += basePayPerMinute * nightMinutes * 1.5;
+          extraPay += basePayPerMinute * normalMinutes;
+          extraPay += basePayPerMinute * nightMinutes * nightPay;
         }
       }
 
@@ -108,7 +94,7 @@ export default function useSettlement() {
         퇴근: end ? end.format("HH:mm") : "-",
         총근무시간: `${Math.floor(totalMinutes / 60)}시간 ${totalMinutes % 60}분`,
         야간근무: `${Math.floor(nightMinutes / 60)}시간 ${nightMinutes % 60}분`,
-        휴일근무: isHoliday && workType === "정상출근" ? "✅" : "",
+        휴일근무: isHoliday ? "✅" : "",
         외근: workType === "외근" ? "✅" : "",
         근무유형: workType,
         ...(includeSalary && {
