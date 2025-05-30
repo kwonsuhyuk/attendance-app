@@ -65,7 +65,7 @@ export const periodAttTourSteps: Step[] = [
   },
 ];
 
-export const vacationRegisterAndRequestTourSteps: Step[] = [
+export const vacationDetailTourSteps: Step[] = [
   {
     target: '[data-tour="body"]',
     content: "이곳은 휴가를 등록하고 요청을 처리하는 페이지 입니다.",
@@ -79,34 +79,33 @@ export const vacationRegisterAndRequestTourSteps: Step[] = [
   },
   {
     target: '[data-tour="pending-1"]',
-    content: "직원의 휴가 요청을 처리하는 부분입니다.",
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="pending-2"]',
-    content: "해당 데이터를 클릭하면 승인 혹은 거절 버튼을 눌러 처리할 수 있습니다.",
+    content: "직원의 휴가 요청 부분입니다. 클릭 시, 승인/거절 버튼을 통해 처리가 가능합니다.",
     disableBeacon: true,
   },
   {
     target: '[data-tour="process-1"]',
-    content: "처리 내역 탭으로 이동하면 휴가 요청을 처리한 내역이 나옵니다.",
+    content: "처리 내역 탭으로 이동하세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="process-2"]',
+    content: "휴가가 처리된 내역이며, 클릭 시, 상세 휴가 정보를 보실 수 있습니다.",
     disableBeacon: true,
   },
-  // {
-  //   target: '[data-tour="process-2"]',
-  //   content: "이 부분 또한 데이터를 클릭하면 처리된 상세 휴가 정보를 보실 수 있습니다.",
-  //   disableBeacon: true,
-  // },
   {
     target: '[data-tour="register-1"]',
-    content: "등록 내역 탭으로 이동하면 수동으로 휴가를 등록한 내역이 나옵니다.",
+    content: "등록 내역 탭으로 이동하세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="register-2"]',
+    content: "관리자가 직접 휴가를 등록한 내역이며, 마찬가지로 상세 정보 확인이 가능합니다.",
     disableBeacon: true,
   },
-  // {
-  //   target: '[data-tour="register-2"]',
-  //   content: "이 부분 또한 데이터를 클릭하면 등록된 휴가의 상세 내용을 확인할 수 있습니다.",
-  //   disableBeacon: true,
-  // },
 ];
 
 export const employeeManageTourSteps: Step[] = [
