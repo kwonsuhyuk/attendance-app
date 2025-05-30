@@ -13,7 +13,7 @@ const ManagerHomeBoxLayout = ({ children, boxName, toNavigate }: Props) => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
   return (
-    <Card className="relative shadow-md">
+    <Card className="relative shadow-none">
       <CardTitle className="flex items-center gap-2 p-4 text-lg font-semibold md:text-xl">
         {boxName}
       </CardTitle>

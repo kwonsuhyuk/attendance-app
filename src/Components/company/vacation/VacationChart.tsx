@@ -8,6 +8,7 @@ import { getFilteredDetails } from "@/util/vacation.util";
 import VacationSubTitle from "./\bVacationSubTitle";
 import { CustomBarLegend } from "@/components/common/chart/CustomLegend";
 import { CustomBarTooltip } from "@/components/common/chart/CustomTooltip";
+import { VACATION_TYPE_COLOR_MAP } from "@/constants/chartColor";
 
 interface IVacationChartProps {
   selectedDate: { year: number; month: number };
@@ -67,9 +68,24 @@ const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps
               domain={[0, (dataMax: number) => Math.max(dataMax, 10)]}
             />
             <Tooltip content={<CustomBarTooltip />} />
-            <Bar dataKey="annual" fill="#0F4C75" name="연차" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="half" fill="#3282B8" name="반차" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="special" fill="#BBE1FA" name="특별 휴가" radius={[4, 4, 0, 0]} />
+            <Bar
+              dataKey="annual"
+              fill={VACATION_TYPE_COLOR_MAP["연차"]}
+              name="연차"
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar
+              dataKey="half"
+              fill={VACATION_TYPE_COLOR_MAP["반차"]}
+              name="반차"
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar
+              dataKey="special"
+              fill={VACATION_TYPE_COLOR_MAP["특별 휴가"]}
+              name="특별 휴가"
+              radius={[4, 4, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
 

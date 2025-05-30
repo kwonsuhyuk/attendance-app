@@ -36,7 +36,9 @@ export const EmployeeListItem = ({
   };
 
   return (
-    <li className={`flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-sm ${darkBgColor}`}>
+    <li
+      className={`flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none ${darkBgColor}`}
+    >
       <div
         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${bgColor} text-sm font-bold text-blue-900 dark:${bgColor} dark:text-white`}
       >
@@ -97,115 +99,103 @@ const TodayCommuteBox = () => {
 
   return (
     <div
-      className="flex min-h-[250px] flex-col gap-4 md:flex-row md:p-3"
+      className="flex min-h-[250px] flex-col gap-4 md:flex-row md:gap-6 md:p-3"
       data-tour="manager_home-2"
     >
       {/* 출근율 박스 */}
       <div className="w-full dark:text-white md:max-w-sm">
-        <div className="rounded-md border border-solid border-white-border-sub bg-white p-4 py-6 text-gray-800 transition-all duration-300 hover:shadow-xl dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
-          <h2 className="mb-2 text-xl font-semibold">금일 출근율</h2>
-          <p className="mb-6 text-sm text-gray-600 dark:text-zinc-400">
-            전체 직원 중{" "}
-            <span className="text-emerald-500 dark:text-emerald-300">
-              {commuteEmployeeNumber}명
-            </span>{" "}
-            출근 / 총 {totalEmployeeNumber}명
-          </p>
-          <div className="relative h-[180px] sm:h-[250px]">
+        <div className="border-point-color-sub bg-point-color-sub rounded-xl border border-solid p-6 text-white shadow-lg dark:border-white/20 dark:bg-[#b4c8bb] dark:text-white">
+          <h2 className="mb-2 text-lg font-bold text-vacation-dark-color dark:text-white">
+            금일 출근율
+          </h2>
+          {/* 출근 인원 시각적 강조 */}
+          <div className="mb-4 flex items-baseline gap-1 text-sm dark:text-white/80">
+            <span className="text-3xl font-extrabold text-vacation-dark-color">
+              {commuteEmployeeNumber}
+            </span>
+            <span className="font-semibol text-base text-vacation-color">
+              / {totalEmployeeNumber}명 출근
+            </span>
+          </div>
+
+          <div className="relative h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart
-                innerRadius="100%"
-                outerRadius="170%"
+                innerRadius="65%"
+                outerRadius="115%"
                 cx="50%"
-                cy="100%"
-                startAngle={180}
-                endAngle={0}
-                data={chartData}
+                cy="50%"
+                startAngle={90}
+                endAngle={-270}
+                data={chartData.map(d => ({ ...d, fill: "#6b8c7d" }))}
               >
                 <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                <RadialBar dataKey="value" background fill="#34d399" />
+                <RadialBar dataKey="value" background fill="#6b8c7d" />
               </RadialBarChart>
             </ResponsiveContainer>
-            <div className="absolute inset-0 flex items-end justify-center">
-              <span className="bg-gradient-to-r from-emerald-500 to-green-400 bg-clip-text text-2xl font-extrabold text-transparent dark:from-emerald-300 dark:to-green-200 sm:text-4xl">
+
+            {/* 가운데 텍스트 */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xl font-extrabold text-vacation-dark-color sm:text-3xl">
                 {percentage}%
               </span>
             </div>
           </div>
         </div>
-        <div className="mt-3">
+        <div className="mt-8">
           <TodayVacationEmployeeCard selectedDate={new Date()} />
         </div>
       </div>
 
       {/* 리스트 */}
       <div className="flex w-full flex-col gap-4 md:flex-row">
-        {/* 출근 중 */}
-        <div className="flex flex-1 flex-col gap-4 rounded-xl border border-emerald-100 bg-emerald-50 p-5 dark:border-emerald-700/30 dark:bg-emerald-900/10">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-            <span className="inline-block rounded bg-emerald-200 px-2 py-0.5 text-[11px] font-bold dark:bg-emerald-600 dark:text-white">
-              WORKING
-            </span>
-            현재 근무 중 ({workingEmployees?.length || 0})
-          </h3>
-          <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
-            {workingEmployees?.length > 0 ? (
-              workingEmployees.map(({ user, startTime }, index) =>
-                user ? (
-                  <EmployeeListItem
-                    key={index}
-                    name={user.name}
-                    jobName={user.jobName}
-                    phoneNumber={user.phoneNumber}
-                    employmentType={user.employmentType}
-                    subText={`출근 ${dayjs(startTime).format("HH:mm")}`}
-                    iconColor="text-emerald-700"
-                    bgColor="bg-emerald-100"
-                    darkBgColor="dark:bg-emerald-800/30"
-                  />
-                ) : null,
-              )
-            ) : (
-              <li className="text-sm text-gray-500 dark:text-gray-400">
-                금일 출근 중인 직원이 없습니다.
-              </li>
-            )}
-          </ul>
-        </div>
-
-        {/* 외근 */}
-        <div className="flex flex-1 flex-col gap-4 rounded-xl border border-orange-100 bg-orange-50 p-5 dark:border-orange-700/30 dark:bg-orange-900/10">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-orange-700 dark:text-orange-300">
-            <span className="inline-block rounded bg-orange-200 px-2 py-0.5 text-[11px] font-semibold dark:bg-orange-600 dark:text-white">
-              OUTWORK
-            </span>
-            금일 외근 ({outworkingPlace?.employees?.length || 0})
-          </h3>
-
-          <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
-            {outworkingEmployees.length > 0 ? (
-              outworkingEmployees.map((user: any, index: number) =>
-                user ? (
-                  <EmployeeListItem
-                    key={index}
-                    name={user.name}
-                    jobName={user.jobName}
-                    phoneNumber={user.phoneNumber}
-                    employmentType={user.employmentType}
-                    subText={user.memo}
-                    iconColor="text-orange-700"
-                    bgColor="bg-orange-100"
-                    darkBgColor="dark:bg-orange-800/30"
-                  />
-                ) : null,
-              )
-            ) : (
-              <li className="text-sm text-gray-500 dark:text-gray-400">
-                금일 외근 중인 직원이 없습니다.
-              </li>
-            )}
-          </ul>
-        </div>
+        {[
+          { title: "현재 근무 중", list: workingEmployees },
+          { title: "금일 외근", list: outworkingEmployees },
+        ].map(({ title, list }, idx) => (
+          <div
+            key={title}
+            className="flex flex-1 flex-col gap-4 rounded-xl border border-point-color bg-white px-4 pt-6 shadow-md dark:border-white/20 dark:bg-[#f6f8f7]"
+          >
+            <h3 className="flex items-center gap-2 text-sm font-semibold">
+              <span className="inline-block rounded bg-vacation-color px-2 py-0.5 text-[11px] font-bold text-white">
+                {idx === 0 ? "WORKING" : "OUTWORK"}
+              </span>
+              <span className="text-vacation-color">
+                {title} ({list?.length || 0})
+              </span>
+            </h3>
+            <ul className="relative max-h-[480px] space-y-3 overflow-y-auto pr-1 pt-5">
+              {list?.length > 0 ? (
+                list.map((item, index) => {
+                  const user = idx === 0 ? item.user : item;
+                  if (!user) return null;
+                  return (
+                    <EmployeeListItem
+                      key={index}
+                      name={user.name}
+                      jobName={user.jobName}
+                      phoneNumber={user.phoneNumber}
+                      employmentType={user.employmentType}
+                      subText={
+                        idx === 0
+                          ? `출근 ${dayjs(item.startTime).format("HH:mm")}`
+                          : (user.memo ?? "외근 중")
+                      }
+                      iconColor="text-vacation-color"
+                      bgColor="bg-point-color-sub"
+                      darkBgColor="dark:bg-point-color-sub/10"
+                    />
+                  );
+                })
+              ) : (
+                <li className="text-sm text-gray-500 dark:text-gray-400">
+                  {title}인 직원이 없습니다.
+                </li>
+              )}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );

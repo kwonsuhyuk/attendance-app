@@ -11,10 +11,9 @@ export const useCompanyWorkPlacesListForm = () => {
   );
 
   const formMethods = useForm({
-    // resolver: zodResolver(companyWorkPlacesListSche),
     mode: "onChange",
     defaultValues: {
-      companyWorkPlaces: workPlacesList,
+      companyWorkPlaces: workPlacesList ?? [],
     },
   });
   return formMethods;

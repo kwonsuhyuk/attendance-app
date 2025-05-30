@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TJobList } from "@/model/types/company.type";
 import JobCard from "./JobCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface JobListCardProps {
   jobs: TJobList;
@@ -17,9 +18,11 @@ const JobListCard = ({ jobs, onRemove }: JobListCardProps) => {
         <CardTitle className="text-lg">추가된 직무 목록</CardTitle>
       </CardHeader>
       <CardContent className="px-0">
-        <ScrollArea className="max-h-72 overflow-y-auto rounded-lg border border-solid border-white-border-sub dark:border-dark-border">
+        <ScrollArea className="max-h-[24rem] overflow-y-auto rounded-xl shadow-md">
           {jobs.map((job, index) => (
-            <JobCard key={job.id} job={job} onRemove={() => onRemove(index)} />
+            <>
+              <JobCard key={job.id} job={job} onRemove={() => onRemove(index)} />
+            </>
           ))}
         </ScrollArea>
       </CardContent>
