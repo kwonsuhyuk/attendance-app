@@ -15,13 +15,22 @@ import { todayAttSteps } from "@/constants/managerTourSteps";
 const TodayAttenancePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const dateParam = searchParams.get("date");
+
   const initialDate = dateParam ? new Date(dateParam) : new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
 
   useEffect(() => {
-    const formattedDate = getKSTFormattedDate(selectedDate);
-    setSearchParams({ date: formattedDate });
-  }, [selectedDate, setSearchParams]);
+    if (!dateParam) {
+      const todayStr = getKSTFormattedDate(new Date());
+      setSearchParams({ date: todayStr }, { replace: true });
+    }
+  }, [dateParam, setSearchParams]);
+
+  const handleDateChange = (newDate: Date) => {
+    setSelectedDate(newDate);
+    const formatted = getKSTFormattedDate(newDate);
+    setSearchParams({ date: formatted }, { replace: true });
+  };
 
   useTour("today_att", todayAttSteps);
 
@@ -32,7 +41,7 @@ const TodayAttenancePage = () => {
         description="On & Off에서 근태관리 서비스를 이용해보세요."
       />
       <div className="max-w-7xl flex-1 space-y-6">
-        <AttendanceHeader selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <AttendanceHeader selectedDate={selectedDate} setSelectedDate={handleDateChange} />
         <AttendanceStatsCards selectedDate={selectedDate} />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <FullAttendanceRatioChart selectedDate={selectedDate} />
