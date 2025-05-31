@@ -13,7 +13,8 @@ import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
 
 const App = () => {
   const [appReady, setAppReady] = useState(false);
-  const { setUser, clearUser } = useUserStore();
+  const setUser = useUserStore(state => state.setUser);
+  const clearUser = useUserStore(state => state.clearUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async user => {
