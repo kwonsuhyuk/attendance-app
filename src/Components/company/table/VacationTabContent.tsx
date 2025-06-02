@@ -39,34 +39,47 @@ const VacationTabContent = ({
   const currentPageData = getCurrentPageData(filteredData, tab.value);
 
   return (
-    <TabsContent value={tab.value} className="mt-4 w-full" data-tour={`${tab.value}-1`}>
-      {["registered", "processed"].includes(tab.value) && (
-        <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
-          ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다.
-        </p>
-      )}
-      {["pending"].includes(tab.value) && (
-        <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
-          ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
-        </p>
-      )}
-      <div className="min-h-[510px] w-full overflow-auto" data-tour={`${tab.value}-2`}>
-        <DataTable
-          columns={columns}
-          data={currentPageData}
-          onRowClick={onRowClick}
-          hiddenColumnIdsOnMobile={hiddenColumnIdsOnMobile}
-        />
-      </div>
-      <div className="-translate-y-8 sm:translate-y-0">
-        {filteredData.length > 0 && (
-          <Pagination
-            page={page}
-            totalPageCount={totalPageCount}
-            onNext={onNext}
-            onPrevious={onPrevious}
-          />
+    <TabsContent value={tab.value} className="mt-4 w-full">
+      <div>
+        {["registered", "processed"].includes(tab.value) && (
+          <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+            ※ 휴가 내역은 최근 6개월 이전 ~ 3개월 이후 까지만 표시됩니다.
+          </p>
         )}
+        {["pending"].includes(tab.value) && (
+          <p className="mb-4 flex justify-end px-5 text-xs text-white-nav-text dark:text-dark-nav-text">
+            ※ 해당 직원 클릭 시, 승인/거절 가능합니다.
+          </p>
+        )}
+        <div
+          className="min-h-[510px] w-full overflow-auto"
+          data-tour={
+            tab.value === "pending"
+              ? "pending-1"
+              : tab.value === "processed"
+                ? "process-2"
+                : tab.value === "registered"
+                  ? "register-2"
+                  : undefined
+          }
+        >
+          <DataTable
+            columns={columns}
+            data={currentPageData}
+            onRowClick={onRowClick}
+            hiddenColumnIdsOnMobile={hiddenColumnIdsOnMobile}
+          />
+        </div>
+        <div className="-translate-y-8 sm:translate-y-0">
+          {filteredData.length > 0 && (
+            <Pagination
+              page={page}
+              totalPageCount={totalPageCount}
+              onNext={onNext}
+              onPrevious={onPrevious}
+            />
+          )}
+        </div>
       </div>
     </TabsContent>
   );

@@ -68,7 +68,7 @@ const PeriodAttCalendarGrid = ({
   return (
     <div
       className="mb-12 overflow-hidden rounded-lg border border-white-border-sub px-6 pb-6 shadow-md dark:border-dark-border-sub"
-      data-tour="period-4"
+      data-tour="period-3"
     >
       <CardTitle className="my-3 flex w-fit flex-wrap items-center gap-2 rounded-md p-4 py-5 text-base font-semibold">
         {variant === "total" ? (

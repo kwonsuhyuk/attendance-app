@@ -20,7 +20,6 @@ export function DatePickerDemo({ pickDate, setPickDate, className }: DatePickerD
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          data-tour="today-1"
           variant={"outline"}
           className={twMerge(
             "w-full justify-start text-left font-normal",

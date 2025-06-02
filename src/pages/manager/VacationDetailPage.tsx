@@ -13,10 +13,18 @@ import Seo from "@/components/Seo";
 import { Plus } from "lucide-react";
 import { useTourStore } from "@/store/tour.store";
 import { useTour } from "@/hooks/use-tour";
-import { vacationRegisterAndRequestTourSteps } from "@/constants/managerTourSteps";
+import { vacationDetailTourSteps } from "@/constants/managerTourSteps";
+import { useShallow } from "zustand/shallow";
 
 const VacationDetailPage = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const { stepIndex, setStepIndex, run } = useTourStore(
+    useShallow(state => ({
+      stepIndex: state.stepIndex,
+      setStepIndex: state.setStepIndex,
+      run: state.run,
+    })),
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,11 +56,10 @@ const VacationDetailPage = () => {
     tab: { active: activeTab, setActive: setActiveTab },
   } = useVacationRequests();
 
-  useTour("vacation_register_request", vacationRegisterAndRequestTourSteps);
+  useTour("vacation_register_request", vacationDetailTourSteps, [3, 5]);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-    const { run } = useTourStore.getState();
     if (run) {
       const joyrideContainer = document.querySelector(".react-joyride__tooltip");
       if (joyrideContainer) {
@@ -104,6 +111,21 @@ const VacationDetailPage = () => {
                     key={tab.value}
                     value={tab.value}
                     className="relative mt-2 h-12 min-w-[80px] max-w-[200px] flex-1 rounded-t-lg border-none text-center text-sm font-semibold text-white-text data-[state=active]:text-black dark:bg-dark-bg dark:text-white-bg dark:data-[state=active]:bg-dark-card-bg dark:data-[state=active]:text-white-bg sm:px-6 sm:py-3 sm:text-base"
+                    data-tour={
+                      tab.value === "processed"
+                        ? "process-1"
+                        : tab.value === "registered"
+                          ? "register-1"
+                          : undefined
+                    }
+                    onClick={() => {
+                      if (tab.value === "processed" && stepIndex === 3) {
+                        setStepIndex(4); // process-1 → process-2
+                      }
+                      if (tab.value === "registered" && stepIndex === 5) {
+                        setStepIndex(6); // register-1 → register-2
+                      }
+                    }}
                   >
                     <span className="flex items-center justify-center gap-1 pt-2">
                       {tab.label}

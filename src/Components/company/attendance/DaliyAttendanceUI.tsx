@@ -141,7 +141,6 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
         </div>
         <Button
           variant="outline"
-          data-tour="today-2"
           className="flex w-full items-center gap-2"
           onClick={handleSelfCommuteModalOpen}
         >
@@ -151,7 +150,7 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
 
       {/* 데스크탑 레이아웃 */}
       <div className="hidden sm:flex sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-tour="today-1">
           <DatePickerDemo
             pickDate={selectedDate}
             setPickDate={setSelectedDate}
@@ -166,14 +165,15 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
-        <Button
-          variant="outline"
-          data-tour="today-2"
-          className="flex items-center gap-2"
-          onClick={handleSelfCommuteModalOpen}
-        >
-          <Plus className="h-4 w-4" /> 수동 출퇴근 등록
-        </Button>
+        <div data-tour="today-2">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            onClick={handleSelfCommuteModalOpen}
+          >
+            <Plus className="h-4 w-4" /> 수동 출퇴근 등록
+          </Button>
+        </div>
       </div>
 
       {/* SelfCommuteModal 연결 */}
@@ -657,15 +657,17 @@ export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date
 
   return (
     <>
-      <StatCard
-        icon={PlaneTakeoffIcon}
-        iconColor="text-point-color"
-        bgColor="bg-point-color-sub"
-        title="휴가 인원"
-        count={`${totalTodayVacationCount}명`}
-        onClick={() => handleVacationBoxClick(todayVacationData || null)}
-        rightIcon={<ChevronRight className="h-4 w-4 text-gray-400 dark:text-white/60" />}
-      />
+      <div data-tour="today-4">
+        <StatCard
+          icon={PlaneTakeoffIcon}
+          iconColor="text-point-color"
+          bgColor="bg-point-color-sub"
+          title="휴가 인원"
+          count={`${totalTodayVacationCount}명`}
+          onClick={() => handleVacationBoxClick(todayVacationData || null)}
+          rightIcon={<ChevronRight className="h-4 w-4 text-gray-400 dark:text-white/60" />}
+        />
+      </div>
 
       <VacationChartModal
         open={!!selectedData}
