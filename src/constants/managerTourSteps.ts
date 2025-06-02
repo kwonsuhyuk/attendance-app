@@ -16,7 +16,8 @@ export const noticeTourSteps: Step[] = [
   },
   {
     target: '[data-tour="notice-modal"]',
-    content: "게시물 유형을 설정하고 작성하면 공지가 업로드됩니다.",
+    content: "게시물 유형을 설정하고 작성하시면 공지가 업로드됩니다.",
+    placement: "top",
     disableBeacon: true,
   },
   {
@@ -29,33 +30,42 @@ export const noticeTourSteps: Step[] = [
 export const periodAttTourSteps: Step[] = [
   {
     target: "body",
-    content: "이곳은 기간 출퇴근 페이지입니다. 전체적인 근태 현황을 체크하는 곳입니다.",
+    content: "이곳은 기간 출퇴근 페이지입니다. 근태 현황을 한 눈에 확인할 수 있습니다.",
     disableBeacon: true,
     placement: "center",
   },
   {
     target: '[data-tour="period-1"]',
-    content: "회사의 전체적인 출퇴근과 특정 직원의 근태를 확인 할 수 있습니다.",
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="period-2"]',
     content: "기본적으로 월 단위로 현황을 체크할 수 있습니다.",
     disableBeacon: true,
   },
   {
-    target: '[data-tour="period-3"]',
+    target: '[data-tour="period-2"]',
     content: "근무지 별 근태 현황을 볼 수도 있습니다.",
     disableBeacon: true,
   },
   {
+    target: '[data-tour="period-3"]',
+    content: "특정 날짜를 클릭하시면 자세한 정보를 위한 해당 금일 출퇴근 페이지로 넘어갑니다.",
+    disableBeacon: true,
+  },
+  // 직원 탭
+  {
     target: '[data-tour="period-4"]',
-    content: "해당 날짜를 클릭하면 특정 날짜의 금일 출퇴근 페이지로 이동합니다.",
+    content: "특정 직원 별로 근태 현황을 보실 수 있습니다. 클릭해주세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="period-5"]',
+    content:
+      "이름을 검색하시면 직원에 대한 근태 현황이 나오고, 또한 직원 관리 페이지에서도 바로 확인이 가능합니다.",
     disableBeacon: true,
   },
 ];
 
-export const vacationRegisterAndRequestTourSteps: Step[] = [
+export const vacationDetailTourSteps: Step[] = [
   {
     target: '[data-tour="body"]',
     content: "이곳은 휴가를 등록하고 요청을 처리하는 페이지 입니다.",
@@ -69,39 +79,38 @@ export const vacationRegisterAndRequestTourSteps: Step[] = [
   },
   {
     target: '[data-tour="pending-1"]',
-    content: "직원의 휴가 요청을 처리하는 부분입니다.",
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="pending-2"]',
-    content: "해당 데이터를 클릭하면 승인 혹은 거절 버튼을 눌러 처리할 수 있습니다.",
+    content: "직원의 휴가 요청 부분입니다. 클릭 시, 승인/거절 버튼을 통해 처리가 가능합니다.",
     disableBeacon: true,
   },
   {
     target: '[data-tour="process-1"]',
-    content: "처리 내역 탭으로 이동하면 휴가 요청을 처리한 내역이 나옵니다.",
+    content: "처리 내역 탭으로 이동하세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="process-2"]',
+    content: "휴가가 처리된 내역이며, 클릭 시, 상세 휴가 정보를 보실 수 있습니다.",
     disableBeacon: true,
   },
-  // {
-  //   target: '[data-tour="process-2"]',
-  //   content: "이 부분 또한 데이터를 클릭하면 처리된 상세 휴가 정보를 보실 수 있습니다.",
-  //   disableBeacon: true,
-  // },
   {
     target: '[data-tour="register-1"]',
-    content: "등록 내역 탭으로 이동하면 수동으로 휴가를 등록한 내역이 나옵니다.",
+    content: "등록 내역 탭으로 이동하세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="register-2"]',
+    content: "관리자가 직접 휴가를 등록한 내역이며, 마찬가지로 상세 정보 확인이 가능합니다.",
     disableBeacon: true,
   },
-  // {
-  //   target: '[data-tour="register-2"]',
-  //   content: "이 부분 또한 데이터를 클릭하면 등록된 휴가의 상세 내용을 확인할 수 있습니다.",
-  //   disableBeacon: true,
-  // },
 ];
 
 export const employeeManageTourSteps: Step[] = [
   {
-    target: '[data-tour="body"]',
+    target: "body",
     content: "이 곳은 직원을 관리하는 페이지입니다.",
     disableBeacon: true,
     placement: "center",
@@ -126,16 +135,17 @@ export const todayAttSteps: Step[] = [
     disableBeacon: true,
     placement: "center",
   },
-  // {
-  //   target: '[data-tour="today-1"]',
-  //   content: "날짜를 클릭해서 해당 날짜의 출퇴근 정보를 볼 수 있습니다.",
-  //   disableBeacon: true,
-  // },
-  // {
-  //   target: '[data-tour="today-2"]',
-  //   content: "직원들이 불가피하게 출퇴근을 등록하지 못할경우 수동으로 등록해줄 수 있는 기능입니다.",
-  //   disableBeacon: true,
-  // },
+  {
+    target: '[data-tour="today-1"]',
+    content: "날짜를 클릭해서 해당 날짜의 출퇴근 정보를 볼 수 있습니다.",
+    disableBeacon: true,
+    placement: "top",
+  },
+  {
+    target: '[data-tour="today-2"]',
+    content: "직원들이 불가피하게 출퇴근을 등록하지 못할경우 수동으로 등록해줄 수 있는 기능입니다.",
+    disableBeacon: true,
+  },
   {
     target: '[data-tour="today-3"]',
     content: "금일 근태 정보를 간단하게 볼 수 있습니다.",
@@ -181,7 +191,6 @@ export const homeSteps: Step[] = [
     content:
       "금일 출퇴근 정보를 한눈에 볼 수 있는 박스입니다. 클릭하셔서 상세페이지로 이동할 수 있습니다.",
     disableBeacon: true,
-    placement: "left",
   },
   {
     target: '[data-tour="manager_home-3"]',
@@ -195,14 +204,14 @@ export const homeSteps: Step[] = [
     disableScrolling: false,
     content: "회사의 설정된 직무를 볼 수 있는 박스입니다.",
     disableBeacon: true,
-    placement: "bottom",
+    placement: "top",
   },
   {
     target: '[data-tour="manager_home-5"]',
     disableScrolling: false,
     content: "회사의 설정된 근무지를 볼 수 있는 박스입니다.",
     disableBeacon: true,
-    placement: "bottom",
+    placement: "top",
   },
 ];
 
@@ -332,6 +341,55 @@ export const companyHolidaySetStep: Step[] = [
   {
     target: '[data-tour="holiday_set-5"]',
     content: "설정을 완료하셨으면 꼭 저장 버튼을 눌러주세요.",
+    disableBeacon: true,
+  },
+];
+
+export const settlementTourStep: Step[] = [
+  {
+    target: "body",
+    content: "이번달 특정 직원 급여를 계산하는 정산 페이지입니다.",
+    disableBeacon: true,
+    placement: "center",
+  },
+  {
+    target: '[data-tour="settlement-1"]',
+    content: "정산하려는 날짜를 선택하고, 직원의 이름을 검색해보세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="settlement-2"]',
+    content: "검색된 직원의 정보가 나옵니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-3"]',
+    content: "그리고 수당 포함 옵션을 선택하시면 됩니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-4"]',
+    content: "회사 정산 정책에 대한 안내도 확인 바랍니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-5"]',
+    content: "버튼을 누르면 데이터가 나옵니다. 정산 데이터를 생성해주세요!",
+    disableBeacon: true,
+    spotlightClicks: true,
+    hideFooter: true,
+  },
+  {
+    target: '[data-tour="settlement-6"]',
+    content: "이번달 근태 현황과 체크 여부에 따른 수당이 자료 형태로 나옵니다.",
+    placement: "top",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="settlement-7"]',
+    content: "엑셀 파일을 원하시면 다운로드를 눌러주세요!",
     disableBeacon: true,
   },
 ];

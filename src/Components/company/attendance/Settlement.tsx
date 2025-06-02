@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { EmployeeInfo } from "@/model/types/user.type";
 import { useCompanyStore } from "@/store/company.store";
-
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import AutoCompleteUserInput from "@/components/common/AutoCompleteInput";
 import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
@@ -20,7 +19,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Table,
   TableBody,
@@ -33,7 +31,12 @@ import CustomCalendarHeader from "./CustomCalendarHeader";
 import dayjs from "dayjs";
 import useSettlement from "@/hooks/manager/useSettlement";
 import { Card, CardTitle } from "@/components/ui/card";
+import { useTour } from "@/hooks/use-tour";
+import { useTourStore } from "@/store/tour.store";
+import { settlementTourStep } from "@/constants/managerTourSteps";
 import { useShallow } from "zustand/shallow";
+
+dayjs.extend(isSameOrBefore);
 
 export interface ISettlementRow {
   날짜: string;
@@ -53,8 +56,6 @@ interface SettlementProps {
   setSelectedEmployee: (user: EmployeeInfo | null) => void;
   setEmployeeName: (name: string) => void;
 }
-
-dayjs.extend(isSameOrBefore);
 
 const Settlement = ({
   currentDate,
@@ -80,30 +81,22 @@ const Settlement = ({
   const [summary, setSummary] = useState<ISettlementRow[]>([]);
   const { generateSettlement, downloadExcel } = useSettlement();
   const [loading, setLoading] = useState(false);
-
-  const handleGenerate = async () => {
-    if (!selectedEmployee) return;
-    setLoading(true);
-    const data = await generateSettlement({
-      employee: selectedEmployee,
-      currentDate,
-      includeSalary,
-    });
-    setSummary(data);
-    setLoading(false);
-  };
-
-  const handleDownload = () => {
-    if (!selectedEmployee) return;
-    downloadExcel(summary, selectedEmployee, currentDate, includeSalary);
-  };
-  const navigate = useNavigate();
   const [includeSalary, setIncludeSalary] = useState(false);
   const salaryAmount = selectedEmployee?.salaryAmount ?? 0;
   const isSalaryInvalid = includeSalary && salaryAmount === 0;
+  const navigate = useNavigate();
+
+  useTour("settlement", settlementTourStep, [1, 5]);
+  const { run, stepIndex, setStepIndex, steps } = useTourStore(
+    useShallow(state => ({
+      run: state.run,
+      stepIndex: state.stepIndex,
+      setStepIndex: state.setStepIndex,
+      steps: state.steps,
+    })),
+  );
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
   if (isMobile) {
     return (
       <div className="mx-auto mt-10 flex w-full max-w-md flex-col justify-center gap-5 rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm">
@@ -115,8 +108,35 @@ const Settlement = ({
     );
   }
 
+  const handleGenerate = async () => {
+    if (!selectedEmployee) return;
+    setLoading(true);
+    const data = await generateSettlement({
+      employee: selectedEmployee,
+      currentDate,
+      includeSalary,
+    });
+    setSummary(data);
+    setLoading(false);
+
+    const currentStep = steps[stepIndex];
+    if (run && currentStep?.target === '[data-tour="settlement-5"]') {
+      setTimeout(() => {
+        setStepIndex(stepIndex + 1);
+      }, 300);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!selectedEmployee) return;
+    downloadExcel(summary, selectedEmployee, currentDate, includeSalary);
+  };
+
   return (
-    <Card className="relative mx-auto flex w-full max-w-4xl flex-col justify-between space-y-10 rounded-2xl border bg-white px-8 py-8">
+    <Card
+      className="relative mx-auto flex w-full max-w-4xl flex-col justify-between space-y-10 rounded-2xl border bg-white px-8 py-8"
+      data-tour="settlement-1"
+    >
       <CardTitle className="flex justify-between space-y-3">
         <h1 className="text-2xl font-bold">이번달 직원 정산</h1>
         <div className="flex items-center gap-2 text-xs leading-relaxed text-gray-600">
@@ -148,12 +168,22 @@ const Settlement = ({
             setSelectedEmployee(emp);
             setEmployeeName(emp?.name || "");
             setSummary([]);
+
+            const currentStep = steps[stepIndex];
+            if (run && currentStep?.target === '[data-tour="settlement-1"]') {
+              setTimeout(() => {
+                setStepIndex(stepIndex + 1);
+              }, 300);
+            }
           }}
         />
       </section>
 
       {selectedEmployee && (
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-colors dark:border-gray-700 dark:bg-slate-700">
+        <section
+          className="rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-colors dark:border-gray-700 dark:bg-slate-700"
+          data-tour="settlement-2"
+        >
           <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
             <User className="h-5 w-5" />
             직원 정보
@@ -184,8 +214,8 @@ const Settlement = ({
       )}
 
       {selectedEmployee && (
-        <section className="flex items-center gap-3">
-          <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-point-color-sub px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
+        <section className="flex items-center gap-3" data-tour="settlement-3">
+          <div className="bg-point-color-sub flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
             <div className="flex items-start gap-3">
               <Checkbox
                 id="salaryCheck"
@@ -210,16 +240,19 @@ const Settlement = ({
         </section>
       )}
       {selectedEmployee && (
-        <div className="rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:border-point-color-sub dark:bg-point-color-sub/10 dark:backdrop-blur">
+        <div
+          className="dark:border-point-color-sub dark:bg-point-color-sub/10 rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:backdrop-blur"
+          data-tour="settlement-4"
+        >
           <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-vacation-dark-color dark:text-point-color">
             <AlertCircle className="h-5 w-5" />
             회사 정산 정책 안내
           </div>
-          <div className="my-5 flex items-start gap-3 rounded-md border border-solid border-point-color bg-point-color-sub/20 p-4 text-sm text-point-color dark:border-point-color-sub dark:bg-point-color-sub/10 dark:text-point-color">
+          <div className="bg-point-color-sub/20 dark:border-point-color-sub dark:bg-point-color-sub/10 my-5 flex items-start gap-3 rounded-md border border-solid border-point-color p-4 text-sm text-point-color dark:text-point-color">
             <AlertTriangle className="mt-1 h-5 w-5 text-point-color" />
             <div>
               <span className="font-semibold">외근은 수당 계산에서 제외됩니다.</span>
-              <div className="mt-1 text-xs text-point-color/80 dark:text-point-color-sub">
+              <div className="dark:text-point-color-sub mt-1 text-xs text-point-color/80">
                 출퇴근 기록 및 수당 계산 없이 외근 횟수만 정산됩니다.
               </div>
             </div>
@@ -297,7 +330,10 @@ const Settlement = ({
 
       {summary.length > 0 && (
         <>
-          <section className="rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
+          <section
+            className="rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800"
+            data-tour="settlement-6"
+          >
             <Table>
               <TableHeader>
                 <TableRow>
@@ -386,6 +422,7 @@ const Settlement = ({
             onClick={handleGenerate}
             disabled={!selectedEmployee || loading}
             className="flex w-full items-center justify-center py-4 text-base font-semibold"
+            data-tour="settlement-5"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -399,6 +436,7 @@ const Settlement = ({
           <Button
             onClick={handleDownload}
             className="flex w-full items-center justify-center py-4 text-base font-semibold"
+            data-tour="settlement-7"
           >
             <FileDown className="mr-2 h-5 w-5" /> 엑셀 다운로드
           </Button>
