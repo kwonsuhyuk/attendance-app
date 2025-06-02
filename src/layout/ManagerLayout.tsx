@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 import TourController from "@/components/common/TourController";
 import { useTourStore } from "@/store/tour.store";
+import { useEffect, useState } from "react";
 
 const Layout = () => {
   const steps = useTourStore(state => state.steps);
@@ -13,15 +14,24 @@ const Layout = () => {
   const setRunTour = useTourStore(state => state.setRun);
   const setStepIndex = useTourStore(state => state.setStepIndex);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const handleStartTour = () => {
     const { steps } = useTourStore.getState();
-    if (steps.length === 0) return; // 💡 steps가 준비되었는지 확인
+    if (steps.length === 0) return; // steps가 준비되었는지 확인
 
-    setRunTour(false); // 1. 강제 초기화
+    setRunTour(false); // 강제 초기화
     setStepIndex(0);
 
     setTimeout(() => {
-      setRunTour(true); // 2. 실행
+      setRunTour(true); // 실행
     }, 50);
   };
 
@@ -45,13 +55,15 @@ const Layout = () => {
             </div>
           </main>
 
-          <button
-            onClick={handleStartTour}
-            className="fixed bottom-6 right-6 z-50 rounded-full bg-point-color p-3 text-white shadow-lg transition-all ease-out hover:bg-yellow-500"
-            aria-label="도움말"
-          >
-            <HelpCircle className="h-7 w-7" />
-          </button>
+          {!isMobile && (
+            <button
+              onClick={handleStartTour}
+              className="fixed bottom-6 right-6 z-50 rounded-full bg-point-color p-3 text-white shadow-lg transition-all ease-out hover:bg-yellow-500"
+              aria-label="도움말"
+            >
+              <HelpCircle className="h-7 w-7" />
+            </button>
+          )}
         </div>
       </div>
     </SidebarProvider>
