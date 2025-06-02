@@ -10,6 +10,7 @@ import { Navigate, Outlet, useParams } from "react-router-dom";
 
 const AuthenticatedLayout = () => {
   const currentUser = useUserStore(state => state.currentUser);
+  const isUserLoading = useUserStore(state => state.isLoading);
   const { companyCode } = useParams();
   const setCompany = useCompanyStore(state => state.setCompany);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ const AuthenticatedLayout = () => {
     return () => unsubscribe();
   }, [companyCode, setCompany]);
 
-  if (isLoading) return <Loading />;
+  if (isUserLoading || isLoading) return <Loading />;
 
   return currentUser ? <Outlet /> : <Navigate to={MAIN_ROUTES.SIGNIN} replace />;
 };
