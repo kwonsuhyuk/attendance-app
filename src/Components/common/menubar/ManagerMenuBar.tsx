@@ -38,9 +38,9 @@ export const ManagerMenuBar = () => {
           href="https://google.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex w-full items-center gap-2 rounded-md border border-t border-solid px-4 py-2 text-sm font-medium text-zinc-700 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+          className="group flex w-full items-center gap-2 rounded-md border border-t border-solid border-point-color bg-white px-4 py-2 text-sm font-medium text-point-color transition-colors duration-200 hover:bg-point-color hover:text-white dark:bg-transparent dark:text-point-color dark:hover:bg-point-color dark:hover:text-white"
         >
-          <ClipboardList className="h-5 w-5 shrink-0 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-white" />
+          <ClipboardList className="h-5 w-5 shrink-0 text-point-color transition-colors duration-200" />
           <span>서비스 만족도 설문</span>
         </SidebarMenuSubButton>
         <Separator />

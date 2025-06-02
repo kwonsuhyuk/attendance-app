@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
 import * as XLSX from "xlsx";
 import { ISettlementRow } from "@/components/company/attendance/Settlement";
+import { useMemo } from "react";
 
 interface GenerateOptions {
   employee: EmployeeInfo;
@@ -13,10 +14,12 @@ interface GenerateOptions {
 
 export default function useSettlement() {
   const companyCode = useCompanyStore(state => state.currentCompany?.companyCode);
-  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList ?? []);
   const payCheckDay = useCompanyStore(state => state.currentCompany?.payCheckDay);
-  const holidayPay = useCompanyStore(state => state.currentCompany?.holidayPay ?? 1);
-  const nightPay = useCompanyStore(state => state.currentCompany?.nightPay ?? 1);
+  const companyInfo = useCompanyStore(state => state.currentCompany);
+
+  const holidayList = useMemo(() => companyInfo?.holidayList ?? [], [companyInfo?.holidayList]);
+  const holidayPay = useMemo(() => companyInfo?.holidayPay ?? 1, [companyInfo?.holidayPay]);
+  const nightPay = useMemo(() => companyInfo?.nightPay ?? 1, [companyInfo?.nightPay]);
 
   const generateSettlement = async ({ employee, currentDate, includeSalary }: GenerateOptions) => {
     if (!companyCode || !payCheckDay) return [];

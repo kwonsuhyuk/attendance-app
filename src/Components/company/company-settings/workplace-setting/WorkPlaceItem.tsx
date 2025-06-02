@@ -35,7 +35,7 @@ const WorkPlaceItem = ({ place, onRemove, onEdit }: WorkPlaceItemProps) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
-            className="hover:bg-point-color-sub/80 dark:bg-point-color-sub/20 dark:hover:bg-point-color-sub/30 text-point-color-sub relative z-10 flex items-center gap-1 rounded-full bg-point-color px-3 py-0.5 text-[10px] font-medium transition hover:text-point-color dark:text-point-color"
+            className="relative z-10 flex items-center gap-1 rounded-full bg-point-color px-3 py-0.5 text-[10px] font-medium text-point-color-sub transition hover:bg-point-color-sub/80 hover:text-point-color dark:bg-point-color-sub/20 dark:text-point-color dark:hover:bg-point-color-sub/30"
           >
             지도에서 보기
           </a>
