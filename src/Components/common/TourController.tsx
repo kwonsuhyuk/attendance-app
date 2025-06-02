@@ -46,7 +46,7 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
   if (!run || steps.length === 0) return null;
 
   const pathname = window.location.pathname;
-  const isEmployeePage = pathname.includes("/employee");
+  const isEmployeePage = pathname.includes("/employee/");
 
   return (
     <Joyride
@@ -74,7 +74,7 @@ const TourController = ({ steps, run, onClose, stepIndex, onStepChange }: TourCo
           width: isEmployeePage ? 280 : 380,
         },
         tooltip: {
-          fontSize: isEmployeePage ? "14px" : "17px",
+          fontSize: isEmployeePage ? "15px" : "16px",
           padding: "10px 14px",
         },
       }}
