@@ -29,6 +29,11 @@
     {
       "src": "/favicon/favicon.ico",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon/favicon-check-on.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
