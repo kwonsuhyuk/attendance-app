@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": ["react", "react-dom", "node"],
+    "types": ["react", "react-dom", "node", "kakao.maps.d.ts"],
     "noEmit": true,
     "baseUrl": "./src",
     "paths": {
