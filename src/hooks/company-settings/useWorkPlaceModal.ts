@@ -1,5 +1,4 @@
-// import { PlaceCard } from './../../Components/company/attendance/DaliyAttendanceUI';
-import { fetchAddressByNaver } from "@/api/map.api";
+import { fetchAddressByKakao } from "@/api/map.api";
 import { TWorkPlace } from "@/model/types/company.type";
 import { useState, useEffect } from "react";
 
@@ -18,25 +17,34 @@ export const useWorkPlaceModal = (place?: TWorkPlace) => {
   const [lat, setLat] = useState(37.5665);
   const [lng, setLng] = useState(126.978);
   const [isLocationLoaded, setIsLocationLoaded] = useState(false);
+
   const [searchResults, setSearchResults] = useState<
     { address: string; lat: number; lng: number }[]
   >([]);
   const [isSearching, setIsSearching] = useState(false);
   const [noResult, setNoResult] = useState(false);
 
-  // 사용자 위치 가져오기
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
           setLat(position.coords.latitude);
           setLng(position.coords.longitude);
+          setIsLocationLoaded(true);
         },
-        () => setIsLocationLoaded(true),
+        error => {
+          setLat(37.5665); // 기본값: 서울
+          setLng(126.978);
+          setIsLocationLoaded(true);
+        },
         { enableHighAccuracy: true },
       );
+    } else {
+      console.warn("⚠️ 이 브라우저는 Geolocation을 지원하지 않습니다.");
+      setLat(37.5665);
+      setLng(126.978);
+      setIsLocationLoaded(true);
     }
-    setIsLocationLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -52,22 +60,58 @@ export const useWorkPlaceModal = (place?: TWorkPlace) => {
     }
 
     setIsSearching(true);
-    const response = await fetchAddressByNaver(address);
+    const response = await fetchAddressByKakao(address);
+
     if (response.data) {
-      if (response.data.addresses.length === 0) {
+      const docs = response.data.documents;
+
+      if (!docs || docs.length === 0) {
         setNoResult(true);
       }
-      if (response.data.addresses) {
-        setSearchResults(
-          response.data.addresses.map((addr: any) => ({
-            address: addr.roadAddress || addr.jibunAddress,
-            lat: parseFloat(addr.y),
-            lng: parseFloat(addr.x),
-          })),
-        );
-      }
+
+      setSearchResults(
+        docs.map((doc: any) => ({
+          address: doc.road_address?.address_name || doc.address?.address_name,
+          lat: parseFloat(doc.y),
+          lng: parseFloat(doc.x),
+        })),
+      );
     }
+
     setIsSearching(false);
+  };
+
+  // 다음 우편번호 팝업
+  const openPostcodePopup = () => {
+    const script = document.createElement("script");
+    script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.onload = () => {
+      new window.daum.Postcode({
+        oncomplete: async data => {
+          const fullAddress = data.roadAddress || data.jibunAddress;
+
+          if (fullAddress) {
+            setAddress(fullAddress);
+
+            // 좌표 변환 요청
+            try {
+              const response = await fetchAddressByKakao(fullAddress);
+              const docs = response.data?.documents;
+
+              if (docs && docs.length > 0) {
+                const first = docs[0];
+                setLat(parseFloat(first.y));
+                setLng(parseFloat(first.x));
+              }
+            } catch (err) {
+              console.error("좌표 변환 실패:", err);
+            }
+          }
+        },
+      }).open();
+    };
+
+    document.body.appendChild(script);
   };
 
   // 주소 선택 시 업데이트
@@ -82,6 +126,7 @@ export const useWorkPlaceModal = (place?: TWorkPlace) => {
     setSearchResults([]);
   };
 
+  // place가 있을 경우 초기값 세팅
   useEffect(() => {
     if (place) {
       setName(place.name);
@@ -93,7 +138,7 @@ export const useWorkPlaceModal = (place?: TWorkPlace) => {
       setName("");
       setMemo("");
       setAddress("");
-      setLat(37.5665); // 기본값
+      setLat(37.5665);
       setLng(126.978);
     }
   }, [place]);
@@ -107,11 +152,15 @@ export const useWorkPlaceModal = (place?: TWorkPlace) => {
     setAddress,
     lat,
     lng,
+    setLat,
+    setLng,
     isLocationLoaded,
     searchResults,
+    setSearchResults,
     isSearching,
     noResult,
     handleSearchAddress,
     handleSelectAddress,
+    openPostcodePopup,
   };
 };

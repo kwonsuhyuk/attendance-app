@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { lazy, Suspense } from "react";
 
-const NaverMap = lazy(() => import("./NaverMap"));
+const KakaoMap = lazy(() => import("./KakaoMap"));
 
 interface WorkPlaceMapProps {
   lat: number;
@@ -22,12 +22,11 @@ const WorkPlaceMap = ({
 }: WorkPlaceMapProps) => {
   return (
     <Suspense fallback={<Skeleton className="h-48 w-full animate-pulse rounded-md" />}>
-      <NaverMap
+      <KakaoMap
         onLocationSelect={onLocationSelect}
         selectedLocation={{ lat, lng }}
         markerDragAble={markerDragAble}
         radius={radius}
-        isLoaded={isLoaded}
       />
     </Suspense>
   );

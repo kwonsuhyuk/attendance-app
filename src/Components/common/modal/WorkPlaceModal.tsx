@@ -28,12 +28,10 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
     setAddress,
     lat,
     lng,
+    setLat,
+    openPostcodePopup,
+    setLng,
     isLocationLoaded,
-    searchResults,
-    isSearching,
-    noResult,
-    handleSearchAddress,
-    handleSelectAddress,
   } = useWorkPlaceModal(place);
 
   const radiusOptions = [1, 3, 5, 10, 20];
@@ -67,6 +65,7 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
       icon={<MapPin className="h-5 w-5" />}
       onSubmit={handleAddPlace}
       submitLabel="저장"
+      submitDisabled={!name.trim() || !address.trim()}
       titleAlign="left"
     >
       {/* 근무지 이름 */}
@@ -92,30 +91,25 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
       </div>
 
       {/* 주소 */}
-      <div className="relative space-y-2">
-        <Label>주소</Label>
-        <div className="flex h-10 items-center space-x-2">
-          <Input
-            placeholder="도로명 주소를 입력하세요 (예: 기흥구 기흥로 116번길 10)"
-            className="h-10 placeholder:text-xs sm:placeholder:text-sm"
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSearchAddress();
-              }
-            }}
-          />
-          <Button onClick={handleSearchAddress} disabled={isSearching} className="h-10">
-            <Search className="h-5 w-5" />
+      <div className="space-y-1">
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">주소</Label>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {address && (
+            <Input
+              className="h-10 w-full flex-1 truncate bg-gray-100 text-sm dark:bg-zinc-800"
+              value={address}
+              readOnly
+            />
+          )}
+          <Button
+            type="button"
+            onClick={openPostcodePopup}
+            className="h-10 whitespace-nowrap px-3 text-sm"
+            variant="outline"
+          >
+            주소 검색
           </Button>
         </div>
-        <SearchResults
-          searchResults={searchResults}
-          noResult={noResult}
-          onSelect={handleSelectAddress}
-        />
       </div>
 
       {/* 반경 슬라이더 */}
@@ -149,13 +143,15 @@ const WorkPlaceModal = ({ isOpen, onClose, onSave, place }: WorkPlaceModalProps)
         </div>
       </div>
 
-      {/* 지도 */}
       <WorkPlaceMap
         lat={lat}
         lng={lng}
         isLoaded={isLocationLoaded}
         radius={radius}
-        onLocationSelect={() => {}}
+        onLocationSelect={(newLat, newLng) => {
+          setLat(newLat);
+          setLng(newLng);
+        }}
       />
     </RegisterModal>
   );

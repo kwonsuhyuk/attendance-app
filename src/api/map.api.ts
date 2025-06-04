@@ -1,18 +1,26 @@
-export async function fetchAddressByNaver(address: string) {
+export async function fetchAddressByKakao(address: string) {
   try {
-    const response = await fetch(`/api/naver-geocode?query=${encodeURIComponent(address)}`, {
-      method: "GET",
-      headers: {
-        "X-NCP-APIGW-API-KEY-ID": import.meta.env.VITE_NAVER_CLIENT_ID,
-        "X-NCP-APIGW-API-KEY": import.meta.env.VITE_NAVER_CLIENT_SECRET,
-        Accept: "application/json",
+    const response = await fetch(
+      `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(address)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_REST_KEY}`, // ✅ 정확한 키 이름 사용
+          Accept: "application/json",
+        },
       },
-    });
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.message || "주소 요청 실패");
+    }
 
     const data = await response.json();
+
     return {
       success: true,
-      data: { addresses: data.addresses },
+      data: { documents: data.documents },
     };
   } catch (e: any) {
     return {

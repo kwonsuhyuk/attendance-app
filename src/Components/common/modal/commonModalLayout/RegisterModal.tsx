@@ -19,6 +19,7 @@ interface RegisterModalProps {
   children: ReactNode;
   onSubmit?: () => void | Promise<void>;
   submitLabel?: string;
+  submitDisabled?: boolean;
   maxWidthClass?: string;
   titleAlign?: "left" | "center";
 }
@@ -33,6 +34,7 @@ const RegisterModal = ({
   maxWidthClass = "max-w-md",
   onSubmit,
   submitLabel,
+  submitDisabled = false, // 기본값 false
   titleAlign = "center",
 }: RegisterModalProps) => {
   return (
@@ -68,6 +70,7 @@ const RegisterModal = ({
             <Button
               type="button"
               onClick={onSubmit}
+              disabled={submitDisabled}
               className="mt-4 w-full dark:bg-dark-bg dark:text-dark-text"
             >
               {submitLabel || "등록"}
