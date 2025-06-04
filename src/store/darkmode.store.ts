@@ -9,7 +9,7 @@ interface IDarkModeStore {
 const getInitialMode = (): boolean => {
   const savedMode = localStorage.getItem("darkMode");
   if (!savedMode) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return false;
   }
   return JSON.parse(savedMode);
 };

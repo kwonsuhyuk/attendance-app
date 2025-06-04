@@ -1,5 +1,4 @@
 import { SidebarTrigger } from "../ui/sidebar";
-import DarkmodeSwitch from "./DarkmodeSwitch";
 import NavTitle from "./NavTitle";
 import AppTitle from "./AppTitle";
 import NotificationBell from "./NotificationBell";
