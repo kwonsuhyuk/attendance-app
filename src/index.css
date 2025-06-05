@@ -76,16 +76,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* react-quill 제목 스타일 커스터마이징 */
-.ql-editor h1 {
-  @apply mb-2 text-2xl font-bold;
-}
-
-.ql-editor h2 {
-  @apply mb-2 text-xl font-semibold;
-}
-
-.ql-editor h3 {
-  @apply mb-2 text-lg font-medium;
-}
