@@ -2,7 +2,6 @@ import { useCompanyStore } from "@/store/company.store";
 import { fetchCommutesByPeriod } from "@/api/commute.api";
 import dayjs from "dayjs";
 import { EmployeeInfo } from "@/model/types/user.type";
-import * as XLSX from "xlsx";
 import { ISettlementRow } from "@/components/company/attendance/Settlement";
 import { useMemo } from "react";
 
@@ -107,12 +106,13 @@ export default function useSettlement() {
     });
   };
 
-  const downloadExcel = (
+  const downloadExcel = async (
     summary: ISettlementRow[],
     employee: EmployeeInfo,
     currentDate: Date,
     includeSalary: boolean,
   ) => {
+    const XLSX = await import("xlsx");
     const totalMinutes = summary.reduce((acc, cur) => {
       const match = cur.총근무시간.match(/(\d+)시간 (\d+)분/);
       return acc + (match ? parseInt(match[1]) * 60 + parseInt(match[2]) : 0);

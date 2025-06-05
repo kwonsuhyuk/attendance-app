@@ -3,10 +3,7 @@ import RegisterModal from "@/components/common/modal/commonModalLayout/RegisterM
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { TNoticeType } from "@/model/types/manager.type";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 interface NoticeModalProps {
   onClose: () => void;
@@ -25,7 +22,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
 
   const handleSave = () => {
     if (!title.trim() || !content.trim()) return;
-
+    console.log(title, content);
     onSave({
       title,
       content,
@@ -70,7 +67,12 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
-          <ReactQuill value={content} onChange={setContent} style={{ height: "200px" }} />
+          <Textarea
+            placeholder="내용을 입력하세요"
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            className="h-52 resize-none"
+          />
         </div>
       </div>
     </RegisterModal>

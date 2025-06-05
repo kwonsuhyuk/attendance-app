@@ -1,5 +1,5 @@
-import { Card } from "antd";
 import React from "react";
+import { Card } from "../ui/card";
 
 interface INoticeCardProps {
   title: string;
@@ -8,9 +8,9 @@ interface INoticeCardProps {
 
 const NoticeCard = ({ title, description }: INoticeCardProps) => {
   return (
-    <Card className="w-full bg-blue-50 p-4 rounded-lg">
-      <h3 className="text-lg font-semibold text-gray-700 text-center">{title}</h3>
-      <p className="text-sm text-gray-600 mt-2 text-center">{description}</p>
+    <Card className="w-full rounded-lg bg-blue-50 p-4">
+      <h3 className="text-center text-lg font-semibold text-gray-700">{title}</h3>
+      <p className="mt-2 text-center text-sm text-gray-600">{description}</p>
     </Card>
   );
 };

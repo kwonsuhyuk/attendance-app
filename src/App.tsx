@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import "./firebase";
 import "./App.css";
-import "react-toastify/dist/ReactToastify.css";
 
 import MainRoutes from "./routes/MainRoutes";
 import Loading from "./components/common/Loading";
