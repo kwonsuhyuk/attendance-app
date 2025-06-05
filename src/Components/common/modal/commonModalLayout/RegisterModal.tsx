@@ -40,7 +40,7 @@ const RegisterModal = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className={`w-[90vw] ${maxWidthClass} overflow-y-auto dark:border dark:border-dark-border`}
+        className={`max-h-[95vh] w-[90vw] ${maxWidthClass} overflow-y-auto dark:border dark:border-dark-border`}
       >
         <DialogHeader>
           <DialogTitle
