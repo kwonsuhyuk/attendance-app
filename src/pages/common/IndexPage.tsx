@@ -255,8 +255,6 @@ export function FeatureSection({
             src={image}
             alt={title}
             className={`max-w-full rounded-xl object-contain shadow-md ${imageStyle}`}
-            onLoad={() => console.log(`✅ 이미지 로드 성공: ${image}`)}
-            onError={() => console.error(`❌ 이미지 로드 실패: ${image}`)}
           />
         </div>
 
