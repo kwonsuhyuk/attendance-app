@@ -86,7 +86,7 @@ const VacationRegisterModal: React.FC<IVacationModalProps> = ({ onClose, onRegis
 
       {/* 사용 기간 */}
       <div className="flex flex-col gap-2">
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
           <span className="font-medium">사용 기간 :</span>
           <div className="rounded-md border px-2 py-1 text-sm dark:border-dark-border dark:bg-white-bg">
             {vacationDays > 0 ? `${vacationDays}일` : ""}
