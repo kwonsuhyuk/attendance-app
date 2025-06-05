@@ -1,5 +1,5 @@
 import { db } from "@/api";
-import { ref, push, update, remove } from "firebase/database";
+import { ref, push, remove } from "firebase/database";
 import { NotificationPayload } from "@/model/types/notification.type";
 
 // 알림 전송 함수
