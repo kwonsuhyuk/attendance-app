@@ -67,7 +67,7 @@ function IndexPage() {
         </section>
         <FeatureSection
           bgColor="bg-white"
-          image="/images/금일출퇴근.png"
+          image="/images/today-attendance.png"
           title="직원 근태 현황을 한눈에"
           reverse
           description={
@@ -89,7 +89,7 @@ function IndexPage() {
 
         <FeatureSection
           bgColor="bg-[#f8f9fb]"
-          image="/images/출근하기.png"
+          image="/images/mobile-attendance.png"
           title="직원의 출근, 더 쉽고 정확하게"
           description={
             <>
@@ -108,7 +108,7 @@ function IndexPage() {
         />
         <FeatureSection
           bgColor="bg-white"
-          image="/images/기간출퇴근.png"
+          image="/images/period-attendance.png"
           title="기간별 출퇴근 기록도 한눈에"
           reverse
           description={
@@ -131,7 +131,7 @@ function IndexPage() {
 
         <FeatureSection
           bgColor="bg-[#f8f9fb]"
-          image="/images/휴가통계.png"
+          image="/images/vacation-statistic.png"
           title="휴가 통계, 더 정밀하게 한눈에"
           description={
             <>
@@ -155,7 +155,7 @@ function IndexPage() {
 
         <FeatureSection
           bgColor="bg-gradient-to-br from-white to-zinc-100"
-          image="/images/휴가내역.png"
+          image="/images/vacation-detail.png"
           title="휴가 요청과 승인도 간편하게"
           reverse
           description={
@@ -176,7 +176,7 @@ function IndexPage() {
 
         <FeatureSection
           bgColor="bg-white"
-          image="/images/정산.png"
+          image="/images/settlement.png"
           title="근태부터 휴가까지, 엑셀로 한 번에 정산"
           description={
             <>
@@ -255,6 +255,8 @@ export function FeatureSection({
             src={image}
             alt={title}
             className={`max-w-full rounded-xl object-contain shadow-md ${imageStyle}`}
+            onLoad={() => console.log(`✅ 이미지 로드 성공: ${image}`)}
+            onError={() => console.error(`❌ 이미지 로드 실패: ${image}`)}
           />
         </div>
 
