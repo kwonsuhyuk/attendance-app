@@ -23,39 +23,14 @@ const NoticePage = () => {
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const { toast } = useToast();
 
-  useTour("notice", noticeTourSteps, [1, 2]);
-  const { run, stepIndex, setStepIndex, steps } = useTourStore(
-    useShallow(state => ({
-      run: state.run,
-      stepIndex: state.stepIndex,
-      setStepIndex: state.setStepIndex,
-      steps: state.steps,
-    })),
-  );
+  useTour("notice", noticeTourSteps);
 
   const handleClickWriteButton = () => {
     setIsModalOpen(true);
-
-    const currentStep = steps[stepIndex];
-    if (run && currentStep?.target === '[data-tour="notice-1"]') {
-      setTimeout(() => {
-        const target = document.querySelector('[data-tour="notice-2"]');
-        if (target) {
-          setStepIndex(stepIndex + 1); // 수동으로 다음 step 이동
-        }
-      }, 300);
-    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-
-    const currentStep = steps[stepIndex];
-    if (run && currentStep?.target === '[data-tour="notice-modal"]') {
-      setTimeout(() => {
-        setStepIndex(stepIndex + 1);
-      }, 300);
-    }
   };
 
   const [page, setPage] = useState(1);
@@ -126,7 +101,14 @@ const NoticePage = () => {
 
         <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:px-6 md:grid-cols-2">
           {sortedNotices.length === 0 ? (
-            <p className="text-sm text-muted-foreground">등록된 공지사항이 없습니다.</p>
+            <>
+              <div
+                data-tour="notice-3"
+                className="flex h-24 items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-sm text-gray-400"
+              >
+                등록된 공지사항이 없습니다.
+              </div>
+            </>
           ) : (
             sortedNotices.map(notice =>
               notice.id ? (

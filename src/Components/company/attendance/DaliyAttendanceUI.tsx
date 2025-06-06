@@ -1,4 +1,4 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   UserCheck,
@@ -8,7 +8,6 @@ import {
   RefreshCw,
   User,
   PlaneTakeoffIcon,
-  StickyNote,
   Copy,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -261,7 +260,7 @@ export const AttendanceStatsCards = ({ selectedDate }: { selectedDate: Date }) =
         bgColor="bg-point-color"
         title="출근 현황"
         count={`${commuteEmployeeNumber}명 / ${totalEmployeeNumber}명`}
-        className="bg-point-color-sub border-point-color"
+        className="border-point-color bg-point-color-sub"
       />
 
       <TodayVacationEmployeeCard selectedDate={selectedDate} />
@@ -316,7 +315,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
 
   return (
     <Card
-      className="bg-point-color-sub rounded-xl border shadow-lg dark:bg-zinc-900"
+      className="rounded-xl border bg-point-color-sub shadow-lg dark:bg-zinc-900"
       data-tour="today-5"
     >
       <CardContent className="flex flex-col gap-4 p-4 sm:p-4">
@@ -381,7 +380,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
 
   return (
     <div
-      className="border-outwork-color dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl border border-solid bg-white p-4 shadow-lg"
+      className="dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl border border-solid border-outwork-color bg-white p-4 shadow-lg"
       data-tour="today-6"
     >
       <div className="flex items-center justify-between">
@@ -430,7 +429,7 @@ export const OutworkerItem = ({
   return (
     <li className="flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none dark:bg-[#1f2b26]">
       {/* 아이콘 */}
-      <div className="bg-point-color-sub dark:bg-point-color-sub/30 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-vacation-color dark:text-white">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/30 dark:text-white">
         <User className="h-5 w-5" />
       </div>
 
@@ -538,7 +537,7 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
     <>
       <div
         onClick={() => setOpen(true)}
-        className="border-point-color-sub flex h-full flex-col gap-4 rounded-2xl border bg-white p-4 pb-0 shadow-md transition-transform hover:scale-[1.01] hover:shadow-lg dark:border-white/10 dark:bg-[#f6f8f7]"
+        className="flex h-full flex-col gap-4 rounded-2xl border border-point-color-sub bg-white p-4 pb-0 shadow-md transition-transform hover:scale-[1.01] hover:shadow-lg dark:border-white/10 dark:bg-[#f6f8f7]"
       >
         {/* 헤더 */}
         <div className="flex items-start justify-between">
@@ -552,7 +551,7 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
         </div>
 
         {place.memo && (
-          <div className="border-point-color-sub bg-point-color-sub/10 dark:border-point-color-sub rounded-md border border-dashed px-4 py-3 text-sm text-point-color dark:text-point-color">
+          <div className="rounded-md border border-dashed border-point-color-sub bg-point-color-sub/10 px-4 py-3 text-sm text-point-color dark:border-point-color-sub dark:text-point-color">
             {place.memo}
           </div>
         )}
@@ -573,7 +572,7 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
                   className="flex items-start justify-between gap-2 rounded-md bg-white px-3 py-2 dark:bg-zinc-800"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="bg-point-color-sub dark:bg-point-color-sub/40 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-vacation-color dark:text-white">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/40 dark:text-white">
                       <User className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col gap-0.5">

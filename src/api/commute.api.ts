@@ -319,7 +319,7 @@ export async function fetchCalendarSummaryByWorkplace(
         Object.values(dayData).forEach(data => {
           const workplaceId = data.startWorkplaceId || data.endWorkplaceId;
           const workplaceName =
-            workplaceId === "외근" ? "외근" : workPlaceList.find(p => p.id === workplaceId)?.name;
+            workplaceId === "외근" ? "외근" : workPlaceList?.find(p => p.id === workplaceId)?.name;
 
           // 외근은 필터 상관없이 항상 포함
           if (workplaceName === "외근" || data.outworkingMemo) {
