@@ -35,7 +35,7 @@ export const ManagerMenuBar = () => {
 
       <SidebarFooter className="mt-auto space-y-3 border border-t border-solid p-4 dark:border-gray-800 dark:bg-dark-bg">
         <SidebarMenuSubButton
-          href="https://docs.google.com/forms/d/e/1FAIpQLScaham4g12Q0CbAaOw5uLDCXwplXhEMYaFqzx-1TA-2_0Bvcw/viewform?usp=header"
+          href="https://forms.gle/D8ESME9mL8Myo8uJ7"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex w-full items-center gap-2 rounded-md border border-t border-solid border-point-color bg-white px-4 py-2 text-sm font-medium text-point-color transition-colors duration-200 hover:bg-point-color hover:text-white dark:bg-transparent dark:text-point-color dark:hover:bg-point-color dark:hover:text-white"

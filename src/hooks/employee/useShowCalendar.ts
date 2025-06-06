@@ -6,7 +6,6 @@ import { fetchRegisteredVacationsByMonth } from "@/api/vacation.api";
 import { getVacationDateRange } from "@/util/vacation.util";
 import { TCommuteData } from "@/model/types/commute.type";
 import { useUserStore } from "@/store/user.store";
-import { useCompanyStore } from "@/store/company.store";
 import { getToday } from "@/util/date.util";
 import { calculateCommuteSummaryByType } from "@/util/commute.util";
 import { TRegisteredVacation } from "@/model/types/vacation.type";

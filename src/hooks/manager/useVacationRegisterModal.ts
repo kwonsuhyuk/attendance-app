@@ -76,7 +76,7 @@ export const useVacationRegister = (
       },
       requestDate: `${dateRange.from.toISOString().split("T")[0]} ~ ${dateRange.to.toISOString().split("T")[0]}`,
       reason,
-      status: "자동 승인",
+      status: "자동승인",
       email: selectedEmployee.email,
     };
 
@@ -96,7 +96,7 @@ export const useVacationRegister = (
           endDate: format(dateRange.to, "yyyy-MM-dd"),
           vacationType: vacationType as TVacationType,
           reason,
-          status: "자동 승인됨",
+          status: "자동승인",
           createdAt: new Date().toISOString(),
           name: selectedEmployee.name,
           email: selectedEmployee.email,

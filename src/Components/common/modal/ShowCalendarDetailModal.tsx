@@ -23,9 +23,9 @@ const CommuteDetailModal = ({
   commuteData,
   vacationList = [],
 }: CommuteDetailModalProps) => {
-  const workPlaceList = useCompanyStore(state => state.currentCompany?.workPlacesList || []);
+  const workPlaceList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const getWorkplaceNameById = (id?: string) =>
-    id ? workPlaceList.find(w => w.id === id)?.name : undefined;
+    id ? workPlaceList?.find(w => w.id === id)?.name : undefined;
 
   const commute = selectedDate ? commuteData[selectedDate] : null;
   const vacation = vacationList.find(v =>

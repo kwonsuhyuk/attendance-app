@@ -11,7 +11,6 @@ import { format } from "date-fns";
 import { TRegisteredVacation, TVacationType } from "@/model/types/vacation.type";
 import { useNotification } from "@/hooks/employee/useNotification";
 
-
 export const useVacationRequests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 더미데이터 사용시
@@ -181,7 +180,7 @@ export const useVacationRequests = () => {
       const data = await fetchVacationRegistered(companyCode);
 
       const mapped = data
-        .filter(item => item.status === "자동 승인됨") // ✅ 자동 승인만 등록탭에 포함
+        .filter(item => item.status === "자동승인")
         .map(item => {
           return {
             id: item.createdAt ?? new Date().toISOString(),

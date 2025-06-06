@@ -3,27 +3,19 @@ import { Step } from "react-joyride";
 export const noticeTourSteps: Step[] = [
   {
     target: "body",
-    content: "이곳은 공지사항을 관리하는 페이지입니다.",
+    content: "공지사항 페이지입니다. 이곳에서 공지를 등록하고 관리할 수 있어요.",
     placement: "center",
-    disableBeacon: true,
   },
   {
     target: '[data-tour="notice-1"]',
-    content: "새로운 공지사항을 작성할 수 있어요. 클릭해주세요!",
-    disableBeacon: true,
-    spotlightClicks: true,
-    hideFooter: true,
+    content: "여기를 눌러 새로운 공지사항을 작성할 수 있어요.",
+    placement: "bottom",
   },
   {
-    target: '[data-tour="notice-modal"]',
-    content: "게시물 유형을 설정하고 작성하시면 공지가 업로드됩니다.",
+    target: '[data-tour="notice-3"]', // NoticeCard 전체
+    content:
+      "등록된 공지사항을 확인할 수 있어요. 자세한 내용을 보시고 싶으시면 박스를 클릭하시면 됩니다.",
     placement: "top",
-    disableBeacon: true,
-  },
-  {
-    target: '[data-tour="notice-2"]',
-    content: "자세한 공지사항 내용을 보려면 이 버튼을 클릭해 주세요.",
-    disableBeacon: true,
   },
 ];
 
@@ -357,7 +349,7 @@ export const settlementTourStep: Step[] = [
     content: "정산하려는 날짜를 선택하고, 직원의 이름을 검색해보세요!",
     disableBeacon: true,
     spotlightClicks: true,
-    hideFooter: true,
+    showSkipButton: true,
   },
   {
     target: '[data-tour="settlement-2"]',
