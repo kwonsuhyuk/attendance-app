@@ -1,10 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import CompanyInfoHeader from "./CompanyInfoHeader";
 import CompanySummaryInfo from "../common/CompanySummaryInfo";
-import { useCompanyStore } from "@/store/company.store";
 import IntroGuideBox from "./mainpageBox/IntroGuideBox";
 import CommuteBox from "./mainpageBox/CommuteBox";
 import NoticeBox from "./mainpageBox/NoticeBox";

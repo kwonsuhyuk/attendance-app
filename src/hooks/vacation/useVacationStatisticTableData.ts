@@ -44,7 +44,7 @@ export const useVacationStatisticTableData = (
             days.forEach(() => {
               if (entry.vacationType === "연차") annual++;
               else if (entry.vacationType === "반차") half++;
-              else if (entry.vacationType === "특별 휴가") special++;
+              else if (entry.vacationType === "특별") special++;
             });
           });
         } else {
@@ -58,7 +58,7 @@ export const useVacationStatisticTableData = (
               days.forEach(() => {
                 if (entry.vacationType === "연차") annual++;
                 else if (entry.vacationType === "반차") half++;
-                else if (entry.vacationType === "특별 휴가") special++;
+                else if (entry.vacationType === "특별") special++;
               });
             });
           });

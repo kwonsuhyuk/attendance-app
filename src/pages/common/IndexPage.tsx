@@ -21,8 +21,8 @@ function IndexPage() {
           <div className="text-xl font-bold text-white md:text-2xl">On&Off</div>
           <nav>
             <button
-              className="hover:bg-point-color-sub ml-4 rounded-md border border-solid bg-point-color px-4 py-2 text-sm text-black transition hover:text-black"
-              onClick={() => navigate("/login")}
+              className="ml-4 rounded-md border border-solid bg-point-color px-4 py-2 text-sm text-black transition hover:bg-point-color-sub hover:text-black"
+              onClick={() => navigate("/signin")}
             >
               로그인
             </button>
@@ -50,7 +50,7 @@ function IndexPage() {
               간편하고 효율적인 근태 관리로 일상을 바꾸세요.
             </p>
             <button
-              className="hover:bg-point-color-sub rounded bg-point-color px-6 py-3 text-sm font-semibold text-black transition md:px-8 md:py-4 md:text-base"
+              className="rounded bg-point-color px-6 py-3 text-sm font-semibold text-black transition hover:bg-point-color-sub md:px-8 md:py-4 md:text-base"
               onClick={() => navigate("/signup")}
             >
               지금 시작하기

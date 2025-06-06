@@ -1,16 +1,8 @@
-// Import the functions you need from the SDKs you need
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-import "firebase/database";
-import * as firebase from "firebase/app";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// config 그대로 사용
 const firebaseConfig = {
   apiKey: "AIzaSyBWsGya53buGyFjmgeV-dNgd2XqeBXy4d0",
   authDomain: "britec-attd-app.firebaseapp.com",
@@ -22,9 +14,11 @@ const firebaseConfig = {
   measurementId: "G-P4SQ6BEGGM",
 };
 
-// Initialize Firebase
+// Firebase 초기화
 const app = initializeApp(firebaseConfig);
+
+// 필요한 서비스만 추출
 const auth = getAuth(app);
-const db = firebase.getDatabase;
+const db = getDatabase(app);
 
 export { db, auth };

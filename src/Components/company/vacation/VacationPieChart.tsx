@@ -3,7 +3,6 @@ import { EmployeeInfo } from "@/model/types/user.type";
 import { useVacationPieChart } from "@/hooks/vacation/useVacationPieChart";
 import { CustomTooltip } from "@/components/common/chart/CustomTooltip";
 import { CustomLegend } from "@/components/common/chart/CustomLegend";
-import VacationSubTitle from "./\bVacationSubTitle";
 import { cn } from "@/util/cn.util";
 import { CardTitle } from "@/components/ui/card";
 

@@ -27,7 +27,6 @@ export const useShowCalendar = () => {
 
   const companyCode = useUserStore(state => state.currentUser?.companyCode);
   const userId = useUserStore(state => state.currentUser?.uid);
-  const holidayList = useCompanyStore(state => state.currentCompany?.holidayList || []);
 
   useEffect(() => {
     if (isOpen) {
