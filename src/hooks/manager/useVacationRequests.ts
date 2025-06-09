@@ -183,7 +183,8 @@ export const useVacationRequests = () => {
         .filter(item => item.status === "자동승인")
         .map(item => {
           return {
-            id: item.createdAt ?? new Date().toISOString(),
+            id: item.registerId,
+            createdAt: item.createdAt ?? new Date().toISOString(),
             requestType: item.vacationType,
             requester: {
               name: item.name,
@@ -206,21 +207,22 @@ export const useVacationRequests = () => {
     tabValue: string,
     filter: (item: IVacationRequest) => boolean,
   ) => {
-    if (tabValue === "registered") return registeredRequests;
+    const sortByLatest = (a: IVacationRequest, b: IVacationRequest) => {
+      const getTime = (item: IVacationRequest) => {
+        if (item.processedAt) return new Date(item.processedAt).getTime();
+        if (item.requestDate) return new Date(item.requestDate.split(" ~ ")[0]).getTime();
+        if (item.id) return new Date(item.id).getTime();
+        return 0;
+      };
 
-    if (tabValue === "processed") {
-      return requests.filter(filter).sort((a, b) => {
-        const aTime = a.processedAt
-          ? new Date(a.processedAt).getTime()
-          : new Date(a.requestDate.split(" ~ ")[0]).getTime();
-        const bTime = b.processedAt
-          ? new Date(b.processedAt).getTime()
-          : new Date(b.requestDate.split(" ~ ")[0]).getTime();
-        return bTime - aTime;
-      });
+      return getTime(b) - getTime(a);
+    };
+
+    if (tabValue === "registered") {
+      return [...registeredRequests].sort(sortByLatest);
     }
 
-    return requests.filter(filter);
+    return requests.filter(filter).sort(sortByLatest);
   };
 
   return {
