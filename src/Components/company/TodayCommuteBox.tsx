@@ -1,12 +1,14 @@
 import { useTodayCommuteData } from "@/hooks/manager/useTodayCommuteData";
 import { useCompanyStore } from "@/store/company.store";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { TodayVacationEmployeeCard } from "./attendance/DaliyAttendanceUI";
-import { Copy, User } from "lucide-react";
+import { Bell, Copy, FileWarning, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFilterWork } from "@/hooks/manager/useFilterWork";
+import RequestAlarmButton from "./RequestAlarmButton";
+import OutworkRequestModal from "../common/modal/OutworkRequestModal";
 
 export const EmployeeListItem = ({
   name,
@@ -88,7 +90,7 @@ const TodayCommuteBox = () => {
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
-
+  const [showModal, setShowModal] = useState(false);
   useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   const percentage = totalEmployeeNumber
@@ -97,6 +99,37 @@ const TodayCommuteBox = () => {
 
   const chartData = [{ name: "출근율", value: percentage, fill: "#10b981" }];
 
+  let pendingOutworkCount = 1;
+  const pendingOutworkList = [
+    {
+      id: "outwork-001",
+      requester: {
+        name: "김민재",
+        jobName: "영업팀",
+      },
+      reason: "거래처 미팅",
+      requestDate: "2025-06-08T10:00:00",
+    },
+    {
+      id: "outwork-002",
+      requester: {
+        name: "이서연",
+        jobName: "디자인팀",
+      },
+      reason: "외부 촬영",
+      requestDate: "2025-06-09T09:30:00",
+    },
+    {
+      id: "outwork-003",
+      requester: {
+        name: "박지훈",
+        jobName: "개발팀",
+      },
+      reason: "협력사 회의 참석",
+      requestDate: "2025-06-09T14:00:00",
+    },
+  ];
+
   return (
     <div
       className="flex min-h-[250px] flex-col gap-4 md:flex-row md:gap-6 md:p-3"
@@ -104,11 +137,11 @@ const TodayCommuteBox = () => {
     >
       {/* 출근율 박스 */}
       <div className="w-full dark:text-white md:max-w-sm">
-        <div className="border-point-color-sub bg-point-color-sub rounded-xl border border-solid p-6 text-white shadow-lg dark:border-white/20 dark:bg-[#b4c8bb] dark:text-white">
+        <div className="rounded-xl border border-solid border-point-color-sub bg-point-color-sub p-6 text-white shadow-lg dark:border-white/20 dark:bg-[#b4c8bb] dark:text-white">
           <h2 className="mb-2 text-lg font-bold text-vacation-dark-color dark:text-white">
             금일 출근율
           </h2>
-          {/* 출근 인원 시각적 강조 */}
+
           <div className="mb-4 flex items-baseline gap-1 text-sm dark:text-white/80">
             <span className="text-3xl font-extrabold text-vacation-dark-color">
               {commuteEmployeeNumber}
@@ -147,7 +180,6 @@ const TodayCommuteBox = () => {
         </div>
       </div>
 
-      {/* 리스트 */}
       <div className="flex w-full flex-col gap-4 md:flex-row">
         {[
           { title: "현재 근무 중", list: workingEmployees },
@@ -157,19 +189,34 @@ const TodayCommuteBox = () => {
             key={title}
             className="flex flex-1 flex-col gap-4 rounded-xl border border-point-color bg-white px-4 pt-6 shadow-md dark:border-white/20 dark:bg-[#f6f8f7]"
           >
-            <h3 className="flex items-center gap-2 text-sm font-semibold">
-              <span className="inline-block rounded bg-vacation-color px-2 py-0.5 text-[11px] font-bold text-white">
-                {idx === 0 ? "WORKING" : "OUTWORK"}
-              </span>
-              <span className="text-vacation-color">
-                {title} ({list?.length || 0})
-              </span>
-            </h3>
+            {/* 타이틀 영역 */}
+            <div className="flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <span className="inline-block rounded bg-vacation-color px-2 py-0.5 text-[11px] font-bold text-white">
+                  {idx === 0 ? "WORKING" : "OUTWORK"}
+                </span>
+                <span className="text-vacation-color">
+                  {title} ({list?.length || 0})
+                </span>
+              </h3>
+
+              {/* 외근 요청 알림 (오른쪽 아이콘 + 텍스트) */}
+              {idx === 1 && (
+                <RequestAlarmButton
+                  count={pendingOutworkCount}
+                  label="외근 요청"
+                  onClick={() => setShowModal(true)}
+                />
+              )}
+            </div>
+
+            {/* 리스트 */}
             <ul className="relative max-h-[480px] space-y-3 overflow-y-auto pr-1 pt-5">
               {list?.length > 0 ? (
                 list.map((item, index) => {
                   const user = idx === 0 ? item.user : item;
                   if (!user) return null;
+
                   return (
                     <EmployeeListItem
                       key={index}
@@ -197,6 +244,13 @@ const TodayCommuteBox = () => {
           </div>
         ))}
       </div>
+
+      {/* 외근 요청 모달 */}
+      <OutworkRequestModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        pendingOutworkList={pendingOutworkList}
+      />
     </div>
   );
 };

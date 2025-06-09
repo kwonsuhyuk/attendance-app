@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { useCompanyStore } from "@/store/company.store";
 import useCommuteBox from "@/hooks/employee/useCommuteBox";
 import CommuteBoxRenderItem from "./CommuteBoxRenderItem";
 import Clock from "../Clock";

@@ -72,3 +72,9 @@ export type TCommuteRecord = {
   endWorkplaceId?: string;
   userInfo?: TEmpUserData;
 };
+
+export type IOutworkRequest = {
+  requester: TEmpUserData;
+  outworkingMemo: string;
+  requestDate: string;
+};

@@ -56,7 +56,7 @@ const CommuteConfirmModal = ({
         </DialogHeader>
 
         <div className="mt-4 space-y-4 text-sm">
-          <div className="rounded-lg rounded-md border border-solid border-gray-300 border-white-border-sub bg-white p-4">
+          <div className="rounded-lg border border-solid border-gray-300 border-white-border-sub bg-white p-4">
             <div className="mb-2">
               <p className="text-xs text-muted-foreground">근무지 이름</p>
               <p className="text-sm font-semibold text-gray-700">{place.name}</p>

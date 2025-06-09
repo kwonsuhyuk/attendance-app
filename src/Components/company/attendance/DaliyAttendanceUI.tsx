@@ -43,6 +43,8 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { EmployeeListItem } from "../TodayCommuteBox";
 import WorkplaceDetailModal from "@/components/common/modal/WorkplaceDetailModal";
 import clsx from "clsx";
+import RequestAlarmButton from "../RequestAlarmButton";
+import OutworkRequestModal from "@/components/common/modal/OutworkRequestModal";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -373,10 +375,41 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
     month: dayjs(selectedDate).format("MM"),
     day: dayjs(selectedDate).format("DD"),
   });
-
+  const [showModal, setShowModal] = useState(false);
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
+
+  let pendingOutworkCount = 1;
+  const pendingOutworkList = [
+    {
+      id: "outwork-001",
+      requester: {
+        name: "김민재",
+        jobName: "영업팀",
+      },
+      reason: "거래처 미팅",
+      requestDate: "2025-06-08T10:00:00",
+    },
+    {
+      id: "outwork-002",
+      requester: {
+        name: "이서연",
+        jobName: "디자인팀",
+      },
+      reason: "외부 촬영",
+      requestDate: "2025-06-09T09:30:00",
+    },
+    {
+      id: "outwork-003",
+      requester: {
+        name: "박지훈",
+        jobName: "개발팀",
+      },
+      reason: "협력사 회의 참석",
+      requestDate: "2025-06-09T14:00:00",
+    },
+  ];
 
   return (
     <div
@@ -384,10 +417,18 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
       data-tour="today-6"
     >
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-bold text-gray-800 dark:text-white sm:text-lg">외근 인원</h3>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {outworkingEmployees.length}명
-        </span>
+        <div className="flex items-center gap-2 text-base font-bold text-gray-800 dark:text-white sm:text-lg">
+          외근 인원
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            ({outworkingEmployees.length})
+          </span>
+        </div>
+
+        <RequestAlarmButton
+          count={pendingOutworkCount}
+          label="외근 요청"
+          onClick={() => setShowModal(true)}
+        />
       </div>
 
       <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
@@ -401,6 +442,11 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
           </li>
         )}
       </ul>
+      <OutworkRequestModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        pendingOutworkList={pendingOutworkList}
+      />
     </div>
   );
 };
