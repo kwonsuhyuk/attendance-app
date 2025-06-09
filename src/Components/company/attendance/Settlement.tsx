@@ -215,7 +215,7 @@ const Settlement = ({
 
       {selectedEmployee && (
         <section className="flex items-center gap-3" data-tour="settlement-3">
-          <div className="bg-point-color-sub flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
+          <div className="flex flex-1 items-start justify-between gap-4 rounded-lg border border-blue-200 bg-point-color-sub px-5 py-4 shadow-sm transition-colors dark:border-blue-400 dark:bg-blue-900/20">
             <div className="flex items-start gap-3">
               <Checkbox
                 id="salaryCheck"
@@ -229,10 +229,10 @@ const Settlement = ({
                 className="text-sm leading-snug text-gray-800 dark:text-gray-100"
               >
                 <strong className="font-semibold text-gray-900 dark:text-white">
-                  급여 기반 수당 포함하기
+                  수당 계산 포함하기
                 </strong>
                 <span className="mt-0.5 block text-sm text-gray-600 dark:text-gray-400">
-                  시급 환산 기준으로 수당을 계산합니다.
+                  시급 정보를 바탕으로 야근, 주말 근무 등 수당을 자동으로 계산합니다.
                 </span>
               </Label>
             </div>
@@ -241,18 +241,18 @@ const Settlement = ({
       )}
       {selectedEmployee && (
         <div
-          className="dark:border-point-color-sub dark:bg-point-color-sub/10 rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:backdrop-blur"
+          className="rounded-2xl border border-solid border-point-color bg-white/60 p-6 shadow-sm backdrop-blur-sm dark:border-point-color-sub dark:bg-point-color-sub/10 dark:backdrop-blur"
           data-tour="settlement-4"
         >
           <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-vacation-dark-color dark:text-point-color">
             <AlertCircle className="h-5 w-5" />
             회사 정산 정책 안내
           </div>
-          <div className="bg-point-color-sub/20 dark:border-point-color-sub dark:bg-point-color-sub/10 my-5 flex items-start gap-3 rounded-md border border-solid border-point-color p-4 text-sm text-point-color dark:text-point-color">
+          <div className="my-5 flex items-start gap-3 rounded-md border border-solid border-point-color bg-point-color-sub/20 p-4 text-sm text-point-color dark:border-point-color-sub dark:bg-point-color-sub/10 dark:text-point-color">
             <AlertTriangle className="mt-1 h-5 w-5 text-point-color" />
             <div>
               <span className="font-semibold">외근은 수당 계산에서 제외됩니다.</span>
-              <div className="dark:text-point-color-sub mt-1 text-xs text-point-color/80">
+              <div className="mt-1 text-xs text-point-color/80 dark:text-point-color-sub">
                 출퇴근 기록 및 수당 계산 없이 외근 횟수만 정산됩니다.
               </div>
             </div>
@@ -368,8 +368,9 @@ const Settlement = ({
                   {/* 총 근무시간 계산 */}
                   <TableCell>
                     {(() => {
-                      const totalMinutes = summary.reduce((acc, cur) => {
-                        const match = cur.총근무시간.match(/(\\d+)시간 (\\d+)분/);
+                      const totalMinutes = summary.reduce((acc, cur, idx) => {
+                        const match = cur.총근무시간?.match(/(\d+)시간 (\d+)분/);
+
                         return acc + (match ? parseInt(match[1]) * 60 + parseInt(match[2]) : 0);
                       }, 0);
                       return `${Math.floor(totalMinutes / 60)}시간 ${totalMinutes % 60}분`;
@@ -379,8 +380,9 @@ const Settlement = ({
                   {/* 야간 근무시간 계산 */}
                   <TableCell>
                     {(() => {
-                      const totalNight = summary.reduce((acc, cur) => {
-                        const match = cur.야간근무.match(/(\\d+)시간 (\\d+)분/);
+                      const totalNight = summary.reduce((acc, cur, idx) => {
+                        const match = cur.야간근무?.match(/(\d+)시간 (\d+)분/);
+
                         return acc + (match ? parseInt(match[1]) * 60 + parseInt(match[2]) : 0);
                       }, 0);
                       return `${Math.floor(totalNight / 60)}시간 ${totalNight % 60}분`;
