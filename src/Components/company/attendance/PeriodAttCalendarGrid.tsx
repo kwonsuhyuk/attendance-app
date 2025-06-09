@@ -97,7 +97,6 @@ const PeriodAttCalendarGrid = ({
       <div className="grid grid-cols-7">
         {calendar.map((data, idx) => {
           const isSunday = idx % 7 === 0;
-          const isSaturday = idx % 7 === 6;
 
           if (data) {
             const fullDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), data.day);
