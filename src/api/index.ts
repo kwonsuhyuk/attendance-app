@@ -1,4 +1,4 @@
-import { get, set, getDatabase, ref, update, onValue, off } from "firebase/database";
+import { get, set, getDatabase, ref, update, onValue, off, remove } from "firebase/database";
 import "@/firebase";
 import { getCompanyInfoPath } from "@/constants/api.path";
 
@@ -31,6 +31,25 @@ export async function setData<T>(
     return { success: true, message: message || "데이터가 성공적으로 저장되었습니다." };
   } catch (error: any) {
     console.error(`Error setting data to ${path}:`, error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Firebase 데이터 삭제 함수
+ * @param path 삭제할 Firebase 경로
+ * @param message 성공 시 반환할 메시지 (선택 사항)
+ * @returns 성공 또는 실패 응답 객체
+ */
+export async function removeData(
+  path: string,
+  message?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    await remove(ref(db, path));
+    return { success: true, message: message || "데이터가 성공적으로 삭제되었습니다." };
+  } catch (error: any) {
+    console.error(`Error removing data from ${path}:`, error);
     return { success: false, error: error.message };
   }
 }

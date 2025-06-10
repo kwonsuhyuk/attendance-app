@@ -9,8 +9,6 @@ import {
   AlertTriangle,
   Building2,
   TimerIcon,
-  MessageSquare,
-  StickyNote,
   LogIn,
   LogOut,
   AlertCircle,

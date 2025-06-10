@@ -1,5 +1,9 @@
-import { getDayCommutePath, getUserDayCommutePath } from "@/constants/api.path";
-import { getData, setData, updateData } from ".";
+import {
+  getDayCommutePath,
+  getOutworkRequestListPath,
+  getUserDayCommutePath,
+} from "@/constants/api.path";
+import { getData, removeData, setData, updateData } from ".";
 import {
   TStartCommutePayload,
   TEndCommutePayload,
@@ -9,11 +13,14 @@ import {
   TEndOutwokingPayload,
   TCalendarDayInfo,
   TCommuteRecord,
+  IOutworkRequest,
 } from "@/model/types/commute.type";
 import { TWorkPlace } from "@/model/types/company.type";
 import { fetchRegisteredVacationsByMonth } from "./vacation.api";
 import dayjs from "dayjs";
 import { TUserBase } from "@/model/types/user.type";
+import { set } from "date-fns";
+import { getDatabase, off, onValue, ref } from "firebase/database";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -125,6 +132,62 @@ export async function processCommute(
     console.error("❌ Error processing commute:", error);
     return { success: false, error: error.message };
   }
+}
+
+/**
+ * 외근 요청 등록 함수 (정규화 setData 유틸 사용)
+ * @param companyCode 회사 코드
+ * @param requestId 요청 ID
+ * @param data 외근 요청 데이터
+ */
+export async function createOutworkRequest(
+  companyCode: string,
+  requestId: string,
+  data: IOutworkRequest,
+) {
+  const path = `${getOutworkRequestListPath(companyCode)}/${requestId}`;
+  return await setData(path, data, "외근 요청이 등록되었습니다.");
+}
+
+/**
+ * 외근 요청 리스트를 실시간으로 구독하는 함수
+ * @param companyCode 회사 코드
+ * @param callback 변경된 외근 요청 리스트를 전달받는 콜백
+ * @returns 구독 해제 함수
+ */
+export function subscribeToOutworkRequests(
+  companyCode: string,
+  callback: (data: IOutworkRequest[]) => void,
+) {
+  const path = getOutworkRequestListPath(companyCode);
+  const requestRef = ref(getDatabase(), path);
+
+  const unsubscribe = onValue(requestRef, snapshot => {
+    if (!snapshot.exists()) {
+      callback([]);
+      return;
+    }
+
+    const raw = snapshot.val();
+    const requestList: IOutworkRequest[] = Object.entries(raw).map(([id, value]) => ({
+      id,
+      ...(value as IOutworkRequest),
+    }));
+
+    callback(requestList);
+  });
+
+  return () => off(requestRef, "value", unsubscribe);
+}
+
+/**
+ * 외근 요청 삭제 함수 (removeData 유틸 사용)
+ * @param companyCode 회사 코드
+ * @param requestId 삭제할 요청 ID
+ */
+export async function deleteOutworkRequest(companyCode: string, requestId: string) {
+  const path = `${getOutworkRequestListPath(companyCode)}/${requestId}`;
+  return await removeData(path, "외근 요청이 삭제되었습니다.");
 }
 
 export async function registerOutWork(
