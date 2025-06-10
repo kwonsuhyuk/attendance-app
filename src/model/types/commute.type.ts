@@ -41,6 +41,7 @@ export type TCommuteStatus =
   | "checked-in-only" // 출근은 했고, 퇴근은 안 한 상태
   | "checked-in-and-out" // 출퇴근 모두 완료
   | "out-working" // 외근
+  | "out-working-checking" // 외근 요청 대기
   | "missing-check-in"; // 퇴근만 있고 출근 기록 없음 (비정상 케이스)
 
 export type TCalendarDayInfo = {

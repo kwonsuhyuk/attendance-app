@@ -426,7 +426,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
 
         <RequestAlarmButton
           count={pendingOutworkCount}
-          label="외근 요청"
+          label="새로운 외근 요청"
           onClick={() => setShowModal(true)}
         />
       </div>

@@ -16,12 +16,18 @@ const RequestAlarmButton = ({
   icon = <Bell className="h-4 w-4" />,
   className = "",
 }: IRequestAlarmButtonProps) => {
-  if (count === 0) return 0;
+  if (count === 0) return null;
+
+  const isAlert = count > 0;
+  const baseStyle =
+    "flex items-center gap-1 rounded-md px-2 py-1 text-sm  font-medium transition-colors";
+  const alertStyle = "bg-red-50 text-red-600 hover:bg-red-100";
+  const normalStyle = "bg-gray-100 text-gray-600 hover:bg-gray-200";
 
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1 rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-100 ${className}`}
+      className={`${baseStyle} ${isAlert ? alertStyle : normalStyle} ${className}`}
     >
       {icon}
       {label} ({count})

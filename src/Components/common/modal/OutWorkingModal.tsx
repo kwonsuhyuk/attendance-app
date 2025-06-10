@@ -92,6 +92,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
         </div>
         <div className="flex justify-end gap-2">
           <Button
+            variant={"outline"}
             className="bg-gray-100 text-gray-800 dark:bg-gray-100"
             onClick={() => setOpen(false)}
             disabled={isSubmitting}
@@ -99,7 +100,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
             취소
           </Button>
           <Button
-            className="bg-point-color text-gray-800"
+            className="bg-point-color text-gray-800 hover:bg-point-color-sub"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >

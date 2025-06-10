@@ -204,7 +204,7 @@ const TodayCommuteBox = () => {
               {idx === 1 && (
                 <RequestAlarmButton
                   count={pendingOutworkCount}
-                  label="외근 요청"
+                  label="새로운 외근 요청"
                   onClick={() => setShowModal(true)}
                 />
               )}

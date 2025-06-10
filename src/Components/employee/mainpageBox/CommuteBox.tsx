@@ -4,7 +4,14 @@ import useCommuteBox from "@/hooks/employee/useCommuteBox";
 import CommuteBoxRenderItem from "./CommuteBoxRenderItem";
 import Clock from "../Clock";
 
-import { DoorOpen, Clock as ClockIcon, CalendarCheck2, Plane, MapPin } from "lucide-react";
+import {
+  DoorOpen,
+  Clock as ClockIcon,
+  CalendarCheck2,
+  Plane,
+  MapPin,
+  AlertCircle,
+} from "lucide-react";
 import { TCommuteStatus } from "@/model/types/commute.type";
 
 const CommuteBox = () => {
@@ -73,6 +80,13 @@ const getStatusDisplay = (status: TCommuteStatus) => {
         label: "외근 중",
         icon: <Plane className="h-5 w-5 text-orange-500" />,
         colorClass: "bg-orange-50 text-orange-600",
+      };
+    case "out-working-checking":
+      // out-working-checking
+      return {
+        label: "외근 승인 대기중",
+        icon: <AlertCircle className="animate-ping-slow h-5 w-5 text-yellow-500" />,
+        colorClass: "bg-yellow-100 text-yellow-700 ring-1 ring-yellow-300 animate-pulse",
       };
     default:
       return {
