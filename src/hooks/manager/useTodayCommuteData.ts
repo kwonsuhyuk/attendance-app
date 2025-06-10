@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import dayjs from "dayjs";
 import { fetchEmployees } from "@/api/employee.api";
 import { TCommuteRecord } from "@/model/types/commute.type";
-import { fetchTodayCommuteDataWithUserInfo } from "@/api/commute.api";
+import { subscribeToTodayCommuteDataWithUserInfo } from "@/api/commute.api";
 import { TEmpUserData } from "@/model/types/user.type";
 
 interface UseTodayCommuteDataProps {
@@ -36,22 +35,23 @@ export function useTodayCommuteData({ year, month, day }: UseTodayCommuteDataPro
   useEffect(() => {
     if (!companyCode) return;
 
-    async function loadCommuteData() {
-      try {
-        const data = await fetchTodayCommuteDataWithUserInfo(
-          companyCode as string,
-          year,
-          month,
-          day,
-        );
-        setCommuteData(data ?? []);
-      } catch (error) {
-        console.error("❌ 출퇴근 데이터 불러오기 실패:", error);
-        setCommuteData([]);
-      }
-    }
+    let unsubscribe: () => void;
 
-    loadCommuteData();
+    const init = async () => {
+      unsubscribe = await subscribeToTodayCommuteDataWithUserInfo(
+        companyCode,
+        year,
+        month,
+        day,
+        data => setCommuteData(data),
+      );
+    };
+
+    init();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [companyCode, year, month, day]);
 
   const workingEmployees = commuteData

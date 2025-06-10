@@ -45,6 +45,7 @@ import WorkplaceDetailModal from "@/components/common/modal/WorkplaceDetailModal
 import clsx from "clsx";
 import RequestAlarmButton from "../RequestAlarmButton";
 import OutworkRequestModal from "@/components/common/modal/OutworkRequestModal";
+import { useOutworkRequests } from "@/hooks/manager/useOutworkRequests";
 
 interface IAttendanceHeaderProps {
   selectedDate: Date;
@@ -379,37 +380,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   const placeList = useCompanyStore(state => state.currentCompany?.workPlacesList);
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
-
-  let pendingOutworkCount = 1;
-  const pendingOutworkList = [
-    {
-      id: "outwork-001",
-      requester: {
-        name: "김민재",
-        jobName: "영업팀",
-      },
-      reason: "거래처 미팅",
-      requestDate: "2025-06-08T10:00:00",
-    },
-    {
-      id: "outwork-002",
-      requester: {
-        name: "이서연",
-        jobName: "디자인팀",
-      },
-      reason: "외부 촬영",
-      requestDate: "2025-06-09T09:30:00",
-    },
-    {
-      id: "outwork-003",
-      requester: {
-        name: "박지훈",
-        jobName: "개발팀",
-      },
-      reason: "협력사 회의 참석",
-      requestDate: "2025-06-09T14:00:00",
-    },
-  ];
+  const { pendingOutworkList, pendingOutworkCount } = useOutworkRequests();
 
   return (
     <div

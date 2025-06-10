@@ -18,7 +18,18 @@ import {
 import { TWorkPlace } from "@/model/types/company.type";
 import { fetchRegisteredVacationsByMonth } from "./vacation.api";
 import dayjs from "dayjs";
-import { getDatabase, off, onValue, push, ref } from "firebase/database";
+import {
+  get,
+  getDatabase,
+  off,
+  onChildAdded,
+  onChildChanged,
+  onChildRemoved,
+  onValue,
+  push,
+  ref,
+} from "firebase/database";
+import { TEmpUserData } from "@/model/types/user.type";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -438,36 +449,53 @@ export async function fetchCalendarSummaryByWorkplace(
   }
 }
 
-export async function fetchTodayCommuteDataWithUserInfo(
+/**
+ * 출퇴근 + 유저 정보 실시간 구독
+ */
+export async function subscribeToTodayCommuteDataWithUserInfo(
   companyCode: string,
   year: string,
   month: string,
   day: string,
-): Promise<TCommuteRecord[]> {
+  onUpdate: (data: TCommuteRecord[]) => void,
+): Promise<() => void> {
   try {
-    const commutePath = getDayCommutePath(companyCode, year, month, day);
-    const commuteData = await getData(commutePath);
-
     const usersPath = `companyCode/${companyCode}/users`;
-    const usersData = await getData(usersPath);
+    const userMap = await getData<Record<string, TEmpUserData>>(usersPath);
 
-    if (!commuteData || !usersData) {
-      return [];
+    if (!userMap) {
+      console.warn("유저 정보가 없습니다.");
+      onUpdate([]);
+      return () => {};
     }
 
-    const result: TCommuteRecord[] = Object.entries(commuteData).map(([userId, record]: any) => ({
-      userId,
-      startTime: record.startTime,
-      startWorkplaceId: record.startWorkplaceId,
-      endTime: record.endTime,
-      endWorkplaceId: record.endWorkplaceId,
-      outworkingMemo: record.outworkingMemo,
-      userInfo: usersData[userId] || undefined,
-    }));
+    const commutePath = getDayCommutePath(companyCode, year, month, day);
+    const commuteRef = ref(getDatabase(), commutePath);
 
-    return result;
+    const unsubscribe = onValue(commuteRef, snapshot => {
+      const raw = snapshot.val();
+      if (!raw) {
+        onUpdate([]);
+        return;
+      }
+
+      const result: TCommuteRecord[] = Object.entries(raw).map(([userId, record]: any) => ({
+        userId,
+        startTime: record.startTime,
+        startWorkplaceId: record.startWorkplaceId,
+        endTime: record.endTime,
+        endWorkplaceId: record.endWorkplaceId,
+        outworkingMemo: record.outworkingMemo,
+        userInfo: userMap[userId] ?? undefined,
+      }));
+
+      onUpdate(result);
+    });
+
+    return unsubscribe;
   } catch (error) {
-    console.error("❌ 출퇴근 + 유저 데이터 조회 실패:", error);
-    return [];
+    console.error("❌ 유저 or 출퇴근 데이터 구독 실패:", error);
+    onUpdate([]);
+    return () => {};
   }
 }
