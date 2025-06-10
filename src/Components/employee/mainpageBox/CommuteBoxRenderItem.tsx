@@ -221,13 +221,15 @@ const CommuteBoxRenderItem = ({
           </div>
 
           {/* 요청 시간 */}
-          {commuteData?.startTime && (
+          {commuteData?.requestTime && (
             <div className="mt-3 flex items-center justify-between rounded-md bg-yellow-50 px-3 py-2 text-sm text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
                 요청 시간
               </div>
-              <span className="text-xs font-semibold">{getKSTDateInfo(commuteData.startTime)}</span>
+              <span className="text-xs font-semibold">
+                {getKSTDateInfo(commuteData.requestTime)}
+              </span>
             </div>
           )}
 
@@ -235,6 +237,16 @@ const CommuteBoxRenderItem = ({
           <div className="mt-4 px-4 py-2 text-xs text-yellow-800 dark:text-yellow-300">
             관리자의 승인을 기다리고 있습니다. <br />
             승인 전까지 출근 처리가 완료되지 않습니다.
+          </div>
+
+          {/* 취소 버튼 */}
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={onButtonClick}
+              className="rounded-md border border-yellow-500 bg-white px-4 py-1 text-sm font-semibold text-yellow-600 transition hover:bg-yellow-50 dark:border-yellow-400 dark:bg-transparent dark:text-yellow-300 dark:hover:bg-yellow-900"
+            >
+              요청 취소
+            </button>
           </div>
         </div>
       );

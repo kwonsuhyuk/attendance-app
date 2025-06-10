@@ -10,17 +10,15 @@ import {
   TCommuteData,
   TCommuteStatus,
   TStartOutWorkingPayload,
-  TEndOutwokingPayload,
   TCalendarDayInfo,
   TCommuteRecord,
-  IOutworkRequest,
+  TOutworkRequestWithId,
+  TOutworkRequest,
 } from "@/model/types/commute.type";
 import { TWorkPlace } from "@/model/types/company.type";
 import { fetchRegisteredVacationsByMonth } from "./vacation.api";
 import dayjs from "dayjs";
-import { TUserBase } from "@/model/types/user.type";
-import { set } from "date-fns";
-import { getDatabase, off, onValue, ref } from "firebase/database";
+import { getDatabase, off, onValue, push, ref } from "firebase/database";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -135,29 +133,32 @@ export async function processCommute(
 }
 
 /**
- * 외근 요청 등록 함수 (정규화 setData 유틸 사용)
+ * 외근 요청 등록 함수 (Firebase push로 자동 ID 생성)
  * @param companyCode 회사 코드
- * @param requestId 요청 ID
  * @param data 외근 요청 데이터
+ * @returns 등록 성공 여부와 자동 생성된 ID
  */
 export async function createOutworkRequest(
   companyCode: string,
-  requestId: string,
   data: IOutworkRequest,
-) {
-  const path = `${getOutworkRequestListPath(companyCode)}/${requestId}`;
-  return await setData(path, data, "외근 요청이 등록되었습니다.");
+): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
+    const path = getOutworkRequestListPath(companyCode);
+    const requestRef = ref(getDatabase(), path);
+    const newRef = await push(requestRef, data);
+    return { success: true, id: newRef.key || undefined };
+  } catch (error: any) {
+    console.error("외근 요청 등록 실패:", error);
+    return { success: false, error: error.message };
+  }
 }
 
 /**
  * 외근 요청 리스트를 실시간으로 구독하는 함수
- * @param companyCode 회사 코드
- * @param callback 변경된 외근 요청 리스트를 전달받는 콜백
- * @returns 구독 해제 함수
  */
 export function subscribeToOutworkRequests(
   companyCode: string,
-  callback: (data: IOutworkRequest[]) => void,
+  callback: (data: TOutworkRequestWithId[]) => void,
 ) {
   const path = getOutworkRequestListPath(companyCode);
   const requestRef = ref(getDatabase(), path);
@@ -169,9 +170,9 @@ export function subscribeToOutworkRequests(
     }
 
     const raw = snapshot.val();
-    const requestList: IOutworkRequest[] = Object.entries(raw).map(([id, value]) => ({
+    const requestList: TOutworkRequestWithId[] = Object.entries(raw).map(([id, value]) => ({
+      ...(value as TOutworkRequest),
       id,
-      ...(value as IOutworkRequest),
     }));
 
     callback(requestList);

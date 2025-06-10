@@ -26,7 +26,11 @@ export type TEndCommutePayload = {
 };
 
 export type TCommuteData = Partial<
-  TStartCommutePayload & TEndCommutePayload & TStartOutWorkingPayload & TEndOutwokingPayload
+  TStartCommutePayload &
+    TEndCommutePayload &
+    TStartOutWorkingPayload &
+    TEndOutwokingPayload &
+    TOutworkRequest
 >;
 
 export type TProcessedCommuteResult = {
@@ -74,8 +78,11 @@ export type TCommuteRecord = {
   userInfo?: TEmpUserData;
 };
 
-export type IOutworkRequest = {
+export type TOutworkRequest = {
   requester: TEmpUserData;
   outworkingMemo: string;
-  requestDate: string;
+  requestTime: string;
+  isCheckout: boolean;
 };
+
+export type TOutworkRequestWithId = TOutworkRequest & { id: string };

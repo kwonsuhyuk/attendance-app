@@ -4,11 +4,12 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { TodayVacationEmployeeCard } from "./attendance/DaliyAttendanceUI";
-import { Bell, Copy, FileWarning, User } from "lucide-react";
+import { Copy, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFilterWork } from "@/hooks/manager/useFilterWork";
 import RequestAlarmButton from "./RequestAlarmButton";
 import OutworkRequestModal from "../common/modal/OutworkRequestModal";
+import { useOutworkRequests } from "@/hooks/manager/useOutworkRequests";
 
 export const EmployeeListItem = ({
   name,
@@ -76,7 +77,7 @@ export const EmployeeListItem = ({
   );
 };
 
-const TodayCommuteBox = () => {
+export const TodayCommuteBox = () => {
   const { totalEmployeeNumber, commuteEmployeeNumber, workingEmployees } = useTodayCommuteData({
     year: dayjs().format("YYYY"),
     month: dayjs().format("MM"),
@@ -98,37 +99,7 @@ const TodayCommuteBox = () => {
     : 0;
 
   const chartData = [{ name: "출근율", value: percentage, fill: "#10b981" }];
-
-  let pendingOutworkCount = 1;
-  const pendingOutworkList = [
-    {
-      id: "outwork-001",
-      requester: {
-        name: "김민재",
-        jobName: "영업팀",
-      },
-      reason: "거래처 미팅",
-      requestDate: "2025-06-08T10:00:00",
-    },
-    {
-      id: "outwork-002",
-      requester: {
-        name: "이서연",
-        jobName: "디자인팀",
-      },
-      reason: "외부 촬영",
-      requestDate: "2025-06-09T09:30:00",
-    },
-    {
-      id: "outwork-003",
-      requester: {
-        name: "박지훈",
-        jobName: "개발팀",
-      },
-      reason: "협력사 회의 참석",
-      requestDate: "2025-06-09T14:00:00",
-    },
-  ];
+  const { pendingOutworkList, pendingOutworkCount } = useOutworkRequests();
 
   return (
     <div
@@ -254,5 +225,3 @@ const TodayCommuteBox = () => {
     </div>
   );
 };
-
-export default TodayCommuteBox;

@@ -31,8 +31,7 @@ const OutWorkingModal = ({ isCheckout = false, status }: OutWorkingModalProps) =
     try {
       setIsSubmitting(true);
       const nowTime = new Date().toISOString();
-      if (isCheckout) await submitOutJob(memo, isCheckout, status, nowTime);
-      else await submitOutJob(memo, isCheckout);
+      await submitOutJob(memo, isCheckout, nowTime);
       setMemo("");
     } catch (error) {
       console.error("외근 처리 중 에러 발생", error);

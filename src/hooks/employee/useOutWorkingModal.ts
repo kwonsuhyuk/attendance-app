@@ -1,17 +1,19 @@
-import { registerOutWork } from "@/api/commute.api";
+import { createOutworkRequest } from "@/api/commute.api";
 import { useUserStore } from "@/store/user.store";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
 import { useToast } from "../use-toast";
-import { TCommuteStatus } from "@/model/types/commute.type";
+import { TOutworkRequest } from "@/model/types/commute.type";
+import { TEmpUserData } from "@/model/types/user.type";
 
 export default function useOutWorkingModal() {
-  const { companyCode, userId } = useUserStore(
+  const { companyCode, userId, currentUser } = useUserStore(
     useShallow(state => ({
       companyCode: state.currentUser?.companyCode,
       userId: state.currentUser?.uid,
+      currentUser: state.currentUser,
     })),
   );
   const { toast } = useToast();
@@ -21,20 +23,22 @@ export default function useOutWorkingModal() {
     new Date().getMonth() + 1
   }월 ${new Date().getDate()}일`;
 
-  const submitOutJob = async (
-    memo: string,
-    isCheckout: boolean,
-    status?: TCommuteStatus,
-    scanTime?: string,
-  ) => {
+  const submitOutJob = async (memo: string, isCheckout: boolean, scanTime: string) => {
     if (!companyCode || !userId) return;
-    const result = await registerOutWork(companyCode, userId, memo, isCheckout, status, scanTime);
+    // const result = await registerOutWork(companyCode, userId, memo, isCheckout, status, scanTime);
+    const data: TOutworkRequest = {
+      outworkingMemo: memo,
+      requestTime: scanTime,
+      isCheckout: isCheckout,
+      requester: currentUser as TEmpUserData,
+    };
+    const result = await createOutworkRequest(companyCode, data);
     if (result.success) {
       setOpen(false);
-      toast({ title: "외근이 성공적으로 등록되었습니다." });
+      toast({ title: "외근이 성공적으로 요청 되었습니다." });
       navigate(`/${companyCode}/employee/companymain`);
     } else {
-      toast({ title: "외근이 성공적으로 등록되었습니다.", variant: "destructive" });
+      toast({ title: "외근이 요청이 실패하였습니다. 다시 시도해주세요.", variant: "destructive" });
     }
   };
 

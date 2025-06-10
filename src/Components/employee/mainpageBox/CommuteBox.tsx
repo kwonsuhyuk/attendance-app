@@ -13,15 +13,32 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { TCommuteStatus } from "@/model/types/commute.type";
+import { useMyOutworkRequests } from "@/hooks/employee/useMyOutworkRequests";
+import { deleteOutworkRequest } from "@/api/commute.api";
+import { toast } from "@/hooks/use-toast";
 
 const CommuteBox = () => {
   const { status, commuteData, startWorkplace, endWorkplace, isLoading } = useCommuteBox();
   const { companyCode } = useParams();
   const navigate = useNavigate();
-
-  const handleClick = () => {
+  const { myOutworkRequests } = useMyOutworkRequests();
+  const handleClick = async () => {
     if (!companyCode) return;
-    navigate(`/${companyCode}/employee/commute`);
+
+    if (status === "out-working-checking") {
+      const latestRequest = myOutworkRequests[0];
+
+      if (!latestRequest?.id) return;
+
+      const result = await deleteOutworkRequest(companyCode, latestRequest.id);
+      if (result.success) {
+        toast({ title: "외근 요청이 취소되었습니다." });
+      } else {
+        toast({ title: "요청 취소 실패", description: result.error, variant: "destructive" });
+      }
+    } else {
+      navigate(`/${companyCode}/employee/commute`);
+    }
   };
 
   const { label, icon, colorClass } = getStatusDisplay(status);
