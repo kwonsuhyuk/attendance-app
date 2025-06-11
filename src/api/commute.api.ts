@@ -1,19 +1,35 @@
-import { getDayCommutePath, getUserDayCommutePath } from "@/constants/api.path";
-import { getData, setData, updateData } from ".";
+import {
+  getDayCommutePath,
+  getOutworkRequestListPath,
+  getUserDayCommutePath,
+} from "@/constants/api.path";
+import { getData, removeData, setData, updateData } from ".";
 import {
   TStartCommutePayload,
   TEndCommutePayload,
   TCommuteData,
   TCommuteStatus,
   TStartOutWorkingPayload,
-  TEndOutwokingPayload,
   TCalendarDayInfo,
   TCommuteRecord,
+  TOutworkRequestWithId,
+  TOutworkRequest,
 } from "@/model/types/commute.type";
 import { TWorkPlace } from "@/model/types/company.type";
 import { fetchRegisteredVacationsByMonth } from "./vacation.api";
 import dayjs from "dayjs";
-import { TUserBase } from "@/model/types/user.type";
+import {
+  get,
+  getDatabase,
+  off,
+  onChildAdded,
+  onChildChanged,
+  onChildRemoved,
+  onValue,
+  push,
+  ref,
+} from "firebase/database";
+import { TEmpUserData } from "@/model/types/user.type";
 
 // KST 기준 ISO-like 문자열(타임존 표시 없이 "YYYY-MM-DDTHH:mm:ss" 형식)을 반환하는 헬퍼 함수
 function formatToKST(date: Date): string {
@@ -127,26 +143,82 @@ export async function processCommute(
   }
 }
 
+/**
+ * 외근 요청 등록 함수 (Firebase push로 자동 ID 생성)
+ * @param companyCode 회사 코드
+ * @param data 외근 요청 데이터
+ * @returns 등록 성공 여부와 자동 생성된 ID
+ */
+export async function createOutworkRequest(
+  companyCode: string,
+  data: TOutworkRequest,
+): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
+    const path = getOutworkRequestListPath(companyCode);
+    const requestRef = ref(getDatabase(), path);
+    const newRef = await push(requestRef, data);
+    return { success: true, id: newRef.key || undefined };
+  } catch (error: any) {
+    console.error("외근 요청 등록 실패:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * 외근 요청 리스트를 실시간으로 구독하는 함수
+ */
+export function subscribeToOutworkRequests(
+  companyCode: string,
+  callback: (data: TOutworkRequestWithId[]) => void,
+) {
+  const path = getOutworkRequestListPath(companyCode);
+  const requestRef = ref(getDatabase(), path);
+
+  const unsubscribe = onValue(requestRef, snapshot => {
+    if (!snapshot.exists()) {
+      callback([]);
+      return;
+    }
+
+    const raw = snapshot.val();
+    const requestList: TOutworkRequestWithId[] = Object.entries(raw).map(([id, value]) => ({
+      ...(value as TOutworkRequest),
+      id,
+    }));
+
+    callback(requestList);
+  });
+
+  return () => off(requestRef, "value", unsubscribe);
+}
+
+/**
+ * 외근 요청 삭제 함수 (removeData 유틸 사용)
+ * @param companyCode 회사 코드
+ * @param requestId 삭제할 요청 ID
+ */
+export async function deleteOutworkRequest(companyCode: string, requestId: string) {
+  const path = `${getOutworkRequestListPath(companyCode)}/${requestId}`;
+  return await removeData(path, "외근 요청이 삭제되었습니다.");
+}
+
 export async function registerOutWork(
   companyCode: string,
   userId: string,
   memo: string,
   isCheckout: boolean,
-  status?: TCommuteStatus,
-  scanTime?: string,
+  scanTime: string,
+  status: TCommuteStatus,
 ): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     const now = new Date();
     const { year, month, day } = getKSTDateParts(now);
     const todayPath = getUserDayCommutePath(companyCode, year, month, day, userId);
     const todayData = await getData<TCommuteData>(todayPath);
-
+    if (!status) return { success: false, error: "직원 출근 상태가 유효하지 않습니다." };
+    if (!scanTime) return { success: false, error: "요청 시간이 유효하지 않습니다." };
+    const kstTime = formatToKST(new Date(scanTime));
     if (isCheckout) {
-      if (!status) return { success: false, error: "출퇴근 상태 정보가 없습니다." };
-      if (!scanTime) return { success: false, error: "스캔 시간이 유효하지 않습니다." };
-
-      const kstTime = formatToKST(new Date(scanTime));
-
       const yesterday = new Date(now);
       yesterday.setDate(yesterday.getDate() - 1);
       const { year: yYear, month: yMonth, day: yDay } = getKSTDateParts(yesterday);
@@ -213,6 +285,7 @@ export async function registerOutWork(
 
       const payload: TStartOutWorkingPayload = {
         startWorkplaceId: "외근",
+        startTime: kstTime,
         outworkingMemo: memo,
       };
 
@@ -374,36 +447,53 @@ export async function fetchCalendarSummaryByWorkplace(
   }
 }
 
-export async function fetchTodayCommuteDataWithUserInfo(
+/**
+ * 출퇴근 + 유저 정보 실시간 구독
+ */
+export async function subscribeToTodayCommuteDataWithUserInfo(
   companyCode: string,
   year: string,
   month: string,
   day: string,
-): Promise<TCommuteRecord[]> {
+  onUpdate: (data: TCommuteRecord[]) => void,
+): Promise<() => void> {
   try {
-    const commutePath = getDayCommutePath(companyCode, year, month, day);
-    const commuteData = await getData(commutePath);
-
     const usersPath = `companyCode/${companyCode}/users`;
-    const usersData = await getData(usersPath);
+    const userMap = await getData<Record<string, TEmpUserData>>(usersPath);
 
-    if (!commuteData || !usersData) {
-      return [];
+    if (!userMap) {
+      console.warn("유저 정보가 없습니다.");
+      onUpdate([]);
+      return () => {};
     }
 
-    const result: TCommuteRecord[] = Object.entries(commuteData).map(([userId, record]: any) => ({
-      userId,
-      startTime: record.startTime,
-      startWorkplaceId: record.startWorkplaceId,
-      endTime: record.endTime,
-      endWorkplaceId: record.endWorkplaceId,
-      outworkingMemo: record.outworkingMemo,
-      userInfo: usersData[userId] || undefined,
-    }));
+    const commutePath = getDayCommutePath(companyCode, year, month, day);
+    const commuteRef = ref(getDatabase(), commutePath);
 
-    return result;
+    const unsubscribe = onValue(commuteRef, snapshot => {
+      const raw = snapshot.val();
+      if (!raw) {
+        onUpdate([]);
+        return;
+      }
+
+      const result: TCommuteRecord[] = Object.entries(raw).map(([userId, record]: any) => ({
+        userId,
+        startTime: record.startTime,
+        startWorkplaceId: record.startWorkplaceId,
+        endTime: record.endTime,
+        endWorkplaceId: record.endWorkplaceId,
+        outworkingMemo: record.outworkingMemo,
+        userInfo: userMap[userId] ?? undefined,
+      }));
+
+      onUpdate(result);
+    });
+
+    return unsubscribe;
   } catch (error) {
-    console.error("❌ 출퇴근 + 유저 데이터 조회 실패:", error);
-    return [];
+    console.error("❌ 유저 or 출퇴근 데이터 구독 실패:", error);
+    onUpdate([]);
+    return () => {};
   }
 }

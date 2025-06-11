@@ -22,7 +22,6 @@ const VacationRequestModal: React.FC<IVacationModalProps> = ({ onClose, onRegist
     vacationType,
     setVacationType,
     dateRange,
-    setDateRange,
     handleDateChange,
     vacationDays,
     handleRegister,

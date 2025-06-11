@@ -5,7 +5,9 @@ export type NotificationType =
   | "notice_posted" // 공지사항 등록
   | "manual_commute_update" // 출퇴근 수동 수정
   | "vacation_requested" // 직원이 휴가 요청
-  | "new_employee_registered"; // 새로운 직원 가입
+  | "new_employee_registered"
+  | "outworking_approved"
+  | "outworking_rejected";
 
 export type NotificationPayload = {
   receiverId: string; // 수신자 (필수)

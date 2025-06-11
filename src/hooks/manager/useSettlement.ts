@@ -135,22 +135,22 @@ export default function useSettlement() {
       : undefined;
 
     const totalRow: any = {
-      날짜: "총 합계",
+      날짜: `${dayjs(currentDate).format("YYYYMM")}_${employee.name} 총 합계`,
       출근: "-",
       퇴근: "-",
       총근무시간: `${Math.floor(totalMinutes / 60)}시간 ${totalMinutes % 60}분`,
       야간근무: `${Math.floor(totalNight / 60)}시간 ${totalNight % 60}분`,
-      휴일근무: `${holidayCount}일`,
+      휴일근무: "-",
       근무일: `${totalWorkDays}일`,
       외근: `${totalOutworkDays}일`,
-      ...(includeSalary && { 추가수당: `${totalPay?.toLocaleString()}원` }),
+      ...(includeSalary && { 추가수당: `${totalPay?.toLocaleString()}` }),
     };
 
     const sheetData = [...summary, totalRow];
     const worksheet = XLSX.utils.json_to_sheet(sheetData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "정산");
-    const fileName = `${employee.name}_${dayjs(currentDate).format("YYYYMM")}_정산.xlsx`;
+    const fileName = `${dayjs(currentDate).format("YYYYMM")}_${employee.name}_정산.xlsx`;
     XLSX.writeFile(workbook, fileName);
   };
 

@@ -52,9 +52,9 @@ const PeriodAttCalendarDayCard = ({
         <span
           className={
             isSunday
-              ? "flex h-6 w-6 items-center justify-center rounded-full bg-red-500 pt-0.5 text-[15px] text-dark-text dark:bg-red-500"
+              ? "font-bold text-red-500"
               : isCompanyHoliday
-                ? "flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 pt-0.5 text-[15px] text-dark-text dark:bg-yellow-500"
+                ? "font-bold text-yellow-400"
                 : "text-muted-foreground"
           }
         >
@@ -77,7 +77,7 @@ const PeriodAttCalendarDayCard = ({
               key={item.label}
               className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded border-2 border-solid border-white-border-sub px-2 py-1 text-[13px] dark:border-dark-border-sub"
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${item.color}`} />
+              <span className={`h-2 w-2 rounded-full ${item.color}`} />
               <span className="truncate">{item.label}</span>
               <span className="ml-auto font-semibold">{item.value}</span>
             </div>

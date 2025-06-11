@@ -52,3 +52,6 @@ export const getUserDayCommutePath = (
 
 export const getDayCommutePath = (companyCode: string, year: string, month: string, day: string) =>
   `attendance/${companyCode}/${year}/${month}/${day}`;
+
+// 외근 요청 전체 목록 조회
+export const getOutworkRequestListPath = (companyCode: string) => `outworkRequest/${companyCode}`;
