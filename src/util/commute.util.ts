@@ -73,6 +73,7 @@ export const calculateCommuteSummaryByType = (
 export function computeCommuteStatus(
   today: TCommuteData | null,
   yesterday: TCommuteData | null,
+  hasOutworkRequest: boolean = false,
 ): { status: TCommuteStatus; data: TCommuteData | null } {
   const hasStartToday = !!today?.startTime;
   const hasEndToday = !!today?.endTime;
@@ -80,8 +81,13 @@ export function computeCommuteStatus(
   const hasEndYesterday = !!yesterday?.endTime;
 
   const isOutWorkToday = today?.startWorkplaceId === "외근";
+
   if (isOutWorkToday) {
     return { status: "out-working", data: today };
+  }
+
+  if (hasOutworkRequest) {
+    return { status: "out-working-checking", data: null };
   }
 
   if (hasStartYesterday && !hasEndYesterday && !hasStartToday && !hasEndToday) {

@@ -1,7 +1,5 @@
 import { useCompanyStore } from "@/store/company.store";
 import { useCommuteStatus } from "./useCommuteStatus";
-import { useUserStore } from "@/store/user.store";
-import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
 
 export default function useCommuteBox() {

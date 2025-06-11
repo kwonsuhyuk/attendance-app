@@ -6,6 +6,7 @@ import { HelpCircle } from "lucide-react";
 import TourController from "@/components/common/TourController";
 import { useTourStore } from "@/store/tour.store";
 import { useEffect, useState } from "react";
+import { GlobalOutworkAlert } from "@/components/company/GlobalOutworkAlert";
 
 const Layout = () => {
   const steps = useTourStore(state => state.steps);
@@ -49,6 +50,7 @@ const Layout = () => {
         <MenuBar />
         <div className="flex w-full flex-col">
           <Header />
+          <GlobalOutworkAlert />
           <main className="relative mx-auto mt-16 flex h-full w-full flex-1 justify-center overflow-auto px-5 pb-12 pt-8 md:px-10">
             <div className="page-main flex w-full overflow-auto">
               <Outlet />
