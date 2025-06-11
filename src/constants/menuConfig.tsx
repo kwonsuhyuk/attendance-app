@@ -1,6 +1,7 @@
 import {
   Bell,
   BookOpenCheck,
+  BriefcaseBusiness,
   Calendar,
   CheckCheck,
   Clock,
@@ -83,8 +84,13 @@ export const EMPLOYEE_SUB_MENUS = (companyCode: string) => [
   },
   {
     icon: <BookOpenCheck className="h-5 w-5 text-primary" />,
-    label: "다운로드 가이드",
+    label: "다운로드 안내",
     path: `/${companyCode}/employee/appguide`,
+  },
+  {
+    icon: <BriefcaseBusiness className="h-5 w-5 text-primary" />,
+    label: "출퇴근 방법 안내",
+    path: `/commuteguide`,
   },
 
   {

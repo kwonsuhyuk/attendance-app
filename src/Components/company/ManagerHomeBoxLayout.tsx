@@ -7,15 +7,17 @@ interface Props {
   children: React.ReactNode;
   boxName: string;
   toNavigate: string;
+  guideProps?: React.ReactNode;
 }
 
-const ManagerHomeBoxLayout = ({ children, boxName, toNavigate }: Props) => {
+const ManagerHomeBoxLayout = ({ children, boxName, toNavigate, guideProps }: Props) => {
   const navigate = useNavigate();
   const { companyCode } = useParams();
   return (
     <Card className="relative shadow-none">
       <CardTitle className="flex items-center gap-2 p-4 text-lg font-semibold md:text-xl">
         {boxName}
+        <div className="flex items-center gap-2">{guideProps}</div>
       </CardTitle>
       {/* 이동 아이콘 */}
       <ChevronRight

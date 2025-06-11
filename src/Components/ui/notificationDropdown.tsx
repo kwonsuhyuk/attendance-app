@@ -1,4 +1,4 @@
-import { NotificationPayload } from "@/model/types/notification.type";
+import { NotificationPayload, NotificationType } from "@/model/types/notification.type";
 import { CheckCircle, XCircle, Info, Megaphone, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
@@ -11,11 +11,13 @@ interface NotificationDropdownProps {
   onCloseDropdown: () => void;
 }
 
-const getIcon = (type: string) => {
+const getIcon = (type: NotificationType) => {
   switch (type) {
     case "vacation_approved":
+    case "outworking_approved":
       return <CheckCircle className="h-4 w-4 text-green-500" />;
     case "vacation_rejected":
+    case "outworking_rejected":
       return <XCircle className="h-4 w-4 text-red-500" />;
     case "vacation_registered":
       return <Info className="h-4 w-4 text-blue-500" />;
@@ -44,7 +46,7 @@ const NotificationDropdown = ({
       case "holiday_update":
         return `/${companyCode}/employee/holiday`;
       default:
-        return `/${companyCode}`;
+        return `/${companyCode}/employee/companymain`;
     }
   };
 
@@ -92,8 +94,21 @@ const NotificationDropdown = ({
                   </button>
                 </div>
 
+                {/* ✅ 알림 상세 날짜 표시 로직 */}
                 {data.requestDate &&
                   (() => {
+                    if (
+                      data.type === "outworking_approved" ||
+                      data.type === "outworking_rejected"
+                    ) {
+                      const formattedTime = format(parseISO(data.requestDate), "yyyy.MM.dd HH:mm");
+                      return (
+                        <p className="ml-6 mt-1 text-xs text-dark-nav-text">
+                          요청 시간: {formattedTime}
+                        </p>
+                      );
+                    }
+
                     const [start, end] = data.requestDate.split(" ~ ");
                     const formattedStart = format(parseISO(start), "yy.MM.dd");
                     const formattedEnd = format(parseISO(end), "yy.MM.dd");

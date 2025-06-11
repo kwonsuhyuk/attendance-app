@@ -1,18 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Clock from "../employee/Clock";
 import ManagerHomeBoxLayout from "./ManagerHomeBoxLayout";
-import IntroGuideBox from "../employee/mainpageBox/IntroGuideBox";
 import CompanyCodeCopy from "./CompanyCodeCopy";
-import { useEmployeeList } from "@/hooks/manager/useEmployeeList";
 import WorkplaceBox from "./WorkplaceBox";
 import EmployeeListBox from "./EmployeeListBox";
 import ManagerVacationBox from "./ManagerVacationBox";
-import TodayCommuteBox from "./TodayCommuteBox";
+import { TodayCommuteBox } from "./TodayCommuteBox";
 import BasicGuideStepBox from "./BasicGuideStepBox";
 import { useTour } from "@/hooks/use-tour";
 import { homeSteps } from "@/constants/managerTourSteps";
+import { Button } from "../ui/button";
 
 const ManagerMainContent = () => {
+  const navigate = useNavigate();
   useTour("manager_home", homeSteps);
 
   return (
@@ -23,7 +23,28 @@ const ManagerMainContent = () => {
       </div>
       <BasicGuideStepBox />
       {/* 금일 출퇴근 박스 */}
-      <ManagerHomeBoxLayout boxName="금일 출퇴근" toNavigate="todayatt">
+      <ManagerHomeBoxLayout
+        boxName="금일 출퇴근"
+        toNavigate="todayatt"
+        guideProps={
+          <>
+            <Button
+              variant="outline"
+              className="h-7 px-2 text-[11px]"
+              onClick={() => navigate("/commuteguide")}
+            >
+              직원 출퇴근 안내
+            </Button>
+            <Button
+              variant="outline"
+              className="h-7 px-2 text-[11px]"
+              onClick={() => navigate("/outworkguide")}
+            >
+              외근 수락 안내
+            </Button>
+          </>
+        }
+      >
         <TodayCommuteBox />
       </ManagerHomeBoxLayout>
       <ManagerHomeBoxLayout boxName="휴가" toNavigate="vacationstatistic">
