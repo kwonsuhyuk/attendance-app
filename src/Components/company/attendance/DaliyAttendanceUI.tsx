@@ -285,14 +285,18 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     employeeList,
   );
 
+  const [selectedPlace, setSelectedPlace] = useState<any | null>(null);
+  const [open, setOpen] = useState(false);
+
   const { coloredData, total } = useMemo(() => {
     const baseData = [
       ...workplacePlaces.map(place => ({
         name: place.name,
         value: place.employees.length,
+        place,
       })),
-      { name: "외근", value: outworkingPlace.employees.length },
-      { name: "미출근", value: notCommutePlace.employees.length },
+      { name: "외근", value: outworkingPlace.employees.length, place: outworkingPlace },
+      { name: "미출근", value: notCommutePlace.employees.length, place: notCommutePlace },
     ];
 
     const totalValue = baseData.reduce((acc, cur) => acc + cur.value, 0);
@@ -316,6 +320,11 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
     return { coloredData: chartData, total: totalValue };
   }, [workplacePlaces, outworkingPlace, notCommutePlace]);
 
+  const handlePieClick = (data: any) => {
+    setSelectedPlace(data.place);
+    setOpen(true);
+  };
+
   return (
     <Card
       className="rounded-xl border bg-point-color-sub shadow-lg dark:bg-zinc-900"
@@ -328,6 +337,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
           </h3>
           <span className="text-sm text-point-color">{dayjs(selectedDate).format("M월 D일")}</span>
         </div>
+
         <div className="relative h-48 w-full sm:h-64 md:h-72">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
@@ -341,9 +351,10 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
                 dataKey="value"
                 stroke="none"
                 isAnimationActive={false}
+                onClick={handlePieClick}
               >
                 {coloredData.map((entry, idx) => (
-                  <Cell key={`cell-${idx}`} fill={entry.color} />
+                  <Cell key={`cell-${idx}`} fill={entry.color} cursor="pointer" />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
@@ -366,6 +377,10 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
           className="pt-4 sm:px-8"
         />
       </CardContent>
+
+      {selectedPlace && (
+        <WorkplaceDetailModal open={open} onClose={() => setOpen(false)} place={selectedPlace} />
+      )}
     </Card>
   );
 };
@@ -384,7 +399,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
 
   return (
     <div
-      className="dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl border border-solid border-outwork-color bg-white p-4 shadow-lg"
+      className="dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl bg-white p-4 shadow-lg"
       data-tour="today-6"
     >
       <div className="flex items-center justify-between">
@@ -435,63 +450,6 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   );
 };
 
-// export const OutworkerItem = ({
-//   name,
-//   jobName,
-//   employmentType,
-//   phoneNumber,
-//   memo,
-// }: {
-//   name: string;
-//   jobName: string;
-//   employmentType: string;
-//   phoneNumber: string;
-//   memo?: string;
-// }) => {
-//   const { toast } = useToast();
-
-//   const handleCopy = () => {
-//     if (!phoneNumber) return;
-//     navigator.clipboard.writeText(phoneNumber);
-//     toast({ title: "전화번호가 복사되었습니다." });
-//   };
-
-//   return (
-//     <li className="flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none dark:bg-[#1f2b26]">
-//       {/* 아이콘 */}
-//       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/30 dark:text-white">
-//         <User className="h-5 w-5" />
-//       </div>
-
-//       {/* 정보 */}
-//       <div className="flex flex-col gap-0.5 overflow-hidden">
-//         <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
-//         <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-//           {jobName} {employmentType && `· ${employmentType}`}
-//         </p>
-//         {phoneNumber && (
-//           <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-//             <Phone className="h-3 w-3" />
-//             {phoneNumber}
-//           </p>
-//         )}
-//         <p className="flex items-center gap-1 text-xs text-vacation-color dark:text-point-color">
-//           {memo?.trim() ? memo : "외근 중"}
-//         </p>
-//       </div>
-
-//       {phoneNumber && (
-//         <button
-//           onClick={handleCopy}
-//           className="ml-auto text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
-//         >
-//           <Copy className="h-4 w-4" />
-//         </button>
-//       )}
-//     </li>
-//   );
-// };
-
 export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => {
   const { commuteData, employeeList } = useTodayCommuteData({
     year: dayjs(selectedDate).format("YYYY"),
@@ -508,8 +466,16 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   return (
     <Card className="w-full bg-white" data-tour="today-7">
       <CardContent className="p-4">
-        <div className="mb-4 flex items-center gap-2 text-base font-semibold text-zinc-800 dark:text-white sm:text-lg">
-          근무지별 출근 인원
+        <div>
+          <div className="flex items-center gap-2 text-lg font-bold text-zinc-800 dark:text-white sm:text-xl">
+            근무지별 출근 인원
+            <span className="group relative">
+              <span className="ml-1 cursor-help text-sm text-gray-400 dark:text-gray-500">ⓘ</span>
+              <div className="absolute left-5 top-full z-10 hidden w-max max-w-xs rounded-md border border-solid border-zinc-200 bg-white px-3 py-2 text-xs text-gray-600 shadow-md group-hover:block dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-300">
+                출근지와 퇴근지가 다를 경우 <strong>출근지 기준</strong>으로 표시됩니다.
+              </div>
+            </span>
+          </div>
         </div>
 
         <div className="relative w-full overflow-hidden">
@@ -588,62 +554,82 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
 
         {/* 직원 목록 */}
         <div>
-          <h4 className="mb-2 flex justify-between text-sm font-semibold text-vacation-dark-color">
-            출근 직원{" "}
-            <span className="text-sm font-medium text-vacation-dark-color dark:text-gray-300">
-              {place.employees.length > 0 ? `${place.employees.length}명` : ""}
-            </span>
-          </h4>
-          <ul className="scrollbar-thin scrollbar-thumb-zinc-200 relative max-h-72 space-y-2 overflow-y-auto pr-1 pt-3">
+          {place.employees.length > 0 && (
+            <h4 className="mb-2 flex justify-between text-sm font-semibold text-white-text">
+              출근·퇴근 직원{" "}
+              <span className="text-sm font-medium text-white-text dark:text-gray-300">
+                {`${place.employees.length}명`}
+              </span>
+            </h4>
+          )}
+
+          <ul className="scrollbar-thin scrollbar-thumb-zinc-200 relative max-h-72 space-y-2 overflow-y-auto pr-1 pt-5">
             {place.employees.length > 0 ? (
-              place.employees.map(emp => (
-                <li
-                  key={emp.userId}
-                  className="flex items-start justify-between gap-2 rounded-md bg-white px-3 py-2 dark:bg-zinc-800"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/40 dark:text-white">
-                      <User className="h-5 w-5" />
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                        {emp.name}
-                      </p>
-                      <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                        {emp.jobName} · {emp.employmentType}
-                      </p>
-                      {emp.phoneNumber && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {emp.phoneNumber}
+              place.employees
+                .slice()
+                .sort((a, b) => {
+                  const aTime =
+                    a.startTime && isValid(new Date(a.startTime))
+                      ? new Date(a.startTime).getTime()
+                      : Infinity;
+                  const bTime =
+                    b.startTime && isValid(new Date(b.startTime))
+                      ? new Date(b.startTime).getTime()
+                      : Infinity;
+                  return aTime - bTime;
+                })
+                .map(emp => (
+                  <li
+                    key={emp.userId}
+                    className="flex items-start justify-between gap-2 rounded-md bg-white px-3 py-2 dark:bg-zinc-800"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/40 dark:text-white">
+                        <User className="h-5 w-5" />
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                          {emp.name}
                         </p>
-                      )}
-                      <p className="text-xs text-vacation-color">
-                        출근{" "}
-                        {emp.startTime && isValid(new Date(emp.startTime))
-                          ? getKSTDateInfo(emp.startTime)
-                          : "-"}
-                      </p>
-                      <p className="text-xs text-vacation-dark-color">
-                        퇴근:{" "}
-                        {emp.endTime && isValid(new Date(emp.endTime))
-                          ? getKSTDateInfo(emp.endTime)
-                          : "-"}
-                      </p>
+                        <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                          {emp.jobName} · {emp.employmentType}
+                        </p>
+                        {emp.phoneNumber && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {emp.phoneNumber}
+                          </p>
+                        )}
+                        <div className="flex flex-wrap gap-1">
+                          <p className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                            출근{" "}
+                            {emp.startTime && isValid(new Date(emp.startTime))
+                              ? getKSTDateInfo(emp.startTime)
+                              : "-"}
+                          </p>
+                          {emp.endTime !== "-" && (
+                            <p className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-900 dark:text-rose-200">
+                              퇴근{" "}
+                              {emp.endTime && isValid(new Date(emp.endTime))
+                                ? getKSTDateInfo(emp.endTime)
+                                : "-"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  {emp.phoneNumber && (
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleCopy(emp.phoneNumber);
-                      }}
-                      className="mt-1 text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </button>
-                  )}
-                </li>
-              ))
+                    {emp.phoneNumber && (
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleCopy(emp.phoneNumber);
+                        }}
+                        className="mt-1 text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                    )}
+                  </li>
+                ))
             ) : (
               <li className="flex h-24 items-center justify-center text-sm text-zinc-400 dark:text-zinc-500">
                 금일 출근한 직원이 없습니다.

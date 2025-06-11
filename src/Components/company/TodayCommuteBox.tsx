@@ -59,16 +59,11 @@ export const EmployeeListItem = ({
         </p>
         {phoneNumber && <p className="text-xs text-gray-500 dark:text-gray-400">{phoneNumber}</p>}
         {subText && (
-          <p
-            className={`text-xs ${iconColor} ${
-              iconColor.includes("text-")
-                ? iconColor.replace("text-", "dark:text-")
-                : "dark:text-green-300"
-            }`}
-          >
+          <p className="w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
             {subText}
           </p>
         )}
+
         <AnimatePresence>
           {showMemo && memo && (
             <motion.p
