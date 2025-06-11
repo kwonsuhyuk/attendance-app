@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
 import { useToast } from "../use-toast";
-import { TOutworkRequest } from "@/model/types/commute.type";
+import { TCommuteStatus, TOutworkRequest } from "@/model/types/commute.type";
 import { TEmpUserData } from "@/model/types/user.type";
 
 export default function useOutWorkingModal() {
@@ -23,14 +23,20 @@ export default function useOutWorkingModal() {
     new Date().getMonth() + 1
   }월 ${new Date().getDate()}일`;
 
-  const submitOutJob = async (memo: string, isCheckout: boolean, scanTime: string) => {
+  const submitOutJob = async (
+    memo: string,
+    isCheckout: boolean,
+    scanTime: string,
+    status: TCommuteStatus,
+  ) => {
     if (!companyCode || !userId) return;
-    // const result = await registerOutWork(companyCode, userId, memo, isCheckout, status, scanTime);
+
     const data: TOutworkRequest = {
       outworkingMemo: memo,
       requestTime: scanTime,
       isCheckout: isCheckout,
       requester: currentUser as TEmpUserData,
+      status: status,
     };
     const result = await createOutworkRequest(companyCode, data);
     if (result.success) {

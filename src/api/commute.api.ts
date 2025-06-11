@@ -151,7 +151,7 @@ export async function processCommute(
  */
 export async function createOutworkRequest(
   companyCode: string,
-  data: IOutworkRequest,
+  data: TOutworkRequest,
 ): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
     const path = getOutworkRequestListPath(companyCode);
@@ -207,21 +207,18 @@ export async function registerOutWork(
   userId: string,
   memo: string,
   isCheckout: boolean,
-  status?: TCommuteStatus,
-  scanTime?: string,
+  scanTime: string,
+  status: TCommuteStatus,
 ): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     const now = new Date();
     const { year, month, day } = getKSTDateParts(now);
     const todayPath = getUserDayCommutePath(companyCode, year, month, day, userId);
     const todayData = await getData<TCommuteData>(todayPath);
-
+    if (!status) return { success: false, error: "직원 출근 상태가 유효하지 않습니다." };
+    if (!scanTime) return { success: false, error: "요청 시간이 유효하지 않습니다." };
+    const kstTime = formatToKST(new Date(scanTime));
     if (isCheckout) {
-      if (!status) return { success: false, error: "출퇴근 상태 정보가 없습니다." };
-      if (!scanTime) return { success: false, error: "스캔 시간이 유효하지 않습니다." };
-
-      const kstTime = formatToKST(new Date(scanTime));
-
       const yesterday = new Date(now);
       yesterday.setDate(yesterday.getDate() - 1);
       const { year: yYear, month: yMonth, day: yDay } = getKSTDateParts(yesterday);
@@ -288,6 +285,7 @@ export async function registerOutWork(
 
       const payload: TStartOutWorkingPayload = {
         startWorkplaceId: "외근",
+        startTime: kstTime,
         outworkingMemo: memo,
       };
 

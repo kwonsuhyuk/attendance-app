@@ -4,12 +4,13 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { TodayVacationEmployeeCard } from "./attendance/DaliyAttendanceUI";
-import { Copy, User } from "lucide-react";
+import { Copy, StickyNote, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFilterWork } from "@/hooks/manager/useFilterWork";
 import RequestAlarmButton from "./RequestAlarmButton";
 import OutworkRequestModal from "../common/modal/OutworkRequestModal";
 import { useOutworkRequests } from "@/hooks/manager/useOutworkRequests";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const EmployeeListItem = ({
   name,
@@ -19,6 +20,7 @@ export const EmployeeListItem = ({
   iconColor = "text-emerald-700",
   bgColor = "bg-emerald-100",
   subText,
+  memo,
   darkBgColor = "dark:bg-zinc-800/70",
 }: {
   name: string;
@@ -28,10 +30,11 @@ export const EmployeeListItem = ({
   iconColor?: string;
   bgColor?: string;
   subText?: string;
+  memo?: string;
   darkBgColor?: string;
 }) => {
   const { toast } = useToast();
-
+  const [showMemo, setShowMemo] = useState(false);
   const handleCopy = () => {
     if (!phoneNumber) return;
     navigator.clipboard.writeText(phoneNumber);
@@ -47,8 +50,10 @@ export const EmployeeListItem = ({
       >
         <User className={`${iconColor} dark:text-black`} />
       </div>
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
+      <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
+        <div className="flex items-center gap-1">
+          <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
+        </div>
         <p className="truncate text-xs text-gray-500 dark:text-gray-400">
           {jobName} {employmentType && `· ${employmentType}`}
         </p>
@@ -64,7 +69,31 @@ export const EmployeeListItem = ({
             {subText}
           </p>
         )}
+        <AnimatePresence>
+          {showMemo && memo && (
+            <motion.p
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mt-2 rounded-md border border-solid border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-700 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-300"
+            >
+              {memo}
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
+      {memo && (
+        <button
+          className="text-orange-400 hover:text-orange-600 dark:text-gray-300 dark:hover:text-white"
+          onClick={() => setShowMemo(prev => !prev)}
+          title="메모 보기"
+        >
+          <StickyNote className="h-4 w-4" />
+        </button>
+      )}
+
       {phoneNumber && (
         <button
           onClick={handleCopy}
@@ -186,6 +215,7 @@ export const TodayCommuteBox = () => {
               {list?.length > 0 ? (
                 list.map((item, index) => {
                   const user = idx === 0 ? item.user : item;
+
                   if (!user) return null;
                   return (
                     <EmployeeListItem
@@ -194,11 +224,8 @@ export const TodayCommuteBox = () => {
                       jobName={user.jobName}
                       phoneNumber={user.phoneNumber}
                       employmentType={user.employmentType}
-                      subText={
-                        idx === 0
-                          ? `출근 ${dayjs(item.startTime).format("HH:mm")}`
-                          : (user.memo ?? "외근 중")
-                      }
+                      subText={`출근 ${dayjs(item?.startTime).format("HH:mm")}`}
+                      memo={user.memo}
                       iconColor="text-vacation-color"
                       bgColor="bg-point-color-sub"
                       darkBgColor="dark:bg-point-color-sub/10"

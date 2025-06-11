@@ -405,7 +405,20 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
       <ul className="relative max-h-[380px] space-y-3 overflow-y-auto pb-6 pr-1">
         {outworkingEmployees.length > 0 ? (
           outworkingEmployees.map((user: any, index: number) =>
-            user ? <OutworkerItem key={index} {...user} /> : null,
+            user ? (
+              <EmployeeListItem
+                key={index}
+                name={user.name}
+                jobName={user.jobName}
+                employmentType={user.employmentType}
+                phoneNumber={user.phoneNumber}
+                memo={user.memo}
+                iconColor="text-vacation-color"
+                bgColor="bg-point-color-sub"
+                darkBgColor="dark:bg-point-color-sub/30"
+                subText={`출근 ${dayjs(user?.startTime).format("HH:mm")}`}
+              />
+            ) : null,
           )
         ) : (
           <li className="text-sm text-gray-500 dark:text-gray-400">
@@ -422,62 +435,62 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   );
 };
 
-export const OutworkerItem = ({
-  name,
-  jobName,
-  employmentType,
-  phoneNumber,
-  memo,
-}: {
-  name: string;
-  jobName: string;
-  employmentType: string;
-  phoneNumber: string;
-  memo?: string;
-}) => {
-  const { toast } = useToast();
+// export const OutworkerItem = ({
+//   name,
+//   jobName,
+//   employmentType,
+//   phoneNumber,
+//   memo,
+// }: {
+//   name: string;
+//   jobName: string;
+//   employmentType: string;
+//   phoneNumber: string;
+//   memo?: string;
+// }) => {
+//   const { toast } = useToast();
 
-  const handleCopy = () => {
-    if (!phoneNumber) return;
-    navigator.clipboard.writeText(phoneNumber);
-    toast({ title: "전화번호가 복사되었습니다." });
-  };
+//   const handleCopy = () => {
+//     if (!phoneNumber) return;
+//     navigator.clipboard.writeText(phoneNumber);
+//     toast({ title: "전화번호가 복사되었습니다." });
+//   };
 
-  return (
-    <li className="flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none dark:bg-[#1f2b26]">
-      {/* 아이콘 */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/30 dark:text-white">
-        <User className="h-5 w-5" />
-      </div>
+//   return (
+//     <li className="flex items-start gap-3 rounded-md bg-white px-3 py-2 shadow-none dark:bg-[#1f2b26]">
+//       {/* 아이콘 */}
+//       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-point-color-sub text-vacation-color dark:bg-point-color-sub/30 dark:text-white">
+//         <User className="h-5 w-5" />
+//       </div>
 
-      {/* 정보 */}
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
-        <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-          {jobName} {employmentType && `· ${employmentType}`}
-        </p>
-        {phoneNumber && (
-          <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-            <Phone className="h-3 w-3" />
-            {phoneNumber}
-          </p>
-        )}
-        <p className="flex items-center gap-1 text-xs text-vacation-color dark:text-point-color">
-          {memo?.trim() ? memo : "외근 중"}
-        </p>
-      </div>
+//       {/* 정보 */}
+//       <div className="flex flex-col gap-0.5 overflow-hidden">
+//         <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
+//         <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+//           {jobName} {employmentType && `· ${employmentType}`}
+//         </p>
+//         {phoneNumber && (
+//           <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+//             <Phone className="h-3 w-3" />
+//             {phoneNumber}
+//           </p>
+//         )}
+//         <p className="flex items-center gap-1 text-xs text-vacation-color dark:text-point-color">
+//           {memo?.trim() ? memo : "외근 중"}
+//         </p>
+//       </div>
 
-      {phoneNumber && (
-        <button
-          onClick={handleCopy}
-          className="ml-auto text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
-        >
-          <Copy className="h-4 w-4" />
-        </button>
-      )}
-    </li>
-  );
-};
+//       {phoneNumber && (
+//         <button
+//           onClick={handleCopy}
+//           className="ml-auto text-gray-400 hover:text-gray-600 dark:text-zinc-300 dark:hover:text-white"
+//         >
+//           <Copy className="h-4 w-4" />
+//         </button>
+//       )}
+//     </li>
+//   );
+// };
 
 export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => {
   const { commuteData, employeeList } = useTodayCommuteData({

@@ -55,7 +55,7 @@ export function useTodayCommuteData({ year, month, day }: UseTodayCommuteDataPro
   }, [companyCode, year, month, day]);
 
   const workingEmployees = commuteData
-    .filter(record => record.startTime && !record.endTime)
+    .filter(record => record.startTime && !record.endTime && !record.outworkingMemo)
     .map(record => ({
       user: record.userInfo,
       startTime: record.startTime,

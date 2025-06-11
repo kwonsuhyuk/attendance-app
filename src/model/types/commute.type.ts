@@ -10,6 +10,7 @@ export type TStartCommutePayload = {
 export type TStartOutWorkingPayload = {
   startWorkplaceId: "외근";
   outworkingMemo: string;
+  startTime: string;
 };
 
 // 외근 퇴근
@@ -83,6 +84,7 @@ export type TOutworkRequest = {
   outworkingMemo: string;
   requestTime: string;
   isCheckout: boolean;
+  status: TCommuteStatus;
 };
 
 export type TOutworkRequestWithId = TOutworkRequest & { id: string };

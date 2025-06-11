@@ -87,7 +87,11 @@ const CommuteConfirmModal = ({
         </div>
         <p className="my-5 text-right text-xs text-red-500">{warningText}</p>
         <div className="mt-6 flex justify-end gap-2">
-          <Button className="bg-gray-100 text-gray-800 dark:bg-gray-100" onClick={onCancel}>
+          <Button
+            variant="outline"
+            className="bg-gray-100 text-gray-800 dark:bg-gray-100"
+            onClick={onCancel}
+          >
             취소
           </Button>
           <Button className={`${confirmButtonColor} text-white`} onClick={onConfirm}>

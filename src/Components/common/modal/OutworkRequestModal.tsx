@@ -27,6 +27,8 @@ const OutworkRequestModal = ({ open, onClose, pendingOutworkList }: OutworkReque
       req.requester.uid,
       req.outworkingMemo,
       req.isCheckout,
+      req.requestTime,
+      req.status,
     );
 
     if (result.success) {
@@ -101,10 +103,11 @@ const OutworkRequestModal = ({ open, onClose, pendingOutworkList }: OutworkReque
                   {req.requester.name}
                 </p>
                 <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                  {req.requester.jobName || "직책 미정"}
+                  {req.requester.jobName || "직책 미정"}·
+                  {req.requester.employmentType || "근무타입 미정"}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  사유: {req.outworkingMemo || "-"}
+                <p className="my-2 rounded-lg border border-solid border-gray-300 p-2 text-xs text-gray-500 dark:text-gray-400">
+                  {req.outworkingMemo || "-"}
                 </p>
                 <p className="text-xs text-gray-400 dark:text-gray-500">
                   요청일자: {dayjs(req.requestTime).format("YYYY.MM.DD HH:mm")}

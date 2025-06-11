@@ -50,6 +50,8 @@ export function useFilterWork(
     } else if (workplaceId === "외근") {
       const employee: TWorkplaceEmployee = {
         ...baseEmployee,
+        startTime: entry.startTime || "-",
+        endTime: entry.endTime || "-",
         memo: entry.outworkingMemo || "-",
       };
 

@@ -2,16 +2,14 @@ import React from "react";
 import { TCommuteStatus, TCommuteData } from "@/model/types/commute.type";
 import { Button } from "@/components/ui/button";
 import {
-  Sun,
-  MapPin,
   Clock,
-  Sparkles,
   AlertTriangle,
   Building2,
   TimerIcon,
   LogIn,
   LogOut,
   AlertCircle,
+  Handshake,
 } from "lucide-react";
 import { calculateWorkDuration, getKSTDateInfo } from "@/util/time.util";
 import clsx from "clsx";
@@ -106,7 +104,7 @@ const CommuteBoxRenderItem = ({
           darkBgColor="bg-zinc-800"
         >
           <div className="mb-4 flex items-center gap-2 text-gray-500 dark:text-white">
-            <Sparkles className="h-5 w-5" />
+            <Handshake className="h-5 w-5" />
             <span className="text-sm font-semibold">오늘도 수고 많으셨습니다!</span>
           </div>
 
@@ -199,7 +197,6 @@ const CommuteBoxRenderItem = ({
           {/* Divider */}
           <div className="my-4 h-px w-full bg-gray-200 dark:bg-zinc-600" />
 
-          {/* 출근 시간 */}
           {commuteData?.startTime && (
             <div className="mt-3 flex items-center justify-between rounded-md bg-orange-100 px-4 py-2 text-sm text-orange-900 shadow-sm dark:bg-zinc-700 dark:text-orange-300">
               <div className="flex items-center gap-2">
