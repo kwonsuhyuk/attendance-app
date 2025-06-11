@@ -14,6 +14,7 @@ import EmployeeRoutes from "@/components/employee/EmployeeRoutes";
 import ErrorPage from "@/pages/ErrorPage";
 import Notfound from "@/pages/common/Notfound";
 import IndexPage from "@/pages/common/IndexPage";
+import CommuteGuidePage from "@/pages/CommuteGuidePage";
 
 export const MainRoutes = createBrowserRouter([
   {
@@ -49,7 +50,7 @@ export const MainRoutes = createBrowserRouter([
           },
         ],
       },
-
+      { path: "/commuteguide", Component: CommuteGuidePage },
       { path: "*", Component: Notfound },
     ],
   },
