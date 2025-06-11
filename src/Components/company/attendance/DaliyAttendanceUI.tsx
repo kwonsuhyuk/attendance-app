@@ -547,7 +547,7 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
         </div>
 
         {place.memo && (
-          <div className="rounded-md border border-dashed border-point-color-sub bg-point-color-sub/10 px-4 py-3 text-sm text-point-color dark:border-point-color-sub dark:text-point-color">
+          <div className="rounded-md border border-dashed border-point-color-sub bg-point-color-sub/10 px-4 py-3 text-sm text-vacation-dark-color dark:border-point-color-sub dark:text-point-color">
             {place.memo}
           </div>
         )}

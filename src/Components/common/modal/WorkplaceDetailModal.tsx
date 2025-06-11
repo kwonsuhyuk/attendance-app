@@ -17,14 +17,13 @@ const WorkplaceDetailModal = ({ open, onClose, place }: WorkplaceDetailModalProp
       open={open}
       onClose={onClose}
       title={place.name}
-      icon={<MapPin className="h-5 w-5 text-vacation-dark-color" />}
+      icon={<MapPin className="h-5 w-5" />}
       maxWidthClass="max-w-2xl"
     >
       {/* 주소 & 메모 */}
       <div className="space-y-3 text-sm text-zinc-700 dark:text-zinc-200">
-        <div className="font-semibold">
-          <strong className="text-zinc-600 dark:text-zinc-300"></strong> {place?.address}
-        </div>
+        <div className="text-xs text-gray-700 dark:text-gray-500">{place?.address}</div>
+
         {place.memo && (
           <div className="rounded-md border border-dashed border-point-color-sub bg-point-color-sub/10 px-4 py-3 text-sm text-vacation-dark-color dark:border-point-color-sub dark:text-point-color">
             {place.memo}
@@ -34,9 +33,9 @@ const WorkplaceDetailModal = ({ open, onClose, place }: WorkplaceDetailModalProp
 
       {/* 직원 목록 */}
       <div className="mt-6">
-        <h4 className="mb-2 flex justify-between text-sm font-semibold text-vacation-dark-color">
+        <h4 className="mb-2 flex justify-between text-sm font-semibold text-white-text">
           출근·퇴근 직원{" "}
-          <span className="text-sm font-medium text-vacation-dark-color dark:text-gray-300">
+          <span className="text-sm font-medium text-white-text dark:text-gray-300">
             {place.employees.length > 0 ? `${place.employees.length}명` : ""}
           </span>
         </h4>
