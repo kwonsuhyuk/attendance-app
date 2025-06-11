@@ -100,7 +100,7 @@ export default function CommuteGuidePage() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-10 bg-slate-100 px-4 py-12">
-      <h1 className="flex flex-col items-center gap-3 text-3xl font-bold text-gray-900 dark:text-white">
+      <h1 className="flex flex-col items-center justify-center gap-3 text-3xl font-bold text-gray-900 dark:text-white">
         <button
           onClick={() => window.history.back()}
           className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-gray-100 dark:hover:bg-zinc-600"
@@ -112,7 +112,7 @@ export default function CommuteGuidePage() {
           <AppTitle className="mr-2 inline-block" />로 출퇴근 하기
         </span>
       </h1>
-      <p className="mb-4 text-gray-600 dark:text-gray-300">
+      <p className="mb-4 text-center text-gray-600 dark:text-gray-300">
         처음 사용하는 분들도 쉽게 이해할 수 있도록 출근 방식별 안내를 이미지와 함께 제공합니다.
         <br />본 서비스는 회사 근무지에서의 출근과, 근무지 없이 진행되는 외근 출근을 모두
         지원합니다.

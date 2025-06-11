@@ -45,7 +45,7 @@ const IntroGuideBox = () => {
       <div className="flex flex-col gap-3">
         <p className="text-base font-semibold leading-snug">
           On&Off 서비스를 처음 이용하시나요? <br />
-          아래 가이드를 확인해보세요!
+          아래 안내를 확인해보세요!
         </p>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
@@ -54,14 +54,14 @@ const IntroGuideBox = () => {
             className="h-9 w-full flex-1 bg-white text-blue-700 hover:bg-blue-100 dark:text-blue-800"
             onClick={handleNavigate}
           >
-            다운로드 가이드 보기
+            다운로드 안내 보기
           </Button>
 
           <Button
             className="h-9 w-full flex-1 border-white text-white hover:bg-white hover:text-blue-600"
             onClick={() => navigate("/commuteguide")}
           >
-            출퇴근 가이드 보기
+            출퇴근 안내 보기
           </Button>
         </div>
       </div>

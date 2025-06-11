@@ -15,6 +15,7 @@ import ErrorPage from "@/pages/ErrorPage";
 import Notfound from "@/pages/common/Notfound";
 import IndexPage from "@/pages/common/IndexPage";
 import CommuteGuidePage from "@/pages/CommuteGuidePage";
+import OutworkGuidePage from "@/pages/OutworkGuidePage";
 
 export const MainRoutes = createBrowserRouter([
   {
@@ -50,6 +51,8 @@ export const MainRoutes = createBrowserRouter([
           },
         ],
       },
+
+      { path: "/outworkguide", Component: OutworkGuidePage },
       { path: "/commuteguide", Component: CommuteGuidePage },
       { path: "*", Component: Notfound },
     ],

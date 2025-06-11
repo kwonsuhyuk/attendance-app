@@ -161,7 +161,7 @@ export const TodayCommuteBox = () => {
             className="flex flex-1 flex-col gap-4 rounded-xl border border-point-color bg-white px-4 pt-6 shadow-md dark:border-white/20 dark:bg-[#f6f8f7]"
           >
             {/* 타이틀 영역 */}
-            <div className="flex items-center justify-between">
+            <div className="items-between flex flex-col justify-center gap-3">
               <h3 className="flex items-center gap-2 text-sm font-semibold">
                 <span className="inline-block rounded bg-vacation-color px-2 py-0.5 text-[11px] font-bold text-white">
                   {idx === 0 ? "WORKING" : "OUTWORK"}
@@ -170,12 +170,10 @@ export const TodayCommuteBox = () => {
                   {title} ({list?.length || 0})
                 </span>
               </h3>
-
-              {/* 외근 요청 알림 (오른쪽 아이콘 + 텍스트) */}
               {idx === 1 && (
                 <RequestAlarmButton
                   count={pendingOutworkCount}
-                  label="새로운 외근 요청"
+                  label="새로운 외근 요청이 있습니다."
                   onClick={() => setShowModal(true)}
                 />
               )}
@@ -183,11 +181,12 @@ export const TodayCommuteBox = () => {
 
             {/* 리스트 */}
             <ul className="relative max-h-[480px] space-y-3 overflow-y-auto pr-1 pt-5">
+              {/* 외근 요청 알림 (오른쪽 아이콘 + 텍스트) */}
+
               {list?.length > 0 ? (
                 list.map((item, index) => {
                   const user = idx === 0 ? item.user : item;
                   if (!user) return null;
-
                   return (
                     <EmployeeListItem
                       key={index}

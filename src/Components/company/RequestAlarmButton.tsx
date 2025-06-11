@@ -13,7 +13,7 @@ const RequestAlarmButton = ({
   count,
   label = "요청",
   onClick,
-  icon = <Bell className="h-4 w-4" />,
+  icon = <Bell className="h-4 w-4 text-red-500" />,
   className = "",
 }: IRequestAlarmButtonProps) => {
   if (count === 0) return null;
@@ -22,16 +22,14 @@ const RequestAlarmButton = ({
     <button
       onClick={onClick}
       aria-label={`${label} ${count}건 알림`}
-      className={`group relative flex items-center gap-2 rounded-md bg-red-50 px-3 py-1 text-sm font-medium text-red-600 shadow-sm hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-800 ${className}`}
+      className={`relative inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700 shadow hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800 ${className}`}
     >
-      {/* 아이콘 */}
-      {icon}
-
-      <span className="hidden sm:inline">
-        {label} ({count})
+      <span className="relative flex items-center gap-1">
+        {icon}
+        <span>{label}</span>
       </span>
 
-      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white sm:hidden">
+      <span className="ml-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-bold text-white dark:bg-red-500">
         {count}
       </span>
     </button>
