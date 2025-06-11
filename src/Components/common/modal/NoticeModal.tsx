@@ -22,7 +22,7 @@ const NoticeModal = ({ onClose, onSave }: NoticeModalProps) => {
 
   const handleSave = () => {
     if (!title.trim() || !content.trim()) return;
-
+    console.log(title, content);
     onSave({
       title,
       content,
