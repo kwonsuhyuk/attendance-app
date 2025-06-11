@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Clock from "../employee/Clock";
 import ManagerHomeBoxLayout from "./ManagerHomeBoxLayout";
-import IntroGuideBox from "../employee/mainpageBox/IntroGuideBox";
 import CompanyCodeCopy from "./CompanyCodeCopy";
 import WorkplaceBox from "./WorkplaceBox";
 import EmployeeListBox from "./EmployeeListBox";

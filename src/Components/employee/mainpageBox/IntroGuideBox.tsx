@@ -58,7 +58,7 @@ const IntroGuideBox = () => {
           </Button>
 
           <Button
-            className="h-9 w-full flex-1 border-white text-white hover:bg-white hover:text-blue-600"
+            className="h-9 w-full flex-1 border-white text-white hover:bg-white hover:text-blue-600 dark:bg-black dark:hover:bg-white-bg"
             onClick={() => navigate("/commuteguide")}
           >
             출퇴근 안내 보기

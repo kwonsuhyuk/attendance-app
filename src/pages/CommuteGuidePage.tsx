@@ -83,7 +83,7 @@ const GuideSection = ({
   image: string;
 }) => {
   return (
-    <section className="flex flex-col items-center gap-6 rounded-xl border border-solid border-gray-200 bg-white p-6 shadow-lg dark:bg-zinc-800 md:flex-row">
+    <section className="flex flex-col items-center gap-6 rounded-xl border border-solid border-gray-200 bg-white p-6 shadow-lg dark:border-zinc-700 dark:bg-zinc-800 md:flex-row">
       <img src={image} alt={title} className="w-full rounded-md border md:w-1/2" />
       <div className="space-y-2 md:w-1/2">
         <h2 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h2>
@@ -99,7 +99,7 @@ export default function CommuteGuidePage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-4xl space-y-10 bg-slate-100 px-4 py-12">
+    <main className="mx-auto max-w-4xl space-y-10 bg-slate-100 px-4 py-12 dark:bg-zinc-900">
       <h1 className="flex flex-col items-center justify-center gap-3 text-3xl font-bold text-gray-900 dark:text-white">
         <button
           onClick={() => window.history.back()}
@@ -112,6 +112,7 @@ export default function CommuteGuidePage() {
           <AppTitle className="mr-2 inline-block" />로 출퇴근 하기
         </span>
       </h1>
+
       <p className="mb-4 text-center text-gray-600 dark:text-gray-300">
         처음 사용하는 분들도 쉽게 이해할 수 있도록 출근 방식별 안내를 이미지와 함께 제공합니다.
         <br />본 서비스는 회사 근무지에서의 출근과, 근무지 없이 진행되는 외근 출근을 모두
@@ -153,33 +154,41 @@ export default function CommuteGuidePage() {
               ))}
             </TabsContent>
             <TabsContent value="faq" className="space-y-6">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="q1">
-                  <AccordionTrigger className="text-base font-semibold text-gray-800 dark:text-gray-100">
+              <Accordion type="single" collapsible className="w-full space-y-2">
+                <AccordionItem
+                  value="q1"
+                  className="rounded-md border border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                >
+                  <AccordionTrigger className="px-4 py-3 text-base font-semibold text-gray-800 dark:bg-zinc-800 dark:text-gray-100">
                     Q. 실수로 위치 허용을 거부했어요. 어떻게 해야 하나요?
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700 dark:text-gray-300">
+                  <AccordionContent className="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
                     A. 브라우저 또는 휴대폰 설정에서 다시 위치 권한을 허용해 주세요. <br />
                     위치 정보가 꺼져 있으면 출근 버튼이 비활성화되며 출근 처리가 되지 않습니다.
                   </AccordionContent>
                 </AccordionItem>
-                <Separator />
 
-                <AccordionItem value="q2">
-                  <AccordionTrigger className="text-base font-semibold text-gray-800 dark:text-gray-100">
+                <AccordionItem
+                  value="q2"
+                  className="rounded-md border border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                >
+                  <AccordionTrigger className="px-4 py-3 text-base font-semibold text-gray-800 dark:bg-zinc-800 dark:text-gray-100">
                     Q. 위치 정보가 안 나와서 출근 또는 퇴근을 못했어요.
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700 dark:text-gray-300">
+                  <AccordionContent className="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
                     A. 네트워크 환경이나 위치 오차로 인해 출근 처리가 되지 않을 수 있습니다. <br />
                     이 경우 관리자에게 문의하여 수동으로 출근/퇴근 처리를 요청해 주세요.
                   </AccordionContent>
                 </AccordionItem>
-                <Separator />
-                <AccordionItem value="q3">
-                  <AccordionTrigger className="text-base font-semibold text-gray-800 dark:text-gray-100">
+
+                <AccordionItem
+                  value="q3"
+                  className="rounded-md border border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                >
+                  <AccordionTrigger className="px-4 py-3 text-base font-semibold text-gray-800 dark:bg-zinc-800 dark:text-gray-100">
                     Q. 그 외 오류가 발생했을 경우 어떻게 해야 하나요?
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700 dark:text-gray-300">
+                  <AccordionContent className="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
                     A. 화면 캡처와 함께 관리자에게 문의해 주세요. <br />
                     오류 사항을 가능한 자세히 설명해주시면 빠른 조치가 가능합니다.
                   </AccordionContent>
