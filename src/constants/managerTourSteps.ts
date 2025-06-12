@@ -155,12 +155,17 @@ export const todayAttSteps: Step[] = [
   },
   {
     target: '[data-tour="today-6"]',
+    content: "특정 그래프를 클릭하시면 해당 근무지에 대한 직원 정보를 보실 수 있습니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="today-7"]',
     content:
       "금일 외근 요청을 통해 승인/거절 처리가 가능하고, 처리된 직원들의 상세 정보를 볼 수 있습니다.",
     disableBeacon: true,
   },
   {
-    target: '[data-tour="today-7"]',
+    target: '[data-tour="today-8"]',
     content: "금일 근무지별 출근한 직원들의 상세 정보를 볼 수 있습니다.",
     disableBeacon: true,
   },

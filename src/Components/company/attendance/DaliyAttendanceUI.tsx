@@ -338,7 +338,7 @@ export const FullAttendanceRatioChart = ({ selectedDate }: { selectedDate: Date 
           <span className="text-sm text-point-color">{dayjs(selectedDate).format("M월 D일")}</span>
         </div>
 
-        <div className="relative h-48 w-full sm:h-64 md:h-72">
+        <div className="relative h-48 w-full sm:h-64 md:h-72" data-tour="today-6">
           <ResponsiveContainer width="100%" height="100%">
             <RechartPieChart>
               <Pie
@@ -400,7 +400,7 @@ export const OutworkingBox = ({ selectedDate }: { selectedDate: Date }) => {
   return (
     <div
       className="dark:border-outwork-color-dark dark:bg-outwork-color-dark flex flex-1 flex-col gap-4 rounded-xl bg-white p-4 shadow-lg"
-      data-tour="today-6"
+      data-tour="today-7"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-base font-bold text-gray-800 dark:text-white sm:text-lg">
@@ -464,7 +464,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   const { companyCode } = useParams();
 
   return (
-    <Card className="w-full bg-white" data-tour="today-7">
+    <Card className="w-full bg-white" data-tour="today-8">
       <CardContent className="p-4">
         <div>
           <div className="flex items-center gap-2 text-lg font-bold text-zinc-800 dark:text-white sm:text-xl">
