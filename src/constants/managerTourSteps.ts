@@ -15,7 +15,7 @@ export const noticeTourSteps: Step[] = [
     target: '[data-tour="notice-3"]', // NoticeCard 전체
     content:
       "등록된 공지사항을 확인할 수 있어요. 자세한 내용을 보시고 싶으시면 박스를 클릭하시면 됩니다.",
-    placement: "top",
+    placement: "bottom",
   },
 ];
 
@@ -155,7 +155,8 @@ export const todayAttSteps: Step[] = [
   },
   {
     target: '[data-tour="today-6"]',
-    content: "금일 외근 처리한 직원들의 상세 정보를 볼 수 있습니다.",
+    content:
+      "금일 외근 요청을 통해 승인/거절 처리가 가능하고, 처리된 직원들의 상세 정보를 볼 수 있습니다.",
     disableBeacon: true,
   },
   {
@@ -180,8 +181,7 @@ export const homeSteps: Step[] = [
   {
     target: '[data-tour="manager_home-2"]',
     disableScrolling: false,
-    content:
-      "금일 출퇴근 정보를 한눈에 볼 수 있는 박스입니다. 클릭하셔서 상세페이지로 이동할 수 있습니다.",
+    content: "금일 출퇴근 정보를 한눈에 볼 수 있는 박스입니다. 외근 처리도 여기서 가능합니다.",
     disableBeacon: true,
   },
   {

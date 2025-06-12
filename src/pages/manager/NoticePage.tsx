@@ -99,13 +99,13 @@ const NoticePage = () => {
           )}
         </div>
 
-        <div className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:px-6 md:grid-cols-2">
+        <div
+          className="grid w-full max-w-7xl grid-cols-1 gap-4 px-4 sm:px-6 md:grid-cols-2"
+          data-tour="notice-3"
+        >
           {sortedNotices.length === 0 ? (
             <>
-              <div
-                data-tour="notice-3"
-                className="flex h-24 items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-sm text-gray-400"
-              >
+              <div className="flex h-24 items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 text-sm text-gray-400">
                 등록된 공지사항이 없습니다.
               </div>
             </>
