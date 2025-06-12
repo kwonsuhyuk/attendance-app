@@ -12,7 +12,7 @@ export const noticeTourSteps: Step[] = [
     placement: "bottom",
   },
   {
-    target: '[data-tour="notice-3"]', // NoticeCard 전체
+    target: '[data-tour="notice-3"]',
     content:
       "등록된 공지사항을 확인할 수 있어요. 자세한 내용을 보시고 싶으시면 박스를 클릭하시면 됩니다.",
     placement: "bottom",
@@ -192,19 +192,25 @@ export const homeSteps: Step[] = [
   {
     target: '[data-tour="manager_home-3"]',
     disableScrolling: false,
+    content: "이 곳에서 직원의 전화번호 복사 기능과 외근 요청 처리도 가능합니다.",
+    disableBeacon: true,
+  },
+  {
+    target: '[data-tour="manager_home-4"]',
+    disableScrolling: false,
     content: "직원의 휴가 요청 및 이번달 직원들의 전체 휴가 내역을 한눈에 볼 수 있는 박스입니다.",
     disableBeacon: true,
     placement: "bottom",
   },
   {
-    target: '[data-tour="manager_home-4"]',
+    target: '[data-tour="manager_home-5"]',
     disableScrolling: false,
     content: "회사의 설정된 직무를 볼 수 있는 박스입니다.",
     disableBeacon: true,
     placement: "top",
   },
   {
-    target: '[data-tour="manager_home-5"]',
+    target: '[data-tour="manager_home-6"]',
     disableScrolling: false,
     content: "회사의 설정된 근무지를 볼 수 있는 박스입니다.",
     disableBeacon: true,

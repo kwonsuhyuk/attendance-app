@@ -175,7 +175,7 @@ export const TodayCommuteBox = () => {
         </div>
       </div>
 
-      <div className="flex w-full flex-col gap-4 md:flex-row">
+      <div className="flex w-full flex-col gap-4 md:flex-row" data-tour="manager_home-3">
         {[
           { title: "현재 근무 중", list: workingEmployees },
           { title: "금일 외근", list: outworkingEmployees },
@@ -204,7 +204,10 @@ export const TodayCommuteBox = () => {
             </div>
 
             {/* 리스트 */}
-            <ul className="relative max-h-[480px] space-y-3 overflow-y-auto pr-1 pt-5">
+            <ul
+              className="relative max-h-[480px] space-y-3 overflow-y-auto pr-1 pt-5"
+              data-tour="manager_home-2"
+            >
               {/* 외근 요청 알림 (오른쪽 아이콘 + 텍스트) */}
 
               {list?.length > 0 ? (

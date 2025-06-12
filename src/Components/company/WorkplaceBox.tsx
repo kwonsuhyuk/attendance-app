@@ -8,7 +8,7 @@ import { ScrollArea } from "../ui/scroll-area";
 const WorkplaceBox = () => {
   const workPlaces = useCompanyStore(state => state.currentCompany?.workPlacesList);
   return (
-    <div className="space-y-4" data-tour="manager_home-5">
+    <div className="space-y-4" data-tour="manager_home-6">
       <SummaryCard title="전체 근무지 수" count={workPlaces?.length} icon={Building2} />
 
       <CardContent className="flex h-[28rem] items-center justify-center rounded-xl p-2 shadow-md">
