@@ -19,7 +19,7 @@ export const EmployeeListItem = ({
   employmentType,
   iconColor = "text-emerald-700",
   bgColor = "bg-emerald-100",
-  subText,
+  startTime,
   memo,
   darkBgColor = "dark:bg-zinc-800/70",
 }: {
@@ -29,17 +29,28 @@ export const EmployeeListItem = ({
   employmentType?: string;
   iconColor?: string;
   bgColor?: string;
-  subText?: string;
+  startTime?: string;
   memo?: string;
   darkBgColor?: string;
 }) => {
   const { toast } = useToast();
   const [showMemo, setShowMemo] = useState(false);
+
   const handleCopy = () => {
     if (!phoneNumber) return;
     navigator.clipboard.writeText(phoneNumber);
     toast({ title: "전화번호가 복사되었습니다." });
   };
+
+  const now = dayjs();
+  const isToday = startTime && dayjs(startTime).isSame(now, "day");
+  const subText = startTime
+    ? `출근 ${dayjs(startTime).format(isToday ? "HH:mm" : "MM/DD HH:mm")}`
+    : "";
+
+  const badgeStyle = isToday
+    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200"
+    : "bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-100";
 
   return (
     <li
@@ -50,6 +61,7 @@ export const EmployeeListItem = ({
       >
         <User className={`${iconColor} dark:text-black`} />
       </div>
+
       <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-1">
           <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{name}</p>
@@ -59,7 +71,7 @@ export const EmployeeListItem = ({
         </p>
         {phoneNumber && <p className="text-xs text-gray-500 dark:text-gray-400">{phoneNumber}</p>}
         {subText && (
-          <p className="w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+          <p className={`w-fit rounded-full px-2 py-0.5 text-xs font-medium ${badgeStyle}`}>
             {subText}
           </p>
         )}
@@ -79,6 +91,7 @@ export const EmployeeListItem = ({
           )}
         </AnimatePresence>
       </div>
+
       {memo && (
         <button
           className="text-orange-400 hover:text-orange-600 dark:text-gray-300 dark:hover:text-white"
@@ -116,7 +129,6 @@ export const TodayCommuteBox = () => {
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
   const [showModal, setShowModal] = useState(false);
-  useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   const percentage = totalEmployeeNumber
     ? Math.round((commuteEmployeeNumber / totalEmployeeNumber) * 100)
@@ -137,6 +149,14 @@ export const TodayCommuteBox = () => {
             금일 출근율
           </h2>
 
+          <p className="mb-4 text-xs text-muted-foreground">
+            금일 출근한 인원만 집계되며,{" "}
+            <span className="font-medium text-foreground">
+              <br />
+              어제 출근하여 퇴근하지 않은 인원
+            </span>
+            은 포함되지 않습니다.
+          </p>
           <div className="mb-4 flex items-baseline gap-1 text-sm dark:text-white/80">
             <span className="text-3xl font-extrabold text-vacation-dark-color">
               {commuteEmployeeNumber}
@@ -222,7 +242,7 @@ export const TodayCommuteBox = () => {
                       jobName={user.jobName}
                       phoneNumber={user.phoneNumber}
                       employmentType={user.employmentType}
-                      subText={`출근 ${dayjs(item?.startTime).format("HH:mm")}`}
+                      startTime={item?.startTime}
                       memo={user.memo}
                       iconColor="text-vacation-color"
                       bgColor="bg-point-color-sub"

@@ -19,7 +19,6 @@ interface IVacationChartProps {
 const VacationChart = ({ selectedDate, selectedName, mode }: IVacationChartProps) => {
   const [selectedData, setSelectedData] = useState<any>(null);
   const { vacationData, rawDetails } = useVacationChartData(selectedDate, selectedName, mode);
-  console.log(vacationData, rawDetails);
 
   const handleBarClick = (data: any) => {
     setSelectedData(data);

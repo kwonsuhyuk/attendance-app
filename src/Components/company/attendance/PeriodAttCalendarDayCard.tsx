@@ -85,36 +85,39 @@ const PeriodAttCalendarDayCard = ({
         </div>
       ) : (
         // 직원 탭: 출근/퇴근/휴가 표시
-        <div className="flex flex-col items-center py-5 text-sm text-muted-foreground">
+        <div className="flex h-full w-full flex-col items-center justify-start gap-2 px-1 py-3 text-sm text-muted-foreground">
           {summary?.휴가 && !checkIn && !checkOut ? (
-            // 휴가만 있는 경우에만 표시
-            <div className="flex items-center gap-2 text-sm font-semibold text-blue-500">
-              <span>휴가</span>
+            <div className="w-full rounded-lg border border-blue-300 bg-blue-50 px-3 py-1 text-center text-blue-500 shadow-md dark:border-blue-500 dark:bg-blue-900/10">
+              휴가
             </div>
           ) : (
             <>
               {checkIn && (
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`h-2 w-2 rounded-full ${
+                <div className="flex w-full items-center gap-3 rounded-lg bg-white px-3 py-1 shadow-sm dark:bg-[#1f1f1f]">
+                  <div
+                    className={`h-4 w-1.5 rounded-full ${
                       checkIn.workplace === "외근"
                         ? "bg-[#f3c78c]"
                         : "bg-green-300 dark:bg-green-500"
                     }`}
                   />
-                  <span>{`${checkIn.workplace} 출근 ${checkIn.time}`}</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {`${checkIn.time} · ${checkIn.workplace} 출근`}
+                  </span>
                 </div>
               )}
               {checkOut && (
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`h-2 w-2 rounded-full ${
+                <div className="flex w-full items-center gap-3 rounded-lg bg-white px-3 py-1 shadow-sm dark:bg-[#1f1f1f]">
+                  <div
+                    className={`h-4 w-1.5 rounded-full ${
                       checkOut.workplace === "외근"
                         ? "bg-[#f3c78c]"
                         : "bg-gray-400 dark:bg-gray-300"
                     }`}
                   />
-                  <span>{`${checkOut.workplace} 퇴근 ${checkOut.time}`}</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {`${checkOut.time} · ${checkOut.workplace} 퇴근`}
+                  </span>
                 </div>
               )}
             </>
