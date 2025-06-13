@@ -149,6 +149,14 @@ export const TodayCommuteBox = () => {
             금일 출근율
           </h2>
 
+          <p className="mb-4 text-xs text-muted-foreground">
+            금일 출근한 인원만 집계되며,{" "}
+            <span className="font-medium text-foreground">
+              <br />
+              어제 출근하여 퇴근하지 않은 인원
+            </span>
+            은 포함되지 않습니다.
+          </p>
           <div className="mb-4 flex items-baseline gap-1 text-sm dark:text-white/80">
             <span className="text-3xl font-extrabold text-vacation-dark-color">
               {commuteEmployeeNumber}
