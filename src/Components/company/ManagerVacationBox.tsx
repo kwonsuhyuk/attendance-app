@@ -6,35 +6,6 @@ import VacationChart from "./vacation/VacationChart";
 import SummaryCard from "./\bSummaryCard";
 import { useParams } from "react-router-dom";
 
-// const VacationRequestItem = ({ request }: { request: IVacationRequest }) => {
-//   return (
-//     <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900">
-//       <div className="mb-3 flex flex-col gap-0.5">
-//         <span className="text-base font-semibold text-gray-900 dark:text-white">
-//           <span className="mr-1">{request.requester.name}</span>
-//           {request.requester.jobName && (
-//             <span className="text-xs text-gray-500 dark:text-gray-400">
-//               {request.requester.jobName}
-//             </span>
-//           )}
-//         </span>
-//       </div>
-
-//       <div className="mb-2 flex items-center text-sm text-gray-500 dark:text-gray-400">
-//         <CalendarClock className="mr-1 h-4 w-4 text-blue-500 dark:text-blue-300" />
-//         신청일:{" "}
-//         <span className="ml-1 font-medium text-gray-700 dark:text-gray-300">
-//           {request.requestDate}
-//         </span>
-//       </div>
-
-//       <div className="text-sm text-gray-700 dark:text-gray-300">
-//         <span className="font-medium">사유:</span> {request.reason}
-//       </div>
-//     </div>
-//   );
-// };
-
 const VacationRequestBox = () => {
   const { companyCode } = useParams();
   const {

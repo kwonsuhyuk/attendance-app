@@ -15,6 +15,8 @@ export interface IVacationRequest {
   status: "대기중" | "승인" | "거절" | "자동승인";
   email?: string;
   processedAt?: string;
+  createdAt?: string;
+  requestedAt?: string;
 }
 
 // 상태 배지 컴포넌트
