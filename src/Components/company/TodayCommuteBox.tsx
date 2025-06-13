@@ -116,7 +116,6 @@ export const TodayCommuteBox = () => {
   const { outworkingPlace } = useFilterWork(commuteData, placeList ?? [], employeeList);
   const outworkingEmployees = outworkingPlace.employees;
   const [showModal, setShowModal] = useState(false);
-  useCompanyStore(state => state.currentCompany?.workPlacesList);
 
   const percentage = totalEmployeeNumber
     ? Math.round((commuteEmployeeNumber / totalEmployeeNumber) * 100)

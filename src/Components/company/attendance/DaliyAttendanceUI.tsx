@@ -646,14 +646,14 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
 
 export const TodayVacationEmployeeCard = ({ selectedDate }: { selectedDate: Date }) => {
   const [selectedData, setSelectedData] = useState<any>(null);
-  const { vacationData, rawDetails } = useVacationChartData(
-    {
+  const vacationParams = useMemo(
+    () => ({
       year: dayjs(selectedDate).year(),
       month: dayjs(selectedDate).month(),
-    },
-    null,
-    "month",
+    }),
+    [selectedDate],
   );
+  const { vacationData, rawDetails } = useVacationChartData(vacationParams, null, "month");
   const { todayVacationData, totalTodayVacationCount } = useTodayVacationData({
     vacationData,
     selectedDate,

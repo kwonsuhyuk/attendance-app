@@ -49,7 +49,7 @@ export const useVacationChartData = (
             });
           });
         });
-        console.log("fla", flattened);
+
         const dates = getMonthDates(selectedDate.year, selectedDate.month);
         const result = dates.map(date => {
           const daily = flattened.filter(item => item.date === date);
