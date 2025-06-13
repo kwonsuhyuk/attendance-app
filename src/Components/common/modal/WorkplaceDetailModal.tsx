@@ -4,14 +4,26 @@ import DetailModal from "./commonModalLayout/DetailModal";
 import { TPlaceData } from "@/hooks/manager/useFilterWork";
 import { getKSTDateInfo } from "@/util/time.util";
 import { toast } from "@/hooks/use-toast";
+import dayjs from "dayjs";
 
 interface WorkplaceDetailModalProps {
   open: boolean;
   onClose: () => void;
   place: TPlaceData;
+  selectedDate: Date;
 }
 
-const WorkplaceDetailModal = ({ open, onClose, place }: WorkplaceDetailModalProps) => {
+const WorkplaceDetailModal = ({
+  open,
+  onClose,
+  place,
+  selectedDate,
+}: WorkplaceDetailModalProps) => {
+  const formatTimeByDate = (time?: string) => {
+    if (!time || !isValid(new Date(time))) return "-";
+    const isSameDay = dayjs(time).isSame(dayjs(selectedDate), "day");
+    return dayjs(time).format(isSameDay ? "HH:mm" : "MM/DD HH:mm");
+  };
   return (
     <DetailModal
       open={open}
@@ -73,13 +85,12 @@ const WorkplaceDetailModal = ({ open, onClose, place }: WorkplaceDetailModalProp
                     <div className="flex flex-wrap gap-1">
                       {emp.startTime && emp.startTime !== "-" && (
                         <p className="w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                          출근{" "}
-                          {isValid(new Date(emp.startTime)) ? getKSTDateInfo(emp.startTime) : "-"}
+                          출근 {formatTimeByDate(emp.startTime)}
                         </p>
                       )}
                       {emp.endTime && emp.endTime !== "-" && (
                         <p className="w-fit rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-900 dark:text-rose-200">
-                          퇴근 {isValid(new Date(emp.endTime)) ? getKSTDateInfo(emp.endTime) : "-"}
+                          퇴근 {formatTimeByDate(emp.endTime)}
                         </p>
                       )}
                     </div>

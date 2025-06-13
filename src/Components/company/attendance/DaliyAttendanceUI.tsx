@@ -19,7 +19,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { DatePickerDemo } from "@/components/ui/DatePicker";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
@@ -28,9 +28,8 @@ import VacationChartModal from "@/components/common/modal/VacationChartModal";
 import { useVacationChartData } from "@/hooks/vacation/useVacationChartData";
 import { getFilteredDetails } from "@/util/vacation.util";
 import useTodayVacationData from "@/hooks/manager/useTodayVacationData";
-import { TPlaceData, TWorkplaceEmployee, useFilterWork } from "@/hooks/manager/useFilterWork";
+import { TPlaceData, useFilterWork } from "@/hooks/manager/useFilterWork";
 import { useCompanyStore } from "@/store/company.store";
-import { getKSTDateInfo } from "@/util/time.util";
 import { isValid } from "date-fns";
 import { CHART_COLORS, GRAY_COLOR, ORANGE_COLOR } from "@/constants/chartColor";
 import { CustomLegend } from "@/components/common/chart/CustomLegend";
@@ -127,6 +126,12 @@ export const AttendanceHeader = ({ selectedDate, setSelectedDate }: IAttendanceH
         </h1>
         <p className="text-sm text-muted-foreground sm:text-base">출퇴근 현황</p>
       </div>
+
+      {/* 안내 문구 */}
+      <p className="rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground sm:text-sm">
+        출퇴근 기록은 <span className="font-medium text-foreground">출근일 기준</span>으로
+        집계됩니다. 퇴근 시간이 다른 날짜일 경우, 해당 출근일로 이동해 조회해 주세요.
+      </p>
 
       {/* 모바일 레이아웃 */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-1 sm:hidden">
@@ -498,6 +503,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
                             ...place,
                             employees: matched?.employees || [],
                           }}
+                          selectedDate={selectedDate}
                         />
                       </CarouselItem>
                     );
@@ -520,7 +526,7 @@ export const WorkplaceBreakdown = ({ selectedDate }: { selectedDate: Date }) => 
   );
 };
 
-export const PlaceCard = ({ place }: { place: TPlaceData }) => {
+export const PlaceCard = ({ place, selectedDate }: { place: TPlaceData; selectedDate: Date }) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
@@ -529,11 +535,14 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
     toast({ title: "전화번호가 복사되었습니다." });
   };
 
+  const isSameSelectedDate = (time?: string) =>
+    !!time && isValid(new Date(time)) && dayjs(time).isSame(dayjs(selectedDate), "day");
+
   return (
     <>
       <div
         onClick={() => setOpen(true)}
-        className="flex h-full flex-col gap-4 rounded-2xl border border-point-color-sub bg-white p-4 pb-0 shadow-md transition-transform hover:scale-[1.01] hover:shadow-lg dark:border-white/10 dark:bg-[#f6f8f7]"
+        className="flex h-full cursor-pointer flex-col gap-4 rounded-2xl border border-point-color-sub bg-white p-4 pb-0 shadow-md transition-transform hover:scale-[1.01] hover:shadow-lg dark:border-white/10 dark:bg-[#f6f8f7]"
       >
         {/* 헤더 */}
         <div className="flex items-start justify-between">
@@ -599,18 +608,38 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
                             {emp.phoneNumber}
                           </p>
                         )}
+
                         <div className="flex flex-wrap gap-1">
-                          <p className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                          {/* 출근 */}
+                          <p
+                            className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                              isSameSelectedDate(emp.startTime)
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200"
+                                : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200"
+                            }`}
+                          >
                             출근{" "}
                             {emp.startTime && isValid(new Date(emp.startTime))
-                              ? getKSTDateInfo(emp.startTime)
+                              ? dayjs(emp.startTime).format(
+                                  isSameSelectedDate(emp.startTime) ? "HH:mm" : "MM/DD HH:mm",
+                                )
                               : "-"}
                           </p>
+
+                          {/* 퇴근 */}
                           {emp.endTime !== "-" && (
-                            <p className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-900 dark:text-rose-200">
+                            <p
+                              className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                                isSameSelectedDate(emp.endTime)
+                                  ? "bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-200"
+                                  : "bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-200"
+                              }`}
+                            >
                               퇴근{" "}
                               {emp.endTime && isValid(new Date(emp.endTime))
-                                ? getKSTDateInfo(emp.endTime)
+                                ? dayjs(emp.endTime).format(
+                                    isSameSelectedDate(emp.endTime) ? "HH:mm" : "MM/DD HH:mm",
+                                  )
                                 : "-"}
                             </p>
                           )}
@@ -639,7 +668,12 @@ export const PlaceCard = ({ place }: { place: TPlaceData }) => {
         </div>
       </div>
 
-      <WorkplaceDetailModal open={open} onClose={() => setOpen(false)} place={place} />
+      <WorkplaceDetailModal
+        open={open}
+        onClose={() => setOpen(false)}
+        place={place}
+        selectedDate={selectedDate}
+      />
     </>
   );
 };

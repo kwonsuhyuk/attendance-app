@@ -447,6 +447,40 @@ export async function fetchCalendarSummaryByWorkplace(
   }
 }
 
+export async function fetchTodayCommuteDataWithUserInfo(
+  companyCode: string,
+  year: string,
+  month: string,
+  day: string,
+): Promise<TCommuteRecord[]> {
+  try {
+    const commutePath = getDayCommutePath(companyCode, year, month, day);
+    const commuteData = await getData(commutePath);
+
+    const usersPath = `companyCode/${companyCode}/users`;
+    const usersData = await getData(usersPath);
+
+    if (!commuteData || !usersData) {
+      return [];
+    }
+
+    const result: TCommuteRecord[] = Object.entries(commuteData).map(([userId, record]: any) => ({
+      userId,
+      startTime: record.startTime,
+      startWorkplaceId: record.startWorkplaceId,
+      endTime: record.endTime,
+      endWorkplaceId: record.endWorkplaceId,
+      outworkingMemo: record.outworkingMemo,
+      userInfo: usersData[userId] || undefined,
+    }));
+
+    return result;
+  } catch (error) {
+    console.error("❌ 출퇴근 + 유저 데이터 조회 실패:", error);
+    return [];
+  }
+}
+
 /**
  * 출퇴근 + 유저 정보 실시간 구독
  */
