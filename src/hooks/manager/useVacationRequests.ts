@@ -166,6 +166,7 @@ export const useVacationRequests = () => {
         status: item.status === "승인" ? "승인" : item.status === "거절" ? "거절" : "대기중",
         email: item.requester.email,
         processedAt: item.processedAt,
+        requestedAt: item.createdAt ?? new Date().toISOString(),
       }));
 
       setRequests(mapped);
@@ -207,16 +208,18 @@ export const useVacationRequests = () => {
     tabValue: string,
     filter: (item: IVacationRequest) => boolean,
   ) => {
-    const sortByLatest = (a: IVacationRequest, b: IVacationRequest) => {
-      const getTime = (item: IVacationRequest) => {
-        if (item.processedAt) return new Date(item.processedAt).getTime();
-        if (item.requestDate) return new Date(item.requestDate.split(" ~ ")[0]).getTime();
-        if (item.id) return new Date(item.id).getTime();
-        return 0;
-      };
-
-      return getTime(b) - getTime(a);
+    const getTime = (item: IVacationRequest) => {
+      if (tabValue === "pending") {
+        return new Date(item.requestedAt ?? 0).getTime();
+      } else if (tabValue === "processed") {
+        return item.processedAt ? new Date(item.processedAt).getTime() : 0;
+      } else if (tabValue === "registered") {
+        return item.createdAt ? new Date(item.createdAt).getTime() : 0;
+      }
+      return 0;
     };
+
+    const sortByLatest = (a: IVacationRequest, b: IVacationRequest) => getTime(b) - getTime(a);
 
     if (tabValue === "registered") {
       return [...registeredRequests].sort(sortByLatest);
