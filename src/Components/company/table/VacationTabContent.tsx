@@ -38,13 +38,6 @@ const VacationTabContent = ({
 }: IVacationTabContentProps) => {
   const currentPageData = getCurrentPageData(filteredData, tab.value);
 
-  console.log(`📋 [${tab.value}] 정렬된 전체 데이터:`);
-  filteredData.forEach((d, i) => {
-    console.log(
-      `${i + 1}. id: ${d.id}, status: ${d.status}, requestedAt: ${d.requestedAt}, processedAt: ${d.processedAt}, createdAt: ${d.createdAt}`,
-    );
-  });
-
   return (
     <TabsContent value={tab.value} className="mt-4 w-full">
       <div>

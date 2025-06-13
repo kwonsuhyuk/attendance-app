@@ -52,7 +52,17 @@ export const useVacationRequests = () => {
   };
 
   const handleRegister = (newRequest: IVacationRequest, isManual: boolean = false) => {
-    setRegisteredRequests(prev => [...prev, newRequest]);
+    const withCreatedAt: IVacationRequest = {
+      ...newRequest,
+      createdAt: new Date().toISOString(),
+    };
+
+    setRegisteredRequests(prev => {
+      const updated = [...prev, withCreatedAt];
+      return updated.sort(
+        (a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
+      );
+    });
 
     if (isManual && newRequest.requester?.uid) {
       notify({
