@@ -21,7 +21,7 @@ export const EmployeeCompanyForm = ({
 }: IEmployeeCompanyFormProps) => {
   return (
     <div className="space-y-4">
-      <h4 className="text-black font-medium">가입 회사 정보</h4>
+      <h4 className="font-medium text-black">가입 회사 정보</h4>
 
       <div className="space-y-4">
         {!isCodeValid ? (
@@ -62,6 +62,7 @@ export const EmployeeCompanyForm = ({
         >
           회사찾기
         </Button>
+        <p className="text-xs">※ 올바른 회사코드 입력 후 버튼을 누르면 적용됩니다.</p>
       </div>
     </div>
   );
