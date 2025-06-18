@@ -19,7 +19,7 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
 
   return (
     <div className="space-y-4">
-      <h4 className="text-black font-medium">개인 정보</h4>
+      <h4 className="font-medium text-black">개인 정보</h4>
 
       <FormField
         control={form.control}
@@ -49,6 +49,7 @@ export const PersonalInfoForm = ({ form }: IPersonalInfoFormProps) => {
                 placeholder="예) hongildong@naver.com"
               />
             </FormControl>
+            <p className="text-xs">※유효한 이메일을 입력하세요.</p>
             <FormMessage />
           </FormItem>
         )}

@@ -29,6 +29,7 @@ const LoginForm = ({ emailRef, passwordRef }: ILoginFormProps) => {
           aria-describedby="password-error"
           className="px-3"
         />
+        <p className="text-xs">※ 비밀번호 분실 시 관리자에게 문의하세요.</p>
       </div>
     </div>
   );

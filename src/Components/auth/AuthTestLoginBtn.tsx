@@ -15,7 +15,7 @@ const AuthTestLoginBtn = ({ handleGuestLogin, loading }: GuestLoginButtonsProps)
           type="button"
           variant="outline"
           className="w-full"
-          onClick={() => handleGuestLogin("guestCM@naver.com", "qweqwe")}
+          onClick={() => handleGuestLogin("qamanager@naver.com", "qweqwe")}
           disabled={loading}
         >
           관리자 Guest 로그인
@@ -25,7 +25,7 @@ const AuthTestLoginBtn = ({ handleGuestLogin, loading }: GuestLoginButtonsProps)
           type="button"
           variant="outline"
           className="w-full"
-          onClick={() => handleGuestLogin("guestEM@naver.com", "qweqwe")}
+          onClick={() => handleGuestLogin("qa1@naver.com", "qweqwe")}
           disabled={loading}
         >
           직원 Guest 로그인
