@@ -1,8 +1,6 @@
 import EmployeeVacationList from "./EmployeeVacationList";
 import Pagination from "@/components/ui/pagination";
-import Loading from "@/components/common/Loading";
 import Error from "@/components/Error";
-import { IVacationRequest } from "@/components/company/table/VacationColumns";
 import { TVacationRequest } from "@/model/types/vacation.type";
 
 interface IVacationListSectionProps {
@@ -15,14 +13,12 @@ interface IVacationListSectionProps {
 }
 
 const VacationListSection = ({
-  loading,
   error,
   requests,
   currentPage,
   totalPageCount,
   setCurrentPage,
 }: IVacationListSectionProps) => {
-  // if (loading) return <Loading />;
   if (error) return <Error />;
 
   return (

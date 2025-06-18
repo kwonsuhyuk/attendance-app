@@ -2,23 +2,40 @@ import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import MainRoutes from "./routes/MainRoutes";
-import Loading from "./components/common/Loading";
+import { AppStartLoading } from "./components/common/Loading";
 import { useUserStore } from "@/store/user.store";
+import { useCompanyStore } from "@/store/company.store";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getUser } from "@/api";
+import { getUser, getCompanyInfo, subscribeToData } from "@/api";
+import { getCompanyInfoPath } from "@/constants/api.path";
 import { TCMUserData, TEmpUserData } from "@/model/types/user.type";
+import { TCompanyInfo } from "@/model/types/company.type";
 
 const App = () => {
   const [appReady, setAppReady] = useState(false);
+
   const setUser = useUserStore(state => state.setUser);
   const clearUser = useUserStore(state => state.clearUser);
+  const setCompany = useCompanyStore(state => state.setCompany);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async user => {
       if (user) {
         try {
-          const data = await getUser(user);
-          setUser(data as TEmpUserData | TCMUserData);
+          const userData = await getUser(user);
+          setUser(userData as TEmpUserData | TCMUserData);
+
+          const companyCode = (userData as TCMUserData | TEmpUserData).companyCode;
+          if (companyCode) {
+            const companyData = await getCompanyInfo(companyCode);
+            setCompany(companyData as TCompanyInfo);
+
+            subscribeToData(getCompanyInfoPath(companyCode), updated => {
+              if (updated) {
+                setCompany(updated as TCompanyInfo);
+              }
+            });
+          }
         } catch (e) {
           clearUser();
         }
@@ -30,9 +47,9 @@ const App = () => {
     });
 
     return () => unsubscribe();
-  }, [setUser, clearUser]);
+  }, [setUser, clearUser, setCompany]);
 
-  if (!appReady) return <Loading />;
+  if (!appReady) return <AppStartLoading />;
 
   return <RouterProvider router={MainRoutes} />;
 };
