@@ -5,9 +5,9 @@ import { useCompanySettingForm } from "@/hooks/company-settings/useCompanySettin
 import { useSubmitCompanyData } from "@/hooks/company-settings/useSubmitCompanyData";
 import { COMPANY_SETTING_STEPS } from "@/constants/steps";
 import AppTitle from "@/components/common/AppTitle";
-import Loading from "@/components/common/Loading";
 import { useCompanyStep } from "@/hooks/auth/useCompanyStep";
 import StepperNavigation from "@/components/company/company-settings/StepperNavigation";
+import { Loading } from "@/components/common/Loading";
 
 const CompanyBasicStep = lazy(
   () => import("@/components/company/company-settings/basic-setting/CompanyBasicStep"),

@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Loading from "@/components/common/Loading";
 import { useCompanyStore } from "@/store/company.store";
 import { useShallow } from "zustand/shallow";
 import { TJob } from "@/model/types/company.type";
@@ -12,6 +11,7 @@ import AppTitle from "@/components/common/AppTitle";
 import EmployeeJobSelection from "@/components/employee/EmployeeJobSelection";
 import EmploymentTypeSelection from "@/components/employee/EmployeementTypeSelection";
 import { Label } from "@/components/ui/label";
+import { Loading } from "@/components/common/Loading";
 
 export default function EmployeeFirstPage() {
   const {
